@@ -1,0 +1,203 @@
+:root {
+  --primary: #0e8a76;
+  --primary-dark: #0a6a5a;
+  --primary-light: #e3f6f2;
+  --danger: #e5484d;
+  --danger-light: #fde4e4;
+  --bg: #f6f8f9;
+  --card: #ffffff;
+  --text: #1e2a2f;
+  --muted: #7c8a8e;
+  --radius: 16px;
+  --radius-lg: 22px;
+}
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  font-family: "Tajawal", "Segoe UI", Tahoma, Arial, sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  direction: rtl;
+}
+
+.app-shell {
+  max-width: 480px;
+  margin: 0 auto;
+  min-height: 100vh;
+  background: var(--bg);
+  padding-bottom: 78px;
+  position: relative;
+  box-shadow: 0 0 30px rgba(0,0,0,0.06);
+}
+
+.page { padding: 18px; }
+
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 18px;
+  background: var(--card);
+  border-bottom: 1px solid #eef1f2;
+}
+
+.header h1 { font-size: 19px; margin: 0; color: var(--primary); font-weight: 800; }
+
+.card {
+  background: var(--card);
+  border-radius: var(--radius);
+  padding: 16px;
+  margin-bottom: 12px;
+  box-shadow: 0 2px 10px rgba(15, 42, 38, 0.06);
+  border: 1px solid #f0f2f2;
+}
+
+.card.urgent {
+  background: linear-gradient(135deg, #fff1f1, var(--danger-light));
+  border: 1px solid #f6c6c8;
+}
+
+.btn {
+  display: inline-block;
+  width: 100%;
+  padding: 14px;
+  border: none;
+  border-radius: 12px;
+  background: var(--primary);
+  color: white;
+  font-size: 15px;
+  font-weight: 700;
+  font-family: inherit;
+  cursor: pointer;
+  text-align: center;
+  transition: transform 0.15s ease, opacity 0.15s ease;
+}
+
+.btn:active { transform: scale(0.98); opacity: 0.9; }
+.btn.danger { background: var(--danger); }
+.btn.outline { background: transparent; color: var(--primary); border: 1.5px solid var(--primary); }
+
+.tabs { display: flex; gap: 8px; margin-bottom: 16px; }
+.tab {
+  flex: 1;
+  padding: 11px;
+  border-radius: 12px;
+  text-align: center;
+  background: #eef2f2;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--muted);
+  transition: all 0.15s ease;
+}
+.tab.active { background: var(--primary); color: white; }
+
+.list-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 14px;
+  background: var(--card);
+  border-radius: var(--radius);
+  margin-bottom: 10px;
+  border: 1px solid #f0f2f2;
+}
+
+.badge {
+  font-size: 12px;
+  font-weight: 700;
+  padding: 4px 12px;
+  border-radius: 999px;
+  background: var(--primary-light);
+  color: var(--primary-dark);
+}
+
+.muted { color: var(--muted); font-size: 13px; }
+
+.bottom-nav {
+  position: fixed;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 100%;
+  max-width: 480px;
+  display: flex;
+  justify-content: space-around;
+  background: var(--card);
+  border-top: 1px solid #eef1f2;
+  padding: 10px 0 14px;
+}
+
+.bottom-nav a {
+  text-decoration: none;
+  color: var(--muted);
+  font-size: 12px;
+  text-align: center;
+  font-weight: 500;
+}
+
+.bottom-nav a.active { color: var(--primary); font-weight: 700; }
+
+.timeline-item {
+  display: flex;
+  gap: 12px;
+  align-items: flex-start;
+  margin-bottom: 16px;
+}
+
+.timeline-dot {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background: #e2e8e8;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+  color: white;
+  flex-shrink: 0;
+}
+
+.timeline-dot.done { background: var(--primary); }
+
+/* Splash / welcome screen */
+.splash-screen {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 32px;
+  background: linear-gradient(160deg, var(--primary-dark), var(--primary) 60%, #1fae97);
+  color: white;
+}
+
+.splash-icon {
+  width: 96px;
+  height: 96px;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.15);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 44px;
+  margin-bottom: 28px;
+}
+
+.splash-screen h1 { font-size: 28px; font-weight: 800; margin: 0 0 6px; }
+.splash-screen p { opacity: 0.9; margin: 4px 0; }
+.splash-tagline { margin-top: 40px; font-size: 15px; opacity: 0.85; }
+.splash-tagline strong { display: block; font-size: 18px; margin-top: 4px; }
+
+.splash-screen .btn {
+  margin-top: 36px;
+  background: white;
+  color: var(--primary-dark);
+}
+
+input, select {
+  font-family: inherit;
+}
