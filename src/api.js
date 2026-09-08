@@ -5,32 +5,82 @@ async function request(path, options = {}) {
     headers: { "Content-Type": "application/json" },
     ...options,
   });
-  if (!res.ok) throw new Error(`Request failed: ${res.status}`);
+
+  if (!res.ok) {
+    throw new Error(`Request failed: ${res.status}`);
+  }
+
   return res.json();
 }
 
-export const api = {
-  register: (data) => request("/auth/register", { method: "POST", body: JSON.stringify(data) }),
-  login: (data) => request("/auth/login", { method: "POST", body: JSON.stringify(data) }),
+const api = {
+  register: (data) =>
+    request("/auth/register", {
+      method: "POST",
+      body: JSON.stringify(data),
+    }),
+
+  login: (data) =>
+    request("/auth/login", {
+      method: "POST",
+      body: JSON.stringify(data),
+    }),
 
   getBloodRequests: () => request("/blood/requests"),
-  getBloodRequest: (id) => request(`/blood/requests/${id}`),
-  getNearbyDonors: (bloodType) => request(`/blood/donors/nearby${bloodType ? `?bloodType=${bloodType}` : ""}`),
-  getDonor: (id) => request(`/blood/donors/${id}`),
-  respondToRequest: (id) => request(`/blood/requests/${id}/respond`, { method: "POST" }),
-  getHospitals: () => request("/blood/hospitals"),
 
-  getMedicines: (q) => request(`/medicines${q ? `?q=${q}` : ""}`),
-  getMedicine: (id) => request(`/medicines/${id}`),
-  requestMedicine: (id) => request(`/medicines/${id}/request`, { method: "POST" }),
-  getPharmacies: () => request("/medicines/partners/pharmacies"),
+  getBloodRequest: (id) =>
+    request(`/blood/requests/${id}`),
 
-  getNotifications: () => request("/notifications"),
+  getNearbyDonors: (bloodType) =>
+    request(
+      `/blood/donors/nearby${
+        bloodType ? `?bloodType=${bloodType}` : ""
+      }`
+    ),
 
-  getUser: () => request("/users/me"),
-  getMyRequests: () => request("/users/me/requests"),
-  saveAvatar: (id, avatar) => request(`/users/${id}/avatar`, { method: "POST", body: JSON.stringify({ avatar }) }),
+  getDonor: (id) =>
+    request(`/blood/donors/${id}`),
+
+  respondToRequest: (id) =>
+    request(`/blood/requests/${id}/respond`, {
+      method: "POST",
+    }),
+
+  getHospitals: () =>
+    request("/blood/hospitals"),
+
+  getMedicines: (q) =>
+    request(`/medicines${q ? `?q=${q}` : ""}`),
+
+  getMedicine: (id) =>
+    request(`/medicines/${id}`),
+
+  requestMedicine: (id) =>
+    request(`/medicines/${id}/request`, {
+      method: "POST",
+    }),
+
+  getPharmacies: () =>
+    request("/medicines/partners/pharmacies"),
+
+  getNotifications: () =>
+    request("/notifications"),
+
+  getUser: () =>
+    request("/users/me"),
+
+  getMyRequests: () =>
+    request("/users/me/requests"),
+
+  saveAvatar: (id, avatar) =>
+    request(`/users/${id}/avatar`, {
+      method: "POST",
+      body: JSON.stringify({ avatar }),
+    }),
 };
+
+// Default export
+export default api;
 
 // Wraps the browser Geolocation API in a promise
 export function getCurrentLocation() {
@@ -39,8 +89,14 @@ export function getCurrentLocation() {
       reject(new Error("Geolocation not supported"));
       return;
     }
+
     navigator.geolocation.getCurrentPosition(
-      (pos) => resolve({ lat: pos.coords.latitude, lng: pos.coords.longitude }),
+      (pos) =>
+        resolve({
+          lat: pos.coords.latitude,
+          lng: pos.coords.longitude,
+        }),
+
       (err) => reject(err)
     );
   });
