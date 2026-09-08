@@ -1,430 +1,714 @@
-import React, { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
-import { api } from "../api.js";
-
-function HeartLogo() {
-  return (
-    <div className="login-logo-wrap">
-      <div className="login-logo-ring ring-one"></div>
-      <div className="login-logo-ring ring-two"></div>
-
-      <div className="login-logo">
-        <svg viewBox="0 0 100 100" aria-hidden="true">
-          <path
-            d="M50 82
-               C45 77 20 59 20 38
-               C20 25 30 18 41 18
-               C47 18 52 21 56 27
-               C60 21 65 18 72 18
-               C83 18 90 26 90 38
-               C90 59 61 77 50 82Z"
-            fill="none"
-            stroke="white"
-            strokeWidth="5"
-          />
-
-          <path
-            d="M22 48
-               H37
-               L43 48
-               L48 35
-               L55 62
-               L61 45
-               L65 48
-               H88"
-            fill="none"
-            stroke="white"
-            strokeWidth="4"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-          />
-        </svg>
-      </div>
-    </div>
-  );
+:root {
+  --primary: #0aa88f;
+  --primary-dark: #078876;
+  --primary-light: #e6f7f4;
+  --text-dark: #17332e;
+  --text-muted: #6b7c79;
+  --danger: #e23a3a;
+  --danger-light: #fdecec;
+  --success: #16a34a;
+  --bg: #fafdfc;
+  --card: #ffffff;
+  --border: #edf2f1;
+  --text: var(--text-dark);
+  --muted: var(--text-muted);
+  --radius-btn: 26px;
+  --radius-card: 16px;
+  --radius-input: 14px;
 }
 
-function MailIcon() {
-  return (
-    <svg viewBox="0 0 24 24" className="field-svg">
-      <path
-        d="M3 6.5A2.5 2.5 0 0 1 5.5 4h13A2.5 2.5 0 0 1 21 6.5v11a2.5 2.5 0 0 1-2.5 2.5h-13A2.5 2.5 0 0 1 3 17.5v-11Z"
-        fill="none"
-        stroke="currentColor"
-        strokeWidth="2"
-      />
-
-      <path
-        d="m4 7 8 6 8-6"
-        fill="none"
-        stroke="currentColor"
-        strokeWidth="2"
-        strokeLinecap="round"
-      />
-    </svg>
-  );
+* {
+  box-sizing: border-box;
 }
 
-function LockIcon() {
-  return (
-    <svg viewBox="0 0 24 24" className="field-svg">
-      <rect
-        x="5"
-        y="10"
-        width="14"
-        height="11"
-        rx="2"
-        fill="none"
-        stroke="currentColor"
-        strokeWidth="2"
-      />
-
-      <path
-        d="M8 10V7a4 4 0 0 1 8 0v3"
-        fill="none"
-        stroke="currentColor"
-        strokeWidth="2"
-      />
-    </svg>
-  );
+body {
+  margin: 0;
+  font-family: "Tajawal", "Segoe UI", Tahoma, Arial, sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  direction: rtl;
+  -webkit-font-smoothing: antialiased;
 }
 
-function EyeIcon({ visible }) {
-  return (
-    <svg viewBox="0 0 24 24" className="field-svg">
-      <path
-        d="M2.5 12s3.5-6 9.5-6 9.5 6 9.5 6-3.5 6-9.5 6-9.5-6-9.5-6Z"
-        fill="none"
-        stroke="currentColor"
-        strokeWidth="2"
-      />
-
-      <circle
-        cx="12"
-        cy="12"
-        r="2.5"
-        fill="none"
-        stroke="currentColor"
-        strokeWidth="2"
-      />
-
-      {visible && (
-        <path
-          d="M4 4 20 20"
-          fill="none"
-          stroke="currentColor"
-          strokeWidth="2"
-          strokeLinecap="round"
-        />
-      )}
-    </svg>
-  );
+.app-shell {
+  max-width: 420px;
+  margin: 0 auto;
+  min-height: 100vh;
+  background: var(--bg);
+  padding-bottom: 84px;
+  position: relative;
 }
 
-/* =========================
-   GOOGLE LOGO
-========================= */
-function GoogleIcon() {
-  return (
-    <svg
-      className="social-svg google-svg"
-      viewBox="0 0 48 48"
-      aria-hidden="true"
-    >
-      <path
-        fill="#4285F4"
-        d="M24 9.5c3.54 0 6.7 1.22 9.19 3.6l6.85-6.85C35.89 2.39 30.47 0 24 0 14.61 0 6.51 5.38 2.56 13.22l7.98 6.2C12.45 13.21 17.73 9.5 24 9.5Z"
-      />
-
-      <path
-        fill="#34A853"
-        d="M2.56 13.22A23.94 23.94 0 0 0 0 24c0 3.87.92 7.52 2.55 10.77l7.99-6.2A14.42 14.42 0 0 1 9.5 24c0-1.59.37-3.1 1.04-4.57l-7.98-6.21Z"
-      />
-
-      <path
-        fill="#FBBC05"
-        d="M24 48c6.47 0 11.9-2.13 15.87-5.79l-7.76-6.02c-2.16 1.45-4.93 2.31-8.11 2.31-6.27 0-11.55-3.71-13.46-9.92l-7.99 6.19C6.51 42.62 14.61 48 24 48Z"
-      />
-
-      <path
-        fill="#EA4335"
-        d="M47.5 24.55c0-1.59-.14-2.75-.45-3.95H24v8.12h13.49c-.27 2.02-1.87 5.07-5.38 7.13l7.76 6.02C44.4 38.15 47.5 32.03 47.5 24.55Z"
-      />
-    </svg>
-  );
+.page {
+  padding: 20px;
 }
 
-/* =========================
-   APPLE LOGO
-========================= */
-function AppleIcon() {
-  return (
-    <svg
-      className="social-svg apple-svg"
-      viewBox="0 0 24 24"
-      aria-hidden="true"
-    >
-      <path
-        fill="currentColor"
-        d="M16.72 12.77c.02 2.08 1.82 2.77 1.84 2.78-.02.05-.29 1-.95 1.97-.57.83-1.16 1.66-2.1 1.68-.92.02-1.22-.54-2.28-.54-1.06 0-1.39.52-2.26.56-.9.03-1.58-.9-2.15-1.73-1.17-1.69-2.06-4.77-.86-6.85.6-1.04 1.67-1.7 2.83-1.72.88-.02 1.71.59 2.28.59.57 0 1.64-.73 2.76-.62.47.02 1.79.19 2.64 1.43-.07.04-1.58.92-1.57 2.75ZM14.9 7.65c.48-.58.81-1.39.72-2.2-.7.03-1.54.47-2.04 1.05-.45.51-.84 1.34-.73 2.13.78.06 1.57-.4 2.05-.98Z"
-      />
-    </svg>
-  );
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 18px 20px;
+  background: var(--card);
+  border-bottom: 1px solid var(--border);
 }
 
-/* =========================
-   FACEBOOK LOGO
-========================= */
-function FacebookIcon() {
-  return (
-    <svg
-      className="social-svg facebook-svg"
-      viewBox="0 0 48 48"
-      aria-hidden="true"
-    >
-      <circle cx="24" cy="24" r="24" fill="#1877F2" />
-
-      <path
-        fill="white"
-        d="M27.2 25.7h4.1l.65-4.8H27.2v-3.1c0-1.39.46-2.33 2.38-2.33H32V11.2c-.42-.06-1.86-.2-3.53-.2-3.49 0-5.88 2.13-5.88 6.04v3.86h-3.95v4.8h3.95V38h4.61V25.7Z"
-      />
-    </svg>
-  );
+.header h1 {
+  font-size: 18px;
+  margin: 0;
+  color: var(--primary);
+  font-weight: 700;
 }
 
-function Heartbeat() {
-  return (
-    <svg
-      className="heartbeat-svg"
-      viewBox="0 0 600 100"
-      preserveAspectRatio="none"
-    >
-      <path
-        d="M0 52
-           H180
-           L205 52
-           L220 40
-           L235 52
-           L250 52
-           L275 15
-           L300 84
-           L325 52
-           L345 52
-           L360 40
-           L375 52
-           H600"
-        fill="none"
-        stroke="white"
-        strokeWidth="4"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      />
-    </svg>
-  );
+.card {
+  background: var(--card);
+  border-radius: var(--radius-card);
+  padding: 18px;
+  margin-bottom: 14px;
+  box-shadow: 0 2px 12px rgba(23, 51, 46, 0.04);
+  border: 1px solid var(--border);
 }
 
-export default function Login() {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [remember, setRemember] = useState(true);
-  const [showPassword, setShowPassword] = useState(false);
-  const [error, setError] = useState("");
-
-  const navigate = useNavigate();
-
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    setError("");
-
-    try {
-      const user = await api.login({
-        email,
-        password,
-      });
-
-      localStorage.setItem("nabd_user", JSON.stringify(user));
-
-      if (remember) {
-        localStorage.setItem("nabd_remember", "1");
-      } else {
-        localStorage.removeItem("nabd_remember");
-      }
-
-      navigate("/verify-phone");
-    } catch {
-      setError("البريد الإلكتروني أو كلمة المرور غير صحيحة");
-    }
-  };
-
-  return (
-    <div className="login-page">
-
-      {/* Background decorations */}
-      <div className="login-glow glow-one"></div>
-      <div className="login-glow glow-two"></div>
-      <div className="login-glow glow-three"></div>
-
-      <div className="medical-plus plus-one">+</div>
-      <div className="medical-plus plus-two">+</div>
-
-      <div className="decor-circle circle-one"></div>
-      <div className="decor-circle circle-two"></div>
-
-      <div className="login-content">
-
-        {/* Logo */}
-        <HeartLogo />
-
-        {/* Header */}
-        <div className="login-header">
-          <h1>مرحبًا بعودتك</h1>
-          <p>سجل دخولك للمتابعة</p>
-        </div>
-
-        <form onSubmit={handleSubmit} className="login-form">
-
-          {/* Email */}
-          <div className="login-field">
-            <input
-              type="text"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              placeholder="البريد الإلكتروني أو رقم الهاتف"
-              required
-              dir="rtl"
-            />
-
-            <span className="field-icon right">
-              <MailIcon />
-            </span>
-          </div>
-
-          {/* Password */}
-          <div className="login-field">
-            <input
-              type={showPassword ? "text" : "password"}
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              placeholder="كلمة المرور"
-              required
-              dir="rtl"
-            />
-
-            <span className="field-icon right">
-              <LockIcon />
-            </span>
-
-            <button
-              type="button"
-              className="password-toggle"
-              onClick={() => setShowPassword(!showPassword)}
-              aria-label={
-                showPassword
-                  ? "إخفاء كلمة المرور"
-                  : "إظهار كلمة المرور"
-              }
-            >
-              <EyeIcon visible={!showPassword} />
-            </button>
-          </div>
-
-          {/* Remember + Forgot */}
-          <div className="login-options">
-
-            <label className="remember-option">
-              <input
-                type="checkbox"
-                checked={remember}
-                onChange={() => setRemember(!remember)}
-              />
-
-              <span className="custom-check">
-                {remember && "✓"}
-              </span>
-
-              <span>تذكرني</span>
-            </label>
-
-            <Link to="#" className="forgot-link">
-              نسيت كلمة المرور؟
-            </Link>
-
-          </div>
-
-          {/* Error */}
-          {error && (
-            <div className="login-error">
-              {error}
-            </div>
-          )}
-
-          {/* Login button */}
-          <button type="submit" className="login-button">
-            <span className="button-arrow">→</span>
-            <span>تسجيل الدخول</span>
-          </button>
-
-        </form>
-
-        {/* Divider */}
-        <div className="login-divider">
-          <span></span>
-          <b>أو</b>
-          <span></span>
-        </div>
-
-        {/* Social buttons */}
-        <div className="social-login">
-
-          {/* Google */}
-          <button
-            type="button"
-            className="social-card google"
-          >
-            <GoogleIcon />
-            <span>Google</span>
-          </button>
-
-          {/* Apple */}
-          <button
-            type="button"
-            className="social-card apple"
-          >
-            <AppleIcon />
-            <span>Apple</span>
-          </button>
-
-          {/* Facebook */}
-          <button
-            type="button"
-            className="social-card facebook"
-          >
-            <FacebookIcon />
-            <span>Facebook</span>
-          </button>
-
-        </div>
-
-        {/* Signup */}
-        <p className="signup-text">
-          ليس لديك حساب؟
-          <Link to="/signup">إنشاء حساب جديد</Link>
-        </p>
-
-      </div>
-
-      {/* Bottom waves */}
-      <div className="login-bottom">
-        <div className="wave wave-one"></div>
-        <div className="wave wave-two"></div>
-
-        <div className="heartbeat-container">
-          <Heartbeat />
-        </div>
-
-        <div className="bottom-heart">♡</div>
-      </div>
-
-    </div>
-  );
+.card.urgent {
+  background: var(--danger-light);
+  border: 1px solid #f7cccc;
 }
+
+.btn {
+  display: inline-block;
+  width: 100%;
+  padding: 15px;
+  border: none;
+  border-radius: var(--radius-btn);
+  background: var(--primary);
+  color: white;
+  font-size: 15px;
+  font-weight: 600;
+  font-family: inherit;
+  cursor: pointer;
+  text-align: center;
+  transition: transform 0.15s ease, opacity 0.15s ease;
+}
+
+.btn:active {
+  transform: scale(0.98);
+  opacity: 0.92;
+}
+
+.btn.danger {
+  background: var(--danger);
+}
+
+.btn.outline {
+  background: white;
+  color: var(--primary);
+  border: 1.5px solid var(--primary);
+}
+
+.tabs {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 16px;
+}
+
+.tab {
+  flex: 1;
+  padding: 11px;
+  border-radius: 20px;
+  text-align: center;
+  background: var(--primary-light);
+  cursor: pointer;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-muted);
+}
+
+.tab.active {
+  background: var(--primary);
+  color: white;
+}
+
+.list-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px;
+  background: var(--card);
+  border-radius: var(--radius-card);
+  margin-bottom: 10px;
+  border: 1px solid var(--border);
+}
+
+.badge {
+  font-size: 11px;
+  font-weight: 700;
+  padding: 4px 12px;
+  border-radius: 999px;
+  background: var(--primary-light);
+  color: var(--primary-dark);
+}
+
+.muted {
+  color: var(--muted);
+  font-size: 13px;
+}
+
+.input-group {
+  position: relative;
+}
+
+.input-group input {
+  padding-right: 38px;
+}
+
+.input-icon {
+  position: absolute;
+  top: 50%;
+  right: 12px;
+  transform: translateY(-50%);
+  font-size: 14px;
+  opacity: 0.6;
+}
+
+.leaflet-container {
+  width: 100%;
+  height: 100%;
+  font-family: inherit;
+}
+
+input,
+select {
+  width: 100%;
+  padding: 13px 14px;
+  margin-top: 6px;
+  border-radius: var(--radius-input);
+  border: 1px solid #e2e8e6;
+  background: white;
+  font-family: inherit;
+  font-size: 14px;
+  color: var(--text-dark);
+}
+
+input:focus,
+select:focus {
+  outline: none;
+  border-color: var(--primary);
+}
+
+label.field-label {
+  font-size: 13px;
+  color: var(--text-muted);
+  font-weight: 600;
+}
+
+.search-bar {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: white;
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  padding: 12px 18px;
+  margin-bottom: 18px;
+}
+
+.search-bar input {
+  border: none;
+  padding: 0;
+  margin: 0;
+  flex: 1;
+  background: transparent;
+}
+
+.search-bar input:focus {
+  outline: none;
+}
+
+.bottom-nav {
+  position: fixed;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 100%;
+  max-width: 420px;
+  display: flex;
+  justify-content: space-around;
+  background: var(--card);
+  border-top: 1px solid var(--border);
+  padding: 10px 0 16px;
+}
+
+.bottom-nav a {
+  text-decoration: none;
+  color: var(--text-muted);
+  font-size: 11px;
+  text-align: center;
+  font-weight: 500;
+}
+
+.bottom-nav a.active {
+  color: var(--primary);
+  font-weight: 700;
+}
+
+.timeline-item {
+  display: flex;
+  gap: 12px;
+  align-items: flex-start;
+  margin-bottom: 18px;
+}
+
+.timeline-dot {
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  background: #e5eceb;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+  color: white;
+  flex-shrink: 0;
+}
+
+.timeline-dot.done {
+  background: var(--primary);
+}
+
+.service-card {
+  flex: 1;
+  border-radius: var(--radius-card);
+  padding: 20px 14px;
+  text-align: center;
+  cursor: pointer;
+  text-decoration: none;
+  color: inherit;
+  box-shadow: 0 2px 12px rgba(23, 51, 46, 0.04);
+}
+
+.service-card.emergency {
+  background: var(--danger-light);
+  border: 1px solid #f7cccc;
+}
+
+.service-card.neutral {
+  background: var(--primary-light);
+  border: 1px solid #d7f0ea;
+}
+
+.service-card .icon {
+  font-size: 30px;
+  margin-bottom: 8px;
+}
+
+.service-card .title {
+  font-weight: 700;
+  font-size: 14px;
+}
+
+.avatar {
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  background: var(--primary-light);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 18px;
+}
+
+
+/* =========================================================
+   SPLASH / WELCOME SCREEN
+   ========================================================= */
+
+.splash-screen {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 32px;
+  background: linear-gradient(
+    160deg,
+    var(--primary-dark),
+    var(--primary) 60%,
+    #17c2a6
+  );
+  color: white;
+}
+
+.splash-icon {
+  width: 96px;
+  height: 96px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.15);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 44px;
+  margin-bottom: 28px;
+}
+
+.splash-screen h1 {
+  font-size: 27px;
+  font-weight: 700;
+  margin: 0 0 6px;
+}
+
+.splash-screen p {
+  opacity: 0.92;
+  margin: 4px 0;
+}
+
+.splash-tagline {
+  margin-top: 40px;
+  font-size: 15px;
+  opacity: 0.88;
+}
+
+.splash-tagline strong {
+  display: block;
+  font-size: 18px;
+  margin-top: 4px;
+}
+
+.splash-screen .btn {
+  margin-top: 36px;
+  background: white;
+  color: var(--primary-dark);
+}
+
+
+/* =========================================================
+   NABD AL-AMAL
+   MODERN LOGIN SCREEN
+   ========================================================= */
+
+.login-page {
+  min-height: 100vh;
+  width: 100%;
+  position: relative;
+  overflow: hidden;
+
+  display: flex;
+  justify-content: center;
+
+  background:
+    radial-gradient(
+      circle at 50% 25%,
+      rgba(255, 255, 255, 0.98) 0%,
+      rgba(232, 253, 249, 0.92) 25%,
+      rgba(145, 232, 218, 0.78) 58%,
+      rgba(37, 177, 166, 0.95) 100%
+    );
+
+  color: #075d63;
+  direction: rtl;
+}
+
+
+/* --------------------------------
+   Main content
+-------------------------------- */
+
+.login-content {
+  width: min(100%, 520px);
+  min-height: 100vh;
+
+  padding:
+    clamp(38px, 6vh, 70px)
+    clamp(22px, 5vw, 45px)
+    190px;
+
+  position: relative;
+  z-index: 10;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+
+/* --------------------------------
+   Logo
+-------------------------------- */
+
+.login-logo-wrap {
+  width: 150px;
+  height: 150px;
+
+  position: relative;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  margin-bottom: 12px;
+}
+
+.login-logo {
+  width: 112px;
+  height: 112px;
+
+  border-radius: 50%;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  background:
+    linear-gradient(
+      145deg,
+      #08cbb0,
+      #058d94
+    );
+
+  box-shadow:
+    0 18px 40px rgba(0, 133, 130, 0.28),
+    inset 0 2px 12px rgba(255, 255, 255, 0.35);
+
+  position: relative;
+  z-index: 3;
+}
+
+.login-logo svg {
+  width: 75px;
+  height: 75px;
+}
+
+.login-logo-ring {
+  position: absolute;
+
+  border: 2px solid rgba(255, 255, 255, 0.65);
+
+  border-radius: 50%;
+}
+
+.ring-one {
+  width: 138px;
+  height: 138px;
+
+  animation: pulse-ring 3s ease-in-out infinite;
+}
+
+.ring-two {
+  width: 150px;
+  height: 150px;
+
+  border-color: rgba(255, 255, 255, 0.28);
+
+  animation: pulse-ring 3s ease-in-out infinite 0.5s;
+}
+
+@keyframes pulse-ring {
+  0%,
+  100% {
+    transform: scale(0.96);
+    opacity: 0.55;
+  }
+
+  50% {
+    transform: scale(1.04);
+    opacity: 1;
+  }
+}
+
+
+/* --------------------------------
+   Header
+-------------------------------- */
+
+.login-header {
+  text-align: center;
+  margin-bottom: 38px;
+}
+
+.login-header h1 {
+  margin: 0;
+
+  color: #075d63;
+
+  font-size: clamp(34px, 8vw, 50px);
+  font-weight: 800;
+
+  line-height: 1.2;
+
+  text-shadow:
+    0 3px 12px rgba(0, 100, 100, 0.12);
+}
+
+.login-header p {
+  margin: 10px 0 0;
+
+  color: #568795;
+
+  font-size: clamp(20px, 4.5vw, 28px);
+
+  font-weight: 500;
+}
+
+
+/* --------------------------------
+   Form
+-------------------------------- */
+
+.login-form {
+  width: 100%;
+}
+
+.login-field {
+  width: 100%;
+
+  /* 48px */
+  height: 48px;
+
+  position: relative;
+
+  margin-bottom: 18px;
+}
+
+.login-field input {
+  width: 100%;
+
+  /* 48px */
+  height: 48px;
+
+  margin: 0;
+
+  padding:
+    0 65px
+    0 58px;
+
+  border-radius: 24px;
+
+  border: 1.5px solid rgba(77, 194, 198, 0.32);
+
+  background:
+    rgba(255, 255, 255, 0.72);
+
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+
+  box-shadow:
+    0 8px 24px rgba(0, 125, 130, 0.07),
+    inset 0 1px 0 rgba(255, 255, 255, 0.9);
+
+  color: #245f72;
+
+  font-family: inherit;
+
+  font-size: 18px;
+
+  transition:
+    border 0.2s ease,
+    box-shadow 0.2s ease,
+    background 0.2s ease;
+}
+
+.login-field input::placeholder {
+  color: #5d91a1;
+  opacity: 0.95;
+}
+
+.login-field input:focus {
+  outline: none;
+
+  border-color: #0bb8a5;
+
+  background: rgba(255, 255, 255, 0.9);
+
+  box-shadow:
+    0 0 0 4px rgba(8, 190, 169, 0.12),
+    0 10px 28px rgba(0, 130, 130, 0.1);
+}
+
+.field-icon {
+  position: absolute;
+
+  top: 50%;
+
+  transform: translateY(-50%);
+
+  color: #147f8e;
+
+  z-index: 2;
+
+  display: flex;
+  align-items: center;
+}
+
+.field-icon.right {
+  right: 22px;
+}
+
+.field-svg {
+  width: 28px;
+  height: 28px;
+}
+
+
+/* --------------------------------
+   Password eye
+-------------------------------- */
+
+.password-toggle {
+  position: absolute;
+
+  left: 20px;
+  top: 50%;
+
+  transform: translateY(-50%);
+
+  width: 38px;
+  height: 38px;
+
+  border: none;
+  background: transparent;
+
+  color: #4c8199;
+
+  cursor: pointer;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  padding: 0;
+}
+
+.password-toggle .field-svg {
+  width: 26px;
+  height: 26px;
+}
+
+
+/* --------------------------------
+   Remember / Forgot
+-------------------------------- */
+
+.login-options {
+  width: 100%;
+
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  margin:
+    4px
+    0
+    25px;
+
+  padding: 0 5px;
+
+  color: #3e7284;
+
+  font-size: 17px;
+}
+
+.remember-option {
+  display: flex;
+
+  align-items: center;
+
+  gap:
