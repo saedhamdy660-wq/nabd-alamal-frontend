@@ -17,7 +17,9 @@
   --radius-input: 14px;
 }
 
-* { box-sizing: border-box; }
+* {
+  box-sizing: border-box;
+}
 
 body {
   margin: 0;
@@ -37,7 +39,9 @@ body {
   position: relative;
 }
 
-.page { padding: 20px; }
+.page {
+  padding: 20px;
+}
 
 .header {
   display: flex;
@@ -48,7 +52,12 @@ body {
   border-bottom: 1px solid var(--border);
 }
 
-.header h1 { font-size: 18px; margin: 0; color: var(--primary); font-weight: 700; }
+.header h1 {
+  font-size: 18px;
+  margin: 0;
+  color: var(--primary);
+  font-weight: 700;
+}
 
 .card {
   background: var(--card);
@@ -80,15 +89,27 @@ body {
   transition: transform 0.15s ease, opacity 0.15s ease;
 }
 
-.btn:active { transform: scale(0.98); opacity: 0.92; }
-.btn.danger { background: var(--danger); }
+.btn:active {
+  transform: scale(0.98);
+  opacity: 0.92;
+}
+
+.btn.danger {
+  background: var(--danger);
+}
+
 .btn.outline {
   background: white;
   color: var(--primary);
   border: 1.5px solid var(--primary);
 }
 
-.tabs { display: flex; gap: 8px; margin-bottom: 16px; }
+.tabs {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 16px;
+}
+
 .tab {
   flex: 1;
   padding: 11px;
@@ -100,7 +121,11 @@ body {
   font-weight: 600;
   color: var(--text-muted);
 }
-.tab.active { background: var(--primary); color: white; }
+
+.tab.active {
+  background: var(--primary);
+  color: white;
+}
 
 .list-item {
   display: flex;
@@ -122,10 +147,19 @@ body {
   color: var(--primary-dark);
 }
 
-.muted { color: var(--muted); font-size: 13px; }
+.muted {
+  color: var(--muted);
+  font-size: 13px;
+}
 
-.input-group { position: relative; }
-.input-group input { padding-right: 38px; }
+.input-group {
+  position: relative;
+}
+
+.input-group input {
+  padding-right: 38px;
+}
+
 .input-icon {
   position: absolute;
   top: 50%;
@@ -141,7 +175,8 @@ body {
   font-family: inherit;
 }
 
-input, select {
+input,
+select {
   width: 100%;
   padding: 13px 14px;
   margin-top: 6px;
@@ -152,7 +187,12 @@ input, select {
   font-size: 14px;
   color: var(--text-dark);
 }
-input:focus, select:focus { outline: none; border-color: var(--primary); }
+
+input:focus,
+select:focus {
+  outline: none;
+  border-color: var(--primary);
+}
 
 label.field-label {
   font-size: 13px;
@@ -170,6 +210,7 @@ label.field-label {
   padding: 12px 18px;
   margin-bottom: 18px;
 }
+
 .search-bar input {
   border: none;
   padding: 0;
@@ -177,7 +218,10 @@ label.field-label {
   flex: 1;
   background: transparent;
 }
-.search-bar input:focus { outline: none; }
+
+.search-bar input:focus {
+  outline: none;
+}
 
 .bottom-nav {
   position: fixed;
@@ -201,7 +245,10 @@ label.field-label {
   font-weight: 500;
 }
 
-.bottom-nav a.active { color: var(--primary); font-weight: 700; }
+.bottom-nav a.active {
+  color: var(--primary);
+  font-weight: 700;
+}
 
 .timeline-item {
   display: flex;
@@ -223,7 +270,9 @@ label.field-label {
   flex-shrink: 0;
 }
 
-.timeline-dot.done { background: var(--primary); }
+.timeline-dot.done {
+  background: var(--primary);
+}
 
 .service-card {
   flex: 1;
@@ -235,10 +284,26 @@ label.field-label {
   color: inherit;
   box-shadow: 0 2px 12px rgba(23, 51, 46, 0.04);
 }
-.service-card.emergency { background: var(--danger-light); border: 1px solid #f7cccc; }
-.service-card.neutral { background: var(--primary-light); border: 1px solid #d7f0ea; }
-.service-card .icon { font-size: 30px; margin-bottom: 8px; }
-.service-card .title { font-weight: 700; font-size: 14px; }
+
+.service-card.emergency {
+  background: var(--danger-light);
+  border: 1px solid #f7cccc;
+}
+
+.service-card.neutral {
+  background: var(--primary-light);
+  border: 1px solid #d7f0ea;
+}
+
+.service-card .icon {
+  font-size: 30px;
+  margin-bottom: 8px;
+}
+
+.service-card .title {
+  font-weight: 700;
+  font-size: 14px;
+}
 
 .avatar {
   width: 38px;
@@ -251,7 +316,11 @@ label.field-label {
   font-size: 18px;
 }
 
-/* Splash / welcome screen */
+
+/* =========================================================
+   SPLASH / WELCOME SCREEN
+   ========================================================= */
+
 .splash-screen {
   min-height: 100vh;
   display: flex;
@@ -260,7 +329,12 @@ label.field-label {
   justify-content: center;
   text-align: center;
   padding: 32px;
-  background: linear-gradient(160deg, var(--primary-dark), var(--primary) 60%, #17c2a6);
+  background: linear-gradient(
+    160deg,
+    var(--primary-dark),
+    var(--primary) 60%,
+    #17c2a6
+  );
   color: white;
 }
 
@@ -268,7 +342,7 @@ label.field-label {
   width: 96px;
   height: 96px;
   border-radius: 50%;
-  background: rgba(255,255,255,0.15);
+  background: rgba(255, 255, 255, 0.15);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -276,16 +350,36 @@ label.field-label {
   margin-bottom: 28px;
 }
 
-.splash-screen h1 { font-size: 27px; font-weight: 700; margin: 0 0 6px; }
-.splash-screen p { opacity: 0.92; margin: 4px 0; }
-.splash-tagline { margin-top: 40px; font-size: 15px; opacity: 0.88; }
-.splash-tagline strong { display: block; font-size: 18px; margin-top: 4px; }
+.splash-screen h1 {
+  font-size: 27px;
+  font-weight: 700;
+  margin: 0 0 6px;
+}
+
+.splash-screen p {
+  opacity: 0.92;
+  margin: 4px 0;
+}
+
+.splash-tagline {
+  margin-top: 40px;
+  font-size: 15px;
+  opacity: 0.88;
+}
+
+.splash-tagline strong {
+  display: block;
+  font-size: 18px;
+  margin-top: 4px;
+}
 
 .splash-screen .btn {
   margin-top: 36px;
   background: white;
   color: var(--primary-dark);
 }
+
+
 /* =========================================================
    NABD AL-AMAL
    MODERN LOGIN SCREEN
@@ -313,6 +407,7 @@ label.field-label {
   direction: rtl;
 }
 
+
 /* --------------------------------
    Main content
 -------------------------------- */
@@ -333,6 +428,7 @@ label.field-label {
   flex-direction: column;
   align-items: center;
 }
+
 
 /* --------------------------------
    Logo
@@ -418,13 +514,13 @@ label.field-label {
   }
 }
 
+
 /* --------------------------------
    Header
 -------------------------------- */
 
 .login-header {
   text-align: center;
-
   margin-bottom: 38px;
 }
 
@@ -451,6 +547,7 @@ label.field-label {
 
   font-weight: 500;
 }
+
 
 /* --------------------------------
    Form
@@ -547,7 +644,10 @@ label.field-label {
   height: 28px;
 }
 
-/* Password eye */
+
+/* --------------------------------
+   Password eye
+-------------------------------- */
 
 .password-toggle {
   position: absolute;
@@ -578,6 +678,7 @@ label.field-label {
   width: 26px;
   height: 26px;
 }
+
 
 /* --------------------------------
    Remember / Forgot
@@ -657,6 +758,7 @@ label.field-label {
   text-decoration: underline;
 }
 
+
 /* --------------------------------
    Error
 -------------------------------- */
@@ -678,6 +780,7 @@ label.field-label {
 
   font-size: 14px;
 }
+
 
 /* --------------------------------
    Login button
@@ -746,6 +849,7 @@ label.field-label {
   direction: ltr;
 }
 
+
 /* --------------------------------
    Divider
 -------------------------------- */
@@ -792,9 +896,11 @@ label.field-label {
   font-weight: 600;
 }
 
-/* --------------------------------
-   Social login
--------------------------------- */
+
+/* =========================================================
+   SOCIAL LOGIN
+   REAL SVG ICONS
+   ========================================================= */
 
 .social-login {
   width: 100%;
@@ -832,7 +938,7 @@ label.field-label {
   justify-content: center;
   align-items: center;
 
-  gap: 7px;
+  gap: 9px;
 
   font-size: 16px;
 
@@ -843,59 +949,85 @@ label.field-label {
 
   transition:
     transform 0.2s ease,
-    background 0.2s ease;
+    background 0.2s ease,
+    box-shadow 0.2s ease;
 }
 
 .social-card:hover {
   transform: translateY(-3px);
 
   background: rgba(255, 255, 255, 0.92);
+
+  box-shadow:
+    0 10px 24px rgba(0, 130, 140, 0.1);
 }
 
+.social-card:active {
+  transform: scale(0.97);
+}
+
+
+/* --------------------------------
+   Real SVG social icons
+-------------------------------- */
+
+.social-svg {
+  display: block;
+
+  flex-shrink: 0;
+
+  width: 42px;
+  height: 42px;
+}
+
+
+/* Google */
+
+.google-svg {
+  width: 42px;
+  height: 42px;
+}
+
+
+/* Apple */
+
+.apple-svg {
+  width: 42px;
+  height: 42px;
+
+  color: #000;
+}
+
+
+/* Facebook */
+
+.facebook-svg {
+  width: 42px;
+  height: 42px;
+}
+
+
+/* Remove old text-icon styling */
 .google-icon,
 .apple-icon,
 .facebook-icon {
-  width: 36px;
-  height: 36px;
+  width: auto;
+  height: auto;
 
   display: flex;
 
   align-items: center;
   justify-content: center;
 
-  font-weight: 900;
+  font-weight: normal;
+  font-size: inherit;
 
-  font-size: 29px;
+  background: none;
+  border-radius: 0;
+
+  color: inherit;
 }
 
-.google-icon {
-  color: #4285f4;
-
-  font-family: Arial, sans-serif;
-}
-
-.apple-icon {
-  color: #111;
-
-  font-size: 23px;
-}
-
-.facebook-icon {
-  width: 32px;
-  height: 32px;
-
-  border-radius: 50%;
-
-  background: #1877f2;
-
-  color: white;
-
-  font-family: Arial, sans-serif;
-
-  font-size: 25px;
-
-  line-height: 35px;
-}
 
 /* --------------------------------
    Signup
@@ -924,6 +1056,7 @@ label.field-label {
 .signup-text a:hover {
   text-decoration: underline;
 }
+
 
 /* --------------------------------
    Background effects
@@ -1025,6 +1158,7 @@ label.field-label {
   right: 50px;
 }
 
+
 /* --------------------------------
    Bottom waves
 -------------------------------- */
@@ -1122,9 +1256,10 @@ label.field-label {
     0 0 12px rgba(255, 255, 255, 0.8);
 }
 
-/* --------------------------------
-   Mobile
--------------------------------- */
+
+/* =========================================================
+   MOBILE
+   ========================================================= */
 
 @media (max-width: 600px) {
 
@@ -1195,14 +1330,28 @@ label.field-label {
     gap: 17px;
   }
 
+  /* Social */
+
+  .social-login {
+    gap: 10px;
+  }
+
   .social-card {
     min-height: 90px;
 
+    border-radius: 18px;
+
     font-size: 13px;
+
+    gap: 7px;
   }
 
-  .social-card span:first-child {
-    transform: scale(0.85);
+  .social-svg,
+  .google-svg,
+  .apple-svg,
+  .facebook-svg {
+    width: 38px;
+    height: 38px;
   }
 
   .signup-text {
@@ -1240,9 +1389,10 @@ label.field-label {
   }
 }
 
-/* --------------------------------
-   Very small phones
--------------------------------- */
+
+/* =========================================================
+   VERY SMALL PHONES
+   ========================================================= */
 
 @media (max-width: 380px) {
 
@@ -1275,10 +1425,24 @@ label.field-label {
     font-size: 11px;
   }
 
+  .social-svg,
+  .google-svg,
+  .apple-svg,
+  .facebook-svg {
+    width: 34px;
+    height: 34px;
+  }
+
   .login-options {
     font-size: 12px;
   }
 }
+
+
+/* =========================================================
+   LOGIN FULL WIDTH
+   ========================================================= */
+
 .app-shell:has(.login-page) {
   max-width: 100%;
 }
