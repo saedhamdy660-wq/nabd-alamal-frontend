@@ -1279,3 +1279,6 @@ label.field-label {
     font-size: 12px;
   }
 }
+.app-shell:has(.login-page) {
+  max-width: 100%;
+}
