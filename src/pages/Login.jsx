@@ -53,6 +53,7 @@ function MailIcon() {
         stroke="currentColor"
         strokeWidth="2"
       />
+
       <path
         d="m4 7 8 6 8-6"
         fill="none"
@@ -77,6 +78,7 @@ function LockIcon() {
         stroke="currentColor"
         strokeWidth="2"
       />
+
       <path
         d="M8 10V7a4 4 0 0 1 8 0v3"
         fill="none"
@@ -115,6 +117,77 @@ function EyeIcon({ visible }) {
           strokeLinecap="round"
         />
       )}
+    </svg>
+  );
+}
+
+/* =========================
+   GOOGLE LOGO
+========================= */
+function GoogleIcon() {
+  return (
+    <svg
+      className="social-svg google-svg"
+      viewBox="0 0 48 48"
+      aria-hidden="true"
+    >
+      <path
+        fill="#4285F4"
+        d="M24 9.5c3.54 0 6.7 1.22 9.19 3.6l6.85-6.85C35.89 2.39 30.47 0 24 0 14.61 0 6.51 5.38 2.56 13.22l7.98 6.2C12.45 13.21 17.73 9.5 24 9.5Z"
+      />
+
+      <path
+        fill="#34A853"
+        d="M2.56 13.22A23.94 23.94 0 0 0 0 24c0 3.87.92 7.52 2.55 10.77l7.99-6.2A14.42 14.42 0 0 1 9.5 24c0-1.59.37-3.1 1.04-4.57l-7.98-6.21Z"
+      />
+
+      <path
+        fill="#FBBC05"
+        d="M24 48c6.47 0 11.9-2.13 15.87-5.79l-7.76-6.02c-2.16 1.45-4.93 2.31-8.11 2.31-6.27 0-11.55-3.71-13.46-9.92l-7.99 6.19C6.51 42.62 14.61 48 24 48Z"
+      />
+
+      <path
+        fill="#EA4335"
+        d="M47.5 24.55c0-1.59-.14-2.75-.45-3.95H24v8.12h13.49c-.27 2.02-1.87 5.07-5.38 7.13l7.76 6.02C44.4 38.15 47.5 32.03 47.5 24.55Z"
+      />
+    </svg>
+  );
+}
+
+/* =========================
+   APPLE LOGO
+========================= */
+function AppleIcon() {
+  return (
+    <svg
+      className="social-svg apple-svg"
+      viewBox="0 0 24 24"
+      aria-hidden="true"
+    >
+      <path
+        fill="currentColor"
+        d="M16.72 12.77c.02 2.08 1.82 2.77 1.84 2.78-.02.05-.29 1-.95 1.97-.57.83-1.16 1.66-2.1 1.68-.92.02-1.22-.54-2.28-.54-1.06 0-1.39.52-2.26.56-.9.03-1.58-.9-2.15-1.73-1.17-1.69-2.06-4.77-.86-6.85.6-1.04 1.67-1.7 2.83-1.72.88-.02 1.71.59 2.28.59.57 0 1.64-.73 2.76-.62.47.02 1.79.19 2.64 1.43-.07.04-1.58.92-1.57 2.75ZM14.9 7.65c.48-.58.81-1.39.72-2.2-.7.03-1.54.47-2.04 1.05-.45.51-.84 1.34-.73 2.13.78.06 1.57-.4 2.05-.98Z"
+      />
+    </svg>
+  );
+}
+
+/* =========================
+   FACEBOOK LOGO
+========================= */
+function FacebookIcon() {
+  return (
+    <svg
+      className="social-svg facebook-svg"
+      viewBox="0 0 48 48"
+      aria-hidden="true"
+    >
+      <circle cx="24" cy="24" r="24" fill="#1877F2" />
+
+      <path
+        fill="white"
+        d="M27.2 25.7h4.1l.65-4.8H27.2v-3.1c0-1.39.46-2.33 2.38-2.33H32V11.2c-.42-.06-1.86-.2-3.53-.2-3.49 0-5.88 2.13-5.88 6.04v3.86h-3.95v4.8h3.95V38h4.61V25.7Z"
+      />
     </svg>
   );
 }
@@ -245,7 +318,11 @@ export default function Login() {
               type="button"
               className="password-toggle"
               onClick={() => setShowPassword(!showPassword)}
-              aria-label="إظهار كلمة المرور"
+              aria-label={
+                showPassword
+                  ? "إخفاء كلمة المرور"
+                  : "إظهار كلمة المرور"
+              }
             >
               <EyeIcon visible={!showPassword} />
             </button>
@@ -274,6 +351,7 @@ export default function Login() {
 
           </div>
 
+          {/* Error */}
           {error && (
             <div className="login-error">
               {error}
@@ -298,18 +376,30 @@ export default function Login() {
         {/* Social buttons */}
         <div className="social-login">
 
-          <button type="button" className="social-card google">
-            <span className="google-icon">G</span>
+          {/* Google */}
+          <button
+            type="button"
+            className="social-card google"
+          >
+            <GoogleIcon />
             <span>Google</span>
           </button>
 
-          <button type="button" className="social-card apple">
-            <span className="apple-icon">●</span>
+          {/* Apple */}
+          <button
+            type="button"
+            className="social-card apple"
+          >
+            <AppleIcon />
             <span>Apple</span>
           </button>
 
-          <button type="button" className="social-card facebook">
-            <span className="facebook-icon">f</span>
+          {/* Facebook */}
+          <button
+            type="button"
+            className="social-card facebook"
+          >
+            <FacebookIcon />
             <span>Facebook</span>
           </button>
 
