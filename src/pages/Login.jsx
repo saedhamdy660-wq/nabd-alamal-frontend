@@ -1,4 +1,5 @@
-import React, { useState } from "react";
+
+import React, { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import api from "../api";
 
@@ -255,6 +256,83 @@ export default function Login() {
   const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
+  const [googleReady, setGoogleReady] = useState(false);
+
+  useEffect(() => {
+    // Load Google Identity Services
+    if (window.google?.accounts?.id) {
+      setGoogleReady(true);
+      return;
+    }
+
+    const existingScript = document.querySelector(
+      'script[src="https://accounts.google.com/gsi/client"]'
+    );
+
+    if (existingScript) {
+      existingScript.addEventListener("load", () => {
+        setGoogleReady(true);
+      });
+
+      return;
+    }
+
+    const script = document.createElement("script");
+
+    script.src = "https://accounts.google.com/gsi/client";
+    script.async = true;
+    script.defer = true;
+
+    script.onload = () => {
+      setGoogleReady(true);
+    };
+
+    script.onerror = () => {
+      setGoogleReady(false);
+    };
+
+    document.head.appendChild(script);
+  }, []);
+
+  async function handleGoogleLogin() {
+    setError("");
+
+    if (!googleReady || !window.google?.accounts?.id) {
+      setError("تعذر تحميل تسجيل الدخول بواسطة Google. حاول مرة أخرى.");
+      return;
+    }
+
+    const clientId = import.meta.env.VITE_GOOGLE_CLIENT_ID;
+
+    if (!clientId) {
+      setError("إعدادات Google غير مكتملة.");
+      return;
+    }
+
+    window.google.accounts.id.initialize({
+      client_id: clientId,
+
+      callback: async (response) => {
+        try {
+          setLoading(true);
+          setError("");
+
+          const result = await api.googleLogin(response.credential);
+
+          localStorage.setItem("nabd_user", JSON.stringify(result));
+
+          navigate("/verify-phone");
+        } catch (err) {
+          console.error("Google login error:", err);
+          setError("فشل تسجيل الدخول بواسطة Google. حاول مرة أخرى.");
+        } finally {
+          setLoading(false);
+        }
+      },
+    });
+
+    window.google.accounts.id.prompt();
+  }
 
   async function handleSubmit(e) {
     e.preventDefault();
@@ -397,7 +475,12 @@ export default function Login() {
 
         {/* Social Login */}
         <div className="social-login">
-          <button type="button" className="social-card google">
+          <button
+            type="button"
+            className="social-card google"
+            onClick={handleGoogleLogin}
+            disabled={loading}
+          >
             <GoogleIcon />
             <span>Google</span>
           </button>
