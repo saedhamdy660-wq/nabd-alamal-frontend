@@ -82,6 +82,9 @@ const api = {
 // Default export
 export default api;
 
+// Named export (يخلي import { api } from "../api.js" يشتغل برضو)
+export { api };
+
 // Wraps the browser Geolocation API in a promise
 export function getCurrentLocation() {
   return new Promise((resolve, reject) => {
