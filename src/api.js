@@ -26,6 +26,13 @@ const api = {
       body: JSON.stringify(data),
     }),
 
+  // Google Login
+  googleLogin: (credential) =>
+    request("/auth/google", {
+      method: "POST",
+      body: JSON.stringify({ credential }),
+    }),
+
   getBloodRequests: () => request("/blood/requests"),
 
   getBloodRequest: (id) =>
@@ -82,7 +89,7 @@ const api = {
 // Default export
 export default api;
 
-// Named export (يخلي import { api } from "../api.js" يشتغل برضو)
+// Named export
 export { api };
 
 // Wraps the browser Geolocation API in a promise
