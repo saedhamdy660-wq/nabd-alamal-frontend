@@ -28,10 +28,6 @@ import SavedAddresses from "./pages/SavedAddresses.jsx";
 import FavoriteMedicines from "./pages/FavoriteMedicines.jsx";
 import Support from "./pages/Support.jsx";
 
-
-/*
-  الصفحات التي لا يظهر فيها الـ Navbar العام
-*/
 const noNavRoutes = [
   "/",
   "/welcome",
@@ -40,21 +36,16 @@ const noNavRoutes = [
   "/verify-phone",
   "/location-permission",
 
-  // Home له Navbar خاص به
+  // الـ Home عنده Navbar خاص بيه
   "/home",
 
-  // صفحات بدون Navbar
+  // صفحة إعدادات الإشعارات بدون Navbar
   "/notification-settings",
 ];
-
 
 export default function App() {
   const location = useLocation();
 
-  /*
-    الصفحات التي تحتوي على ID
-    وبالتالي نستخدم startsWith بدل includes
-  */
   const hideNav =
     noNavRoutes.includes(location.pathname) ||
     location.pathname.startsWith("/medicines/") ||
@@ -62,132 +53,60 @@ export default function App() {
     location.pathname.startsWith("/donor/") ||
     location.pathname.startsWith("/track/");
 
-
   return (
     <div className="app-shell">
-
       <Routes>
+        {/* ================= ONBOARDING ================= */}
 
-        {/* =========================
-            ONBOARDING
-        ========================== */}
-
-        <Route
-          path="/"
-          element={<Splash />}
-        />
-
-        <Route
-          path="/welcome"
-          element={<Welcome />}
-        />
-
-        <Route
-          path="/login"
-          element={<Login />}
-        />
-
-        <Route
-          path="/signup"
-          element={<Signup />}
-        />
-
-        <Route
-          path="/verify-phone"
-          element={<PhoneVerify />}
-        />
-
+        <Route path="/" element={<Splash />} />
+        <Route path="/welcome" element={<Welcome />} />
+        <Route path="/login" element={<Login />} />
+        <Route path="/signup" element={<Signup />} />
+        <Route path="/verify-phone" element={<PhoneVerify />} />
         <Route
           path="/location-permission"
           element={<LocationPermission />}
         />
 
+        {/* ================= MAIN APP ================= */}
 
-        {/* =========================
-            MAIN APP
-        ========================== */}
+        <Route path="/home" element={<Home />} />
 
-        <Route
-          path="/home"
-          element={<Home />}
-        />
-
-        <Route
-          path="/medicines"
-          element={<MedicineExchange />}
-        />
-
-        <Route
-          path="/medicines/:id"
-          element={<MedicineDetail />}
-        />
+        <Route path="/medicines" element={<MedicineExchange />} />
+        <Route path="/medicines/:id" element={<MedicineDetail />} />
 
         <Route
           path="/pharmacy/:medicineId"
           element={<PharmacyPartner />}
         />
 
-        <Route
-          path="/blood"
-          element={<BloodDonation />}
-        />
+        <Route path="/blood" element={<BloodDonation />} />
+        <Route path="/donor/:id" element={<DonorDetail />} />
 
-        <Route
-          path="/donor/:id"
-          element={<DonorDetail />}
-        />
+        <Route path="/track/:id" element={<RequestTracking />} />
 
-        <Route
-          path="/track/:id"
-          element={<RequestTracking />}
-        />
+        <Route path="/requests" element={<Requests />} />
 
-        <Route
-          path="/notifications"
-          element={<Notifications />}
-        />
+        <Route path="/notifications" element={<Notifications />} />
 
         <Route
           path="/notification-settings"
           element={<NotificationSettings />}
         />
 
-        <Route
-          path="/profile"
-          element={<Profile />}
-        />
+        <Route path="/profile" element={<Profile />} />
 
-        <Route
-          path="/personal-info"
-          element={<PersonalInfo />}
-        />
+        <Route path="/personal-info" element={<PersonalInfo />} />
 
-        <Route
-          path="/addresses"
-          element={<SavedAddresses />}
-        />
+        <Route path="/addresses" element={<SavedAddresses />} />
 
-        <Route
-          path="/favorites"
-          element={<FavoriteMedicines />}
-        />
+        <Route path="/favorites" element={<FavoriteMedicines />} />
 
-        <Route
-          path="/requests"
-          element={<Requests />}
-        />
-
-        <Route
-          path="/support"
-          element={<Support />}
-        />
-
+        <Route path="/support" element={<Support />} />
       </Routes>
 
-
-      {/* Navbar العام */}
+      {/* الـ Navbar العام يظهر فقط في الصفحات المطلوبة */}
       {!hideNav && <Navbar />}
-
     </div>
   );
 }
