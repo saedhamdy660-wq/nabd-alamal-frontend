@@ -64,6 +64,7 @@ export default function Home() {
                   stroke="currentColor"
                   strokeWidth="3"
                 />
+
                 <path
                   d="M12 31H21L25 24L30 37L35 20L40 31H52"
                   stroke="currentColor"
@@ -94,6 +95,7 @@ export default function Home() {
                   strokeWidth="1.8"
                   strokeLinejoin="round"
                 />
+
                 <path
                   d="M10 21H14"
                   stroke="currentColor"
@@ -122,6 +124,7 @@ export default function Home() {
                       stroke="currentColor"
                       strokeWidth="1.8"
                     />
+
                     <path
                       d="M5 20C5.8 16.3 8.1 14.5 12 14.5C15.9 14.5 18.2 16.3 19 20"
                       stroke="currentColor"
@@ -173,6 +176,7 @@ export default function Home() {
               stroke="currentColor"
               strokeWidth="2"
             />
+
             <path
               d="M16 16L21 21"
               stroke="currentColor"
@@ -181,7 +185,9 @@ export default function Home() {
             />
           </svg>
 
-          <span>ابحث عن دواء أو جمعية..</span>
+          <span>
+            ابحث عن دواء أو جمعية..
+          </span>
 
         </Link>
 
@@ -205,6 +211,7 @@ export default function Home() {
                   stroke="currentColor"
                   strokeWidth="3"
                 />
+
                 <path
                   d="M25 39C26.5 43 29 45 33 45"
                   stroke="currentColor"
@@ -215,7 +222,9 @@ export default function Home() {
             </div>
 
             <div className="service-content">
-              <h3>التبرع بالدم والمخازن</h3>
+              <h3>
+                التبرع بالدم والمخازن
+              </h3>
             </div>
 
             <div className="service-arrow">
@@ -246,6 +255,7 @@ export default function Home() {
                   stroke="currentColor"
                   strokeWidth="3"
                 />
+
                 <path
                   d="M29 17L39 38"
                   stroke="currentColor"
@@ -255,8 +265,15 @@ export default function Home() {
             </div>
 
             <div className="service-content">
-              <h3>تبادل الأدوية</h3>
-              <p>أدوية غير متوفرة</p>
+
+              <h3>
+                تبادل الأدوية
+              </h3>
+
+              <p>
+                أدوية غير متوفرة
+              </p>
+
             </div>
 
             <div className="service-arrow">
@@ -278,6 +295,7 @@ export default function Home() {
             </h2>
 
             <span className="location-icon">
+
               <svg
                 viewBox="0 0 24 24"
                 fill="none"
@@ -287,6 +305,7 @@ export default function Home() {
                   stroke="currentColor"
                   strokeWidth="1.8"
                 />
+
                 <circle
                   cx="12"
                   cy="9.5"
@@ -295,6 +314,7 @@ export default function Home() {
                   strokeWidth="1.8"
                 />
               </svg>
+
             </span>
 
           </div>
@@ -417,6 +437,7 @@ export default function Home() {
               stroke="currentColor"
               strokeWidth="1.8"
             />
+
             <path
               d="M5 20C5.8 16.3 8.1 14.5 12 14.5C15.9 14.5 18.2 16.3 19 20"
               stroke="currentColor"
@@ -444,6 +465,7 @@ export default function Home() {
               stroke="currentColor"
               strokeWidth="1.8"
             />
+
             <path
               d="M10 21H14"
               stroke="currentColor"
@@ -471,6 +493,7 @@ export default function Home() {
               stroke="currentColor"
               strokeWidth="1.8"
             />
+
             <path
               d="M8 9H16M8 13H16M8 17H13"
               stroke="currentColor"
@@ -499,6 +522,7 @@ export default function Home() {
               strokeWidth="1.8"
               strokeLinejoin="round"
             />
+
             <path
               d="M9 20V14H15V20"
               stroke="currentColor"
@@ -600,6 +624,9 @@ export default function Home() {
           direction: rtl;
         }
 
+
+        /* HEART LOGO */
+
         .heart-logo {
           width: 42px;
           height: 42px;
@@ -613,19 +640,23 @@ export default function Home() {
           color: #159b8a;
 
           background:
-            rgba(255,255,255,.58);
+            rgba(255,255,255,.66);
 
           border:
-            1px solid rgba(255,255,255,.8);
+            1px solid rgba(255,255,255,.88);
 
           box-shadow:
-            0 5px 15px rgba(43,130,130,.09);
+            0 6px 18px rgba(35,139,128,.10),
+            inset 0 1px 0 rgba(255,255,255,.85);
         }
 
         .heart-logo svg {
           width: 31px;
           height: 31px;
         }
+
+
+        /* BRAND */
 
         .brand-box h1 {
           margin: 0;
@@ -635,7 +666,7 @@ export default function Home() {
 
           font-weight: 800;
 
-          color: #167c78;
+          color: #218d83;
         }
 
         .brand-box span {
@@ -648,6 +679,8 @@ export default function Home() {
           color: #648486;
         }
 
+
+        /* HEADER ICONS */
 
         .header-actions {
           display: flex;
@@ -674,10 +707,13 @@ export default function Home() {
           color: #337477;
 
           background:
-            rgba(255,255,255,.5);
+            rgba(255,255,255,.56);
 
           border:
-            1px solid rgba(255,255,255,.7);
+            1px solid rgba(255,255,255,.78);
+
+          box-shadow:
+            0 5px 15px rgba(42,128,128,.06);
         }
 
         .header-icon svg {
@@ -689,10 +725,13 @@ export default function Home() {
           overflow: hidden;
 
           background:
-            rgba(255,255,255,.68);
+            rgba(255,255,255,.7);
 
           border:
-            2px solid rgba(255,255,255,.85);
+            2px solid rgba(255,255,255,.9);
+
+          box-shadow:
+            0 5px 15px rgba(42,128,128,.08);
         }
 
         .profile-avatar img {
@@ -742,7 +781,7 @@ export default function Home() {
         }
 
         .welcome-section h2 span {
-          color: #159b89;
+          color: #159b8a;
         }
 
         .welcome-section p {
@@ -772,7 +811,7 @@ export default function Home() {
         .ecg-line path {
           fill: none;
 
-          stroke: #26a899;
+          stroke: #43afa3;
 
           stroke-width: 2.2;
 
@@ -804,15 +843,16 @@ export default function Home() {
           color: #729091;
 
           background:
-            rgba(255,255,255,.7);
+            rgba(255,255,255,.72);
 
           border:
-            1px solid rgba(255,255,255,.82);
+            1px solid rgba(255,255,255,.88);
 
           border-radius: 27px;
 
           box-shadow:
-            0 8px 22px rgba(42,128,128,.08);
+            0 8px 22px rgba(42,128,128,.08),
+            inset 0 1px 0 rgba(255,255,255,.8);
 
           backdrop-filter: blur(8px);
         }
@@ -837,7 +877,9 @@ export default function Home() {
           z-index: 2;
 
           display: grid;
-          grid-template-columns: 1fr 1fr;
+
+          grid-template-columns:
+            1fr 1fr;
 
           gap: 10px;
 
@@ -849,7 +891,10 @@ export default function Home() {
 
           height: 168px;
 
-          padding: 13px 10px 12px;
+          padding:
+            13px
+            10px
+            12px;
 
           display: flex;
           flex-direction: column;
@@ -863,7 +908,7 @@ export default function Home() {
           border-radius: 24px;
 
           box-shadow:
-            0 9px 22px rgba(42,128,128,.09);
+            0 9px 22px rgba(42,128,128,.08);
 
           transition:
             transform .18s ease;
@@ -873,33 +918,50 @@ export default function Home() {
           transform: scale(.98);
         }
 
+
+        /* BLOOD CARD */
+
         .blood-service {
-          color: #9c4b5a;
+          color: #98505f;
 
           background:
             linear-gradient(
               145deg,
-              #ffe7ec,
-              #f8cdd6
+              rgba(255,231,237,.96),
+              rgba(248,211,220,.96)
             );
 
           border:
-            1px solid rgba(255,255,255,.65);
+            1px solid rgba(255,255,255,.82);
+
+          box-shadow:
+            0 10px 25px rgba(190,120,140,.10),
+            inset 0 1px 0 rgba(255,255,255,.65);
         }
+
+
+        /* MEDICINE CARD */
 
         .medicine-service {
-          color: #258b76;
+          color: #288b78;
 
           background:
             linear-gradient(
               145deg,
-              #e1fff5,
-              #bcefe0
+              rgba(218,251,242,.96),
+              rgba(201,243,232,.96)
             );
 
           border:
-            1px solid rgba(255,255,255,.7);
+            1px solid rgba(255,255,255,.82);
+
+          box-shadow:
+            0 10px 25px rgba(55,145,130,.10),
+            inset 0 1px 0 rgba(255,255,255,.7);
         }
+
+
+        /* SERVICE ICON */
 
         .service-icon {
           width: 57px;
@@ -912,7 +974,10 @@ export default function Home() {
           justify-content: center;
 
           background:
-            rgba(255,255,255,.42);
+            rgba(255,255,255,.46);
+
+          border:
+            1px solid rgba(255,255,255,.38);
 
           flex-shrink: 0;
         }
@@ -921,6 +986,7 @@ export default function Home() {
           width: 43px;
           height: 43px;
         }
+
 
         .service-content {
           margin-top: auto;
@@ -950,6 +1016,9 @@ export default function Home() {
           opacity: .72;
         }
 
+
+        /* SERVICE ARROW */
+
         .service-arrow {
           position: absolute;
 
@@ -966,7 +1035,7 @@ export default function Home() {
           border-radius: 50%;
 
           background:
-            rgba(255,255,255,.55);
+            rgba(255,255,255,.58);
 
           font-size: 18px;
           font-weight: 700;
@@ -1029,6 +1098,8 @@ export default function Home() {
         }
 
 
+        /* URGENT CARD */
+
         .urgent-card {
           width: 100%;
           min-height: 87px;
@@ -1045,18 +1116,26 @@ export default function Home() {
           color: #24575a;
 
           background:
-            rgba(255,255,255,.67);
+            linear-gradient(
+              145deg,
+              rgba(245,253,253,.94),
+              rgba(228,247,247,.88)
+            );
 
           border:
-            1px solid rgba(255,255,255,.82);
+            1px solid rgba(255,255,255,.9);
 
           border-radius: 20px;
 
           box-shadow:
-            0 8px 20px rgba(42,128,128,.08);
+            0 9px 23px rgba(42,128,128,.08),
+            inset 0 1px 0 rgba(255,255,255,.75);
 
-          backdrop-filter: blur(8px);
+          backdrop-filter: blur(10px);
         }
+
+
+        /* BLOOD CIRCLE */
 
         .blood-circle {
           width: 51px;
@@ -1070,10 +1149,10 @@ export default function Home() {
 
           border-radius: 50%;
 
-          color: #c34d61;
+          color: #c05267;
 
           background:
-            #ffe0e6;
+            rgba(255,218,226,.9);
 
           border:
             2px solid rgba(255,255,255,.8);
@@ -1081,7 +1160,11 @@ export default function Home() {
           font-size: 13px;
 
           font-weight: 800;
+
+          box-shadow:
+            inset 0 1px 5px rgba(255,255,255,.5);
         }
+
 
         .urgent-info {
           min-width: 0;
@@ -1125,6 +1208,7 @@ export default function Home() {
           color: #789293;
         }
 
+
         .urgent-arrow {
           width: 30px;
           height: 30px;
@@ -1143,6 +1227,7 @@ export default function Home() {
             rgba(221,250,245,.9);
 
           font-size: 17px;
+
           font-weight: 700;
         }
 
@@ -1167,14 +1252,15 @@ export default function Home() {
           color: #178e81;
 
           background:
-            rgba(255,255,255,.64);
+            rgba(255,255,255,.68);
 
           border:
-            1px solid rgba(255,255,255,.75);
+            1px solid rgba(255,255,255,.82);
 
           border-radius: 20px;
 
           font-size: 12px;
+
           font-weight: 800;
 
           box-shadow:
@@ -1248,16 +1334,17 @@ export default function Home() {
           padding: 5px 4px;
 
           display: grid;
+
           grid-template-columns:
             repeat(4, 1fr);
 
           align-items: stretch;
 
           background:
-            rgba(255,255,255,.88);
+            rgba(255,255,255,.9);
 
           border:
-            1px solid rgba(255,255,255,.95);
+            1px solid rgba(255,255,255,.96);
 
           border-radius: 24px;
 
@@ -1334,6 +1421,11 @@ export default function Home() {
           .heart-logo {
             width: 39px;
             height: 39px;
+          }
+
+          .heart-logo svg {
+            width: 29px;
+            height: 29px;
           }
 
           .header-icon,
