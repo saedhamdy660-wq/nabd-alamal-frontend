@@ -110,10 +110,10 @@ export default function PersonalInfo() {
   }, []);
 
   const update = (field) => (e) => {
-    setUser({
-      ...user,
+    setUser((current) => ({
+      ...current,
       [field]: e.target.value,
-    });
+    }));
   };
 
   const save = (e) => {
@@ -160,7 +160,7 @@ export default function PersonalInfo() {
 
       </header>
 
-      {/* User intro */}
+      {/* User Card */}
       <section className="personal-intro">
 
         <div className="intro-avatar">
@@ -187,10 +187,10 @@ export default function PersonalInfo() {
         onSubmit={save}
       >
 
-        {/* Name */}
+        {/* الاسم */}
         <div className="form-card">
 
-          <div className="field-content">
+          <div className="field-text">
             <label>الاسم الكامل</label>
 
             <input
@@ -207,21 +207,19 @@ export default function PersonalInfo() {
 
         </div>
 
-        {/* Email */}
+        {/* البريد */}
         <div className="form-card">
 
-          <div className="field-content">
-
+          <div className="field-text">
             <label>البريد الإلكتروني</label>
 
             <input
-              className="email-input"
               type="email"
+              className="email-input"
               value={user.email || ""}
               onChange={update("email")}
               placeholder="example@email.com"
             />
-
           </div>
 
           <div className="field-icon">
@@ -230,21 +228,19 @@ export default function PersonalInfo() {
 
         </div>
 
-        {/* Phone */}
+        {/* الهاتف */}
         <div className="form-card">
 
-          <div className="field-content">
-
+          <div className="field-text">
             <label>رقم الهاتف</label>
 
             <input
-              className="phone-input"
               type="tel"
+              className="phone-input"
               value={user.phone || ""}
               onChange={update("phone")}
               placeholder="رقم الهاتف"
             />
-
           </div>
 
           <div className="field-icon">
@@ -253,11 +249,10 @@ export default function PersonalInfo() {
 
         </div>
 
-        {/* Blood type */}
+        {/* فصيلة الدم */}
         <div className="form-card blood-card">
 
-          <div className="field-content">
-
+          <div className="field-text blood-text">
             <label>فصيلة الدم</label>
 
             <select
@@ -273,7 +268,6 @@ export default function PersonalInfo() {
                 </option>
               ))}
             </select>
-
           </div>
 
           <div className="blood-value">
@@ -304,10 +298,14 @@ export default function PersonalInfo() {
 
       <style>{`
 
+        /* =========================
+           PAGE
+        ========================= */
+
         .personal-page {
           min-height: 100vh;
 
-          padding: 22px 18px 90px;
+          padding: 22px 18px 95px;
 
           direction: rtl;
 
@@ -354,24 +352,32 @@ export default function PersonalInfo() {
             sans-serif;
         }
 
-        /* HEADER */
+
+        /* =========================
+           HEADER
+        ========================= */
 
         .personal-header {
+          width: 100%;
           max-width: 520px;
 
-          margin: 0 auto 24px;
+          margin: 0 auto 23px;
 
           display: flex;
+
           align-items: center;
 
           justify-content: space-between;
 
-          gap: 15px;
+          gap: 14px;
         }
 
         .personal-header-text {
           flex: 1;
+
           min-width: 0;
+
+          text-align: right;
         }
 
         .personal-header h1 {
@@ -396,10 +402,12 @@ export default function PersonalInfo() {
           width: 50px;
           height: 50px;
 
-          flex-shrink: 0;
+          flex: 0 0 50px;
 
           display: flex;
+
           align-items: center;
+
           justify-content: center;
 
           border-radius: 18px;
@@ -409,7 +417,8 @@ export default function PersonalInfo() {
           background:
             rgba(255,255,255,.82);
 
-          border: 1px solid
+          border:
+            1px solid
             rgba(255,255,255,.95);
 
           box-shadow:
@@ -426,9 +435,13 @@ export default function PersonalInfo() {
           height: 24px;
         }
 
-        /* USER INTRO */
+
+        /* =========================
+           USER INTRO
+        ========================= */
 
         .personal-intro {
+          width: 100%;
           max-width: 520px;
 
           min-height: 108px;
@@ -443,16 +456,19 @@ export default function PersonalInfo() {
 
           gap: 15px;
 
+          direction: rtl;
+
           border-radius: 30px;
 
           background:
             linear-gradient(
               145deg,
-              rgba(255,255,255,.91),
-              rgba(226,248,244,.79)
+              rgba(255,255,255,.92),
+              rgba(226,248,244,.8)
             );
 
-          border: 1px solid
+          border:
+            1px solid
             rgba(255,255,255,.95);
 
           box-shadow:
@@ -469,10 +485,12 @@ export default function PersonalInfo() {
           width: 66px;
           height: 66px;
 
-          flex-shrink: 0;
+          flex: 0 0 66px;
 
           display: flex;
+
           align-items: center;
+
           justify-content: center;
 
           border-radius: 22px;
@@ -486,7 +504,8 @@ export default function PersonalInfo() {
               #c5eee6
             );
 
-          border: 2px solid
+          border:
+            2px solid
             rgba(255,255,255,.9);
 
           box-shadow:
@@ -499,8 +518,11 @@ export default function PersonalInfo() {
         }
 
         .intro-text {
-          min-width: 0;
           flex: 1;
+
+          min-width: 0;
+
+          text-align: right;
         }
 
         .intro-text h2 {
@@ -511,6 +533,12 @@ export default function PersonalInfo() {
           font-size: 18px;
 
           font-weight: 800;
+
+          overflow: hidden;
+
+          text-overflow: ellipsis;
+
+          white-space: nowrap;
         }
 
         .intro-text p {
@@ -523,15 +551,22 @@ export default function PersonalInfo() {
           line-height: 1.6;
         }
 
-        /* FORM */
+
+        /* =========================
+           FORM
+        ========================= */
 
         .personal-form {
+          width: 100%;
           max-width: 520px;
 
           margin: 0 auto;
         }
 
-        /* FIELD CARD */
+
+        /* =========================
+           FIELD CARD
+        ========================= */
 
         .form-card {
           width: 100%;
@@ -546,9 +581,15 @@ export default function PersonalInfo() {
 
           align-items: center;
 
-          gap: 13px;
+          gap: 14px;
 
-          direction: rtl;
+          /*
+            RTL للصفحة،
+            لكن ترتيب الكارت نفسه مضبوط
+            بحيث الأيقونة تفضل يمين
+            والنص له مساحة مستقلة.
+          */
+          direction: ltr;
 
           border-radius: 25px;
 
@@ -559,7 +600,8 @@ export default function PersonalInfo() {
               rgba(232,249,246,.81)
             );
 
-          border: 1px solid
+          border:
+            1px solid
             rgba(255,255,255,.96);
 
           box-shadow:
@@ -572,59 +614,17 @@ export default function PersonalInfo() {
           -webkit-backdrop-filter: blur(14px);
         }
 
-        /* IMPORTANT:
-           icon stays on the right,
-           content gets all remaining space
-        */
 
-        .field-icon {
-          width: 48px;
-          height: 48px;
+        /* =========================
+           TEXT AREA
+        ========================= */
 
-          flex: 0 0 48px;
-
-          display: flex;
-          align-items: center;
-          justify-content: center;
-
+        .field-text {
           order: 1;
 
-          border-radius: 16px;
+          flex: 1 1 auto;
 
-          color: #159b8a;
-
-          background:
-            linear-gradient(
-              145deg,
-              #e1faf5,
-              #cef0e9
-            );
-
-          box-shadow:
-            inset 0 1px 0
-              rgba(255,255,255,.8);
-        }
-
-        .field-icon svg {
-          width: 24px;
-          height: 24px;
-        }
-
-        .field-icon.blood-icon {
-          color: #c05267;
-
-          background:
-            linear-gradient(
-              145deg,
-              #ffecef,
-              #f8dce3
-            );
-        }
-
-        .field-content {
-          order: 2;
-
-          flex: 1;
+          width: 0;
 
           min-width: 0;
 
@@ -635,10 +635,16 @@ export default function PersonalInfo() {
           justify-content: center;
 
           gap: 7px;
+
+          direction: rtl;
+
+          text-align: right;
         }
 
-        .field-content label {
+        .field-text label {
           display: block;
+
+          width: 100%;
 
           margin: 0;
 
@@ -651,13 +657,15 @@ export default function PersonalInfo() {
           line-height: 1.2;
         }
 
-        .field-content input,
-        .field-content select {
+        .field-text input,
+        .field-text select {
+          display: block;
+
           width: 100%;
 
-          height: 22px;
-
           min-width: 0;
+
+          height: 22px;
 
           margin: 0;
 
@@ -681,23 +689,20 @@ export default function PersonalInfo() {
           font-weight: 800;
 
           box-shadow: none;
-
-          appearance: none;
         }
 
-        .field-content input::placeholder {
+        .field-text input::placeholder {
           color: #a3b7b5;
 
-          font-weight: 500;
-
           opacity: 1;
+
+          font-weight: 500;
         }
 
-        .field-content input:focus {
-          outline: none;
-        }
 
-        /* FIX EMAIL */
+        /* =========================
+           EMAIL
+        ========================= */
 
         .email-input {
           direction: ltr !important;
@@ -705,34 +710,89 @@ export default function PersonalInfo() {
           text-align: right !important;
 
           unicode-bidi: plaintext;
+
+          overflow: hidden;
+
+          text-overflow: ellipsis;
         }
 
-        /* FIX PHONE */
+
+        /* =========================
+           PHONE
+        ========================= */
 
         .phone-input {
           direction: ltr !important;
 
           text-align: right !important;
+
+          unicode-bidi: plaintext;
         }
 
-        /* BLOOD */
+
+        /* =========================
+           ICON
+        ========================= */
+
+        .field-icon {
+          order: 2;
+
+          width: 48px;
+          height: 48px;
+
+          flex: 0 0 48px;
+
+          display: flex;
+
+          align-items: center;
+
+          justify-content: center;
+
+          border-radius: 16px;
+
+          color: #159b8a;
+
+          background:
+            linear-gradient(
+              145deg,
+              #e1faf5,
+              #cef0e9
+            );
+
+          box-shadow:
+            inset 0 1px 0
+              rgba(255,255,255,.8);
+        }
+
+        .field-icon svg {
+          width: 24px;
+          height: 24px;
+        }
+
+
+        /* =========================
+           BLOOD
+        ========================= */
 
         .blood-card {
           position: relative;
         }
 
-        .blood-card .field-content {
-          padding-left: 54px;
+        .blood-icon {
+          color: #c05267;
+
+          background:
+            linear-gradient(
+              145deg,
+              #ffecef,
+              #f8dce3
+            );
         }
 
         .blood-value {
-          position: absolute;
+          order: 2;
 
-          left: 15px;
-
-          top: 50%;
-
-          transform: translateY(-50%);
+          flex: 0 0 auto;
 
           min-width: 55px;
 
@@ -756,15 +816,28 @@ export default function PersonalInfo() {
           font-weight: 900;
         }
 
-        .blood-card select {
-          cursor: pointer;
+        .blood-card .field-icon {
+          order: 3;
+        }
 
+        .blood-text {
+          order: 1;
+        }
+
+        .blood-text select {
           direction: ltr;
 
           text-align: right;
+
+          cursor: pointer;
+
+          appearance: auto;
         }
 
-        /* SAVE */
+
+        /* =========================
+           SAVE BUTTON
+        ========================= */
 
         .save-button {
           width: 100%;
@@ -814,7 +887,10 @@ export default function PersonalInfo() {
               rgba(21,155,138,.15);
         }
 
-        /* SAVED */
+
+        /* =========================
+           SAVED MESSAGE
+        ========================= */
 
         .saved-message {
           margin-top: 11px;
@@ -830,7 +906,8 @@ export default function PersonalInfo() {
           background:
             rgba(215,247,240,.85);
 
-          border: 1px solid
+          border:
+            1px solid
             rgba(255,255,255,.9);
 
           font-size: 11px;
@@ -838,27 +915,49 @@ export default function PersonalInfo() {
           font-weight: 700;
         }
 
-        /* SMALL PHONES */
+
+        /* =========================
+           SMALL PHONES
+        ========================= */
 
         @media (max-width: 380px) {
 
           .personal-page {
-            padding-left: 14px;
-            padding-right: 14px;
+            padding-left: 13px;
+            padding-right: 13px;
           }
 
           .personal-header h1 {
             font-size: 21px;
           }
 
+          .personal-intro {
+            padding: 14px;
+          }
+
+          .intro-avatar {
+            width: 58px;
+            height: 58px;
+
+            flex-basis: 58px;
+
+            border-radius: 19px;
+
+            font-size: 24px;
+          }
+
           .form-card {
             min-height: 80px;
+
             padding: 11px;
+
+            gap: 10px;
           }
 
           .field-icon {
             width: 44px;
             height: 44px;
+
             flex-basis: 44px;
           }
 
@@ -867,13 +966,17 @@ export default function PersonalInfo() {
             height: 21px;
           }
 
-          .field-content input,
-          .field-content select {
+          .field-text input,
+          .field-text select {
             font-size: 13px;
           }
 
           .blood-value {
-            left: 12px;
+            min-width: 48px;
+
+            padding: 8px 7px;
+
+            font-size: 12px;
           }
 
         }
