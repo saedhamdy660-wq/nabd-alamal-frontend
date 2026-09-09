@@ -38,14 +38,10 @@ export default function Home() {
     <>
       <style>{`
 
-        /* =====================================================
+        /* ================================
            HOME ONLY
-           ===================================================== */
+        ================================= */
 
-        /*
-          إخفاء الـ Navbar القديم في Home فقط.
-          باقي الصفحات لا تتأثر.
-        */
         body:has(.home-reference) .bottom-nav {
           display: none !important;
         }
@@ -64,59 +60,46 @@ export default function Home() {
           position: relative;
           overflow: hidden;
 
-          padding:
-            22px
-            16px
-            125px;
+          padding: 20px 16px 105px;
 
           background:
             radial-gradient(
-              circle at 10% 8%,
+              circle at 5% 5%,
               rgba(255,255,255,.95) 0%,
-              rgba(255,255,255,0) 25%
+              transparent 24%
             ),
             radial-gradient(
-              circle at 90% 12%,
-              rgba(255,255,255,.7) 0%,
-              rgba(255,255,255,0) 23%
-            ),
-            radial-gradient(
-              circle at 50% 45%,
+              circle at 95% 18%,
               rgba(255,255,255,.65) 0%,
-              rgba(255,255,255,0) 42%
+              transparent 25%
             ),
             linear-gradient(
               180deg,
-              #c5f6f1 0%,
-              #eafffc 38%,
-              #d9faf6 72%,
-              #9fddd6 100%
+              #c9f7f3 0%,
+              #edfffd 43%,
+              #d7faf6 75%,
+              #a7dfd9 100%
             );
 
           color: #075d63;
         }
-
-
-        /* =====================================================
-           DECORATIVE LIGHT
-           ===================================================== */
 
         .home-reference::before {
           content: "";
 
           position: absolute;
 
-          width: 310px;
-          height: 310px;
+          width: 280px;
+          height: 280px;
 
-          top: 30px;
-          left: -160px;
+          left: -150px;
+          top: 180px;
 
           border-radius: 50%;
 
-          background: rgba(255,255,255,.32);
+          background: rgba(255,255,255,.28);
 
-          filter: blur(35px);
+          filter: blur(40px);
 
           pointer-events: none;
         }
@@ -126,11 +109,11 @@ export default function Home() {
 
           position: absolute;
 
-          width: 320px;
-          height: 320px;
+          width: 300px;
+          height: 300px;
 
-          top: 430px;
-          right: -170px;
+          right: -160px;
+          bottom: 100px;
 
           border-radius: 50%;
 
@@ -142,9 +125,7 @@ export default function Home() {
         }
 
 
-        /* =====================================================
-           HEADER
-           ===================================================== */
+        /* HEADER */
 
         .home-reference-header {
           width: 100%;
@@ -164,16 +145,16 @@ export default function Home() {
           display: flex;
           align-items: center;
 
-          gap: 7px;
+          gap: 5px;
         }
 
         .home-brand-logo {
-          width: 76px;
-          height: 76px;
-
-          color: #08a99c;
+          width: 72px;
+          height: 72px;
 
           flex-shrink: 0;
+
+          color: #079b94;
         }
 
         .home-brand-logo svg {
@@ -188,12 +169,12 @@ export default function Home() {
         .home-brand-text h1 {
           margin: 0;
 
-          color: #078b87;
+          color: #078c88;
 
-          font-size: 30px;
+          font-size: 29px;
           font-weight: 900;
 
-          line-height: 1.05;
+          line-height: 1;
         }
 
         .home-brand-text p {
@@ -201,20 +182,15 @@ export default function Home() {
 
           color: #168c91;
 
-          font-size: 16px;
-          font-weight: 600;
+          font-size: 15px;
+          font-weight: 700;
         }
-
-
-        /* =====================================================
-           HEADER ACTIONS
-           ===================================================== */
 
         .home-header-actions {
           display: flex;
           align-items: center;
 
-          gap: 9px;
+          gap: 8px;
         }
 
         .home-notification {
@@ -233,15 +209,15 @@ export default function Home() {
         }
 
         .home-notification svg {
-          width: 35px;
-          height: 35px;
+          width: 34px;
+          height: 34px;
         }
 
         .home-notification span {
-          position: absolute;
+          width: 8px;
+          height: 8px;
 
-          width: 9px;
-          height: 9px;
+          position: absolute;
 
           top: 4px;
           right: 4px;
@@ -250,12 +226,12 @@ export default function Home() {
 
           background: #08a99c;
 
-          border: 2px solid #c5f6f1;
+          border: 2px solid #c9f7f3;
         }
 
         .home-avatar {
-          width: 62px;
-          height: 62px;
+          width: 59px;
+          height: 59px;
 
           display: flex;
           align-items: center;
@@ -267,15 +243,13 @@ export default function Home() {
           background-position: center;
           background-size: cover;
 
-          border: 4px solid rgba(255,255,255,.9);
+          border: 4px solid rgba(255,255,255,.95);
 
-          box-shadow:
-            0 7px 20px rgba(0,120,125,.14),
-            0 0 0 2px rgba(255,255,255,.35);
+          box-shadow: 0 7px 20px rgba(0,120,125,.14);
 
           color: #078b87;
 
-          font-size: 25px;
+          font-size: 23px;
 
           text-decoration: none;
 
@@ -283,15 +257,13 @@ export default function Home() {
         }
 
 
-        /* =====================================================
-           WELCOME
-           ===================================================== */
+        /* WELCOME */
 
         .home-welcome {
           width: 100%;
           max-width: 430px;
 
-          margin: 23px auto 0;
+          margin: 19px auto 0;
 
           position: relative;
           z-index: 5;
@@ -304,43 +276,35 @@ export default function Home() {
 
           color: #075d63;
 
-          font-size: 34px;
+          font-size: 31px;
           font-weight: 900;
 
-          line-height: 1.2;
-        }
-
-        .home-welcome h2 span {
-          color: #075d63;
+          line-height: 1.25;
         }
 
         .home-welcome p {
-          margin: 5px 0 0;
+          margin: 4px 0 0;
 
           color: #578895;
 
-          font-size: 22px;
-          font-weight: 600;
+          font-size: 20px;
+          font-weight: 700;
         }
 
 
-        /* =====================================================
-           TOP ECG
-           ===================================================== */
+        /* ECG */
 
         .home-top-ecg {
           width: calc(100% + 32px);
-          height: 82px;
+          height: 66px;
 
-          margin:
-            -3px
-            -16px
-            0;
+          margin: -2px -16px 0;
 
           position: relative;
+
           z-index: 2;
 
-          opacity: .72;
+          opacity: .7;
 
           pointer-events: none;
         }
@@ -351,17 +315,15 @@ export default function Home() {
         }
 
 
-        /* =====================================================
-           SEARCH
-           ===================================================== */
+        /* SEARCH */
 
         .home-search {
           width: 100%;
           max-width: 430px;
 
-          height: 69px;
+          height: 62px;
 
-          margin: 0 auto 29px;
+          margin: 0 auto 22px;
 
           display: flex;
           align-items: center;
@@ -369,16 +331,14 @@ export default function Home() {
           position: relative;
           z-index: 10;
 
-          background: rgba(255,255,255,.55);
+          background: rgba(255,255,255,.66);
 
-          border:
-            2px solid
-            rgba(255,255,255,.9);
+          border: 2px solid rgba(255,255,255,.95);
 
-          border-radius: 38px;
+          border-radius: 34px;
 
           box-shadow:
-            0 10px 26px rgba(0,120,125,.12),
+            0 9px 24px rgba(0,120,125,.11),
             inset 0 2px 8px rgba(255,255,255,.8);
 
           backdrop-filter: blur(13px);
@@ -391,7 +351,7 @@ export default function Home() {
           width: 100%;
           height: 100%;
 
-          padding: 0 23px;
+          padding: 0 21px;
 
           border: 0;
           outline: 0;
@@ -402,8 +362,8 @@ export default function Home() {
 
           font-family: inherit;
 
-          font-size: 18px;
-          font-weight: 600;
+          font-size: 17px;
+          font-weight: 700;
 
           text-align: right;
 
@@ -412,15 +372,13 @@ export default function Home() {
 
         .home-search input::placeholder {
           color: #5b8e9c;
-
-          opacity: .9;
         }
 
         .home-search svg {
-          width: 37px;
-          height: 37px;
+          width: 35px;
+          height: 35px;
 
-          margin-left: 18px;
+          margin-left: 17px;
 
           flex-shrink: 0;
 
@@ -428,30 +386,36 @@ export default function Home() {
         }
 
 
-        /* =====================================================
-           SERVICES
-           ===================================================== */
+        /* SERVICES */
 
         .home-services {
           width: 100%;
           max-width: 430px;
 
-          margin: 0 auto 35px;
+          margin: 0 auto 23px;
 
           display: grid;
 
           grid-template-columns: 1fr 1fr;
 
-          gap: 17px;
+          gap: 14px;
+
+          /*
+             مهم جدًا:
+             نخلي اتجاه الجريد LTR
+             عشان الدم يكون على الشمال
+             والأدوية على اليمين.
+          */
+          direction: ltr;
 
           position: relative;
           z-index: 10;
         }
 
         .home-service {
-          min-height: 294px;
+          min-height: 225px;
 
-          padding: 28px 13px 20px;
+          padding: 20px 11px 16px;
 
           display: flex;
           flex-direction: column;
@@ -460,17 +424,19 @@ export default function Home() {
           position: relative;
           overflow: hidden;
 
-          border-radius: 29px;
+          border-radius: 27px;
 
           text-align: center;
           text-decoration: none;
 
           box-shadow:
-            0 10px 25px rgba(0,120,125,.09),
-            inset 0 1px 0 rgba(255,255,255,.85);
+            0 9px 22px rgba(0,120,125,.08),
+            inset 0 1px 0 rgba(255,255,255,.9);
 
           backdrop-filter: blur(13px);
           -webkit-backdrop-filter: blur(13px);
+
+          direction: rtl;
         }
 
         .home-service::after {
@@ -478,42 +444,38 @@ export default function Home() {
 
           position: absolute;
 
-          width: 190px;
-          height: 190px;
+          width: 150px;
+          height: 150px;
 
-          right: -85px;
-          bottom: -105px;
+          right: -70px;
+          bottom: -90px;
 
           border-radius: 50%;
 
-          background: rgba(255,255,255,.25);
+          background: rgba(255,255,255,.28);
         }
 
         .home-service-blood {
           color: #c8232b;
 
-          background: rgba(255,241,245,.74);
+          background: rgba(255,241,245,.78);
 
-          border:
-            2px solid
-            rgba(255,185,201,.65);
+          border: 2px solid rgba(255,185,201,.7);
         }
 
         .home-service-medicine {
           color: #078b87;
 
-          background: rgba(224,250,247,.7);
+          background: rgba(224,250,247,.75);
 
-          border:
-            2px solid
-            rgba(125,224,215,.65);
+          border: 2px solid rgba(125,224,215,.7);
         }
 
         .home-service-icon {
-          width: 91px;
-          height: 91px;
+          width: 73px;
+          height: 73px;
 
-          margin-bottom: 20px;
+          margin-bottom: 13px;
 
           display: flex;
           align-items: center;
@@ -521,15 +483,15 @@ export default function Home() {
 
           border-radius: 50%;
 
-          background: rgba(255,255,255,.42);
+          background: rgba(255,255,255,.48);
 
           position: relative;
           z-index: 2;
         }
 
         .home-service-icon svg {
-          width: 68px;
-          height: 68px;
+          width: 54px;
+          height: 54px;
         }
 
         .home-service h3 {
@@ -538,32 +500,32 @@ export default function Home() {
           position: relative;
           z-index: 2;
 
-          font-size: 23px;
+          font-size: 20px;
           font-weight: 900;
 
-          line-height: 1.28;
+          line-height: 1.3;
         }
 
         .home-service p {
-          margin: 7px 0 0;
+          margin: 5px 0 0;
 
           position: relative;
           z-index: 2;
 
           color: #5b8995;
 
-          font-size: 18px;
-          font-weight: 600;
+          font-size: 15px;
+          font-weight: 700;
         }
 
         .home-service-arrow {
-          width: 43px;
-          height: 43px;
+          width: 38px;
+          height: 38px;
 
           position: absolute;
 
-          left: 17px;
-          bottom: 18px;
+          left: 13px;
+          bottom: 13px;
 
           display: flex;
           align-items: center;
@@ -571,17 +533,15 @@ export default function Home() {
 
           border-radius: 50%;
 
-          background: rgba(255,255,255,.45);
+          background: rgba(255,255,255,.48);
 
-          font-size: 30px;
+          font-size: 27px;
 
           z-index: 4;
         }
 
 
-        /* =====================================================
-           REQUESTS
-           ===================================================== */
+        /* URGENT REQUESTS */
 
         .home-requests {
           width: 100%;
@@ -597,9 +557,9 @@ export default function Home() {
           display: flex;
           align-items: center;
 
-          gap: 7px;
+          gap: 6px;
 
-          margin-bottom: 13px;
+          margin-bottom: 10px;
         }
 
         .home-requests-title h3 {
@@ -607,41 +567,39 @@ export default function Home() {
 
           color: #075d63;
 
-          font-size: 22px;
+          font-size: 20px;
           font-weight: 900;
         }
 
         .home-requests-title svg {
-          width: 25px;
-          height: 25px;
+          width: 23px;
+          height: 23px;
 
           color: #079a94;
         }
 
         .home-request-card {
           width: 100%;
-          min-height: 124px;
+          min-height: 102px;
 
-          padding: 15px 17px;
+          padding: 12px 14px;
 
           display: flex;
           align-items: center;
 
-          gap: 10px;
+          gap: 9px;
 
           position: relative;
 
-          border-radius: 25px;
+          border-radius: 23px;
 
-          background: rgba(255,245,247,.75);
+          background: rgba(255,245,247,.78);
 
-          border:
-            2px solid
-            rgba(255,207,215,.72);
+          border: 2px solid rgba(255,207,215,.75);
 
           box-shadow:
-            0 8px 22px rgba(0,120,125,.08),
-            inset 0 1px 0 rgba(255,255,255,.85);
+            0 8px 20px rgba(0,120,125,.08),
+            inset 0 1px 0 rgba(255,255,255,.9);
 
           color: inherit;
 
@@ -649,8 +607,8 @@ export default function Home() {
         }
 
         .home-request-arrow {
-          width: 42px;
-          height: 42px;
+          width: 38px;
+          height: 38px;
 
           flex-shrink: 0;
 
@@ -660,11 +618,11 @@ export default function Home() {
 
           border-radius: 50%;
 
-          background: rgba(255,221,227,.75);
+          background: rgba(255,221,227,.78);
 
           color: #c8232b;
 
-          font-size: 30px;
+          font-size: 27px;
         }
 
         .home-request-info {
@@ -678,29 +636,29 @@ export default function Home() {
 
           color: #c8232b;
 
-          font-size: 23px;
+          font-size: 19px;
           font-weight: 900;
         }
 
         .home-request-info p {
-          margin: 3px 0;
+          margin: 2px 0;
 
           color: #578895;
 
-          font-size: 17px;
-          font-weight: 600;
+          font-size: 14px;
+          font-weight: 700;
         }
 
         .home-request-info small {
           color: #578895;
 
-          font-size: 15px;
-          font-weight: 600;
+          font-size: 13px;
+          font-weight: 700;
         }
 
         .home-request-blood {
-          width: 70px;
-          height: 70px;
+          width: 58px;
+          height: 58px;
 
           flex-shrink: 0;
 
@@ -710,62 +668,58 @@ export default function Home() {
 
           border-radius: 50%;
 
-          background: rgba(255,215,222,.7);
+          background: rgba(255,215,222,.72);
 
           color: #d31f28;
         }
 
         .home-request-blood svg {
-          width: 50px;
-          height: 50px;
+          width: 41px;
+          height: 41px;
         }
 
         .home-show-all {
-          width: 145px;
-          height: 48px;
+          width: 125px;
+          height: 42px;
 
-          margin-top: 14px;
+          margin-top: 10px;
 
           display: flex;
           align-items: center;
           justify-content: center;
 
-          gap: 5px;
+          gap: 4px;
 
-          border:
-            2px solid
-            rgba(255,255,255,.9);
+          border: 2px solid rgba(255,255,255,.92);
 
-          border-radius: 25px;
+          border-radius: 23px;
 
-          background: rgba(255,255,255,.38);
+          background: rgba(255,255,255,.42);
 
           color: #078c88;
 
-          font-size: 18px;
-          font-weight: 700;
+          font-size: 16px;
+          font-weight: 800;
 
           text-decoration: none;
         }
 
         .home-show-all svg {
-          width: 21px;
-          height: 21px;
+          width: 19px;
+          height: 19px;
         }
 
 
-        /* =====================================================
-           BOTTOM DECORATION
-           ===================================================== */
+        /* BOTTOM DECORATION */
 
         .home-bottom-decoration {
           width: calc(100% + 32px);
-          height: 190px;
+          height: 120px;
 
           position: absolute;
 
           left: -16px;
-          bottom: 73px;
+          bottom: 74px;
 
           overflow: hidden;
 
@@ -774,47 +728,26 @@ export default function Home() {
           z-index: 1;
         }
 
-        .home-wave {
-          position: absolute;
-
-          width: 125%;
-          height: 160px;
-
-          left: -12%;
-          bottom: -45px;
-
-          transform: rotate(-3deg);
-
-          background:
-            linear-gradient(
-              175deg,
-              transparent 30%,
-              rgba(48,193,180,.32) 31%,
-              rgba(48,193,180,.32) 68%,
-              transparent 69%
-            );
-        }
-
         .home-bottom-ecg {
           width: 100%;
-          height: 110px;
+          height: 80px;
 
           position: absolute;
 
           left: 0;
-          top: 25px;
+          top: 22px;
 
-          opacity: .85;
+          opacity: .65;
         }
 
         .home-medical-plus {
-          width: 63px;
-          height: 63px;
+          width: 50px;
+          height: 50px;
 
           position: absolute;
 
-          right: 42px;
-          bottom: 42px;
+          right: 25px;
+          bottom: 0;
 
           display: flex;
           align-items: center;
@@ -822,24 +755,24 @@ export default function Home() {
 
           border-radius: 50%;
 
-          background: rgba(255,255,255,.23);
+          background: rgba(255,255,255,.25);
 
           color: #09a99b;
 
-          font-size: 57px;
+          font-size: 45px;
           font-weight: 300;
         }
 
 
-        /* =====================================================
-           HOME NAVIGATION
-           ===================================================== */
+        /* =================================
+           BOTTOM NAVIGATION
+        ================================= */
 
         .home-local-nav {
           width: 100%;
           max-width: 480px;
 
-          height: 91px;
+          height: 82px;
 
           position: fixed;
 
@@ -854,17 +787,24 @@ export default function Home() {
           align-items: center;
           justify-content: space-around;
 
-          padding: 7px 10px 10px;
+          padding: 6px 8px 8px;
 
-          background: rgba(246,255,254,.94);
+          background: rgba(246,255,254,.95);
 
-          border-radius: 35px 35px 0 0;
+          border-radius: 30px 30px 0 0;
 
           box-shadow:
             0 -8px 25px rgba(0,120,125,.08);
 
           backdrop-filter: blur(16px);
           -webkit-backdrop-filter: blur(16px);
+
+          /*
+             مهم:
+             ترتيب العناصر يكون من الشمال لليمين:
+             الملف الشخصي - الإشعارات - الطلبات - الرئيسية
+          */
+          direction: ltr;
         }
 
         .home-local-nav a {
@@ -877,7 +817,7 @@ export default function Home() {
           align-items: center;
           justify-content: center;
 
-          gap: 5px;
+          gap: 3px;
 
           position: relative;
 
@@ -885,15 +825,15 @@ export default function Home() {
 
           text-decoration: none;
 
-          font-size: 13px;
-          font-weight: 600;
+          font-size: 12px;
+          font-weight: 700;
 
-          transition: transform .15s ease;
+          direction: rtl;
         }
 
         .home-local-nav a svg {
-          width: 30px;
-          height: 30px;
+          width: 29px;
+          height: 29px;
 
           fill: none;
 
@@ -908,7 +848,7 @@ export default function Home() {
         .home-local-nav a.active {
           color: #079a91;
 
-          font-weight: 800;
+          font-weight: 900;
         }
 
         .home-local-nav a.active::after {
@@ -929,14 +869,8 @@ export default function Home() {
           background: #079a91;
         }
 
-        .home-local-nav a:active {
-          transform: scale(.93);
-        }
 
-
-        /* =====================================================
-           SMALL PHONES
-           ===================================================== */
+        /* SMALL PHONES */
 
         @media (max-width: 390px) {
 
@@ -946,8 +880,8 @@ export default function Home() {
           }
 
           .home-brand-logo {
-            width: 66px;
-            height: 66px;
+            width: 64px;
+            height: 64px;
           }
 
           .home-brand-text h1 {
@@ -955,37 +889,42 @@ export default function Home() {
           }
 
           .home-brand-text p {
-            font-size: 13px;
+            font-size: 12px;
           }
 
           .home-avatar {
-            width: 55px;
-            height: 55px;
+            width: 54px;
+            height: 54px;
           }
 
           .home-welcome h2 {
-            font-size: 30px;
+            font-size: 28px;
           }
 
           .home-welcome p {
-            font-size: 19px;
+            font-size: 18px;
+          }
+
+          .home-top-ecg {
+            height: 58px;
+          }
+
+          .home-search {
+            height: 58px;
           }
 
           .home-service {
-            min-height: 255px;
-
-            padding-left: 10px;
-            padding-right: 10px;
+            min-height: 210px;
           }
 
           .home-service-icon {
-            width: 77px;
-            height: 77px;
+            width: 66px;
+            height: 66px;
           }
 
           .home-service-icon svg {
-            width: 58px;
-            height: 58px;
+            width: 49px;
+            height: 49px;
           }
 
           .home-service h3 {
@@ -993,42 +932,32 @@ export default function Home() {
           }
 
           .home-service p {
-            font-size: 15px;
-          }
-
-          .home-request-info strong {
-            font-size: 20px;
-          }
-
-          .home-request-info p {
             font-size: 14px;
           }
 
-          .home-request-info small {
+          .home-request-info strong {
+            font-size: 17px;
+          }
+
+          .home-request-info p {
             font-size: 13px;
           }
 
-          .home-request-blood {
-            width: 61px;
-            height: 61px;
-          }
-
-          .home-request-blood svg {
-            width: 44px;
-            height: 44px;
+          .home-request-info small {
+            font-size: 12px;
           }
 
           .home-local-nav {
-            height: 82px;
+            height: 78px;
           }
 
           .home-local-nav a {
-            font-size: 11px;
+            font-size: 10px;
           }
 
           .home-local-nav a svg {
-            width: 27px;
-            height: 27px;
+            width: 26px;
+            height: 26px;
           }
         }
 
@@ -1037,9 +966,7 @@ export default function Home() {
 
       <main className="home-reference">
 
-        {/* =====================================================
-            HEADER
-            ===================================================== */}
+        {/* HEADER */}
 
         <header className="home-reference-header">
 
@@ -1099,7 +1026,6 @@ export default function Home() {
             <Link
               to="/notifications"
               className="home-notification"
-              aria-label="الإشعارات"
             >
 
               <svg viewBox="0 0 24 24">
@@ -1152,24 +1078,22 @@ export default function Home() {
         </header>
 
 
-        {/* =====================================================
-            WELCOME
-            ===================================================== */}
+        {/* WELCOME */}
 
         <section className="home-welcome">
 
           <h2>
-            مرحبًا، <span>{userName}</span>
+            مرحبًا، {userName}
           </h2>
 
-          <p>مما ينبض حياة</p>
+          <p>
+            مما ينبض حياة
+          </p>
 
         </section>
 
 
-        {/* =====================================================
-            TOP ECG
-            ===================================================== */}
+        {/* ECG */}
 
         <div className="home-top-ecg">
 
@@ -1204,9 +1128,7 @@ export default function Home() {
         </div>
 
 
-        {/* =====================================================
-            SEARCH
-            ===================================================== */}
+        {/* SEARCH */}
 
         <div className="home-search">
 
@@ -1239,13 +1161,11 @@ export default function Home() {
         </div>
 
 
-        {/* =====================================================
-            SERVICES
-            ===================================================== */}
+        {/* SERVICES */}
 
         <section className="home-services">
 
-          {/* BLOOD */}
+          {/* الدم - الشمال */}
 
           <Link
             to="/blood"
@@ -1283,7 +1203,9 @@ export default function Home() {
             </div>
 
             <h3>
-              التبرع بالدم والمخازن
+              التبرع بالدم
+              <br />
+              والمخازن
             </h3>
 
             <div className="home-service-arrow">
@@ -1293,7 +1215,7 @@ export default function Home() {
           </Link>
 
 
-          {/* MEDICINE */}
+          {/* الأدوية - اليمين */}
 
           <Link
             to="/medicines"
@@ -1347,9 +1269,7 @@ export default function Home() {
         </section>
 
 
-        {/* =====================================================
-            URGENT REQUESTS
-            ===================================================== */}
+        {/* URGENT REQUESTS */}
 
         <section className="home-requests">
 
@@ -1469,13 +1389,9 @@ export default function Home() {
         </section>
 
 
-        {/* =====================================================
-            BOTTOM DECORATION
-            ===================================================== */}
+        {/* BOTTOM ECG */}
 
         <div className="home-bottom-decoration">
-
-          <div className="home-wave"></div>
 
           <svg
             className="home-bottom-ecg"
@@ -1514,13 +1430,11 @@ export default function Home() {
         </div>
 
 
-        {/* =====================================================
-            HOME BOTTOM NAVIGATION
-            ===================================================== */}
+        {/* BOTTOM NAV */}
 
         <nav className="home-local-nav">
 
-          {/* PROFILE */}
+          {/* الشمال */}
 
           <Link to="/profile">
 
@@ -1549,8 +1463,6 @@ export default function Home() {
           </Link>
 
 
-          {/* NOTIFICATIONS */}
-
           <Link to="/notifications">
 
             <svg viewBox="0 0 24 24">
@@ -1575,8 +1487,6 @@ export default function Home() {
 
           </Link>
 
-
-          {/* REQUESTS */}
 
           <Link to="/requests">
 
@@ -1603,7 +1513,7 @@ export default function Home() {
           </Link>
 
 
-          {/* HOME */}
+          {/* اليمين - الرئيسية */}
 
           <Link
             to="/home"
@@ -1612,17 +1522,11 @@ export default function Home() {
 
             <svg viewBox="0 0 24 24">
 
-              <path
-                d="M3 11.5 12 4l9 7.5"
-              />
+              <path d="M3 11.5 12 4l9 7.5" />
 
-              <path
-                d="M5 10.5V21h14V10.5"
-              />
+              <path d="M5 10.5V21h14V10.5" />
 
-              <path
-                d="M9 21v-6h6v6"
-              />
+              <path d="M9 21v-6h6v6" />
 
             </svg>
 
