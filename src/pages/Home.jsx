@@ -5,77 +5,179 @@ import { api } from "../api.js";
 export default function Home() {
   const [user, setUser] = useState(null);
   const [urgentRequests, setUrgentRequests] = useState([]);
+
   const avatar = localStorage.getItem("nabd_avatar");
 
   useEffect(() => {
     const stored = localStorage.getItem("nabd_user");
+
     if (stored) {
-      setUser(JSON.parse(stored));
+      try {
+        setUser(JSON.parse(stored));
+      } catch {
+        setUser(null);
+      }
     } else {
       api.getUser().then(setUser).catch(() => {});
     }
-    api.getBloodRequests().then(setUrgentRequests).catch(() => {});
+
+    api.getBloodRequests()
+      .then(setUrgentRequests)
+      .catch(() => {});
   }, []);
 
+  const userName =
+    user?.name ||
+    user?.fullName ||
+    user?.username ||
+    user?.email?.split("@")[0] ||
+    "بك";
+
   return (
-    <div>
-      <div className="header">
-        <h1>❤️ نبض الأمل</h1>
-        <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
-          <Link to="/notifications" style={{ fontSize: 20 }}>🔔</Link>
+    <div className="home-modern">
+
+      {/* Header */}
+      <header className="home-top">
+
+        <div className="home-brand">
+          <div className="home-logo">
+            ♥
+          </div>
+
+          <div>
+            <h1>نبض الأمل</h1>
+            <span>معًا ننقذ حياة</span>
+          </div>
+        </div>
+
+        <div className="home-actions">
+          <Link to="/notifications" className="home-notification">
+            ♧
+          </Link>
+
           <Link
             to="/profile"
-            className="avatar"
-            style={{
-              backgroundImage: avatar ? `url(${avatar})` : "none",
-              backgroundSize: "cover",
-              backgroundPosition: "center",
-            }}
+            className="home-profile"
+            style={
+              avatar
+                ? {
+                    backgroundImage: `url(${avatar})`,
+                  }
+                : {}
+            }
           >
-            {!avatar && "🙂"}
-          </Link>
-        </div>
-      </div>
-
-      <div className="page">
-        <h2 style={{ margin: "0 0 2px" }}>مرحبًا، {user?.name || "بك"} 👋</h2>
-        <p className="muted" style={{ marginBottom: 18 }}>معًا ننقذ حياة</p>
-
-        <div className="search-bar">
-          <span>🔍</span>
-          <input placeholder="ابحث عن دواء أو فصيلة دم..." />
-        </div>
-
-        <div style={{ display: "flex", gap: 12, marginBottom: 20 }}>
-          <Link to="/blood" className="service-card emergency">
-            <div className="icon">🩸</div>
-            <div className="title">التبرع بالدم والصفائح</div>
-          </Link>
-          <Link to="/medicines" className="service-card neutral">
-            <div className="icon">💊</div>
-            <div className="title">تبادل الأدوية</div>
-            <div className="muted">أدوية غير متوفرة</div>
+            {!avatar && "👤"}
           </Link>
         </div>
 
-        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 10 }}>
-          <h3 style={{ margin: 0 }}>طلبات عاجلة قريبة منك</h3>
-          <Link to="/blood" className="muted" style={{ fontSize: 13 }}>عرض الكل</Link>
+      </header>
+
+      <main className="home-body">
+
+        {/* Welcome */}
+        <section className="home-welcome">
+          <h2>
+            مرحبًا، {userName}
+          </h2>
+
+          <p>
+            معًا ننقذ حياة ❤️
+          </p>
+        </section>
+
+        {/* Search */}
+        <div className="home-search-modern">
+          <input
+            type="text"
+            placeholder="ابحث عن دواء أو فصيلة دم..."
+          />
+
+          <span>⌕</span>
         </div>
 
-        {urgentRequests.map((r) => (
-          <Link key={r.id} to={`/track/${r.id}`} style={{ textDecoration: "none", color: "inherit" }}>
-            <div className="card urgent" style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-              <div>
-                <strong>🩸 فصيلة دم {r.bloodType}</strong>
-                <p className="muted" style={{ margin: "4px 0 0" }}>{r.hospital}</p>
-                <p className="muted" style={{ margin: 0 }}>على بعد {r.distanceKm} كم</p>
-              </div>
-              <span style={{ fontSize: 18 }}>←</span>
+        {/* Services */}
+        <section className="home-services">
+
+          <Link to="/medicines" className="home-service medicine">
+            <div className="service-round">
+              💊
             </div>
+
+            <h3>تبادل الأدوية</h3>
+
+            <p>لأدوية غير متوفرة</p>
+
+            <span className="service-arrow">
+              ←
+            </span>
           </Link>
-        ))}
-      </div>
+
+          <Link to="/blood" className="home-service blood">
+            <div className="service-round">
+              🩸
+            </div>
+
+            <h3>التبرع بالدم والصفائح</h3>
+
+            <p>ساهم في إنقاذ حياة</p>
+
+            <span className="service-arrow">
+              ←
+            </span>
+          </Link>
+
+        </section>
+
+        {/* Requests */}
+        <section className="home-requests">
+
+          <div className="requests-header">
+            <h3>طلبات عاجلة قريبة منك</h3>
+
+            <Link to="/blood">
+              عرض الكل
+            </Link>
+          </div>
+
+          {urgentRequests.length === 0 ? (
+            <div className="no-requests">
+              لا توجد طلبات عاجلة حاليًا
+            </div>
+          ) : (
+            urgentRequests.map((r) => (
+              <Link
+                key={r.id}
+                to={`/track/${r.id}`}
+                className="home-request"
+              >
+                <div className="request-blood">
+                  🩸
+                </div>
+
+                <div className="request-info">
+                  <strong>
+                    فصيلة دم {r.bloodType}
+                  </strong>
+
+                  <p>
+                    {r.hospital}
+                  </p>
+
+                  <small>
+                    على بعد {r.distanceKm} كم
+                  </small>
+                </div>
+
+                <span className="request-arrow">
+                  ←
+                </span>
+              </Link>
+            ))
+          )}
+
+        </section>
+
+      </main>
     </div>
   );
 }
