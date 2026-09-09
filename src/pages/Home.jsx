@@ -26,45 +26,39 @@ export default function Home() {
       .catch(() => {});
   }, []);
 
-  const userName =
-    user?.name ||
-    user?.fullName ||
-    user?.username ||
-    user?.email?.split("@")[0] ||
-    "بك";
+  const userName = user?.name || user?.fullName || user?.username || "بك";
 
   return (
-    <div className="home-modern">
+    <div className="home-page">
 
       {/* Header */}
-      <header className="home-top">
+      <header className="home-header">
 
-        <div className="home-brand">
-          <div className="home-logo">
-            ♥
+        <div className="brand">
+          <div className="brand-heart">
+            ❤️
+            <span className="brand-pulse">〰</span>
           </div>
 
           <div>
             <h1>نبض الأمل</h1>
-            <span>معًا ننقذ حياة</span>
+            <span>استجابة طبية طارئة</span>
           </div>
         </div>
 
-        <div className="home-actions">
-          <Link to="/notifications" className="home-notification">
-            ♧
+        <div className="header-actions">
+          <Link to="/notifications" className="notification-btn">
+            🔔
           </Link>
 
           <Link
             to="/profile"
-            className="home-profile"
-            style={
-              avatar
-                ? {
-                    backgroundImage: `url(${avatar})`,
-                  }
-                : {}
-            }
+            className="home-avatar"
+            style={{
+              backgroundImage: avatar ? `url(${avatar})` : "none",
+              backgroundSize: "cover",
+              backgroundPosition: "center",
+            }}
           >
             {!avatar && "👤"}
           </Link>
@@ -72,112 +66,136 @@ export default function Home() {
 
       </header>
 
-      <main className="home-body">
+      <main className="home-content">
 
         {/* Welcome */}
-        <section className="home-welcome">
+        <section className="welcome-section">
           <h2>
             مرحبًا، {userName}
           </h2>
 
-          <p>
-            معًا ننقذ حياة ❤️
-          </p>
+          <p>معًا ننقذ حياة</p>
         </section>
 
+        {/* ECG decoration */}
+        <div className="home-ecg">
+          ──────╱╲╱╲──────
+        </div>
+
         {/* Search */}
-        <div className="home-search-modern">
+        <div className="home-search">
+          <span>🔍</span>
+
           <input
             type="text"
-            placeholder="ابحث عن دواء أو فصيلة دم..."
+            placeholder="ابحث عن دواء أو جمعية.."
           />
-
-          <span>⌕</span>
         </div>
 
         {/* Services */}
-        <section className="home-services">
+        <div className="services-grid">
 
-          <Link to="/medicines" className="home-service medicine">
-            <div className="service-round">
+          <Link to="/blood" className="home-service blood-service">
+
+            <div className="service-icon blood-icon">
+              🩸
+            </div>
+
+            <h3>التبرع بالدم والمحتاج</h3>
+
+            <span className="service-arrow">
+              ←
+            </span>
+
+          </Link>
+
+          <Link to="/medicines" className="home-service medicine-service">
+
+            <div className="service-icon medicine-icon">
               💊
             </div>
 
             <h3>تبادل الأدوية</h3>
 
-            <p>لأدوية غير متوفرة</p>
+            <p>أدوية غير متوفرة</p>
 
             <span className="service-arrow">
               ←
             </span>
+
           </Link>
 
-          <Link to="/blood" className="home-service blood">
-            <div className="service-round">
-              🩸
-            </div>
+        </div>
 
-            <h3>التبرع بالدم والصفائح</h3>
+        {/* Urgent requests */}
+        <section className="urgent-section">
 
-            <p>ساهم في إنقاذ حياة</p>
-
-            <span className="service-arrow">
-              ←
-            </span>
-          </Link>
-
-        </section>
-
-        {/* Requests */}
-        <section className="home-requests">
-
-          <div className="requests-header">
+          <div className="section-title">
             <h3>طلبات عاجلة قريبة منك</h3>
-
-            <Link to="/blood">
-              عرض الكل
-            </Link>
+            <span>📍</span>
           </div>
 
-          {urgentRequests.length === 0 ? (
-            <div className="no-requests">
-              لا توجد طلبات عاجلة حاليًا
-            </div>
-          ) : (
-            urgentRequests.map((r) => (
+          {urgentRequests.length > 0 ? (
+            urgentRequests.map((request) => (
+
               <Link
-                key={r.id}
-                to={`/track/${r.id}`}
-                className="home-request"
+                key={request.id}
+                to={`/track/${request.id}`}
+                className="urgent-request"
               >
-                <div className="request-blood">
-                  🩸
+
+                <div className="urgent-arrow">
+                  ←
                 </div>
 
-                <div className="request-info">
+                <div className="urgent-info">
+
                   <strong>
-                    فصيلة دم {r.bloodType}
+                    فصيلة دم {request.bloodType}
                   </strong>
 
                   <p>
-                    {r.hospital}
+                    {request.hospital}
                   </p>
 
                   <small>
-                    على بعد {r.distanceKm} كم
+                    على بعد {request.distanceKm} كم
                   </small>
+
                 </div>
 
-                <span className="request-arrow">
-                  ←
-                </span>
+                <div className="urgent-blood-icon">
+                  🩸
+                </div>
+
               </Link>
+
             ))
+          ) : (
+            <div className="empty-requests">
+              لا توجد طلبات عاجلة قريبة منك حاليًا
+            </div>
           )}
+
+          <Link to="/blood" className="show-all">
+            عرض الكل 📍
+          </Link>
 
         </section>
 
       </main>
+
+      {/* Decorative bottom */}
+      <div className="home-bottom-decoration">
+        <div className="large-ecg">
+          ───────╱╲╱╲────────
+        </div>
+
+        <span className="medical-plus">
+          +
+        </span>
+      </div>
+
     </div>
   );
 }
