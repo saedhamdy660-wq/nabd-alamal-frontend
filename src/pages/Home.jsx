@@ -36,1509 +36,954 @@ export default function Home() {
 
   return (
     <>
+      <div className="home-reference" dir="rtl">
+
+        {/* HEADER */}
+        <header className="home-header">
+          <div className="brand-box">
+            <div className="heart-logo">
+              <svg viewBox="0 0 64 64" fill="none">
+                <path
+                  d="M32 54S9 40 9 23C9 15 14.5 10 21 10C26 10 30 13 32 17C34 13 38 10 43 10C49.5 10 55 15 55 23C55 40 32 54 32 54Z"
+                  stroke="currentColor"
+                  strokeWidth="3"
+                />
+                <path
+                  d="M12 31H21L25 24L30 37L35 20L40 31H52"
+                  stroke="currentColor"
+                  strokeWidth="2.8"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                />
+              </svg>
+            </div>
+
+            <div>
+              <h1>نبض الأمل</h1>
+              <span>استجابة طبية طارئة</span>
+            </div>
+          </div>
+
+          <div className="header-actions">
+            <Link to="/notifications" className="header-icon">
+              <svg viewBox="0 0 24 24" fill="none">
+                <path
+                  d="M18 9C18 5.7 15.8 3 12 3C8.2 3 6 5.7 6 9C6 15 3.5 16 3.5 18H20.5C20.5 16 18 15 18 9Z"
+                  stroke="currentColor"
+                  strokeWidth="1.8"
+                  strokeLinejoin="round"
+                />
+                <path
+                  d="M10 21H14"
+                  stroke="currentColor"
+                  strokeWidth="1.8"
+                  strokeLinecap="round"
+                />
+              </svg>
+            </Link>
+
+            <Link to="/profile" className="profile-avatar">
+              {avatar ? (
+                <img src={avatar} alt="profile" />
+              ) : (
+                <div className="default-avatar">
+                  <svg viewBox="0 0 24 24" fill="none">
+                    <circle
+                      cx="12"
+                      cy="8"
+                      r="3.5"
+                      stroke="currentColor"
+                      strokeWidth="1.8"
+                    />
+                    <path
+                      d="M5 20C5.8 16.3 8.1 14.5 12 14.5C15.9 14.5 18.2 16.3 19 20"
+                      stroke="currentColor"
+                      strokeWidth="1.8"
+                      strokeLinecap="round"
+                    />
+                  </svg>
+                </div>
+              )}
+            </Link>
+          </div>
+        </header>
+
+        {/* WELCOME */}
+        <section className="welcome-section">
+          <h2>
+            مرحبًا، <span>{userName}</span>
+          </h2>
+
+          <p>مما ينبض حياة</p>
+
+          <div className="ecg-line">
+            <span></span>
+            <svg viewBox="0 0 300 40" preserveAspectRatio="none">
+              <path
+                d="M0 22H55L65 22L72 15L79 30L87 5L96 34L104 22H150L160 22L168 15L175 30L183 5L192 34L200 22H300"
+              />
+            </svg>
+          </div>
+        </section>
+
+        {/* SEARCH */}
+        <Link to="/medicines" className="home-search">
+          <svg viewBox="0 0 24 24" fill="none">
+            <circle
+              cx="10.8"
+              cy="10.8"
+              r="6.8"
+              stroke="currentColor"
+              strokeWidth="2"
+            />
+            <path
+              d="M16 16L21 21"
+              stroke="currentColor"
+              strokeWidth="2"
+              strokeLinecap="round"
+            />
+          </svg>
+
+          <span>ابحث عن دواء أو جمعية..</span>
+        </Link>
+
+        {/* SERVICES */}
+        <section className="services-section">
+
+          {/* BLOOD */}
+          <Link to="/blood" className="home-service blood-service">
+            <div className="service-icon">
+              <svg viewBox="0 0 64 64" fill="none">
+                <path
+                  d="M32 8C32 8 17 25 17 37C17 46 23.7 53 32 53C40.3 53 47 46 47 37C47 25 32 8 32 8Z"
+                  stroke="currentColor"
+                  strokeWidth="3"
+                />
+                <path
+                  d="M25 39C26.5 43 29 45 33 45"
+                  stroke="currentColor"
+                  strokeWidth="2.5"
+                  strokeLinecap="round"
+                />
+              </svg>
+            </div>
+
+            <div className="service-content">
+              <h3>التبرع بالدم والمخازن</h3>
+            </div>
+
+            <div className="service-arrow">
+              ←
+            </div>
+          </Link>
+
+          {/* MEDICINE */}
+          <Link to="/medicines" className="home-service medicine-service">
+            <div className="service-icon">
+              <svg viewBox="0 0 64 64" fill="none">
+                <rect
+                  x="11"
+                  y="23"
+                  width="42"
+                  height="18"
+                  rx="9"
+                  transform="rotate(-25 11 23)"
+                  stroke="currentColor"
+                  strokeWidth="3"
+                />
+                <path
+                  d="M29 17L39 38"
+                  stroke="currentColor"
+                  strokeWidth="3"
+                />
+              </svg>
+            </div>
+
+            <div className="service-content">
+              <h3>تبادل الأدوية</h3>
+              <p>أدوية غير متوفرة</p>
+            </div>
+
+            <div className="service-arrow">
+              ←
+            </div>
+          </Link>
+
+        </section>
+
+        {/* URGENT REQUESTS */}
+        <section className="urgent-section">
+
+          <div className="section-heading">
+            <h2>طلبات عاجلة قريبة منك</h2>
+
+            <span className="location-icon">
+              <svg viewBox="0 0 24 24" fill="none">
+                <path
+                  d="M12 21S19 15.5 19 9.5C19 5.9 16.3 3 12 3C7.7 3 5 5.9 5 9.5C5 15.5 12 21 12 21Z"
+                  stroke="currentColor"
+                  strokeWidth="1.8"
+                />
+                <circle
+                  cx="12"
+                  cy="9.5"
+                  r="2.5"
+                  stroke="currentColor"
+                  strokeWidth="1.8"
+                />
+              </svg>
+            </span>
+          </div>
+
+          {request ? (
+            <Link
+              to={`/track/${request.id}`}
+              className="urgent-card"
+            >
+              <div className="blood-circle">
+                {request.bloodType || request.blood_group || "O+"}
+              </div>
+
+              <div className="urgent-info">
+                <strong>
+                  فصيلة دم {request.bloodType || request.blood_group || "O+"}
+                </strong>
+
+                <p>
+                  {request.hospital ||
+                    request.hospitalName ||
+                    "مستشفى النور التخصصي"}
+                </p>
+
+                <small>
+                  على بعد {request.distance || "2.3"} كم
+                </small>
+              </div>
+
+              <div className="urgent-arrow">
+                ←
+              </div>
+            </Link>
+          ) : (
+            <div className="urgent-card empty-request">
+              <div className="blood-circle">
+                O+
+              </div>
+
+              <div className="urgent-info">
+                <strong>فصيلة دم O+</strong>
+                <p>مستشفى النور التخصصي</p>
+                <small>على بعد 2.3 كم</small>
+              </div>
+
+              <div className="urgent-arrow">
+                ←
+              </div>
+            </div>
+          )}
+
+          <Link to="/blood" className="show-all">
+            عرض الكل
+          </Link>
+
+        </section>
+
+        {/* DECORATION */}
+        <div className="home-decoration">
+          <div className="decoration-plus">+</div>
+
+          <svg
+            className="decoration-ecg"
+            viewBox="0 0 350 60"
+            preserveAspectRatio="none"
+          >
+            <path d="M0 35H95L105 35L113 26L121 46L130 5L140 55L150 35H215L225 35L233 26L241 46L250 5L260 55L270 35H350" />
+          </svg>
+        </div>
+
+      </div>
+
+      {/* BOTTOM NAV */}
+      <nav className="bottom-nav" dir="ltr">
+
+        <Link to="/profile" className="bottom-item">
+          <svg viewBox="0 0 24 24" fill="none">
+            <circle
+              cx="12"
+              cy="8"
+              r="3.5"
+              stroke="currentColor"
+              strokeWidth="1.8"
+            />
+            <path
+              d="M5 20C5.8 16.3 8.1 14.5 12 14.5C15.9 14.5 18.2 16.3 19 20"
+              stroke="currentColor"
+              strokeWidth="1.8"
+              strokeLinecap="round"
+            />
+          </svg>
+          <span>الملف الشخصي</span>
+        </Link>
+
+        <Link to="/notifications" className="bottom-item">
+          <svg viewBox="0 0 24 24" fill="none">
+            <path
+              d="M18 9C18 5.7 15.8 3 12 3C8.2 3 6 5.7 6 9C6 15 3.5 16 3.5 18H20.5C20.5 16 18 15 18 9Z"
+              stroke="currentColor"
+              strokeWidth="1.8"
+            />
+            <path
+              d="M10 21H14"
+              stroke="currentColor"
+              strokeWidth="1.8"
+              strokeLinecap="round"
+            />
+          </svg>
+          <span>الإشعارات</span>
+        </Link>
+
+        <Link to="/requests" className="bottom-item">
+          <svg viewBox="0 0 24 24" fill="none">
+            <path
+              d="M5 5H19V19H5V5Z"
+              stroke="currentColor"
+              strokeWidth="1.8"
+              strokeLinejoin="round"
+            />
+            <path
+              d="M8 9H16M8 13H16M8 17H13"
+              stroke="currentColor"
+              strokeWidth="1.8"
+              strokeLinecap="round"
+            />
+          </svg>
+          <span>الطلبات</span>
+        </Link>
+
+        <Link to="/home" className="bottom-item active">
+          <svg viewBox="0 0 24 24" fill="none">
+            <path
+              d="M4 11.5L12 4L20 11.5V20H4V11.5Z"
+              stroke="currentColor"
+              strokeWidth="1.8"
+              strokeLinejoin="round"
+            />
+            <path
+              d="M9 20V14H15V20"
+              stroke="currentColor"
+              strokeWidth="1.8"
+            />
+          </svg>
+          <span>الرئيسية</span>
+        </Link>
+
+      </nav>
+
       <style>{`
-
-        /* ================================
-           HOME ONLY
-        ================================= */
-
-        body:has(.home-reference) .bottom-nav {
-          display: none !important;
-        }
-
         * {
           box-sizing: border-box;
         }
 
         .home-reference {
-          width: 100%;
           min-height: 100vh;
-          min-height: 100dvh;
-
-          direction: rtl;
-
+          width: 100%;
+          padding: 16px 14px 88px;
+          overflow-x: hidden;
           position: relative;
-          overflow: hidden;
-
-          padding: 20px 16px 105px;
-
+          color: #123b3d;
           background:
-            radial-gradient(
-              circle at 5% 5%,
-              rgba(255,255,255,.95) 0%,
-              transparent 24%
-            ),
-            radial-gradient(
-              circle at 95% 18%,
-              rgba(255,255,255,.65) 0%,
-              transparent 25%
-            ),
-            linear-gradient(
-              180deg,
-              #c9f7f3 0%,
-              #edfffd 43%,
-              #d7faf6 75%,
-              #a7dfd9 100%
-            );
-
-          color: #075d63;
+            radial-gradient(circle at 10% 10%, rgba(255,255,255,.72) 0 5%, transparent 22%),
+            radial-gradient(circle at 90% 25%, rgba(255,255,255,.42) 0 7%, transparent 24%),
+            radial-gradient(circle at 20% 70%, rgba(255,255,255,.30) 0 8%, transparent 26%),
+            linear-gradient(145deg, #e9ffff 0%, #bdeeee 48%, #9bded9 100%);
+          font-family: Arial, Tahoma, sans-serif;
         }
 
         .home-reference::before {
           content: "";
-
           position: absolute;
-
-          width: 280px;
-          height: 280px;
-
-          left: -150px;
-          top: 180px;
-
+          width: 150px;
+          height: 150px;
+          top: 75px;
+          right: -70px;
           border-radius: 50%;
-
           background: rgba(255,255,255,.28);
-
-          filter: blur(40px);
-
+          filter: blur(2px);
           pointer-events: none;
         }
 
         .home-reference::after {
           content: "";
-
           position: absolute;
-
-          width: 300px;
-          height: 300px;
-
-          right: -160px;
-          bottom: 100px;
-
+          width: 120px;
+          height: 120px;
+          bottom: 90px;
+          left: -55px;
           border-radius: 50%;
-
-          background: rgba(255,255,255,.25);
-
-          filter: blur(40px);
-
+          background: rgba(255,255,255,.20);
           pointer-events: none;
         }
-
 
         /* HEADER */
 
-        .home-reference-header {
-          width: 100%;
-          max-width: 430px;
-
-          margin: 0 auto;
-
+        .home-header {
+          position: relative;
+          z-index: 2;
           display: flex;
           align-items: center;
           justify-content: space-between;
-
-          position: relative;
-          z-index: 10;
+          direction: ltr;
+          margin-bottom: 18px;
         }
 
-        .home-brand {
+        .brand-box {
           display: flex;
           align-items: center;
-
-          gap: 5px;
-        }
-
-        .home-brand-logo {
-          width: 72px;
-          height: 72px;
-
-          flex-shrink: 0;
-
-          color: #079b94;
-        }
-
-        .home-brand-logo svg {
-          width: 100%;
-          height: 100%;
-        }
-
-        .home-brand-text {
-          text-align: right;
-        }
-
-        .home-brand-text h1 {
-          margin: 0;
-
-          color: #078c88;
-
-          font-size: 29px;
-          font-weight: 900;
-
-          line-height: 1;
-        }
-
-        .home-brand-text p {
-          margin: 6px 0 0;
-
-          color: #168c91;
-
-          font-size: 15px;
-          font-weight: 700;
-        }
-
-        .home-header-actions {
-          display: flex;
-          align-items: center;
-
           gap: 8px;
+          direction: rtl;
         }
 
-        .home-notification {
+        .heart-logo {
           width: 43px;
           height: 43px;
-
+          border-radius: 14px;
           display: flex;
           align-items: center;
           justify-content: center;
-
-          position: relative;
-
-          color: #078b87;
-
-          text-decoration: none;
+          color: #159c89;
+          background: rgba(255,255,255,.46);
+          border: 1px solid rgba(255,255,255,.65);
+          box-shadow: 0 5px 16px rgba(43,130,130,.10);
         }
 
-        .home-notification svg {
-          width: 34px;
-          height: 34px;
+        .heart-logo svg {
+          width: 32px;
+          height: 32px;
         }
 
-        .home-notification span {
-          width: 8px;
-          height: 8px;
+        .brand-box h1 {
+          margin: 0;
+          font-size: 20px;
+          font-weight: 800;
+          color: #126d6b;
+        }
 
-          position: absolute;
+        .brand-box span {
+          display: block;
+          margin-top: 1px;
+          font-size: 10px;
+          color: #5a7f80;
+        }
 
-          top: 4px;
-          right: 4px;
+        .header-actions {
+          display: flex;
+          align-items: center;
+          gap: 8px;
+          direction: ltr;
+        }
 
+        .header-icon,
+        .profile-avatar {
+          width: 40px;
+          height: 40px;
           border-radius: 50%;
-
-          background: #08a99c;
-
-          border: 2px solid #c9f7f3;
-        }
-
-        .home-avatar {
-          width: 59px;
-          height: 59px;
-
           display: flex;
           align-items: center;
           justify-content: center;
-
-          border-radius: 50%;
-
-          background-color: #e4f9f6;
-          background-position: center;
-          background-size: cover;
-
-          border: 4px solid rgba(255,255,255,.95);
-
-          box-shadow: 0 7px 20px rgba(0,120,125,.14);
-
-          color: #078b87;
-
-          font-size: 23px;
-
           text-decoration: none;
+        }
 
+        .header-icon {
+          color: #2b6e70;
+          background: rgba(255,255,255,.48);
+          border: 1px solid rgba(255,255,255,.55);
+        }
+
+        .header-icon svg {
+          width: 21px;
+          height: 21px;
+        }
+
+        .profile-avatar {
           overflow: hidden;
+          background: rgba(255,255,255,.60);
+          border: 2px solid rgba(255,255,255,.75);
         }
 
+        .profile-avatar img {
+          width: 100%;
+          height: 100%;
+          object-fit: cover;
+        }
+
+        .default-avatar {
+          width: 100%;
+          height: 100%;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          color: #2c8582;
+        }
+
+        .default-avatar svg {
+          width: 24px;
+          height: 24px;
+        }
 
         /* WELCOME */
 
-        .home-welcome {
-          width: 100%;
-          max-width: 430px;
-
-          margin: 19px auto 0;
-
+        .welcome-section {
           position: relative;
-          z-index: 5;
-
+          z-index: 2;
+          margin-bottom: 14px;
           text-align: right;
         }
 
-        .home-welcome h2 {
+        .welcome-section h2 {
           margin: 0;
-
-          color: #075d63;
-
-          font-size: 31px;
-          font-weight: 900;
-
-          line-height: 1.25;
-        }
-
-        .home-welcome p {
-          margin: 4px 0 0;
-
-          color: #578895;
-
-          font-size: 20px;
-          font-weight: 700;
-        }
-
-
-        /* ECG */
-
-        .home-top-ecg {
-          width: calc(100% + 32px);
-          height: 66px;
-
-          margin: -2px -16px 0;
-
-          position: relative;
-
-          z-index: 2;
-
-          opacity: .7;
-
-          pointer-events: none;
-        }
-
-        .home-top-ecg svg {
-          width: 100%;
-          height: 100%;
-        }
-
-
-        /* SEARCH */
-
-        .home-search {
-          width: 100%;
-          max-width: 430px;
-
-          height: 62px;
-
-          margin: 0 auto 22px;
-
-          display: flex;
-          align-items: center;
-
-          position: relative;
-          z-index: 10;
-
-          background: rgba(255,255,255,.66);
-
-          border: 2px solid rgba(255,255,255,.95);
-
-          border-radius: 34px;
-
-          box-shadow:
-            0 9px 24px rgba(0,120,125,.11),
-            inset 0 2px 8px rgba(255,255,255,.8);
-
-          backdrop-filter: blur(13px);
-          -webkit-backdrop-filter: blur(13px);
-        }
-
-        .home-search input {
-          flex: 1;
-
-          width: 100%;
-          height: 100%;
-
-          padding: 0 21px;
-
-          border: 0;
-          outline: 0;
-
-          background: transparent;
-
-          color: #276e7e;
-
-          font-family: inherit;
-
-          font-size: 17px;
-          font-weight: 700;
-
-          text-align: right;
-
-          direction: rtl;
-        }
-
-        .home-search input::placeholder {
-          color: #5b8e9c;
-        }
-
-        .home-search svg {
-          width: 35px;
-          height: 35px;
-
-          margin-left: 17px;
-
-          flex-shrink: 0;
-
-          color: #087987;
-        }
-
-
-        /* SERVICES */
-
-        .home-services {
-          width: 100%;
-          max-width: 430px;
-
-          margin: 0 auto 23px;
-
-          display: grid;
-
-          grid-template-columns: 1fr 1fr;
-
-          gap: 14px;
-
-          /*
-             مهم جدًا:
-             نخلي اتجاه الجريد LTR
-             عشان الدم يكون على الشمال
-             والأدوية على اليمين.
-          */
-          direction: ltr;
-
-          position: relative;
-          z-index: 10;
-        }
-
-        .home-service {
-          min-height: 225px;
-
-          padding: 20px 11px 16px;
-
-          display: flex;
-          flex-direction: column;
-          align-items: center;
-
-          position: relative;
-          overflow: hidden;
-
-          border-radius: 27px;
-
-          text-align: center;
-          text-decoration: none;
-
-          box-shadow:
-            0 9px 22px rgba(0,120,125,.08),
-            inset 0 1px 0 rgba(255,255,255,.9);
-
-          backdrop-filter: blur(13px);
-          -webkit-backdrop-filter: blur(13px);
-
-          direction: rtl;
-        }
-
-        .home-service::after {
-          content: "";
-
-          position: absolute;
-
-          width: 150px;
-          height: 150px;
-
-          right: -70px;
-          bottom: -90px;
-
-          border-radius: 50%;
-
-          background: rgba(255,255,255,.28);
-        }
-
-        .home-service-blood {
-          color: #c8232b;
-
-          background: rgba(255,241,245,.78);
-
-          border: 2px solid rgba(255,185,201,.7);
-        }
-
-        .home-service-medicine {
-          color: #078b87;
-
-          background: rgba(224,250,247,.75);
-
-          border: 2px solid rgba(125,224,215,.7);
-        }
-
-        .home-service-icon {
-          width: 73px;
-          height: 73px;
-
-          margin-bottom: 13px;
-
-          display: flex;
-          align-items: center;
-          justify-content: center;
-
-          border-radius: 50%;
-
-          background: rgba(255,255,255,.48);
-
-          position: relative;
-          z-index: 2;
-        }
-
-        .home-service-icon svg {
-          width: 54px;
-          height: 54px;
-        }
-
-        .home-service h3 {
-          margin: 0;
-
-          position: relative;
-          z-index: 2;
-
-          font-size: 20px;
-          font-weight: 900;
-
-          line-height: 1.3;
-        }
-
-        .home-service p {
-          margin: 5px 0 0;
-
-          position: relative;
-          z-index: 2;
-
-          color: #5b8995;
-
-          font-size: 15px;
-          font-weight: 700;
-        }
-
-        .home-service-arrow {
-          width: 38px;
-          height: 38px;
-
-          position: absolute;
-
-          left: 13px;
-          bottom: 13px;
-
-          display: flex;
-          align-items: center;
-          justify-content: center;
-
-          border-radius: 50%;
-
-          background: rgba(255,255,255,.48);
-
-          font-size: 27px;
-
-          z-index: 4;
-        }
-
-
-        /* URGENT REQUESTS */
-
-        .home-requests {
-          width: 100%;
-          max-width: 430px;
-
-          margin: 0 auto;
-
-          position: relative;
-          z-index: 10;
-        }
-
-        .home-requests-title {
-          display: flex;
-          align-items: center;
-
-          gap: 6px;
-
-          margin-bottom: 10px;
-        }
-
-        .home-requests-title h3 {
-          margin: 0;
-
-          color: #075d63;
-
-          font-size: 20px;
-          font-weight: 900;
-        }
-
-        .home-requests-title svg {
-          width: 23px;
-          height: 23px;
-
-          color: #079a94;
-        }
-
-        .home-request-card {
-          width: 100%;
-          min-height: 102px;
-
-          padding: 12px 14px;
-
-          display: flex;
-          align-items: center;
-
-          gap: 9px;
-
-          position: relative;
-
-          border-radius: 23px;
-
-          background: rgba(255,245,247,.78);
-
-          border: 2px solid rgba(255,207,215,.75);
-
-          box-shadow:
-            0 8px 20px rgba(0,120,125,.08),
-            inset 0 1px 0 rgba(255,255,255,.9);
-
-          color: inherit;
-
-          text-decoration: none;
-        }
-
-        .home-request-arrow {
-          width: 38px;
-          height: 38px;
-
-          flex-shrink: 0;
-
-          display: flex;
-          align-items: center;
-          justify-content: center;
-
-          border-radius: 50%;
-
-          background: rgba(255,221,227,.78);
-
-          color: #c8232b;
-
-          font-size: 27px;
-        }
-
-        .home-request-info {
-          flex: 1;
-
-          text-align: right;
-        }
-
-        .home-request-info strong {
-          display: block;
-
-          color: #c8232b;
-
-          font-size: 19px;
-          font-weight: 900;
-        }
-
-        .home-request-info p {
-          margin: 2px 0;
-
-          color: #578895;
-
-          font-size: 14px;
-          font-weight: 700;
-        }
-
-        .home-request-info small {
-          color: #578895;
-
-          font-size: 13px;
-          font-weight: 700;
-        }
-
-        .home-request-blood {
-          width: 58px;
-          height: 58px;
-
-          flex-shrink: 0;
-
-          display: flex;
-          align-items: center;
-          justify-content: center;
-
-          border-radius: 50%;
-
-          background: rgba(255,215,222,.72);
-
-          color: #d31f28;
-        }
-
-        .home-request-blood svg {
-          width: 41px;
-          height: 41px;
-        }
-
-        .home-show-all {
-          width: 125px;
-          height: 42px;
-
-          margin-top: 10px;
-
-          display: flex;
-          align-items: center;
-          justify-content: center;
-
-          gap: 4px;
-
-          border: 2px solid rgba(255,255,255,.92);
-
-          border-radius: 23px;
-
-          background: rgba(255,255,255,.42);
-
-          color: #078c88;
-
-          font-size: 16px;
+          font-size: 28px;
+          line-height: 1.15;
           font-weight: 800;
-
-          text-decoration: none;
+          color: #15494b;
         }
 
-        .home-show-all svg {
-          width: 19px;
-          height: 19px;
+        .welcome-section h2 span {
+          color: #159a87;
         }
 
-
-        /* BOTTOM DECORATION */
-
-        .home-bottom-decoration {
-          width: calc(100% + 32px);
-          height: 120px;
-
-          position: absolute;
-
-          left: -16px;
-          bottom: 74px;
-
-          overflow: hidden;
-
-          pointer-events: none;
-
-          z-index: 1;
+        .welcome-section p {
+          margin: 5px 0 9px;
+          font-size: 17px;
+          font-weight: 600;
+          color: #5b7b7c;
         }
 
-        .home-bottom-ecg {
+        .ecg-line {
           width: 100%;
-          height: 80px;
-
-          position: absolute;
-
-          left: 0;
-          top: 22px;
-
-          opacity: .65;
-        }
-
-        .home-medical-plus {
-          width: 50px;
-          height: 50px;
-
-          position: absolute;
-
-          right: 25px;
-          bottom: 0;
-
-          display: flex;
-          align-items: center;
-          justify-content: center;
-
-          border-radius: 50%;
-
-          background: rgba(255,255,255,.25);
-
-          color: #09a99b;
-
-          font-size: 45px;
-          font-weight: 300;
-        }
-
-
-        /* =================================
-           BOTTOM NAVIGATION
-        ================================= */
-
-        .home-local-nav {
-          width: 100%;
-          max-width: 480px;
-
-          height: 82px;
-
-          position: fixed;
-
-          left: 50%;
-          bottom: 0;
-
-          transform: translateX(-50%);
-
-          z-index: 99999;
-
-          display: flex;
-          align-items: center;
-          justify-content: space-around;
-
-          padding: 6px 8px 8px;
-
-          background: rgba(246,255,254,.95);
-
-          border-radius: 30px 30px 0 0;
-
-          box-shadow:
-            0 -8px 25px rgba(0,120,125,.08);
-
-          backdrop-filter: blur(16px);
-          -webkit-backdrop-filter: blur(16px);
-
-          /*
-             مهم:
-             ترتيب العناصر يكون من الشمال لليمين:
-             الملف الشخصي - الإشعارات - الطلبات - الرئيسية
-          */
-          direction: ltr;
-        }
-
-        .home-local-nav a {
-          flex: 1;
-
-          height: 100%;
-
-          display: flex;
-          flex-direction: column;
-          align-items: center;
-          justify-content: center;
-
-          gap: 3px;
-
-          position: relative;
-
-          color: #568795;
-
-          text-decoration: none;
-
-          font-size: 12px;
-          font-weight: 700;
-
-          direction: rtl;
-        }
-
-        .home-local-nav a svg {
-          width: 29px;
           height: 29px;
+          display: flex;
+          align-items: center;
+          overflow: hidden;
+        }
 
+        .ecg-line svg {
+          width: 100%;
+          height: 29px;
+        }
+
+        .ecg-line path {
           fill: none;
-
-          stroke: currentColor;
-
-          stroke-width: 1.8;
-
+          stroke: #1a9e8d;
+          stroke-width: 2;
           stroke-linecap: round;
           stroke-linejoin: round;
         }
 
-        .home-local-nav a.active {
-          color: #079a91;
+        /* SEARCH */
 
-          font-weight: 900;
+        .home-search {
+          position: relative;
+          z-index: 2;
+          height: 56px;
+          width: 100%;
+          display: flex;
+          align-items: center;
+          gap: 11px;
+          padding: 0 17px;
+          margin-bottom: 13px;
+          border-radius: 28px;
+          text-decoration: none;
+          color: #789393;
+          background: rgba(255,255,255,.63);
+          border: 1px solid rgba(255,255,255,.78);
+          box-shadow:
+            0 8px 22px rgba(55,128,128,.10),
+            inset 0 1px 1px rgba(255,255,255,.8);
+          backdrop-filter: blur(12px);
         }
 
-        .home-local-nav a.active::after {
+        .home-search svg {
+          width: 21px;
+          height: 21px;
+          flex: 0 0 auto;
+        }
+
+        .home-search span {
+          font-size: 15px;
+        }
+
+        /* SERVICES */
+
+        .services-section {
+          position: relative;
+          z-index: 2;
+          display: grid;
+          grid-template-columns: 1fr 1fr;
+          direction: ltr;
+          gap: 10px;
+          margin-bottom: 17px;
+        }
+
+        .home-service {
+          min-height: 195px;
+          padding: 13px 9px 11px;
+          border-radius: 25px;
+          position: relative;
+          overflow: hidden;
+          text-decoration: none;
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          text-align: center;
+          justify-content: flex-start;
+          box-shadow:
+            0 9px 22px rgba(40,100,100,.10),
+            inset 0 1px 1px rgba(255,255,255,.70);
+          border: 1px solid rgba(255,255,255,.65);
+        }
+
+        .blood-service {
+          background: linear-gradient(150deg, #f9e9e9, #f3d9db);
+          color: #ba565c;
+        }
+
+        .medicine-service {
+          background: linear-gradient(150deg, #e3f7f0, #cceee3);
+          color: #15947f;
+        }
+
+        .home-service::after {
           content: "";
-
-          width: 38px;
-          height: 5px;
-
           position: absolute;
-
-          left: 50%;
-          bottom: 0;
-
-          transform: translateX(-50%);
-
-          border-radius: 10px;
-
-          background: #079a91;
+          width: 90px;
+          height: 90px;
+          border-radius: 50%;
+          background: rgba(255,255,255,.20);
+          bottom: -40px;
+          left: -20px;
         }
 
+        .service-icon {
+          width: 62px;
+          height: 62px;
+          border-radius: 20px;
+          margin-bottom: 10px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          background: rgba(255,255,255,.42);
+          border: 1px solid rgba(255,255,255,.62);
+        }
+
+        .service-icon svg {
+          width: 43px;
+          height: 43px;
+        }
+
+        .service-content {
+          position: relative;
+          z-index: 1;
+        }
+
+        .service-content h3 {
+          margin: 0;
+          font-size: 17px;
+          line-height: 1.45;
+          font-weight: 800;
+        }
+
+        .service-content p {
+          margin: 3px 0 0;
+          font-size: 13px;
+          font-weight: 600;
+          opacity: .72;
+        }
+
+        .service-arrow {
+          position: absolute;
+          left: 12px;
+          bottom: 8px;
+          z-index: 2;
+          width: 34px;
+          height: 34px;
+          border-radius: 50%;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          background: rgba(255,255,255,.55);
+          font-size: 23px;
+          font-weight: 700;
+        }
+
+        /* URGENT */
+
+        .urgent-section {
+          position: relative;
+          z-index: 2;
+          text-align: right;
+        }
+
+        .section-heading {
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          margin-bottom: 9px;
+        }
+
+        .section-heading h2 {
+          margin: 0;
+          font-size: 18px;
+          color: #194b4d;
+          font-weight: 800;
+        }
+
+        .location-icon {
+          width: 30px;
+          height: 30px;
+          border-radius: 50%;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          color: #1b9284;
+          background: rgba(255,255,255,.43);
+        }
+
+        .location-icon svg {
+          width: 18px;
+          height: 18px;
+        }
+
+        .urgent-card {
+          min-height: 92px;
+          width: 100%;
+          display: flex;
+          align-items: center;
+          gap: 10px;
+          direction: rtl;
+          padding: 10px 11px;
+          border-radius: 20px;
+          text-decoration: none;
+          color: #214b4d;
+          background: rgba(255,255,255,.63);
+          border: 1px solid rgba(255,255,255,.72);
+          box-shadow: 0 8px 20px rgba(55,128,128,.09);
+        }
+
+        .blood-circle {
+          flex: 0 0 auto;
+          width: 54px;
+          height: 54px;
+          border-radius: 50%;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          color: #b64d56;
+          background: #f5d7da;
+          font-size: 15px;
+          font-weight: 900;
+          border: 2px solid rgba(255,255,255,.72);
+        }
+
+        .urgent-info {
+          min-width: 0;
+          flex: 1;
+        }
+
+        .urgent-info strong {
+          display: block;
+          margin-bottom: 2px;
+          font-size: 17px;
+          color: #254c4e;
+        }
+
+        .urgent-info p {
+          margin: 0 0 2px;
+          font-size: 13px;
+          color: #587779;
+          white-space: nowrap;
+          overflow: hidden;
+          text-overflow: ellipsis;
+        }
+
+        .urgent-info small {
+          font-size: 12px;
+          color: #789092;
+        }
+
+        .urgent-arrow {
+          width: 32px;
+          height: 32px;
+          flex: 0 0 auto;
+          border-radius: 50%;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          background: rgba(218,242,236,.75);
+          color: #159481;
+          font-size: 22px;
+          font-weight: 800;
+        }
+
+        .empty-request {
+          cursor: default;
+        }
+
+        .show-all {
+          width: 118px;
+          height: 39px;
+          margin: 10px auto 0;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          border-radius: 20px;
+          text-decoration: none;
+          color: #168f80;
+          background: rgba(255,255,255,.54);
+          border: 1px solid rgba(255,255,255,.68);
+          font-size: 13px;
+          font-weight: 800;
+        }
+
+        /* DECORATION */
+
+        .home-decoration {
+          position: relative;
+          z-index: 1;
+          height: 55px;
+          margin-top: 4px;
+          overflow: hidden;
+          opacity: .70;
+        }
+
+        .decoration-ecg {
+          position: absolute;
+          left: 0;
+          bottom: 0;
+          width: 100%;
+          height: 45px;
+        }
+
+        .decoration-ecg path {
+          fill: none;
+          stroke: #5eb9ae;
+          stroke-width: 2;
+          stroke-linecap: round;
+          stroke-linejoin: round;
+        }
+
+        .decoration-plus {
+          position: absolute;
+          left: 50%;
+          top: 3px;
+          transform: translateX(-50%);
+          width: 24px;
+          height: 24px;
+          border-radius: 7px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          color: #3ea79b;
+          background: rgba(255,255,255,.38);
+          font-size: 22px;
+          font-weight: 500;
+        }
+
+        /* BOTTOM NAV */
+
+        .bottom-nav {
+          position: fixed;
+          z-index: 50;
+          left: 0;
+          right: 0;
+          bottom: 0;
+          height: 76px;
+          padding: 7px 10px 5px;
+          display: grid;
+          grid-template-columns: repeat(4, 1fr);
+          align-items: stretch;
+          background: rgba(238,255,253,.91);
+          border-top: 1px solid rgba(255,255,255,.75);
+          box-shadow: 0 -7px 25px rgba(45,111,111,.10);
+          backdrop-filter: blur(15px);
+        }
+
+        .bottom-item {
+          position: relative;
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          justify-content: center;
+          gap: 3px;
+          text-decoration: none;
+          color: #759191;
+          font-size: 10px;
+          font-weight: 700;
+        }
+
+        .bottom-item svg {
+          width: 26px;
+          height: 26px;
+        }
+
+        .bottom-item.active {
+          color: #159682;
+        }
+
+        .bottom-item.active::after {
+          content: "";
+          position: absolute;
+          width: 25px;
+          height: 3px;
+          border-radius: 5px;
+          bottom: 1px;
+          background: currentColor;
+        }
 
         /* SMALL PHONES */
 
-        @media (max-width: 390px) {
-
+        @media (max-width: 360px) {
           .home-reference {
-            padding-left: 12px;
-            padding-right: 12px;
+            padding-left: 11px;
+            padding-right: 11px;
           }
 
-          .home-brand-logo {
-            width: 64px;
-            height: 64px;
-          }
-
-          .home-brand-text h1 {
-            font-size: 23px;
-          }
-
-          .home-brand-text p {
-            font-size: 12px;
-          }
-
-          .home-avatar {
-            width: 54px;
-            height: 54px;
-          }
-
-          .home-welcome h2 {
-            font-size: 28px;
-          }
-
-          .home-welcome p {
+          .brand-box h1 {
             font-size: 18px;
           }
 
-          .home-top-ecg {
-            height: 58px;
-          }
-
-          .home-search {
-            height: 58px;
+          .welcome-section h2 {
+            font-size: 25px;
           }
 
           .home-service {
-            min-height: 210px;
+            min-height: 180px;
+            padding-left: 7px;
+            padding-right: 7px;
           }
 
-          .home-service-icon {
-            width: 66px;
-            height: 66px;
+          .service-icon {
+            width: 57px;
+            height: 57px;
           }
 
-          .home-service-icon svg {
-            width: 49px;
-            height: 49px;
+          .service-icon svg {
+            width: 40px;
+            height: 40px;
           }
 
-          .home-service h3 {
-            font-size: 18px;
+          .service-content h3 {
+            font-size: 15px;
           }
 
-          .home-service p {
-            font-size: 14px;
-          }
-
-          .home-request-info strong {
-            font-size: 17px;
-          }
-
-          .home-request-info p {
-            font-size: 13px;
-          }
-
-          .home-request-info small {
+          .service-content p {
             font-size: 12px;
           }
 
-          .home-local-nav {
-            height: 78px;
-          }
-
-          .home-local-nav a {
-            font-size: 10px;
-          }
-
-          .home-local-nav a svg {
-            width: 26px;
-            height: 26px;
+          .urgent-info strong {
+            font-size: 15px;
           }
         }
-
       `}</style>
-
-
-      <main className="home-reference">
-
-        {/* HEADER */}
-
-        <header className="home-reference-header">
-
-          <div className="home-brand">
-
-            <div className="home-brand-logo">
-
-              <svg viewBox="0 0 100 100">
-
-                <path
-                  d="
-                    M50 82
-                    C42 74 17 57 17 35
-                    C17 19 29 10 42 10
-                    C50 10 56 15 60 22
-                    C64 15 70 10 78 10
-                    C91 10 99 19 99 35
-                    C99 57 74 74 50 82Z
-                  "
-                  fill="currentColor"
-                />
-
-                <path
-                  d="
-                    M22 48
-                    H38
-                    L44 38
-                    L51 57
-                    L58 31
-                    L65 48
-                    H82
-                  "
-                  fill="none"
-                  stroke="white"
-                  strokeWidth="5"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                />
-
-              </svg>
-
-            </div>
-
-            <div className="home-brand-text">
-
-              <h1>نبض الأمل</h1>
-
-              <p>استجابة طبية طارئة</p>
-
-            </div>
-
-          </div>
-
-
-          <div className="home-header-actions">
-
-            <Link
-              to="/notifications"
-              className="home-notification"
-            >
-
-              <svg viewBox="0 0 24 24">
-
-                <path
-                  d="
-                    M18 8
-                    a6 6 0 0 0-12 0
-                    c0 7-3 7-3 9
-                    h18
-                    c0-2-3-2-3-9
-                  "
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="1.8"
-                  strokeLinecap="round"
-                />
-
-                <path
-                  d="M10 21h4"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="1.8"
-                  strokeLinecap="round"
-                />
-
-              </svg>
-
-              <span></span>
-
-            </Link>
-
-
-            <Link
-              to="/profile"
-              className="home-avatar"
-              style={{
-                backgroundImage: avatar
-                  ? `url(${avatar})`
-                  : "none",
-              }}
-            >
-
-              {!avatar && "👤"}
-
-            </Link>
-
-          </div>
-
-        </header>
-
-
-        {/* WELCOME */}
-
-        <section className="home-welcome">
-
-          <h2>
-            مرحبًا، {userName}
-          </h2>
-
-          <p>
-            مما ينبض حياة
-          </p>
-
-        </section>
-
-
-        {/* ECG */}
-
-        <div className="home-top-ecg">
-
-          <svg
-            viewBox="0 0 500 90"
-            preserveAspectRatio="none"
-          >
-
-            <path
-              d="
-                M0 45
-                H170
-                L190 45
-                L202 32
-                L214 45
-                L224 45
-                L238 5
-                L250 78
-                L264 45
-                L278 45
-                L290 28
-                L302 45
-                H500
-              "
-              fill="none"
-              stroke="rgba(255,255,255,.9)"
-              strokeWidth="3"
-            />
-
-          </svg>
-
-        </div>
-
-
-        {/* SEARCH */}
-
-        <div className="home-search">
-
-          <input
-            type="text"
-            placeholder="ابحث عن دواء أو جمعية.."
-          />
-
-          <svg viewBox="0 0 24 24">
-
-            <circle
-              cx="11"
-              cy="11"
-              r="7"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="2"
-            />
-
-            <path
-              d="m20 20-4-4"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="2"
-              strokeLinecap="round"
-            />
-
-          </svg>
-
-        </div>
-
-
-        {/* SERVICES */}
-
-        <section className="home-services">
-
-          {/* الدم - الشمال */}
-
-          <Link
-            to="/blood"
-            className="home-service home-service-blood"
-          >
-
-            <div className="home-service-icon">
-
-              <svg viewBox="0 0 64 64">
-
-                <path
-                  d="
-                    M32 7
-                    C32 7 14 28 14 40
-                    C14 51 22 58 32 58
-                    C42 58 50 51 50 40
-                    C50 28 32 7 32 7Z
-                  "
-                  fill="currentColor"
-                />
-
-                <path
-                  d="
-                    M23 40
-                    C23 47 27 50 31 51
-                  "
-                  fill="none"
-                  stroke="white"
-                  strokeWidth="4"
-                  strokeLinecap="round"
-                />
-
-              </svg>
-
-            </div>
-
-            <h3>
-              التبرع بالدم
-              <br />
-              والمخازن
-            </h3>
-
-            <div className="home-service-arrow">
-              →
-            </div>
-
-          </Link>
-
-
-          {/* الأدوية - اليمين */}
-
-          <Link
-            to="/medicines"
-            className="home-service home-service-medicine"
-          >
-
-            <div className="home-service-icon">
-
-              <svg viewBox="0 0 64 64">
-
-                <g transform="rotate(-45 32 32)">
-
-                  <rect
-                    x="9"
-                    y="23"
-                    width="46"
-                    height="18"
-                    rx="9"
-                    fill="currentColor"
-                  />
-
-                  <line
-                    x1="32"
-                    y1="23"
-                    x2="32"
-                    y2="41"
-                    stroke="white"
-                    strokeWidth="3"
-                  />
-
-                </g>
-
-              </svg>
-
-            </div>
-
-            <h3>
-              تبادل الأدوية
-            </h3>
-
-            <p>
-              أدوية غير متوفرة
-            </p>
-
-            <div className="home-service-arrow">
-              →
-            </div>
-
-          </Link>
-
-        </section>
-
-
-        {/* URGENT REQUESTS */}
-
-        <section className="home-requests">
-
-          <div className="home-requests-title">
-
-            <h3>
-              طلبات عاجلة قريبة منك
-            </h3>
-
-            <svg viewBox="0 0 24 24">
-
-              <path
-                d="
-                  M12 21
-                  s7-6.2 7-12
-                  A7 7 0 0 0 5 9
-                  c0 5.8 7 12 7 12Z
-                "
-                fill="currentColor"
-              />
-
-            </svg>
-
-          </div>
-
-
-          <Link
-            to={
-              request
-                ? `/track/${request.id}`
-                : "/blood"
-            }
-            className="home-request-card"
-          >
-
-            <div className="home-request-arrow">
-              →
-            </div>
-
-
-            <div className="home-request-info">
-
-              <strong>
-                فصيلة دم{" "}
-                {request?.bloodType || "O+"}
-              </strong>
-
-              <p>
-                {request?.hospital ||
-                  "مستشفى النور التخصصي"}
-              </p>
-
-              <small>
-                على بعد{" "}
-                {request?.distanceKm || "2.3"} كم
-              </small>
-
-            </div>
-
-
-            <div className="home-request-blood">
-
-              <svg viewBox="0 0 64 64">
-
-                <path
-                  d="
-                    M32 7
-                    C32 7 14 28 14 40
-                    C14 51 22 58 32 58
-                    C42 58 50 51 50 40
-                    C50 28 32 7 32 7Z
-                  "
-                  fill="currentColor"
-                />
-
-                <path
-                  d="
-                    M23 40
-                    C23 47 27 50 31 51
-                  "
-                  fill="none"
-                  stroke="white"
-                  strokeWidth="4"
-                  strokeLinecap="round"
-                />
-
-              </svg>
-
-            </div>
-
-          </Link>
-
-
-          <Link
-            to="/blood"
-            className="home-show-all"
-          >
-
-            عرض الكل
-
-            <svg viewBox="0 0 24 24">
-
-              <path
-                d="
-                  M12 21
-                  s7-6.2 7-12
-                  A7 7 0 0 0 5 9
-                  c0 5.8 7 12 7 12Z
-                "
-                fill="currentColor"
-              />
-
-            </svg>
-
-          </Link>
-
-        </section>
-
-
-        {/* BOTTOM ECG */}
-
-        <div className="home-bottom-decoration">
-
-          <svg
-            className="home-bottom-ecg"
-            viewBox="0 0 500 100"
-            preserveAspectRatio="none"
-          >
-
-            <path
-              d="
-                M0 55
-                H170
-                L190 55
-                L205 42
-                L218 55
-                L230 55
-                L245 8
-                L258 88
-                L273 55
-                L286 55
-                L300 38
-                L314 55
-                H500
-              "
-              fill="none"
-              stroke="rgba(255,255,255,.9)"
-              strokeWidth="4"
-            />
-
-          </svg>
-
-
-          <div className="home-medical-plus">
-            +
-          </div>
-
-        </div>
-
-
-        {/* BOTTOM NAV */}
-
-        <nav className="home-local-nav">
-
-          {/* الشمال */}
-
-          <Link to="/profile">
-
-            <svg viewBox="0 0 24 24">
-
-              <circle
-                cx="12"
-                cy="7"
-                r="4"
-              />
-
-              <path
-                d="
-                  M4 21
-                  c0-4 3.5-7 8-7
-                  s8 3 8 7
-                "
-              />
-
-            </svg>
-
-            <span>
-              الملف الشخصي
-            </span>
-
-          </Link>
-
-
-          <Link to="/notifications">
-
-            <svg viewBox="0 0 24 24">
-
-              <path
-                d="
-                  M18 8
-                  a6 6 0 0 0-12 0
-                  c0 7-3 7-3 9
-                  h18
-                  c0-2-3-2-3-9
-                "
-              />
-
-              <path d="M10 21h4" />
-
-            </svg>
-
-            <span>
-              الإشعارات
-            </span>
-
-          </Link>
-
-
-          <Link to="/requests">
-
-            <svg viewBox="0 0 24 24">
-
-              <rect
-                x="5"
-                y="3"
-                width="14"
-                height="18"
-                rx="3"
-              />
-
-              <path d="M9 7h6" />
-              <path d="M9 11h6" />
-              <path d="M9 15h4" />
-
-            </svg>
-
-            <span>
-              الطلبات
-            </span>
-
-          </Link>
-
-
-          {/* اليمين - الرئيسية */}
-
-          <Link
-            to="/home"
-            className="active"
-          >
-
-            <svg viewBox="0 0 24 24">
-
-              <path d="M3 11.5 12 4l9 7.5" />
-
-              <path d="M5 10.5V21h14V10.5" />
-
-              <path d="M9 21v-6h6v6" />
-
-            </svg>
-
-            <span>
-              الرئيسية
-            </span>
-
-          </Link>
-
-        </nav>
-
-      </main>
     </>
   );
 }
