@@ -5724,3 +5724,937 @@ label.field-label {
     font-size: 15px;
   }
 }
+/* =========================================================
+   ❤️ NABD ALAMAL - HOME REDESIGN
+   Paste this at the VERY END of index.css
+========================================================= */
+
+/* ---------- Prevent horizontal overflow ---------- */
+
+html,
+body,
+#root {
+  width: 100%;
+  max-width: 100%;
+  margin: 0;
+  padding: 0;
+  overflow-x: hidden;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+
+/* =========================================================
+   HOME MAIN
+========================================================= */
+
+.home-modern {
+  position: relative;
+
+  width: 100%;
+  max-width: 430px;
+
+  min-height: 100vh;
+  min-height: 100dvh;
+
+  margin: 0 auto;
+
+  overflow-x: hidden;
+  overflow-y: auto;
+
+  direction: rtl;
+
+  background:
+    radial-gradient(
+      circle at 50% 18%,
+      rgba(255,255,255,0.98) 0%,
+      rgba(240,255,253,0.95) 22%,
+      rgba(201,246,239,0.88) 50%,
+      rgba(105,207,194,0.72) 78%,
+      rgba(54,181,171,0.82) 100%
+    );
+
+  color: #173b39;
+}
+
+
+/* Soft background glow */
+
+.home-modern::before {
+  content: "";
+
+  position: absolute;
+
+  width: 300px;
+  height: 300px;
+
+  top: 100px;
+  left: -170px;
+
+  border-radius: 50%;
+
+  background: rgba(255,255,255,0.45);
+
+  filter: blur(55px);
+
+  pointer-events: none;
+
+  z-index: 0;
+}
+
+.home-modern::after {
+  content: "";
+
+  position: absolute;
+
+  width: 280px;
+  height: 280px;
+
+  right: -150px;
+  bottom: 120px;
+
+  border-radius: 50%;
+
+  background: rgba(255,255,255,0.30);
+
+  filter: blur(55px);
+
+  pointer-events: none;
+
+  z-index: 0;
+}
+
+
+/* =========================================================
+   TOP HEADER
+========================================================= */
+
+.home-top {
+  position: relative;
+
+  z-index: 5;
+
+  width: 100%;
+
+  min-height: 82px;
+
+  padding: 18px 18px 10px;
+
+  display: flex;
+
+  align-items: center;
+
+  justify-content: space-between;
+
+  background: rgba(255,255,255,0.38);
+
+  border-bottom: 1px solid rgba(255,255,255,0.50);
+
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+}
+
+
+/* Brand */
+
+.home-brand {
+  display: flex;
+
+  align-items: center;
+
+  gap: 9px;
+
+  min-width: 0;
+}
+
+.home-logo {
+  flex: 0 0 auto;
+
+  width: 52px;
+  height: 52px;
+
+  border-radius: 18px;
+
+  display: flex;
+
+  align-items: center;
+  justify-content: center;
+
+  background:
+    linear-gradient(
+      145deg,
+      #08b6a5,
+      #078d91
+    );
+
+  color: white;
+
+  font-size: 27px;
+
+  box-shadow:
+    0 9px 25px rgba(0,140,135,0.20),
+    inset 0 1px 1px rgba(255,255,255,0.45);
+}
+
+.home-brand h1 {
+  margin: 0;
+
+  color: #087f7d;
+
+  font-size: 21px;
+
+  line-height: 1.2;
+
+  font-weight: 900;
+
+  white-space: nowrap;
+}
+
+.home-brand span {
+  display: block;
+
+  margin-top: 3px;
+
+  color: #5d8c94;
+
+  font-size: 10px;
+
+  font-weight: 600;
+
+  white-space: nowrap;
+}
+
+
+/* Header buttons */
+
+.home-actions {
+  display: flex;
+
+  align-items: center;
+
+  gap: 9px;
+
+  flex-shrink: 0;
+}
+
+.home-notification {
+  width: 40px;
+  height: 40px;
+
+  display: flex;
+
+  align-items: center;
+  justify-content: center;
+
+  border-radius: 50%;
+
+  background: rgba(255,255,255,0.58);
+
+  border: 1px solid rgba(255,255,255,0.85);
+
+  color: #079d91;
+
+  font-size: 21px;
+
+  text-decoration: none;
+
+  box-shadow:
+    0 6px 18px rgba(0,100,100,0.08);
+}
+
+.home-profile {
+  width: 43px;
+  height: 43px;
+
+  flex-shrink: 0;
+
+  border-radius: 50%;
+
+  background-color: #e4f8f5;
+
+  background-size: cover;
+
+  background-position: center;
+
+  display: flex;
+
+  align-items: center;
+  justify-content: center;
+
+  border: 2px solid rgba(255,255,255,0.9);
+
+  box-shadow:
+    0 7px 20px rgba(0,100,100,0.12);
+
+  text-decoration: none;
+
+  font-size: 18px;
+}
+
+
+/* =========================================================
+   HOME BODY
+========================================================= */
+
+.home-body {
+  position: relative;
+
+  z-index: 3;
+
+  width: 100%;
+
+  padding: 14px 17px 115px;
+
+  margin: 0;
+
+  overflow: hidden;
+}
+
+
+/* =========================================================
+   WELCOME
+========================================================= */
+
+.home-welcome {
+  width: 100%;
+
+  margin: 8px 0 17px;
+
+  text-align: right;
+}
+
+.home-welcome h2 {
+  margin: 0;
+
+  color: #17423e;
+
+  font-size: clamp(23px, 6vw, 29px);
+
+  line-height: 1.35;
+
+  font-weight: 900;
+
+  word-break: break-word;
+}
+
+.home-welcome p {
+  margin: 3px 0 0;
+
+  color: #5e898e;
+
+  font-size: 15px;
+
+  font-weight: 600;
+}
+
+
+/* =========================================================
+   ECG DECORATION
+========================================================= */
+
+.home-welcome::after {
+  content: "──────╱╲╱╲──────";
+
+  display: block;
+
+  width: 100%;
+
+  margin-top: 10px;
+
+  text-align: center;
+
+  color: rgba(7,143,137,0.65);
+
+  font-size: 20px;
+
+  font-weight: 800;
+
+  letter-spacing: -2px;
+
+  white-space: nowrap;
+
+  overflow: hidden;
+}
+
+
+/* =========================================================
+   SEARCH
+========================================================= */
+
+.home-search-modern {
+  position: relative;
+
+  width: 100%;
+
+  height: 57px;
+
+  margin: 0 0 17px;
+
+  padding: 0 17px;
+
+  display: flex;
+
+  align-items: center;
+
+  gap: 10px;
+
+  border-radius: 30px;
+
+  background: rgba(255,255,255,0.78);
+
+  border: 1.5px solid rgba(255,255,255,0.95);
+
+  box-shadow:
+    0 9px 28px rgba(0,100,100,0.09),
+    inset 0 1px 0 rgba(255,255,255,0.95);
+
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+}
+
+.home-search-modern input {
+  min-width: 0;
+
+  width: 100%;
+
+  flex: 1;
+
+  border: none !important;
+
+  outline: none !important;
+
+  background: transparent !important;
+
+  box-shadow: none !important;
+
+  margin: 0 !important;
+
+  padding: 0 !important;
+
+  color: #315e66;
+
+  font-family: inherit;
+
+  font-size: 15px;
+
+  text-align: right;
+}
+
+.home-search-modern input::placeholder {
+  color: #6b9096;
+
+  opacity: 1;
+}
+
+.home-search-modern span {
+  flex: 0 0 auto;
+
+  width: 30px;
+  height: 30px;
+
+  display: flex;
+
+  align-items: center;
+  justify-content: center;
+
+  color: #078d8b;
+
+  font-size: 24px;
+}
+
+
+/* =========================================================
+   SERVICES
+========================================================= */
+
+.home-services {
+  width: 100%;
+
+  display: grid;
+
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+
+  gap: 12px;
+
+  margin: 0 0 22px;
+}
+
+.home-service {
+  position: relative;
+
+  width: 100%;
+
+  min-width: 0;
+
+  min-height: 185px;
+
+  padding: 17px 11px 35px;
+
+  display: flex;
+
+  flex-direction: column;
+
+  align-items: center;
+
+  justify-content: center;
+
+  border-radius: 25px;
+
+  text-align: center;
+
+  text-decoration: none;
+
+  overflow: hidden;
+
+  box-shadow:
+    0 10px 27px rgba(0,100,100,0.08);
+
+  transition:
+    transform 0.18s ease,
+    box-shadow 0.18s ease;
+}
+
+.home-service:active {
+  transform: scale(0.97);
+}
+
+
+/* Medicine */
+
+.home-service.medicine {
+  background:
+    linear-gradient(
+      145deg,
+      rgba(242,255,252,0.95),
+      rgba(210,248,241,0.82)
+    );
+
+  border: 1px solid rgba(102,215,202,0.40);
+
+  color: #078b7e;
+}
+
+.home-service.medicine::after {
+  content: "";
+
+  position: absolute;
+
+  width: 110px;
+  height: 110px;
+
+  left: -45px;
+  bottom: -55px;
+
+  border-radius: 50%;
+
+  background: rgba(255,255,255,0.40);
+}
+
+
+/* Blood */
+
+.home-service.blood {
+  background:
+    linear-gradient(
+      145deg,
+      rgba(255,249,250,0.96),
+      rgba(255,231,236,0.86)
+    );
+
+  border: 1px solid rgba(241,150,164,0.30);
+
+  color: #cf293b;
+}
+
+.home-service.blood::after {
+  content: "";
+
+  position: absolute;
+
+  width: 110px;
+  height: 110px;
+
+  right: -45px;
+  bottom: -55px;
+
+  border-radius: 50%;
+
+  background: rgba(255,255,255,0.40);
+}
+
+
+/* Round icons */
+
+.service-round {
+  position: relative;
+
+  z-index: 2;
+
+  width: 72px;
+  height: 72px;
+
+  flex-shrink: 0;
+
+  margin: 0 auto 11px;
+
+  border-radius: 50%;
+
+  display: flex;
+
+  align-items: center;
+  justify-content: center;
+
+  font-size: 34px;
+
+  box-shadow:
+    inset 0 1px 5px rgba(255,255,255,0.75);
+}
+
+.medicine .service-round {
+  background:
+    rgba(168,239,227,0.48);
+}
+
+.blood .service-round {
+  background:
+    rgba(255,194,204,0.43);
+}
+
+.home-service h3 {
+  position: relative;
+
+  z-index: 2;
+
+  margin: 0;
+
+  font-size: 16px;
+
+  line-height: 1.55;
+
+  font-weight: 900;
+}
+
+.home-service p {
+  position: relative;
+
+  z-index: 2;
+
+  margin: 4px 0 0;
+
+  color: #6b9296;
+
+  font-size: 12px;
+
+  line-height: 1.5;
+}
+
+.service-arrow {
+  position: absolute;
+
+  z-index: 4;
+
+  left: 12px;
+  bottom: 10px;
+
+  width: 34px;
+  height: 34px;
+
+  display: flex;
+
+  align-items: center;
+  justify-content: center;
+
+  border-radius: 50%;
+
+  background: rgba(255,255,255,0.42);
+
+  font-size: 21px;
+}
+
+.medicine .service-arrow {
+  color: #078e84;
+}
+
+.blood .service-arrow {
+  color: #d12d3d;
+}
+
+
+/* =========================================================
+   REQUESTS
+========================================================= */
+
+.requests-header {
+  width: 100%;
+
+  display: flex;
+
+  align-items: center;
+
+  justify-content: space-between;
+
+  gap: 10px;
+
+  margin: 0 0 11px;
+}
+
+.requests-header h3 {
+  margin: 0;
+
+  color: #17423e;
+
+  font-size: 18px;
+
+  line-height: 1.4;
+
+  font-weight: 900;
+}
+
+.requests-header a {
+  flex-shrink: 0;
+
+  color: #078e86;
+
+  font-size: 12px;
+
+  font-weight: 800;
+
+  text-decoration: none;
+}
+
+
+/* Request Card */
+
+.home-request {
+  position: relative;
+
+  width: 100%;
+
+  min-width: 0;
+
+  min-height: 95px;
+
+  margin: 0 0 10px;
+
+  padding: 13px;
+
+  display: flex;
+
+  align-items: center;
+
+  gap: 10px;
+
+  border-radius: 21px;
+
+  background:
+    linear-gradient(
+      135deg,
+      rgba(255,250,251,0.97),
+      rgba(255,235,238,0.86)
+    );
+
+  border: 1px solid rgba(243,157,170,0.30);
+
+  box-shadow:
+    0 9px 25px rgba(170,60,80,0.07);
+
+  text-decoration: none;
+
+  overflow: hidden;
+}
+
+.request-blood {
+  width: 50px;
+  height: 50px;
+
+  flex: 0 0 50px;
+
+  border-radius: 16px;
+
+  background: rgba(255,194,204,0.40);
+
+  display: flex;
+
+  align-items: center;
+  justify-content: center;
+
+  color: #d12c3d;
+
+  font-size: 25px;
+}
+
+.home-request > div {
+  min-width: 0;
+}
+
+.home-request strong {
+  display: block;
+
+  color: #c92739;
+
+  font-size: 16px;
+
+  font-weight: 900;
+
+  white-space: nowrap;
+
+  overflow: hidden;
+
+  text-overflow: ellipsis;
+}
+
+.home-request p {
+  margin: 3px 0 0;
+
+  color: #5c858d;
+
+  font-size: 12px;
+
+  line-height: 1.5;
+}
+
+.home-request small {
+  color: #76969b;
+
+  font-size: 11px;
+}
+
+
+/* =========================================================
+   BOTTOM NAV - KEEP IT CLEAN
+========================================================= */
+
+.bottom-nav {
+  position: fixed !important;
+
+  left: 50% !important;
+
+  right: auto !important;
+
+  bottom: 0 !important;
+
+  transform: translateX(-50%) !important;
+
+  width: 100% !important;
+
+  max-width: 430px !important;
+
+  min-height: 72px;
+
+  padding: 9px 6px 13px !important;
+
+  display: flex;
+
+  justify-content: space-around;
+
+  align-items: center;
+
+  background: rgba(255,255,255,0.90) !important;
+
+  border-top: 1px solid rgba(180,220,216,0.55) !important;
+
+  box-shadow:
+    0 -7px 25px rgba(0,100,100,0.07);
+
+  backdrop-filter: blur(15px);
+  -webkit-backdrop-filter: blur(15px);
+
+  z-index: 1000 !important;
+}
+
+
+/* =========================================================
+   SMALL PHONES
+========================================================= */
+
+@media (max-width: 360px) {
+
+  .home-top {
+    padding-left: 13px;
+    padding-right: 13px;
+  }
+
+  .home-body {
+    padding-left: 13px;
+    padding-right: 13px;
+  }
+
+  .home-brand h1 {
+    font-size: 19px;
+  }
+
+  .home-brand span {
+    font-size: 9px;
+  }
+
+  .home-logo {
+    width: 47px;
+    height: 47px;
+
+    font-size: 24px;
+  }
+
+  .home-welcome h2 {
+    font-size: 23px;
+  }
+
+  .home-services {
+    gap: 9px;
+  }
+
+  .home-service {
+    min-height: 170px;
+
+    padding-left: 8px;
+    padding-right: 8px;
+  }
+
+  .service-round {
+    width: 62px;
+    height: 62px;
+
+    font-size: 30px;
+  }
+
+  .home-service h3 {
+    font-size: 14px;
+  }
+}
+
+
+/* =========================================================
+   VERY SMALL PHONES
+========================================================= */
+
+@media (max-width: 330px) {
+
+  .home-brand h1 {
+    font-size: 17px;
+  }
+
+  .home-actions {
+    gap: 5px;
+  }
+
+  .home-notification {
+    width: 36px;
+    height: 36px;
+  }
+
+  .home-profile {
+    width: 39px;
+    height: 39px;
+  }
+
+  .home-service {
+    min-height: 160px;
+  }
+
+  .home-service h3 {
+    font-size: 13px;
+  }
+}
