@@ -4167,3 +4167,761 @@ label.field-label {
     height: 49px;
   }
 }
+/* =========================================================
+   LOCATION PERMISSION PAGE
+   FULL SCREEN - NABD AL AMAL
+   ========================================================= */
+
+.location-page {
+  position: relative;
+
+  width: 100vw;
+  min-height: 100vh;
+  min-height: 100dvh;
+
+  margin-left: calc(50% - 50vw);
+
+  overflow: hidden;
+
+  direction: rtl;
+
+  background:
+    radial-gradient(
+      circle at 50% 18%,
+      rgba(255, 255, 255, 0.98) 0%,
+      rgba(239, 253, 250, 0.97) 30%,
+      rgba(220, 249, 243, 0.96) 62%,
+      rgba(183, 238, 227, 0.98) 100%
+    );
+
+  color: #075d63;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+  isolation: isolate;
+}
+
+
+/* =========================================================
+   BACK BUTTON
+   ========================================================= */
+
+.location-back {
+  position: absolute;
+
+  top: 28px;
+  right: 24px;
+
+  width: 46px;
+  height: 46px;
+
+  padding: 0;
+
+  border: none;
+  border-radius: 50%;
+
+  background: rgba(255, 255, 255, 0.35);
+
+  color: #078f87;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  cursor: pointer;
+
+  z-index: 20;
+
+  transition: 0.2s ease;
+}
+
+.location-back:hover {
+  background: rgba(255, 255, 255, 0.65);
+  transform: translateX(3px);
+}
+
+.location-back svg {
+  width: 28px;
+  height: 28px;
+}
+
+
+/* =========================================================
+   CONTENT
+   ========================================================= */
+
+.location-content {
+  position: relative;
+
+  z-index: 10;
+
+  width: min(100%, 520px);
+
+  min-height: 100vh;
+  min-height: 100dvh;
+
+  padding: 90px 24px 170px;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+
+/* =========================================================
+   HEADER
+   ========================================================= */
+
+.location-header {
+  width: 100%;
+
+  text-align: center;
+
+  margin-bottom: 40px;
+}
+
+.location-header h1 {
+  margin: 0;
+
+  color: #075d63;
+
+  font-size: clamp(30px, 7vw, 42px);
+
+  font-weight: 800;
+
+  line-height: 1.25;
+
+  text-shadow:
+    0 3px 12px rgba(0, 100, 100, 0.10);
+}
+
+
+/* =========================================================
+   LOCATION ILLUSTRATION
+   ========================================================= */
+
+.location-illustration {
+  position: relative;
+
+  width: 320px;
+  height: 300px;
+
+  max-width: 90vw;
+
+  margin-bottom: 20px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+
+/* Soft glow */
+
+.map-glow {
+  position: absolute;
+
+  width: 190px;
+  height: 190px;
+
+  border-radius: 50%;
+
+  background:
+    radial-gradient(
+      circle,
+      rgba(190, 249, 239, 0.75),
+      rgba(190, 249, 239, 0.25) 55%,
+      transparent 75%
+    );
+
+  filter: blur(3px);
+}
+
+
+/* Map pieces */
+
+.map-shape {
+  position: absolute;
+
+  width: 95px;
+  height: 65px;
+
+  border-radius: 12px;
+
+  border: 2px solid rgba(112, 219, 215, 0.18);
+
+  background:
+    linear-gradient(
+      145deg,
+      rgba(235, 254, 251, 0.92),
+      rgba(199, 244, 240, 0.70)
+    );
+
+  transform: rotate(-28deg);
+
+  opacity: 0.9;
+}
+
+.map-one {
+  left: 38px;
+  top: 135px;
+}
+
+.map-two {
+  right: 32px;
+  top: 130px;
+
+  transform: rotate(28deg);
+
+  background:
+    linear-gradient(
+      145deg,
+      rgba(211, 252, 230, 0.95),
+      rgba(163, 239, 212, 0.75)
+    );
+}
+
+.map-three {
+  left: 92px;
+  bottom: 35px;
+
+  transform: rotate(18deg);
+}
+
+.map-four {
+  right: 95px;
+  bottom: 30px;
+
+  transform: rotate(-18deg);
+}
+
+
+/* =========================================================
+   PIN
+   ========================================================= */
+
+.location-pin {
+  position: absolute;
+
+  width: 132px;
+  height: 132px;
+
+  background:
+    linear-gradient(
+      145deg,
+      #12c6ad 0%,
+      #08a890 55%,
+      #078879 100%
+    );
+
+  border-radius: 50% 50% 50% 0;
+
+  transform: rotate(-45deg);
+
+  top: 55px;
+
+  z-index: 5;
+
+  box-shadow:
+    0 18px 35px rgba(0, 139, 124, 0.28),
+    inset 0 3px 10px rgba(255, 255, 255, 0.28);
+}
+
+
+/* White circle inside pin */
+
+.pin-hole {
+  position: absolute;
+
+  width: 56px;
+  height: 56px;
+
+  border-radius: 50%;
+
+  background: white;
+
+  top: 38px;
+  left: 38px;
+}
+
+
+/* Inner teal circle */
+
+.pin-hole::after {
+  content: "";
+
+  position: absolute;
+
+  width: 22px;
+  height: 22px;
+
+  border-radius: 50%;
+
+  background: #08a890;
+
+  top: 17px;
+  left: 17px;
+}
+
+
+/* Pin shadow */
+
+.pin-shadow {
+  position: absolute;
+
+  width: 48px;
+  height: 13px;
+
+  border-radius: 50%;
+
+  background: rgba(0, 111, 101, 0.45);
+
+  bottom: 48px;
+
+  filter: blur(1px);
+
+  z-index: 2;
+}
+
+
+/* Floating dots */
+
+.location-dot {
+  position: absolute;
+
+  width: 18px;
+  height: 18px;
+
+  border-radius: 50%;
+
+  background: #79ddc9;
+
+  opacity: 0.85;
+
+  z-index: 3;
+}
+
+.dot-one {
+  top: 45px;
+  left: 45px;
+}
+
+.dot-two {
+  top: 70px;
+  right: 35px;
+
+  width: 25px;
+  height: 25px;
+}
+
+.dot-three {
+  top: 125px;
+  right: 12px;
+
+  width: 14px;
+  height: 14px;
+}
+
+
+/* =========================================================
+   TEXT
+   ========================================================= */
+
+.location-text {
+  width: 100%;
+
+  text-align: center;
+
+  margin-top: 5px;
+
+  margin-bottom: 38px;
+}
+
+.location-text h2 {
+  margin: 0 0 16px;
+
+  color: #075d63;
+
+  font-size: clamp(25px, 6vw, 34px);
+
+  font-weight: 800;
+
+  line-height: 1.35;
+}
+
+.location-text p {
+  margin: 0;
+
+  color: #568795;
+
+  font-size: clamp(17px, 4.3vw, 22px);
+
+  font-weight: 500;
+
+  line-height: 1.9;
+}
+
+
+/* =========================================================
+   ACTIONS
+   ========================================================= */
+
+.location-actions {
+  width: 100%;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+
+/* Allow button */
+
+.location-allow {
+  width: 100%;
+  height: 58px;
+
+  border: none;
+
+  border-radius: 30px;
+
+  background:
+    linear-gradient(
+      135deg,
+      #12bca1 0%,
+      #08a990 55%,
+      #078c7c 100%
+    );
+
+  color: white;
+
+  font-family: inherit;
+
+  font-size: 20px;
+
+  font-weight: 800;
+
+  cursor: pointer;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  gap: 12px;
+
+  box-shadow:
+    0 14px 28px rgba(10, 168, 143, 0.24),
+    inset 0 1px 0 rgba(255, 255, 255, 0.25);
+
+  transition:
+    transform 0.18s ease,
+    box-shadow 0.18s ease,
+    opacity 0.18s ease;
+}
+
+.location-allow:hover {
+  transform: translateY(-2px);
+
+  box-shadow:
+    0 18px 32px rgba(10, 168, 143, 0.30);
+}
+
+.location-allow:active {
+  transform: scale(0.98);
+}
+
+.location-allow:disabled {
+  opacity: 0.75;
+  cursor: wait;
+}
+
+
+/* Allow icon */
+
+.allow-icon {
+  width: 38px;
+  height: 38px;
+
+  border-radius: 50%;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  background: rgba(255, 255, 255, 0.12);
+}
+
+.allow-icon svg {
+  width: 24px;
+  height: 24px;
+}
+
+
+/* Skip */
+
+.location-skip {
+  margin-top: 24px;
+
+  border: none;
+
+  background: transparent;
+
+  color: #079d8e;
+
+  font-family: inherit;
+
+  font-size: 18px;
+
+  font-weight: 700;
+
+  cursor: pointer;
+
+  padding: 8px 20px;
+}
+
+.location-skip:hover {
+  color: #067d73;
+}
+
+
+/* Status */
+
+.location-status {
+  margin: 18px 0 0;
+
+  color: #087f74;
+
+  font-size: 14px;
+
+  text-align: center;
+
+  line-height: 1.7;
+}
+
+
+/* =========================================================
+   BOTTOM WAVES
+   ========================================================= */
+
+.location-waves {
+  position: absolute;
+
+  bottom: 0;
+  left: 0;
+
+  width: 100%;
+  height: 145px;
+
+  z-index: 1;
+
+  pointer-events: none;
+}
+
+
+/* Wave 1 */
+
+.wave {
+  position: absolute;
+
+  left: -5%;
+
+  width: 110%;
+
+  border-radius: 50% 50% 0 0;
+}
+
+.wave-one {
+  bottom: -80px;
+
+  height: 145px;
+
+  background:
+    linear-gradient(
+      180deg,
+      rgba(146, 226, 216, 0.72),
+      rgba(121, 211, 204, 0.9)
+    );
+
+  transform: rotate(-3deg);
+}
+
+
+/* Wave 2 */
+
+.wave-two {
+  bottom: -105px;
+
+  height: 125px;
+
+  background:
+    linear-gradient(
+      180deg,
+      rgba(104, 205, 195, 0.48),
+      rgba(82, 192, 183, 0.72)
+    );
+
+  transform: rotate(4deg);
+}
+
+
+/* White heartbeat/wave line */
+
+.wave-line {
+  position: absolute;
+
+  left: -5%;
+
+  bottom: 48px;
+
+  width: 110%;
+
+  height: 40px;
+
+  border-top: 3px solid rgba(255, 255, 255, 0.95);
+
+  border-radius: 50%;
+
+  transform: rotate(-2deg);
+
+  opacity: 0.95;
+}
+
+
+/* =========================================================
+   MOBILE
+   ========================================================= */
+
+@media (max-width: 480px) {
+
+  .location-content {
+    padding:
+      82px
+      22px
+      145px;
+  }
+
+  .location-back {
+    top: 22px;
+    right: 18px;
+
+    width: 42px;
+    height: 42px;
+  }
+
+  .location-header {
+    margin-bottom: 25px;
+  }
+
+  .location-header h1 {
+    font-size: 30px;
+  }
+
+  .location-illustration {
+    width: 290px;
+    height: 275px;
+
+    margin-bottom: 8px;
+  }
+
+  .location-pin {
+    width: 115px;
+    height: 115px;
+
+    top: 55px;
+  }
+
+  .pin-hole {
+    width: 50px;
+    height: 50px;
+
+    top: 32px;
+    left: 32px;
+  }
+
+  .pin-hole::after {
+    width: 20px;
+    height: 20px;
+
+    top: 15px;
+    left: 15px;
+  }
+
+  .pin-shadow {
+    bottom: 42px;
+  }
+
+  .location-text {
+    margin-bottom: 30px;
+  }
+
+  .location-text h2 {
+    font-size: 24px;
+    margin-bottom: 12px;
+  }
+
+  .location-text p {
+    font-size: 16px;
+    line-height: 1.9;
+  }
+
+  .location-allow {
+    height: 52px;
+    font-size: 18px;
+  }
+
+  .allow-icon {
+    width: 34px;
+    height: 34px;
+  }
+
+  .location-skip {
+    font-size: 17px;
+    margin-top: 18px;
+  }
+
+  .location-waves {
+    height: 115px;
+  }
+}
+
+
+/* =========================================================
+   SMALL HEIGHT DEVICES
+   ========================================================= */
+
+@media (max-height: 700px) {
+
+  .location-content {
+    padding-top: 70px;
+    padding-bottom: 120px;
+  }
+
+  .location-header {
+    margin-bottom: 10px;
+  }
+
+  .location-illustration {
+    height: 220px;
+    transform: scale(0.82);
+    margin-top: -15px;
+    margin-bottom: -25px;
+  }
+
+  .location-text {
+    margin-bottom: 20px;
+  }
+
+  .location-text h2 {
+    font-size: 22px;
+  }
+
+  .location-text p {
+    font-size: 15px;
+  }
+
+  .location-allow {
+    height: 48px;
+  }
+}
