@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 
 const bloodTypes = ["A+", "A-", "B+", "B-", "AB+", "AB-", "O+", "O-"];
 
-function ArrowIcon() {
+function BackIcon() {
   return (
     <svg viewBox="0 0 24 24">
       <path
@@ -145,21 +145,22 @@ export default function PersonalInfo() {
       {/* Header */}
       <header className="personal-header">
 
-        <Link
-          to="/profile"
-          className="back-button"
-        >
-          <ArrowIcon />
-        </Link>
-
-        <div>
+        <div className="personal-header-text">
           <h1>المعلومات الشخصية</h1>
           <p>إدارة بيانات حسابك</p>
         </div>
 
+        <Link
+          to="/profile"
+          className="back-button"
+          aria-label="رجوع"
+        >
+          <BackIcon />
+        </Link>
+
       </header>
 
-      {/* Profile intro */}
+      {/* User intro */}
       <section className="personal-intro">
 
         <div className="intro-avatar">
@@ -168,7 +169,7 @@ export default function PersonalInfo() {
             : "م"}
         </div>
 
-        <div>
+        <div className="intro-text">
           <h2>
             {user.name || "المستخدم"}
           </h2>
@@ -181,20 +182,16 @@ export default function PersonalInfo() {
       </section>
 
       {/* Form */}
-      <form onSubmit={save}>
+      <form
+        className="personal-form"
+        onSubmit={save}
+      >
 
         {/* Name */}
         <div className="form-card">
 
-          <div className="field-icon">
-            <UserIcon />
-          </div>
-
           <div className="field-content">
-
-            <label>
-              الاسم الكامل
-            </label>
+            <label>الاسم الكامل</label>
 
             <input
               type="text"
@@ -202,7 +199,10 @@ export default function PersonalInfo() {
               onChange={update("name")}
               placeholder="اكتب اسمك الكامل"
             />
+          </div>
 
+          <div className="field-icon">
+            <UserIcon />
           </div>
 
         </div>
@@ -210,17 +210,12 @@ export default function PersonalInfo() {
         {/* Email */}
         <div className="form-card">
 
-          <div className="field-icon">
-            <MailIcon />
-          </div>
-
           <div className="field-content">
 
-            <label>
-              البريد الإلكتروني
-            </label>
+            <label>البريد الإلكتروني</label>
 
             <input
+              className="email-input"
               type="email"
               value={user.email || ""}
               onChange={update("email")}
@@ -229,22 +224,21 @@ export default function PersonalInfo() {
 
           </div>
 
+          <div className="field-icon">
+            <MailIcon />
+          </div>
+
         </div>
 
         {/* Phone */}
         <div className="form-card">
 
-          <div className="field-icon">
-            <PhoneIcon />
-          </div>
-
           <div className="field-content">
 
-            <label>
-              رقم الهاتف
-            </label>
+            <label>رقم الهاتف</label>
 
             <input
+              className="phone-input"
               type="tel"
               value={user.phone || ""}
               onChange={update("phone")}
@@ -253,20 +247,18 @@ export default function PersonalInfo() {
 
           </div>
 
+          <div className="field-icon">
+            <PhoneIcon />
+          </div>
+
         </div>
 
-        {/* Blood */}
-        <div className="form-card">
-
-          <div className="field-icon blood">
-            <BloodIcon />
-          </div>
+        {/* Blood type */}
+        <div className="form-card blood-card">
 
           <div className="field-content">
 
-            <label>
-              فصيلة الدم
-            </label>
+            <label>فصيلة الدم</label>
 
             <select
               value={user.bloodType || "O+"}
@@ -284,8 +276,12 @@ export default function PersonalInfo() {
 
           </div>
 
-          <div className="blood-badge">
+          <div className="blood-value">
             {user.bloodType || "O+"}
+          </div>
+
+          <div className="field-icon blood-icon">
+            <BloodIcon />
           </div>
 
         </div>
@@ -308,14 +304,10 @@ export default function PersonalInfo() {
 
       <style>{`
 
-        * {
-          box-sizing: border-box;
-        }
-
         .personal-page {
           min-height: 100vh;
 
-          padding: 22px 18px 40px;
+          padding: 22px 18px 90px;
 
           direction: rtl;
 
@@ -352,8 +344,6 @@ export default function PersonalInfo() {
           align-items: center;
           justify-content: center;
 
-          direction: rtl;
-
           color: #218d83;
 
           background: #f1fbfa;
@@ -364,60 +354,32 @@ export default function PersonalInfo() {
             sans-serif;
         }
 
-        /* Header */
+        /* HEADER */
 
         .personal-header {
           max-width: 520px;
 
-          margin: 0 auto 23px;
-
-          display: flex;
-
-          align-items: center;
-
-          gap: 13px;
-        }
-
-        .back-button {
-          width: 43px;
-          height: 43px;
-
-          flex-shrink: 0;
+          margin: 0 auto 24px;
 
           display: flex;
           align-items: center;
-          justify-content: center;
 
-          border-radius: 15px;
+          justify-content: space-between;
 
-          color: #218d83;
-
-          background:
-            rgba(255,255,255,.75);
-
-          border: 1px solid
-            rgba(255,255,255,.92);
-
-          box-shadow:
-            0 7px 18px
-              rgba(35,139,128,.08),
-            inset 0 1px 0
-              rgba(255,255,255,.9);
-
-          text-decoration: none;
+          gap: 15px;
         }
 
-        .back-button svg {
-          width: 21px;
-          height: 21px;
+        .personal-header-text {
+          flex: 1;
+          min-width: 0;
         }
 
         .personal-header h1 {
-          margin: 0 0 4px;
+          margin: 0 0 5px;
 
           color: #218d83;
 
-          font-size: 21px;
+          font-size: 23px;
 
           font-weight: 800;
         }
@@ -425,19 +387,160 @@ export default function PersonalInfo() {
         .personal-header p {
           margin: 0;
 
-          color: #88a3a2;
+          color: #8ca6a4;
 
-          font-size: 10px;
+          font-size: 11px;
         }
 
-        /* Intro */
+        .back-button {
+          width: 50px;
+          height: 50px;
+
+          flex-shrink: 0;
+
+          display: flex;
+          align-items: center;
+          justify-content: center;
+
+          border-radius: 18px;
+
+          color: #218d83;
+
+          background:
+            rgba(255,255,255,.82);
+
+          border: 1px solid
+            rgba(255,255,255,.95);
+
+          box-shadow:
+            0 8px 22px
+              rgba(35,139,128,.08),
+            inset 0 1px 0
+              rgba(255,255,255,.95);
+
+          text-decoration: none;
+        }
+
+        .back-button svg {
+          width: 24px;
+          height: 24px;
+        }
+
+        /* USER INTRO */
 
         .personal-intro {
           max-width: 520px;
 
-          margin: 0 auto 17px;
+          min-height: 108px;
 
-          padding: 18px;
+          margin: 0 auto 16px;
+
+          padding: 17px 18px;
+
+          display: flex;
+
+          align-items: center;
+
+          gap: 15px;
+
+          border-radius: 30px;
+
+          background:
+            linear-gradient(
+              145deg,
+              rgba(255,255,255,.91),
+              rgba(226,248,244,.79)
+            );
+
+          border: 1px solid
+            rgba(255,255,255,.95);
+
+          box-shadow:
+            0 12px 30px
+              rgba(42,128,128,.08),
+            inset 0 1px 0
+              rgba(255,255,255,.95);
+
+          backdrop-filter: blur(15px);
+          -webkit-backdrop-filter: blur(15px);
+        }
+
+        .intro-avatar {
+          width: 66px;
+          height: 66px;
+
+          flex-shrink: 0;
+
+          display: flex;
+          align-items: center;
+          justify-content: center;
+
+          border-radius: 22px;
+
+          color: #218d83;
+
+          background:
+            linear-gradient(
+              145deg,
+              #dff9f4,
+              #c5eee6
+            );
+
+          border: 2px solid
+            rgba(255,255,255,.9);
+
+          box-shadow:
+            0 7px 18px
+              rgba(35,139,128,.1);
+
+          font-size: 28px;
+
+          font-weight: 900;
+        }
+
+        .intro-text {
+          min-width: 0;
+          flex: 1;
+        }
+
+        .intro-text h2 {
+          margin: 0 0 6px;
+
+          color: #286d6d;
+
+          font-size: 18px;
+
+          font-weight: 800;
+        }
+
+        .intro-text p {
+          margin: 0;
+
+          color: #91a8a7;
+
+          font-size: 10px;
+
+          line-height: 1.6;
+        }
+
+        /* FORM */
+
+        .personal-form {
+          max-width: 520px;
+
+          margin: 0 auto;
+        }
+
+        /* FIELD CARD */
+
+        .form-card {
+          width: 100%;
+
+          min-height: 84px;
+
+          margin-bottom: 12px;
+
+          padding: 13px 14px;
 
           display: flex;
 
@@ -445,163 +548,82 @@ export default function PersonalInfo() {
 
           gap: 13px;
 
+          direction: rtl;
+
           border-radius: 25px;
 
           background:
             linear-gradient(
               145deg,
-              rgba(255,255,255,.9),
-              rgba(224,248,243,.8)
+              rgba(255,255,255,.94),
+              rgba(232,249,246,.81)
             );
 
           border: 1px solid
-            rgba(255,255,255,.94);
+            rgba(255,255,255,.96);
 
           box-shadow:
-            0 11px 28px
-              rgba(42,128,128,.08),
+            0 10px 26px
+              rgba(42,128,128,.07),
             inset 0 1px 0
-              rgba(255,255,255,.95);
+              rgba(255,255,255,.92);
 
           backdrop-filter: blur(14px);
           -webkit-backdrop-filter: blur(14px);
         }
 
-        .intro-avatar {
-          width: 58px;
-          height: 58px;
-
-          flex-shrink: 0;
-
-          display: flex;
-          align-items: center;
-          justify-content: center;
-
-          border-radius: 19px;
-
-          color: #218d83;
-
-          background:
-            linear-gradient(
-              145deg,
-              #ddf8f3,
-              #bfece3
-            );
-
-          border: 2px solid
-            rgba(255,255,255,.85);
-
-          font-size: 23px;
-
-          font-weight: 900;
-
-          box-shadow:
-            0 6px 16px
-              rgba(35,139,128,.1);
-        }
-
-        .personal-intro h2 {
-          margin: 0 0 5px;
-
-          color: #286d6d;
-
-          font-size: 17px;
-
-          font-weight: 800;
-        }
-
-        .personal-intro p {
-          margin: 0;
-
-          color: #8aa3a2;
-
-          font-size: 10px;
-
-          line-height: 1.5;
-        }
-
-        /* Form */
-
-        form {
-          max-width: 520px;
-
-          margin: 0 auto;
-        }
-
-        .form-card {
-          min-height: 78px;
-
-          margin-bottom: 12px;
-
-          padding: 12px 14px;
-
-          display: flex;
-
-          align-items: center;
-
-          gap: 11px;
-
-          border-radius: 23px;
-
-          background:
-            linear-gradient(
-              145deg,
-              rgba(255,255,255,.91),
-              rgba(232,249,246,.8)
-            );
-
-          border: 1px solid
-            rgba(255,255,255,.94);
-
-          box-shadow:
-            0 10px 25px
-              rgba(42,128,128,.07),
-            inset 0 1px 0
-              rgba(255,255,255,.9);
-
-          backdrop-filter: blur(13px);
-          -webkit-backdrop-filter: blur(13px);
-        }
+        /* IMPORTANT:
+           icon stays on the right,
+           content gets all remaining space
+        */
 
         .field-icon {
-          width: 43px;
-          height: 43px;
+          width: 48px;
+          height: 48px;
 
-          flex-shrink: 0;
+          flex: 0 0 48px;
 
           display: flex;
           align-items: center;
           justify-content: center;
 
-          border-radius: 14px;
+          order: 1;
+
+          border-radius: 16px;
 
           color: #159b8a;
 
           background:
             linear-gradient(
               145deg,
-              #e3faf6,
-              #d1f1eb
+              #e1faf5,
+              #cef0e9
             );
+
+          box-shadow:
+            inset 0 1px 0
+              rgba(255,255,255,.8);
         }
 
-        .field-icon.blood {
+        .field-icon svg {
+          width: 24px;
+          height: 24px;
+        }
+
+        .field-icon.blood-icon {
           color: #c05267;
 
           background:
             linear-gradient(
               145deg,
-              #ffe9ee,
-              #f9d9e1
+              #ffecef,
+              #f8dce3
             );
         }
 
-        .field-icon svg {
-          width: 22px;
-          height: 22px;
-        }
-
         .field-content {
+          order: 2;
+
           flex: 1;
 
           min-width: 0;
@@ -610,20 +632,34 @@ export default function PersonalInfo() {
 
           flex-direction: column;
 
-          gap: 5px;
+          justify-content: center;
+
+          gap: 7px;
         }
 
         .field-content label {
-          color: #729292;
+          display: block;
+
+          margin: 0;
+
+          color: #89a2a1;
 
           font-size: 10px;
 
           font-weight: 700;
+
+          line-height: 1.2;
         }
 
         .field-content input,
         .field-content select {
           width: 100%;
+
+          height: 22px;
+
+          min-width: 0;
+
+          margin: 0;
 
           padding: 0;
 
@@ -642,62 +678,116 @@ export default function PersonalInfo() {
 
           font-size: 14px;
 
-          font-weight: 700;
+          font-weight: 800;
+
+          box-shadow: none;
+
+          appearance: none;
         }
 
         .field-content input::placeholder {
-          color: #a4b8b6;
+          color: #a3b7b5;
+
+          font-weight: 500;
+
+          opacity: 1;
         }
 
-        .field-content select {
-          cursor: pointer;
-
-          appearance: auto;
+        .field-content input:focus {
+          outline: none;
         }
 
-        .blood-badge {
-          min-width: 43px;
+        /* FIX EMAIL */
 
-          padding: 8px 7px;
+        .email-input {
+          direction: ltr !important;
+
+          text-align: right !important;
+
+          unicode-bidi: plaintext;
+        }
+
+        /* FIX PHONE */
+
+        .phone-input {
+          direction: ltr !important;
+
+          text-align: right !important;
+        }
+
+        /* BLOOD */
+
+        .blood-card {
+          position: relative;
+        }
+
+        .blood-card .field-content {
+          padding-left: 54px;
+        }
+
+        .blood-value {
+          position: absolute;
+
+          left: 15px;
+
+          top: 50%;
+
+          transform: translateY(-50%);
+
+          min-width: 55px;
+
+          padding: 9px 10px;
 
           text-align: center;
 
-          border-radius: 13px;
+          border-radius: 14px;
 
-          color: #c05267;
+          color: #b94f65;
 
           background:
-            rgba(255,224,231,.8);
+            linear-gradient(
+              145deg,
+              #ffe9ee,
+              #f8d9e1
+            );
 
-          font-size: 12px;
+          font-size: 13px;
 
           font-weight: 900;
         }
 
-        /* Save */
+        .blood-card select {
+          cursor: pointer;
+
+          direction: ltr;
+
+          text-align: right;
+        }
+
+        /* SAVE */
 
         .save-button {
           width: 100%;
 
-          min-height: 52px;
+          height: 58px;
 
-          margin-top: 6px;
+          margin-top: 5px;
 
           border: 0;
 
-          border-radius: 18px;
+          border-radius: 22px;
 
-          color: white;
+          color: #fff;
 
           background:
             linear-gradient(
               135deg,
-              #39b8a5,
+              #38b7a4,
               #159b8a
             );
 
           box-shadow:
-            0 10px 22px
+            0 12px 25px
               rgba(21,155,138,.18);
 
           font-family:
@@ -705,20 +795,26 @@ export default function PersonalInfo() {
             Tahoma,
             sans-serif;
 
-          font-size: 14px;
+          font-size: 15px;
 
           font-weight: 800;
 
           cursor: pointer;
 
-          transition: .2s ease;
+          transition:
+            transform .18s ease,
+            box-shadow .18s ease;
         }
 
         .save-button:active {
           transform: scale(.98);
+
+          box-shadow:
+            0 7px 16px
+              rgba(21,155,138,.15);
         }
 
-        /* Saved */
+        /* SAVED */
 
         .saved-message {
           margin-top: 11px;
@@ -732,14 +828,54 @@ export default function PersonalInfo() {
           color: #28786e;
 
           background:
-            rgba(215,247,240,.8);
+            rgba(215,247,240,.85);
 
           border: 1px solid
-            rgba(255,255,255,.8);
+            rgba(255,255,255,.9);
 
           font-size: 11px;
 
           font-weight: 700;
+        }
+
+        /* SMALL PHONES */
+
+        @media (max-width: 380px) {
+
+          .personal-page {
+            padding-left: 14px;
+            padding-right: 14px;
+          }
+
+          .personal-header h1 {
+            font-size: 21px;
+          }
+
+          .form-card {
+            min-height: 80px;
+            padding: 11px;
+          }
+
+          .field-icon {
+            width: 44px;
+            height: 44px;
+            flex-basis: 44px;
+          }
+
+          .field-icon svg {
+            width: 21px;
+            height: 21px;
+          }
+
+          .field-content input,
+          .field-content select {
+            font-size: 13px;
+          }
+
+          .blood-value {
+            left: 12px;
+          }
+
         }
 
       `}</style>
