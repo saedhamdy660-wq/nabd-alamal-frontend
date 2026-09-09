@@ -14,11 +14,13 @@ export default function Home() {
     if (stored) {
       try {
         setUser(JSON.parse(stored));
-      } catch {
-        setUser(null);
+      } catch (error) {
+        console.log(error);
       }
     } else {
-      api.getUser().then(setUser).catch(() => {});
+      api.getUser()
+        .then(setUser)
+        .catch(() => {});
     }
 
     api.getBloodRequests()
@@ -26,174 +28,250 @@ export default function Home() {
       .catch(() => {});
   }, []);
 
-  const userName = user?.name || user?.fullName || user?.username || "بك";
+  const userName =
+    user?.name ||
+    user?.fullName ||
+    user?.username ||
+    "بك";
 
   return (
-    <div className="home-page">
+    <div className="nabd-home">
 
-      {/* Header */}
-      <header className="home-header">
+      {/* HEADER */}
+      <div className="nabd-home-header">
 
-        <div className="brand">
-          <div className="brand-heart">
-            ❤️
-            <span className="brand-pulse">〰</span>
+        <div className="nabd-brand">
+          <div className="nabd-heart-logo">
+            <span>♥</span>
+            <div className="nabd-ecg-mini">⌁</div>
           </div>
 
           <div>
             <h1>نبض الأمل</h1>
-            <span>استجابة طبية طارئة</span>
+            <p>استجابة طبية طارئة</p>
           </div>
         </div>
 
-        <div className="header-actions">
-          <Link to="/notifications" className="notification-btn">
-            🔔
+        <div className="nabd-header-actions">
+
+          <Link
+            to="/notifications"
+            className="nabd-notification-btn"
+            aria-label="الإشعارات"
+          >
+            <span className="bell-icon">♧</span>
+            <span className="notification-dot"></span>
           </Link>
 
           <Link
             to="/profile"
-            className="home-avatar"
+            className="nabd-avatar"
             style={{
-              backgroundImage: avatar ? `url(${avatar})` : "none",
-              backgroundSize: "cover",
-              backgroundPosition: "center",
+              backgroundImage: avatar
+                ? `url(${avatar})`
+                : "none",
             }}
           >
             {!avatar && "👤"}
           </Link>
+
+        </div>
+      </div>
+
+
+      {/* WELCOME */}
+      <section className="nabd-welcome">
+
+        <h2>
+          مرحبًا، {userName} 👋
+        </h2>
+
+        <p>
+          مما ينبض حياة
+        </p>
+
+        <div className="nabd-ecg-line">
+          <span></span>
         </div>
 
-      </header>
+      </section>
 
-      <main className="home-content">
 
-        {/* Welcome */}
-        <section className="welcome-section">
-          <h2>
-            مرحبًا، {userName}
-          </h2>
+      {/* SEARCH */}
+      <div className="nabd-search">
 
-          <p>معًا ننقذ حياة</p>
-        </section>
+        <input
+          type="text"
+          placeholder="ابحث عن دواء أو جمعية.."
+        />
 
-        {/* ECG decoration */}
-        <div className="home-ecg">
-          ──────╱╲╱╲──────
-        </div>
+        <span className="nabd-search-icon">
+          🔍
+        </span>
 
-        {/* Search */}
-        <div className="home-search">
-          <span>🔍</span>
+      </div>
 
-          <input
-            type="text"
-            placeholder="ابحث عن دواء أو جمعية.."
-          />
-        </div>
 
-        {/* Services */}
-        <div className="services-grid">
+      {/* SERVICES */}
+      <div className="nabd-services">
 
-          <Link to="/blood" className="home-service blood-service">
+        {/* BLOOD */}
+        <Link
+          to="/blood"
+          className="nabd-service-card nabd-blood-card"
+        >
 
-            <div className="service-icon blood-icon">
+          <div className="nabd-service-icon blood-icon">
+            💧
+          </div>
+
+          <h3>
+            التبرع بالدم والمخازن
+          </h3>
+
+          <div className="nabd-service-arrow">
+            →
+          </div>
+
+        </Link>
+
+
+        {/* MEDICINE */}
+        <Link
+          to="/medicines"
+          className="nabd-service-card nabd-medicine-card"
+        >
+
+          <div className="nabd-service-icon medicine-icon">
+            💊
+          </div>
+
+          <h3>
+            تبادل الأدوية
+          </h3>
+
+          <p>
+            أدوية غير متوفرة
+          </p>
+
+          <div className="nabd-service-arrow">
+            →
+          </div>
+
+        </Link>
+
+      </div>
+
+
+      {/* REQUESTS HEADER */}
+      <div className="nabd-requests-title">
+
+        <h3>
+          طلبات عاجلة قريبة منك
+        </h3>
+
+        <span>
+          📍
+        </span>
+
+      </div>
+
+
+      {/* REQUESTS */}
+      <div className="nabd-requests">
+
+        {urgentRequests.length > 0 ? (
+          urgentRequests.map((request) => (
+
+            <Link
+              key={request.id}
+              to={`/track/${request.id}`}
+              className="nabd-request-card"
+            >
+
+              <div className="nabd-request-arrow">
+                →
+              </div>
+
+              <div className="nabd-request-info">
+
+                <strong>
+                  فصيلة دم {request.bloodType || "O+"}
+                </strong>
+
+                <p>
+                  {request.hospital || "مستشفى النور التخصصي"}
+                </p>
+
+                <small>
+                  على بعد {request.distanceKm || "2.3"} كم
+                </small>
+
+              </div>
+
+              <div className="nabd-request-blood">
+                🩸
+              </div>
+
+            </Link>
+
+          ))
+        ) : (
+
+          <div className="nabd-request-card">
+
+            <div className="nabd-request-arrow">
+              →
+            </div>
+
+            <div className="nabd-request-info">
+
+              <strong>
+                فصيلة دم O+
+              </strong>
+
+              <p>
+                مستشفى النور التخصصي
+              </p>
+
+              <small>
+                على بعد 2.3 كم
+              </small>
+
+            </div>
+
+            <div className="nabd-request-blood">
               🩸
             </div>
 
-            <h3>التبرع بالدم والمحتاج</h3>
-
-            <span className="service-arrow">
-              ←
-            </span>
-
-          </Link>
-
-          <Link to="/medicines" className="home-service medicine-service">
-
-            <div className="service-icon medicine-icon">
-              💊
-            </div>
-
-            <h3>تبادل الأدوية</h3>
-
-            <p>أدوية غير متوفرة</p>
-
-            <span className="service-arrow">
-              ←
-            </span>
-
-          </Link>
-
-        </div>
-
-        {/* Urgent requests */}
-        <section className="urgent-section">
-
-          <div className="section-title">
-            <h3>طلبات عاجلة قريبة منك</h3>
-            <span>📍</span>
           </div>
 
-          {urgentRequests.length > 0 ? (
-            urgentRequests.map((request) => (
+        )}
 
-              <Link
-                key={request.id}
-                to={`/track/${request.id}`}
-                className="urgent-request"
-              >
+      </div>
 
-                <div className="urgent-arrow">
-                  ←
-                </div>
 
-                <div className="urgent-info">
+      {/* SHOW ALL */}
+      <Link
+        to="/blood"
+        className="nabd-show-all"
+      >
+        عروض الكل
+        <span>📍</span>
+      </Link>
 
-                  <strong>
-                    فصيلة دم {request.bloodType}
-                  </strong>
 
-                  <p>
-                    {request.hospital}
-                  </p>
+      {/* DECORATION */}
+      <div className="nabd-bottom-decoration">
 
-                  <small>
-                    على بعد {request.distanceKm} كم
-                  </small>
-
-                </div>
-
-                <div className="urgent-blood-icon">
-                  🩸
-                </div>
-
-              </Link>
-
-            ))
-          ) : (
-            <div className="empty-requests">
-              لا توجد طلبات عاجلة قريبة منك حاليًا
-            </div>
-          )}
-
-          <Link to="/blood" className="show-all">
-            عرض الكل 📍
-          </Link>
-
-        </section>
-
-      </main>
-
-      {/* Decorative bottom */}
-      <div className="home-bottom-decoration">
-        <div className="large-ecg">
-          ───────╱╲╱╲────────
+        <div className="nabd-big-ecg">
+          ──────╱╲╱╲──────
         </div>
 
-        <span className="medical-plus">
+        <div className="nabd-medical-plus">
           +
-        </span>
+        </div>
+
       </div>
 
     </div>
