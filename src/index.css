@@ -5203,3 +5203,806 @@ label.field-label {
   color: #879591;
   font-size: 13px;
 }
+/* =========================================================
+   NABD ALAMAL - MODERN HOME
+   ========================================================= */
+
+.nabd-home {
+  width: 100%;
+  max-width: 430px;
+  min-height: 100vh;
+  margin: 0 auto;
+  padding: 28px 18px 125px;
+  position: relative;
+  overflow: hidden;
+
+  direction: rtl;
+
+  background:
+    radial-gradient(circle at 15% 10%, rgba(255,255,255,.85), transparent 28%),
+    radial-gradient(circle at 90% 30%, rgba(110,230,220,.35), transparent 30%),
+    linear-gradient(
+      180deg,
+      #dff9f6 0%,
+      #c9f3f0 35%,
+      #ecfbfa 70%,
+      #d4f5f1 100%
+    );
+
+  color: #126f6c;
+}
+
+
+/* HEADER */
+
+.nabd-home-header {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 18px;
+}
+
+
+.nabd-brand {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+
+.nabd-heart-logo {
+  width: 62px;
+  height: 62px;
+
+  border-radius: 22px;
+
+  background: linear-gradient(
+    145deg,
+    #0db7a4,
+    #079c91
+  );
+
+  color: white;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  position: relative;
+
+  box-shadow:
+    0 10px 25px rgba(0,150,140,.22);
+}
+
+
+.nabd-heart-logo span {
+  font-size: 50px;
+  line-height: 1;
+}
+
+
+.nabd-ecg-mini {
+  position: absolute;
+  left: 7px;
+  right: 7px;
+  top: 27px;
+
+  font-size: 25px;
+  font-weight: bold;
+
+  color: white;
+}
+
+
+.nabd-brand h1 {
+  margin: 0;
+
+  font-size: 29px;
+  font-weight: 900;
+
+  color: #087d76;
+  letter-spacing: -1px;
+}
+
+
+.nabd-brand p {
+  margin: 1px 0 0;
+
+  font-size: 13px;
+  font-weight: 700;
+
+  color: #168c84;
+}
+
+
+.nabd-header-actions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+
+.nabd-notification-btn {
+  width: 48px;
+  height: 48px;
+
+  border-radius: 50%;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  position: relative;
+
+  text-decoration: none;
+
+  background: rgba(255,255,255,.42);
+
+  border: 1px solid rgba(255,255,255,.65);
+
+  box-shadow:
+    0 5px 18px rgba(0,120,110,.08);
+}
+
+
+.bell-icon {
+  font-size: 27px;
+  color: #078b82;
+}
+
+
+.notification-dot {
+  position: absolute;
+
+  width: 10px;
+  height: 10px;
+
+  background: #0bb09e;
+
+  border-radius: 50%;
+
+  top: 9px;
+  right: 9px;
+
+  border: 2px solid #dff9f6;
+}
+
+
+.nabd-avatar {
+  width: 57px;
+  height: 57px;
+
+  border-radius: 50%;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  text-decoration: none;
+
+  color: #078b82;
+
+  font-size: 25px;
+
+  background-color: #e5f8f6;
+  background-size: cover;
+  background-position: center;
+
+  border: 4px solid rgba(255,255,255,.75);
+
+  box-shadow:
+    0 5px 20px rgba(0,130,120,.16);
+}
+
+
+/* WELCOME */
+
+.nabd-welcome {
+  position: relative;
+
+  padding: 12px 4px 16px;
+
+  text-align: right;
+}
+
+
+.nabd-welcome h2 {
+  margin: 0;
+
+  font-size: 30px;
+  line-height: 1.4;
+
+  font-weight: 900;
+
+  color: #086e6a;
+}
+
+
+.nabd-welcome p {
+  margin: 2px 0 0;
+
+  font-size: 21px;
+  font-weight: 700;
+
+  color: #5a8f91;
+}
+
+
+.nabd-ecg-line {
+  width: 100%;
+  height: 48px;
+
+  position: relative;
+
+  margin-top: -3px;
+
+  opacity: .7;
+}
+
+
+.nabd-ecg-line::before {
+  content: "";
+
+  position: absolute;
+
+  left: 0;
+  right: 0;
+  top: 25px;
+
+  height: 2px;
+
+  background: rgba(255,255,255,.8);
+}
+
+
+.nabd-ecg-line span {
+  position: absolute;
+
+  right: 34%;
+  top: 0;
+
+  width: 80px;
+  height: 45px;
+
+  border-bottom: 3px solid white;
+
+  transform:
+    skewX(-18deg)
+    rotate(-5deg);
+}
+
+
+/* SEARCH */
+
+.nabd-search {
+  width: 100%;
+  height: 65px;
+
+  display: flex;
+  align-items: center;
+
+  margin: 4px 0 27px;
+
+  padding: 0 18px;
+
+  border-radius: 34px;
+
+  background: rgba(255,255,255,.45);
+
+  border: 2px solid rgba(255,255,255,.72);
+
+  box-shadow:
+    0 9px 25px rgba(0,120,115,.12);
+
+  backdrop-filter: blur(12px);
+}
+
+
+.nabd-search input {
+  width: 100%;
+
+  border: none;
+  outline: none;
+
+  background: transparent;
+
+  color: #337b7d;
+
+  font-size: 17px;
+  font-weight: 600;
+
+  text-align: right;
+
+  font-family: inherit;
+}
+
+
+.nabd-search input::placeholder {
+  color: #70999a;
+}
+
+
+.nabd-search-icon {
+  font-size: 27px;
+  margin-right: 8px;
+}
+
+
+/* SERVICES */
+
+.nabd-services {
+  display: grid;
+
+  grid-template-columns: 1fr 1fr;
+
+  gap: 14px;
+
+  margin-bottom: 27px;
+}
+
+
+.nabd-service-card {
+  min-height: 295px;
+
+  padding: 25px 17px 18px;
+
+  border-radius: 25px;
+
+  position: relative;
+
+  text-decoration: none;
+
+  overflow: hidden;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+  text-align: center;
+
+  border: 2px solid rgba(255,255,255,.7);
+
+  box-shadow:
+    0 9px 24px rgba(0,120,115,.10);
+
+  transition: transform .2s ease;
+}
+
+
+.nabd-service-card:active {
+  transform: scale(.97);
+}
+
+
+.nabd-blood-card {
+  background:
+    linear-gradient(
+      145deg,
+      rgba(255,244,246,.96),
+      rgba(255,229,235,.80)
+    );
+
+  border-color: rgba(255,181,196,.55);
+}
+
+
+.nabd-medicine-card {
+  background:
+    linear-gradient(
+      145deg,
+      rgba(239,255,253,.95),
+      rgba(207,246,242,.82)
+    );
+
+  border-color: rgba(93,216,204,.45);
+}
+
+
+.nabd-service-icon {
+  width: 102px;
+  height: 102px;
+
+  border-radius: 50%;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  font-size: 57px;
+
+  margin-bottom: 18px;
+}
+
+
+.blood-icon {
+  background: rgba(255,192,205,.35);
+}
+
+
+.medicine-icon {
+  background: rgba(151,235,225,.38);
+}
+
+
+.nabd-service-card h3 {
+  margin: 0;
+
+  font-size: 23px;
+  line-height: 1.35;
+
+  font-weight: 900;
+}
+
+
+.nabd-blood-card h3 {
+  color: #c5222c;
+}
+
+
+.nabd-medicine-card h3 {
+  color: #08766f;
+}
+
+
+.nabd-service-card p {
+  margin: 5px 0 0;
+
+  font-size: 17px;
+  font-weight: 700;
+
+  color: #5f9293;
+}
+
+
+.nabd-service-arrow {
+  width: 42px;
+  height: 42px;
+
+  border-radius: 50%;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  position: absolute;
+
+  bottom: 17px;
+  right: 17px;
+
+  font-size: 28px;
+  font-weight: 700;
+}
+
+
+.nabd-blood-card .nabd-service-arrow {
+  color: #d52631;
+  background: rgba(255,196,205,.35);
+}
+
+
+.nabd-medicine-card .nabd-service-arrow {
+  color: #079e91;
+  background: rgba(147,233,224,.35);
+}
+
+
+/* REQUEST TITLE */
+
+.nabd-requests-title {
+  display: flex;
+
+  align-items: center;
+  justify-content: flex-start;
+
+  gap: 7px;
+
+  margin: 0 5px 14px;
+}
+
+
+.nabd-requests-title h3 {
+  margin: 0;
+
+  font-size: 23px;
+
+  color: #096e6b;
+
+  font-weight: 900;
+}
+
+
+.nabd-requests-title span {
+  font-size: 24px;
+}
+
+
+/* REQUEST CARD */
+
+.nabd-request-card {
+  width: 100%;
+
+  min-height: 145px;
+
+  display: flex;
+  align-items: center;
+
+  position: relative;
+
+  padding: 18px 17px;
+
+  margin-bottom: 13px;
+
+  border-radius: 24px;
+
+  text-decoration: none;
+
+  background:
+    linear-gradient(
+      110deg,
+      rgba(255,247,248,.94),
+      rgba(255,233,237,.86)
+    );
+
+  border: 2px solid rgba(255,255,255,.85);
+
+  box-shadow:
+    0 9px 22px rgba(0,100,100,.09);
+}
+
+
+.nabd-request-arrow {
+  width: 45px;
+  height: 45px;
+
+  border-radius: 50%;
+
+  background: rgba(255,202,211,.45);
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  color: #ca202c;
+
+  font-size: 30px;
+  font-weight: 800;
+}
+
+
+.nabd-request-info {
+  flex: 1;
+
+  text-align: center;
+
+  padding: 0 7px;
+}
+
+
+.nabd-request-info strong {
+  display: block;
+
+  font-size: 24px;
+
+  color: #c3222b;
+
+  font-weight: 900;
+}
+
+
+.nabd-request-info p {
+  margin: 4px 0;
+
+  font-size: 17px;
+
+  color: #5d8d91;
+
+  font-weight: 700;
+}
+
+
+.nabd-request-info small {
+  display: block;
+
+  font-size: 17px;
+
+  color: #5d8d91;
+
+  font-weight: 700;
+}
+
+
+.nabd-request-blood {
+  width: 62px;
+  height: 62px;
+
+  flex-shrink: 0;
+
+  border-radius: 50%;
+
+  background: rgba(255,195,205,.45);
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  font-size: 38px;
+}
+
+
+/* SHOW ALL */
+
+.nabd-show-all {
+  width: 125px;
+  height: 48px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  gap: 5px;
+
+  margin: 0 5px;
+
+  border-radius: 25px;
+
+  color: #13817d;
+
+  background: rgba(255,255,255,.43);
+
+  border: 2px solid rgba(255,255,255,.8);
+
+  text-decoration: none;
+
+  font-size: 17px;
+  font-weight: 800;
+
+  box-shadow:
+    0 6px 18px rgba(0,120,110,.08);
+}
+
+
+/* BOTTOM DECORATION */
+
+.nabd-bottom-decoration {
+  height: 105px;
+
+  position: relative;
+
+  margin-top: 20px;
+
+  overflow: hidden;
+}
+
+
+.nabd-big-ecg {
+  position: absolute;
+
+  left: -30px;
+  right: -30px;
+  top: 25px;
+
+  text-align: center;
+
+  color: rgba(255,255,255,.85);
+
+  font-size: 22px;
+  font-weight: 800;
+
+  letter-spacing: 1px;
+}
+
+
+.nabd-medical-plus {
+  position: absolute;
+
+  left: 18px;
+  bottom: 5px;
+
+  width: 62px;
+  height: 62px;
+
+  border-radius: 50%;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  font-size: 50px;
+  font-weight: 800;
+
+  color: #08a798;
+
+  background: rgba(255,255,255,.25);
+}
+
+
+/* =========================================================
+   BOTTOM NAVIGATION
+   ========================================================= */
+
+.bottom-nav {
+  max-width: 430px !important;
+
+  height: 86px !important;
+
+  left: 50% !important;
+  right: auto !important;
+
+  transform: translateX(-50%);
+
+  bottom: 10px !important;
+
+  border-radius: 42px !important;
+
+  padding: 8px 10px !important;
+
+  background:
+    rgba(247,255,254,.90) !important;
+
+  border: 1px solid rgba(255,255,255,.85);
+
+  box-shadow:
+    0 8px 30px rgba(0,100,100,.15) !important;
+
+  backdrop-filter: blur(15px);
+}
+
+
+.bottom-nav a {
+  color: #648b91 !important;
+
+  font-weight: 700;
+
+  border-radius: 25px;
+}
+
+
+.bottom-nav a.active {
+  color: #079e91 !important;
+}
+
+
+.bottom-nav a.active::after {
+  background: #079e91 !important;
+
+  height: 5px !important;
+
+  width: 38px !important;
+
+  border-radius: 10px;
+}
+
+
+/* MOBILE */
+
+@media (max-width: 380px) {
+
+  .nabd-home {
+    padding-left: 13px;
+    padding-right: 13px;
+  }
+
+  .nabd-brand h1 {
+    font-size: 25px;
+  }
+
+  .nabd-heart-logo {
+    width: 55px;
+    height: 55px;
+  }
+
+  .nabd-welcome h2 {
+    font-size: 26px;
+  }
+
+  .nabd-service-card {
+    min-height: 270px;
+  }
+
+  .nabd-service-card h3 {
+    font-size: 20px;
+  }
+
+}
