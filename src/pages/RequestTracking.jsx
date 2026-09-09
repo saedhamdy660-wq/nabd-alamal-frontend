@@ -2,13 +2,17 @@ import React, { useEffect, useState } from "react";
 import { useParams, Link } from "react-router-dom";
 import { api } from "../api.js";
 
-/* =========================
-   Icons
-========================= */
+const STAGES = [
+  "تم إرسال التنبيه للمتبرعين",
+  "تم قبول الطلب من المتبرع",
+  "المتبرع في طريقه إلى المستشفى",
+  "تم الوصول إلى المستشفى",
+  "تم التبرع بنجاح",
+];
 
 function BackIcon() {
   return (
-    <svg viewBox="0 0 24 24" aria-hidden="true">
+    <svg viewBox="0 0 24 24">
       <path
         d="M15 18l-6-6 6-6"
         fill="none"
@@ -23,7 +27,7 @@ function BackIcon() {
 
 function CheckIcon() {
   return (
-    <svg viewBox="0 0 24 24" aria-hidden="true">
+    <svg viewBox="0 0 24 24">
       <path
         d="M5 12.5l4.2 4.2L19 7"
         fill="none"
@@ -38,7 +42,7 @@ function CheckIcon() {
 
 function ClockIcon() {
   return (
-    <svg viewBox="0 0 24 24" aria-hidden="true">
+    <svg viewBox="0 0 24 24">
       <circle
         cx="12"
         cy="12"
@@ -53,7 +57,6 @@ function ClockIcon() {
         stroke="currentColor"
         strokeWidth="1.8"
         strokeLinecap="round"
-        strokeLinejoin="round"
       />
     </svg>
   );
@@ -61,7 +64,7 @@ function ClockIcon() {
 
 function HomeIcon() {
   return (
-    <svg viewBox="0 0 24 24" aria-hidden="true">
+    <svg viewBox="0 0 24 24">
       <path
         d="M4 10.5L12 4l8 6.5V20a1 1 0 0 1-1 1h-4.5v-5h-5v5H5a1 1 0 0 1-1-1v-9.5Z"
         fill="none"
@@ -75,7 +78,7 @@ function HomeIcon() {
 
 function RequestsIcon() {
   return (
-    <svg viewBox="0 0 24 24" aria-hidden="true">
+    <svg viewBox="0 0 24 24">
       <rect
         x="5"
         y="4"
@@ -99,7 +102,7 @@ function RequestsIcon() {
 
 function BellIcon() {
   return (
-    <svg viewBox="0 0 24 24" aria-hidden="true">
+    <svg viewBox="0 0 24 24">
       <path
         d="M6 17h12l-1.2-1.7V10a4.8 4.8 0 0 0-9.6 0v5.3L6 17Z"
         fill="none"
@@ -120,7 +123,7 @@ function BellIcon() {
 
 function ProfileIcon() {
   return (
-    <svg viewBox="0 0 24 24" aria-hidden="true">
+    <svg viewBox="0 0 24 24">
       <circle
         cx="12"
         cy="8"
@@ -140,82 +143,6 @@ function ProfileIcon() {
   );
 }
 
-/* =========================
-   The ONLY 5 stages
-========================= */
-
-const REQUIRED_STAGES = [
-  "تم إرسال التنبيه للمتبرعين",
-  "تم قبول الطلب من المتبرع",
-  "المتبرع في طريقه إلى المستشفى",
-  "تم الوصول إلى المستشفى",
-  "تم التبرع بنجاح",
-];
-
-/* =========================
-   Helpers
-========================= */
-
-function normalizeText(text = "") {
-  return String(text)
-    .trim()
-    .replace(/\s+/g, " ")
-    .replace(/[إأآ]/g, "ا");
-}
-
-function findStage(requestTimeline, stageLabel, stageIndex) {
-  if (!Array.isArray(requestTimeline)) {
-    return {
-      label: stageLabel,
-      time: "",
-      done: false,
-    };
-  }
-
-  const target = normalizeText(stageLabel);
-
-  const exact = requestTimeline.filter((item) => {
-    const current = normalizeText(item?.label || "");
-    return current === target;
-  });
-
-  if (exact.length > 0) {
-    // لو فيه تكرار، نستخدم آخر نسخة
-    // ونعتبر المرحلة مكتملة إذا أي نسخة منها مكتملة.
-    const last = exact[exact.length - 1];
-
-    return {
-      label: stageLabel,
-      time: last?.time || exact.find((x) => x?.time)?.time || "",
-      done: exact.some((x) => Boolean(x?.done)),
-    };
-  }
-
-  /*
-    لو الـ Backend يستخدم أسماء مختلفة شوية،
-    نحاول مطابقة المرحلة حسب ترتيبها.
-  */
-  const byIndex = requestTimeline[stageIndex];
-
-  if (byIndex) {
-    return {
-      label: stageLabel,
-      time: byIndex.time || "",
-      done: Boolean(byIndex.done),
-    };
-  }
-
-  return {
-    label: stageLabel,
-    time: "",
-    done: false,
-  };
-}
-
-/* =========================
-   Page
-========================= */
-
 export default function RequestTracking() {
   const { id } = useParams();
   const [request, setRequest] = useState(null);
@@ -230,26 +157,23 @@ export default function RequestTracking() {
   if (!request) {
     return (
       <div className="tracking-page">
-        <div className="tracking-loading">جارِ التحميل...</div>
+        <div className="loading">جارِ التحميل...</div>
 
         <style>{`
           .tracking-page {
             min-height: 100vh;
-            padding: 28px 18px;
-            background:
-              radial-gradient(circle at 15% 10%, rgba(89, 205, 190, .18), transparent 30%),
-              radial-gradient(circle at 90% 35%, rgba(157, 235, 220, .2), transparent 30%),
-              linear-gradient(160deg, #f8ffff 0%, #edfafa 55%, #e7f6f3 100%);
+            padding: 30px 18px;
             direction: rtl;
-            color: #24575a;
+            background:
+              radial-gradient(circle at 10% 5%, rgba(70,193,177,.16), transparent 30%),
+              radial-gradient(circle at 90% 30%, rgba(154,231,216,.18), transparent 30%),
+              linear-gradient(160deg, #fbffff, #e8f7f4);
+            font-family: Arial, Tahoma, sans-serif;
           }
 
-          .tracking-loading {
-            width: 100%;
-            max-width: 520px;
-            margin: 120px auto;
+          .loading {
             text-align: center;
-            font-size: 16px;
+            margin-top: 100px;
             color: #6d9191;
           }
         `}</style>
@@ -258,23 +182,45 @@ export default function RequestTracking() {
   }
 
   /*
-    هنا بنبني Timeline جديد من الخمس مراحل فقط.
-    أي مرحلة أخرى يرجعها الـ Backend يتم تجاهلها.
-    وأي مرحلة مكررة لن تظهر.
+    نعرض المراحل الخمسة فقط.
+    أي مراحل إضافية أو تكرار من الـ API يتم تجاهله.
   */
-  const timeline = REQUIRED_STAGES.map((stage, index) =>
-    findStage(request.timeline, stage, index)
-  );
+  const apiTimeline = Array.isArray(request.timeline)
+    ? request.timeline
+    : [];
 
-  const allDone =
-    timeline.length === 5 && timeline.every((step) => step.done);
+  const timeline = STAGES.map((stage, index) => {
+    const matches = apiTimeline.filter(
+      (item) =>
+        String(item?.label || "").trim() === stage
+    );
+
+    if (matches.length > 0) {
+      const last = matches[matches.length - 1];
+
+      return {
+        label: stage,
+        time: last?.time || "",
+        done: matches.some((item) => Boolean(item?.done)),
+      };
+    }
+
+    const fallback = apiTimeline[index];
+
+    return {
+      label: stage,
+      time: fallback?.time || "",
+      done: Boolean(fallback?.done),
+    };
+  });
+
+  const allDone = timeline.every((step) => step.done);
 
   return (
     <div className="tracking-page">
 
-      {/* Header */}
       <header className="tracking-header">
-        <Link to="/blood" className="back-button" aria-label="رجوع">
+        <Link to="/blood" className="back-button">
           <BackIcon />
         </Link>
 
@@ -283,23 +229,18 @@ export default function RequestTracking() {
         <div className="header-space" />
       </header>
 
-      {/* Intro */}
-      <section className="tracking-intro">
+      <section className="intro-card">
         <div className="intro-icon">
           <CheckIcon />
         </div>
 
         <div>
           <h2>حالة طلب التبرع</h2>
-          <p>
-            تابع حالة طلبك خطوة بخطوة
-          </p>
+          <p>تابع حالة طلبك خطوة بخطوة</p>
         </div>
       </section>
 
-      {/* Timeline */}
       <section className="timeline-card">
-
         {timeline.map((step, index) => {
           const isLast = index === timeline.length - 1;
 
@@ -308,21 +249,21 @@ export default function RequestTracking() {
 
               <div className="timeline-content">
                 <div
-                  className={`timeline-title ${
-                    step.done ? "completed" : ""
-                  }`}
+                  className={
+                    step.done
+                      ? "timeline-title completed"
+                      : "timeline-title"
+                  }
                 >
                   {step.label}
                 </div>
 
-                {step.time && (
+                {step.time ? (
                   <div className="timeline-time">
                     <ClockIcon />
                     <span>{step.time}</span>
                   </div>
-                )}
-
-                {!step.time && !step.done && (
+                ) : (
                   <div className="timeline-pending">
                     في انتظار هذه المرحلة
                   </div>
@@ -330,71 +271,66 @@ export default function RequestTracking() {
               </div>
 
               <div className="timeline-side">
-
                 <div
-                  className={`timeline-check ${
-                    step.done ? "done" : "pending"
-                  }`}
+                  className={
+                    step.done
+                      ? "timeline-check done"
+                      : "timeline-check pending"
+                  }
                 >
                   {step.done && <CheckIcon />}
                 </div>
 
                 {!isLast && (
                   <div
-                    className={`timeline-line ${
-                      step.done ? "done" : ""
-                    }`}
+                    className={
+                      step.done
+                        ? "timeline-line done"
+                        : "timeline-line"
+                    }
                   />
                 )}
-
               </div>
 
             </div>
           );
         })}
-
       </section>
 
-      {/* Completed */}
       {allDone && (
         <section className="completed-card">
-
           <div className="completed-icon">
             <CheckIcon />
           </div>
 
           <h3>تم التبرع بنجاح</h3>
 
-          <p>
-            شكرًا لكل من ساهم في إنقاذ حياة ❤️
-          </p>
+          <p>شكرًا لكل من ساهم في إنقاذ حياة ❤️</p>
 
           <Link to="/requests" className="details-button">
             تفاصيل الطلب
           </Link>
-
         </section>
       )}
 
-      {/* Bottom Navigation */}
       <nav className="tracking-bottom-nav">
 
-        <Link to="/profile" className="tracking-nav-item">
+        <Link to="/profile" className="nav-item">
           <ProfileIcon />
           <span>الملف الشخصي</span>
         </Link>
 
-        <Link to="/notifications" className="tracking-nav-item">
+        <Link to="/notifications" className="nav-item">
           <BellIcon />
           <span>الإشعارات</span>
         </Link>
 
-        <Link to="/requests" className="tracking-nav-item active">
+        <Link to="/requests" className="nav-item active">
           <RequestsIcon />
           <span>الطلبات</span>
         </Link>
 
-        <Link to="/home" className="tracking-nav-item">
+        <Link to="/home" className="nav-item">
           <HomeIcon />
           <span>الرئيسية</span>
         </Link>
@@ -402,7 +338,6 @@ export default function RequestTracking() {
       </nav>
 
       <style>{`
-
         * {
           box-sizing: border-box;
         }
@@ -410,15 +345,19 @@ export default function RequestTracking() {
         .tracking-page {
           min-height: 100vh;
           padding: 22px 18px 115px;
+          direction: rtl;
+          color: #24575a;
+          font-family: Arial, Tahoma, sans-serif;
+
           background:
             radial-gradient(
               circle at 10% 5%,
-              rgba(70, 193, 177, .17),
+              rgba(70,193,177,.17),
               transparent 28%
             ),
             radial-gradient(
               circle at 95% 28%,
-              rgba(154, 231, 216, .18),
+              rgba(154,231,216,.18),
               transparent 30%
             ),
             linear-gradient(
@@ -427,15 +366,7 @@ export default function RequestTracking() {
               #f1fbfa 45%,
               #e8f7f4 100%
             );
-          direction: rtl;
-          color: #24575a;
-          font-family:
-            Arial,
-            "Tahoma",
-            sans-serif;
         }
-
-        /* Header */
 
         .tracking-header {
           width: 100%;
@@ -463,11 +394,11 @@ export default function RequestTracking() {
           justify-content: center;
           color: #218d83;
           text-decoration: none;
-          background: rgba(255, 255, 255, .66);
-          border: 1px solid rgba(255, 255, 255, .9);
+          background: rgba(255,255,255,.66);
+          border: 1px solid rgba(255,255,255,.9);
           box-shadow:
-            0 7px 18px rgba(35, 139, 128, .08),
-            inset 0 1px 0 rgba(255, 255, 255, .9);
+            0 7px 18px rgba(35,139,128,.08),
+            inset 0 1px 0 rgba(255,255,255,.9);
           backdrop-filter: blur(12px);
           -webkit-backdrop-filter: blur(12px);
         }
@@ -482,9 +413,7 @@ export default function RequestTracking() {
           height: 42px;
         }
 
-        /* Intro */
-
-        .tracking-intro {
+        .intro-card {
           width: 100%;
           max-width: 520px;
           margin: 0 auto 16px;
@@ -496,13 +425,13 @@ export default function RequestTracking() {
           background:
             linear-gradient(
               145deg,
-              rgba(255, 255, 255, .82),
-              rgba(225, 247, 243, .75)
+              rgba(255,255,255,.82),
+              rgba(225,247,243,.75)
             );
-          border: 1px solid rgba(255, 255, 255, .9);
+          border: 1px solid rgba(255,255,255,.9);
           box-shadow:
-            0 10px 28px rgba(42, 128, 128, .08),
-            inset 0 1px 0 rgba(255, 255, 255, .85);
+            0 10px 28px rgba(42,128,128,.08),
+            inset 0 1px 0 rgba(255,255,255,.85);
           backdrop-filter: blur(14px);
           -webkit-backdrop-filter: blur(14px);
         }
@@ -516,8 +445,7 @@ export default function RequestTracking() {
           align-items: center;
           justify-content: center;
           color: #159b8a;
-          background: rgba(208, 246, 238, .9);
-          border: 1px solid rgba(255, 255, 255, .8);
+          background: rgba(208,246,238,.9);
         }
 
         .intro-icon svg {
@@ -525,20 +453,17 @@ export default function RequestTracking() {
           height: 25px;
         }
 
-        .tracking-intro h2 {
+        .intro-card h2 {
           margin: 0 0 4px;
           color: #286d6d;
           font-size: 16px;
-          font-weight: 800;
         }
 
-        .tracking-intro p {
+        .intro-card p {
           margin: 0;
           color: #789393;
           font-size: 13px;
         }
-
-        /* Timeline */
 
         .timeline-card {
           width: 100%;
@@ -549,13 +474,13 @@ export default function RequestTracking() {
           background:
             linear-gradient(
               145deg,
-              rgba(255, 255, 255, .86),
-              rgba(232, 249, 246, .78)
+              rgba(255,255,255,.86),
+              rgba(232,249,246,.78)
             );
-          border: 1px solid rgba(255, 255, 255, .92);
+          border: 1px solid rgba(255,255,255,.92);
           box-shadow:
-            0 12px 32px rgba(42, 128, 128, .09),
-            inset 0 1px 0 rgba(255, 255, 255, .9);
+            0 12px 32px rgba(42,128,128,.09),
+            inset 0 1px 0 rgba(255,255,255,.9);
           backdrop-filter: blur(15px);
           -webkit-backdrop-filter: blur(15px);
         }
@@ -589,7 +514,6 @@ export default function RequestTracking() {
           margin-top: 5px;
           display: flex;
           align-items: center;
-          justify-content: flex-start;
           gap: 5px;
           color: #91aaaa;
           font-size: 11px;
@@ -611,3 +535,163 @@ export default function RequestTracking() {
           position: relative;
           display: flex;
           justify-content: center;
+          flex-shrink: 0;
+        }
+
+        .timeline-check {
+          position: relative;
+          z-index: 2;
+          width: 28px;
+          height: 28px;
+          border-radius: 50%;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          border: 2px solid #b9d7d3;
+          background: rgba(255,255,255,.78);
+          color: white;
+        }
+
+        .timeline-check.done {
+          border-color: #159b8a;
+          background: #159b8a;
+          box-shadow: 0 5px 14px rgba(21,155,138,.2);
+        }
+
+        .timeline-check svg {
+          width: 16px;
+          height: 16px;
+        }
+
+        .timeline-line {
+          position: absolute;
+          top: 28px;
+          bottom: -1px;
+          width: 2px;
+          background: #cfe5e2;
+        }
+
+        .timeline-line.done {
+          background: #8ed6cc;
+        }
+
+        .completed-card {
+          width: 100%;
+          max-width: 520px;
+          margin: 16px auto 0;
+          padding: 22px 18px;
+          text-align: center;
+          border-radius: 25px;
+          background:
+            linear-gradient(
+              145deg,
+              rgba(218,251,242,.95),
+              rgba(201,243,232,.88)
+            );
+          border: 1px solid rgba(255,255,255,.9);
+          box-shadow:
+            0 12px 30px rgba(55,145,130,.11);
+        }
+
+        .completed-icon {
+          width: 54px;
+          height: 54px;
+          margin: 0 auto 9px;
+          border-radius: 50%;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          color: white;
+          background: #159b8a;
+        }
+
+        .completed-icon svg {
+          width: 28px;
+          height: 28px;
+        }
+
+        .completed-card h3 {
+          margin: 0 0 5px;
+          color: #237c70;
+          font-size: 18px;
+        }
+
+        .completed-card p {
+          margin: 0;
+          color: #6f9290;
+          font-size: 13px;
+        }
+
+        .details-button {
+          display: block;
+          margin-top: 16px;
+          padding: 12px 18px;
+          border-radius: 15px;
+          text-decoration: none;
+          color: white;
+          background: #159b8a;
+          font-size: 14px;
+          font-weight: 800;
+          box-shadow: 0 7px 18px rgba(21,155,138,.18);
+        }
+
+        .tracking-bottom-nav {
+          position: fixed;
+          left: 50%;
+          bottom: 14px;
+          transform: translateX(-50%);
+          z-index: 100;
+          width: calc(100% - 28px);
+          max-width: 520px;
+          height: 68px;
+          padding: 6px;
+          display: grid;
+          grid-template-columns: repeat(4, 1fr);
+          gap: 4px;
+          border-radius: 24px;
+          background: rgba(255,255,255,.78);
+          border: 1px solid rgba(255,255,255,.92);
+          box-shadow:
+            0 12px 32px rgba(37,111,111,.13),
+            inset 0 1px 0 rgba(255,255,255,.95);
+          backdrop-filter: blur(18px);
+          -webkit-backdrop-filter: blur(18px);
+        }
+
+        .nav-item {
+          position: relative;
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          justify-content: center;
+          gap: 3px;
+          border-radius: 18px;
+          text-decoration: none;
+          color: #8aa5a4;
+          font-size: 9px;
+          font-weight: 700;
+        }
+
+        .nav-item svg {
+          width: 21px;
+          height: 21px;
+        }
+
+        .nav-item.active {
+          color: #159b8a;
+          background: rgba(219,248,242,.72);
+        }
+
+        .nav-item.active::after {
+          content: "";
+          position: absolute;
+          bottom: 3px;
+          width: 22px;
+          height: 3px;
+          border-radius: 10px;
+          background: #159b8a;
+        }
+      `}</style>
+    </div>
+  );
+}
