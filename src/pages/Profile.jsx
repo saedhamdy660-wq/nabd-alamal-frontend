@@ -5,9 +5,7 @@ import { api } from "../api.js";
 function getSavedUser() {
   try {
     const saved = localStorage.getItem("nabd_user");
-
     if (!saved) return null;
-
     return JSON.parse(saved);
   } catch {
     return null;
@@ -17,21 +15,8 @@ function getSavedUser() {
 function UserIcon() {
   return (
     <svg viewBox="0 0 24 24">
-      <circle
-        cx="12"
-        cy="8"
-        r="3"
-        fill="none"
-        stroke="currentColor"
-        strokeWidth="1.8"
-      />
-      <path
-        d="M5.5 20c.8-3.3 3-5 6.5-5s5.7 1.7 6.5 5"
-        fill="none"
-        stroke="currentColor"
-        strokeWidth="1.8"
-        strokeLinecap="round"
-      />
+      <circle cx="12" cy="8" r="3" fill="none" stroke="currentColor" strokeWidth="1.8" />
+      <path d="M5.5 20c.8-3.3 3-5 6.5-5s5.7 1.7 6.5 5" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" />
     </svg>
   );
 }
@@ -39,20 +24,8 @@ function UserIcon() {
 function LocationIcon() {
   return (
     <svg viewBox="0 0 24 24">
-      <path
-        d="M12 21s7-6.1 7-12a7 7 0 1 0-14 0c0 5.9 7 12 7 12Z"
-        fill="none"
-        stroke="currentColor"
-        strokeWidth="1.8"
-      />
-      <circle
-        cx="12"
-        cy="9"
-        r="2.2"
-        fill="none"
-        stroke="currentColor"
-        strokeWidth="1.8"
-      />
+      <path d="M12 21s7-6.1 7-12a7 7 0 1 0-14 0c0 5.9 7 12 7 12Z" fill="none" stroke="currentColor" strokeWidth="1.8" />
+      <circle cx="12" cy="9" r="2.2" fill="none" stroke="currentColor" strokeWidth="1.8" />
     </svg>
   );
 }
@@ -60,23 +33,8 @@ function LocationIcon() {
 function CalendarIcon() {
   return (
     <svg viewBox="0 0 24 24">
-      <rect
-        x="4"
-        y="5"
-        width="16"
-        height="15"
-        rx="2"
-        fill="none"
-        stroke="currentColor"
-        strokeWidth="1.8"
-      />
-      <path
-        d="M8 3v4M16 3v4M4 9h16"
-        fill="none"
-        stroke="currentColor"
-        strokeWidth="1.8"
-        strokeLinecap="round"
-      />
+      <rect x="4" y="5" width="16" height="15" rx="2" fill="none" stroke="currentColor" strokeWidth="1.8" />
+      <path d="M8 3v4M16 3v4M4 9h16" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" />
     </svg>
   );
 }
@@ -84,13 +42,7 @@ function CalendarIcon() {
 function HeartIcon() {
   return (
     <svg viewBox="0 0 24 24">
-      <path
-        d="M20 8.8c0 5.2-8 10-8 10s-8-4.8-8-10a4.2 4.2 0 0 1 8-1.7A4.2 4.2 0 0 1 20 8.8Z"
-        fill="none"
-        stroke="currentColor"
-        strokeWidth="1.8"
-        strokeLinejoin="round"
-      />
+      <path d="M20 8.8c0 5.2-8 10-8 10s-8-4.8-8-10a4.2 4.2 0 0 1 8-1.7A4.2 4.2 0 0 1 20 8.8Z" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinejoin="round" />
     </svg>
   );
 }
@@ -98,14 +50,7 @@ function HeartIcon() {
 function SettingsIcon() {
   return (
     <svg viewBox="0 0 24 24">
-      <circle
-        cx="12"
-        cy="12"
-        r="3"
-        fill="none"
-        stroke="currentColor"
-        strokeWidth="1.8"
-      />
+      <circle cx="12" cy="12" r="3" fill="none" stroke="currentColor" strokeWidth="1.8" />
       <path
         d="M19 13.2v-2.4l-1.8-.5a5.9 5.9 0 0 0-.6-1.5l1-1.5-1.7-1.7-1.5 1a5.9 5.9 0 0 0-1.5-.6L12.4 4H10l-.5 1.8a5.9 5.9 0 0 0-1.5.6l-1.5-1L4.8 7.1l1 1.5a5.9 5.9 0 0 0-.6 1.5l-1.8.5v2.4l1.8.5a5.9 5.9 0 0 0 .6 1.5l-1 1.5 1.7 1.7 1.5-1a5.9 5.9 0 0 0 1.5.6L10 20h2.4l.5-1.8a5.9 5.9 0 0 0 1.5-.6l1.5 1 1.7-1.7-1-1.5a5.9 5.9 0 0 0 .6-1.5l1.8-.7Z"
         fill="none"
@@ -117,22 +62,60 @@ function SettingsIcon() {
   );
 }
 
-function BellIcon() {
+function SupportIcon() {
   return (
     <svg viewBox="0 0 24 24">
       <path
-        d="M6 17h12l-1.2-1.7V10a4.8 4.8 0 0 0-9.6 0v5.3L6 17Z"
-        fill="none"
-        stroke="currentColor"
-        strokeWidth="1.8"
-      />
-      <path
-        d="M10 20h4"
+        d="M4 13v-1a8 8 0 0 1 16 0v1"
         fill="none"
         stroke="currentColor"
         strokeWidth="1.8"
         strokeLinecap="round"
       />
+      <path
+        d="M4 13h3v5H5a1 1 0 0 1-1-1v-4Zm16 0h-3v5h2a1 1 0 0 0 1-1v-4Z"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="1.8"
+      />
+      <path
+        d="M17 18c-.7 1.2-1.9 2-3.5 2H12"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="1.8"
+        strokeLinecap="round"
+      />
+    </svg>
+  );
+}
+
+function LogoutIcon() {
+  return (
+    <svg viewBox="0 0 24 24">
+      <path
+        d="M10 4H6a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h4"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="1.8"
+        strokeLinecap="round"
+      />
+      <path
+        d="M14 8l4 4-4 4M9 12h9"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="1.8"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+    </svg>
+  );
+}
+
+function BellIcon() {
+  return (
+    <svg viewBox="0 0 24 24">
+      <path d="M6 17h12l-1.2-1.7V10a4.8 4.8 0 0 0-9.6 0v5.3L6 17Z" fill="none" stroke="currentColor" strokeWidth="1.8" />
+      <path d="M10 20h4" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" />
     </svg>
   );
 }
@@ -140,23 +123,8 @@ function BellIcon() {
 function RequestsIcon() {
   return (
     <svg viewBox="0 0 24 24">
-      <rect
-        x="5"
-        y="4"
-        width="14"
-        height="16"
-        rx="2"
-        fill="none"
-        stroke="currentColor"
-        strokeWidth="1.8"
-      />
-      <path
-        d="M8.5 9h7M8.5 13h7M8.5 17h4"
-        fill="none"
-        stroke="currentColor"
-        strokeWidth="1.8"
-        strokeLinecap="round"
-      />
+      <rect x="5" y="4" width="14" height="16" rx="2" fill="none" stroke="currentColor" strokeWidth="1.8" />
+      <path d="M8.5 9h7M8.5 13h7M8.5 17h4" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" />
     </svg>
   );
 }
@@ -164,13 +132,7 @@ function RequestsIcon() {
 function HomeIcon() {
   return (
     <svg viewBox="0 0 24 24">
-      <path
-        d="M4 10.5L12 4l8 6.5V20a1 1 0 0 1-1 1h-4.5v-5h-5v5H5a1 1 0 0 1-1-1v-9.5Z"
-        fill="none"
-        stroke="currentColor"
-        strokeWidth="1.8"
-        strokeLinejoin="round"
-      />
+      <path d="M4 10.5L12 4l8 6.5V20a1 1 0 0 1-1 1h-4.5v-5h-5v5H5a1 1 0 0 1-1-1v-9.5Z" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinejoin="round" />
     </svg>
   );
 }
@@ -178,21 +140,17 @@ function HomeIcon() {
 function ArrowIcon() {
   return (
     <svg viewBox="0 0 24 24">
-      <path
-        d="M9 5l7 7-7 7"
-        fill="none"
-        stroke="currentColor"
-        strokeWidth="2"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      />
+      <path d="M9 5l7 7-7 7" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
     </svg>
   );
 }
 
-function ProfileMenuItem({ icon, title, onClick }) {
+function ProfileMenuItem({ icon, title, onClick, danger = false }) {
   return (
-    <button className="profile-menu-item" onClick={onClick}>
+    <button
+      className={`profile-menu-item ${danger ? "danger-item" : ""}`}
+      onClick={onClick}
+    >
       <div className="menu-icon">{icon}</div>
 
       <span>{title}</span>
@@ -210,10 +168,6 @@ export default function Profile() {
   const [user, setUser] = useState(getSavedUser());
 
   useEffect(() => {
-    /*
-      نحاول نجيب بيانات المستخدم من الـ API.
-      ولو فشل، نستخدم البيانات المحفوظة بعد التسجيل.
-    */
     api
       .getUser()
       .then((data) => {
@@ -229,10 +183,6 @@ export default function Profile() {
       .catch(() => {});
   }, []);
 
-  /*
-    الاسم هيكون اسم المستخدم اللي سجل بيه.
-    الكود بيتعامل مع أكثر من شكل للبيانات.
-  */
   const userName =
     user?.name ||
     user?.username ||
@@ -250,6 +200,14 @@ export default function Profile() {
     user?.profileImage ||
     localStorage.getItem("nabd_avatar") ||
     "";
+
+  // تسجيل الخروج
+  const handleLogout = () => {
+    localStorage.removeItem("nabd_user");
+    localStorage.removeItem("nabd_avatar");
+
+    navigate("/login", { replace: true });
+  };
 
   return (
     <div className="profile-page">
@@ -335,9 +293,22 @@ export default function Profile() {
         <ProfileMenuItem
           icon={<SettingsIcon />}
           title="إعدادات التطبيق"
-          onClick={() =>
-            navigate("/notification-settings")
-          }
+          onClick={() => navigate("/notification-settings")}
+        />
+
+        {/* المساعدة والدعم */}
+        <ProfileMenuItem
+          icon={<SupportIcon />}
+          title="المساعدة والدعم"
+          onClick={() => navigate("/support")}
+        />
+
+        {/* تسجيل الخروج */}
+        <ProfileMenuItem
+          icon={<LogoutIcon />}
+          title="تسجيل الخروج"
+          danger
+          onClick={handleLogout}
         />
 
       </section>
@@ -388,9 +359,7 @@ export default function Profile() {
         .profile-page {
           min-height: 100vh;
           padding: 22px 18px 110px;
-
           direction: rtl;
-
           color: #24575a;
 
           background:
@@ -425,11 +394,8 @@ export default function Profile() {
 
         .profile-header h1 {
           margin: 0;
-
           text-align: center;
-
           color: #218d83;
-
           font-size: 22px;
           font-weight: 800;
         }
@@ -444,7 +410,6 @@ export default function Profile() {
           background: rgba(255,255,255,.72);
 
           color: #218d83;
-
           font-size: 25px;
 
           cursor: pointer;
@@ -459,13 +424,13 @@ export default function Profile() {
           height: 42px;
         }
 
-        /* Profile */
+        /* Profile Card */
+
         .profile-card {
           max-width: 520px;
           margin: 0 auto 17px;
 
           min-height: 280px;
-
           padding: 25px 18px;
 
           text-align: center;
@@ -535,7 +500,6 @@ export default function Profile() {
           height: 36px;
 
           border: 3px solid white;
-
           border-radius: 50%;
 
           display: flex;
@@ -543,7 +507,6 @@ export default function Profile() {
           justify-content: center;
 
           color: white;
-
           background: #159b8a;
 
           font-size: 23px;
@@ -557,18 +520,14 @@ export default function Profile() {
 
         .profile-card h2 {
           margin: 0 0 5px;
-
           color: #286d6d;
-
           font-size: 24px;
           font-weight: 800;
         }
 
         .profile-card p {
           margin: 0;
-
           color: #729292;
-
           font-size: 13px;
         }
 
@@ -590,6 +549,7 @@ export default function Profile() {
         }
 
         /* Menu */
+
         .profile-menu {
           max-width: 520px;
           margin: 0 auto;
@@ -697,7 +657,29 @@ export default function Profile() {
           height: 17px;
         }
 
+        /* Logout */
+
+        .danger-item .menu-icon {
+          color: #d36a79;
+
+          background:
+            linear-gradient(
+              145deg,
+              #fff0f3,
+              #ffe4e9
+            );
+        }
+
+        .danger-item span {
+          color: #c65f70 !important;
+        }
+
+        .danger-item .menu-arrow {
+          color: #d88a96;
+        }
+
         /* Bottom Nav */
+
         .profile-bottom-nav {
           position: fixed;
 
