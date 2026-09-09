@@ -2,6 +2,10 @@ import React, { useEffect, useState } from "react";
 import { useParams, Link } from "react-router-dom";
 import { api } from "../api.js";
 
+/* =========================
+   Icons
+========================= */
+
 function BackIcon() {
   return (
     <svg viewBox="0 0 24 24" aria-hidden="true">
@@ -9,7 +13,7 @@ function BackIcon() {
         d="M15 18l-6-6 6-6"
         fill="none"
         stroke="currentColor"
-        strokeWidth="2.4"
+        strokeWidth="2"
         strokeLinecap="round"
         strokeLinejoin="round"
       />
@@ -21,7 +25,7 @@ function CheckIcon() {
   return (
     <svg viewBox="0 0 24 24" aria-hidden="true">
       <path
-        d="M5 12.5l4.2 4L19 7"
+        d="M5 12.5l4.2 4.2L19 7"
         fill="none"
         stroke="currentColor"
         strokeWidth="2.4"
@@ -44,11 +48,12 @@ function ClockIcon() {
         strokeWidth="1.8"
       />
       <path
-        d="M12 7v5l3.2 2"
+        d="M12 7v5l3 2"
         fill="none"
         stroke="currentColor"
         strokeWidth="1.8"
         strokeLinecap="round"
+        strokeLinejoin="round"
       />
     </svg>
   );
@@ -58,14 +63,7 @@ function HomeIcon() {
   return (
     <svg viewBox="0 0 24 24" aria-hidden="true">
       <path
-        d="M3.5 10.8L12 3.8l8.5 7v8.7a1.5 1.5 0 01-1.5 1.5H5a1.5 1.5 0 01-1.5-1.5v-8.7z"
-        fill="none"
-        stroke="currentColor"
-        strokeWidth="1.8"
-        strokeLinejoin="round"
-      />
-      <path
-        d="M9 21v-6h6v6"
+        d="M4 10.5L12 4l8 6.5V20a1 1 0 0 1-1 1h-4.5v-5h-5v5H5a1 1 0 0 1-1-1v-9.5Z"
         fill="none"
         stroke="currentColor"
         strokeWidth="1.8"
@@ -80,16 +78,16 @@ function RequestsIcon() {
     <svg viewBox="0 0 24 24" aria-hidden="true">
       <rect
         x="5"
-        y="3.5"
+        y="4"
         width="14"
-        height="17"
-        rx="2.2"
+        height="16"
+        rx="2"
         fill="none"
         stroke="currentColor"
         strokeWidth="1.8"
       />
       <path
-        d="M8.5 8h7M8.5 12h7M8.5 16h4"
+        d="M8.5 9h7M8.5 13h7M8.5 17h4"
         fill="none"
         stroke="currentColor"
         strokeWidth="1.8"
@@ -103,7 +101,7 @@ function BellIcon() {
   return (
     <svg viewBox="0 0 24 24" aria-hidden="true">
       <path
-        d="M6 17h12l-1.3-1.8V10a4.7 4.7 0 00-9.4 0v5.2L6 17z"
+        d="M6 17h12l-1.2-1.7V10a4.8 4.8 0 0 0-9.6 0v5.3L6 17Z"
         fill="none"
         stroke="currentColor"
         strokeWidth="1.8"
@@ -132,7 +130,7 @@ function ProfileIcon() {
         strokeWidth="1.8"
       />
       <path
-        d="M5.5 20c.8-3.4 3-5.2 6.5-5.2s5.7 1.8 6.5 5.2"
+        d="M5.5 20c.8-3.3 3-5 6.5-5s5.7 1.7 6.5 5"
         fill="none"
         stroke="currentColor"
         strokeWidth="1.8"
@@ -142,104 +140,248 @@ function ProfileIcon() {
   );
 }
 
+/* =========================
+   The ONLY 5 stages
+========================= */
+
+const REQUIRED_STAGES = [
+  "تم إرسال التنبيه للمتبرعين",
+  "تم قبول الطلب من المتبرع",
+  "المتبرع في طريقه إلى المستشفى",
+  "تم الوصول إلى المستشفى",
+  "تم التبرع بنجاح",
+];
+
+/* =========================
+   Helpers
+========================= */
+
+function normalizeText(text = "") {
+  return String(text)
+    .trim()
+    .replace(/\s+/g, " ")
+    .replace(/[إأآ]/g, "ا");
+}
+
+function findStage(requestTimeline, stageLabel, stageIndex) {
+  if (!Array.isArray(requestTimeline)) {
+    return {
+      label: stageLabel,
+      time: "",
+      done: false,
+    };
+  }
+
+  const target = normalizeText(stageLabel);
+
+  const exact = requestTimeline.filter((item) => {
+    const current = normalizeText(item?.label || "");
+    return current === target;
+  });
+
+  if (exact.length > 0) {
+    // لو فيه تكرار، نستخدم آخر نسخة
+    // ونعتبر المرحلة مكتملة إذا أي نسخة منها مكتملة.
+    const last = exact[exact.length - 1];
+
+    return {
+      label: stageLabel,
+      time: last?.time || exact.find((x) => x?.time)?.time || "",
+      done: exact.some((x) => Boolean(x?.done)),
+    };
+  }
+
+  /*
+    لو الـ Backend يستخدم أسماء مختلفة شوية،
+    نحاول مطابقة المرحلة حسب ترتيبها.
+  */
+  const byIndex = requestTimeline[stageIndex];
+
+  if (byIndex) {
+    return {
+      label: stageLabel,
+      time: byIndex.time || "",
+      done: Boolean(byIndex.done),
+    };
+  }
+
+  return {
+    label: stageLabel,
+    time: "",
+    done: false,
+  };
+}
+
+/* =========================
+   Page
+========================= */
+
 export default function RequestTracking() {
   const { id } = useParams();
   const [request, setRequest] = useState(null);
 
   useEffect(() => {
-    api.getBloodRequest(id).then(setRequest).catch(() => {});
+    api
+      .getBloodRequest(id)
+      .then(setRequest)
+      .catch(() => {});
   }, [id]);
 
   if (!request) {
     return (
-      <div className="tracking-loading">
-        <div className="loading-circle">
-          <span></span>
-        </div>
-        <p>جارِ التحميل...</p>
+      <div className="tracking-page">
+        <div className="tracking-loading">جارِ التحميل...</div>
+
+        <style>{`
+          .tracking-page {
+            min-height: 100vh;
+            padding: 28px 18px;
+            background:
+              radial-gradient(circle at 15% 10%, rgba(89, 205, 190, .18), transparent 30%),
+              radial-gradient(circle at 90% 35%, rgba(157, 235, 220, .2), transparent 30%),
+              linear-gradient(160deg, #f8ffff 0%, #edfafa 55%, #e7f6f3 100%);
+            direction: rtl;
+            color: #24575a;
+          }
+
+          .tracking-loading {
+            width: 100%;
+            max-width: 520px;
+            margin: 120px auto;
+            text-align: center;
+            font-size: 16px;
+            color: #6d9191;
+          }
+        `}</style>
       </div>
     );
   }
 
+  /*
+    هنا بنبني Timeline جديد من الخمس مراحل فقط.
+    أي مرحلة أخرى يرجعها الـ Backend يتم تجاهلها.
+    وأي مرحلة مكررة لن تظهر.
+  */
+  const timeline = REQUIRED_STAGES.map((stage, index) =>
+    findStage(request.timeline, stage, index)
+  );
+
   const allDone =
-    Array.isArray(request.timeline) &&
-    request.timeline.every((step) => step.done);
+    timeline.length === 5 && timeline.every((step) => step.done);
 
   return (
     <div className="tracking-page">
+
       {/* Header */}
       <header className="tracking-header">
-        <Link to="/blood" className="tracking-back" aria-label="رجوع">
+        <Link to="/blood" className="back-button" aria-label="رجوع">
           <BackIcon />
         </Link>
 
         <h1>تتبع الطلب</h1>
 
-        <div className="header-space"></div>
+        <div className="header-space" />
       </header>
+
+      {/* Intro */}
+      <section className="tracking-intro">
+        <div className="intro-icon">
+          <CheckIcon />
+        </div>
+
+        <div>
+          <h2>حالة طلب التبرع</h2>
+          <p>
+            تابع حالة طلبك خطوة بخطوة
+          </p>
+        </div>
+      </section>
 
       {/* Timeline */}
       <section className="timeline-card">
-        {request.timeline.map((step, index) => {
-          const isLast = index === request.timeline.length - 1;
+
+        {timeline.map((step, index) => {
+          const isLast = index === timeline.length - 1;
 
           return (
-            <div className="timeline-row" key={index}>
-              <div className="timeline-content">
-                <div className="timeline-title">{step.label}</div>
+            <div className="timeline-row" key={step.label}>
 
-                <div className="timeline-time">
-                  <ClockIcon />
-                  <span>{step.time}</span>
+              <div className="timeline-content">
+                <div
+                  className={`timeline-title ${
+                    step.done ? "completed" : ""
+                  }`}
+                >
+                  {step.label}
                 </div>
+
+                {step.time && (
+                  <div className="timeline-time">
+                    <ClockIcon />
+                    <span>{step.time}</span>
+                  </div>
+                )}
+
+                {!step.time && !step.done && (
+                  <div className="timeline-pending">
+                    في انتظار هذه المرحلة
+                  </div>
+                )}
               </div>
 
               <div className="timeline-side">
-                <div className={`timeline-check ${step.done ? "done" : ""}`}>
+
+                <div
+                  className={`timeline-check ${
+                    step.done ? "done" : "pending"
+                  }`}
+                >
                   {step.done && <CheckIcon />}
                 </div>
 
                 {!isLast && (
                   <div
-                    className={`timeline-line ${step.done ? "done" : ""}`}
-                  ></div>
+                    className={`timeline-line ${
+                      step.done ? "done" : ""
+                    }`}
+                  />
                 )}
+
               </div>
+
             </div>
           );
         })}
+
       </section>
 
       {/* Completed */}
       {allDone && (
         <section className="completed-card">
-          <div className="completed-decoration decoration-one">♥</div>
-          <div className="completed-decoration decoration-two">♥</div>
 
-          <div className="completed-check">
+          <div className="completed-icon">
             <CheckIcon />
           </div>
 
-          <h2>تم إكمال الطلب</h2>
+          <h3>تم التبرع بنجاح</h3>
 
-          <p>شكرًا لك على مساهمتك في إنقاذ حياة</p>
+          <p>
+            شكرًا لكل من ساهم في إنقاذ حياة ❤️
+          </p>
 
           <Link to="/requests" className="details-button">
             تفاصيل الطلب
           </Link>
+
         </section>
       )}
 
       {/* Bottom Navigation */}
       <nav className="tracking-bottom-nav">
-        <Link to="/home" className="tracking-nav-item active">
-          <HomeIcon />
-          <span>الرئيسية</span>
-        </Link>
 
-        <Link to="/requests" className="tracking-nav-item">
-          <RequestsIcon />
-          <span>الطلبات</span>
+        <Link to="/profile" className="tracking-nav-item">
+          <ProfileIcon />
+          <span>الملف الشخصي</span>
         </Link>
 
         <Link to="/notifications" className="tracking-nav-item">
@@ -247,523 +389,225 @@ export default function RequestTracking() {
           <span>الإشعارات</span>
         </Link>
 
-        <Link to="/profile" className="tracking-nav-item">
-          <ProfileIcon />
-          <span>الملف الشخصي</span>
+        <Link to="/requests" className="tracking-nav-item active">
+          <RequestsIcon />
+          <span>الطلبات</span>
         </Link>
+
+        <Link to="/home" className="tracking-nav-item">
+          <HomeIcon />
+          <span>الرئيسية</span>
+        </Link>
+
       </nav>
 
       <style>{`
+
         * {
           box-sizing: border-box;
         }
 
         .tracking-page {
           min-height: 100vh;
-          width: 100%;
-          direction: rtl;
-          padding: 26px 18px 125px;
-          position: relative;
-          overflow: hidden;
-
+          padding: 22px 18px 115px;
           background:
             radial-gradient(
-              circle at 8% 5%,
-              rgba(123, 225, 211, 0.28),
-              transparent 30%
+              circle at 10% 5%,
+              rgba(70, 193, 177, .17),
+              transparent 28%
             ),
             radial-gradient(
-              circle at 100% 45%,
-              rgba(185, 242, 232, 0.32),
-              transparent 34%
+              circle at 95% 28%,
+              rgba(154, 231, 216, .18),
+              transparent 30%
             ),
             linear-gradient(
               160deg,
-              #f8ffff 0%,
-              #e9faf7 48%,
-              #dff7f3 100%
+              #fbffff 0%,
+              #f1fbfa 45%,
+              #e8f7f4 100%
             );
-
-          color: #145f67;
+          direction: rtl;
+          color: #24575a;
+          font-family:
+            Arial,
+            "Tahoma",
+            sans-serif;
         }
 
-        .tracking-page::before {
-          content: "";
-          position: absolute;
-          width: 220px;
-          height: 220px;
-          top: -100px;
-          left: -90px;
-          border-radius: 50%;
-          background: rgba(118, 220, 207, 0.12);
-          filter: blur(2px);
-          pointer-events: none;
-        }
-
-        .tracking-page::after {
-          content: "";
-          position: absolute;
-          width: 180px;
-          height: 180px;
-          right: -100px;
-          bottom: 170px;
-          border-radius: 50%;
-          background: rgba(108, 213, 199, 0.12);
-          pointer-events: none;
-        }
+        /* Header */
 
         .tracking-header {
           width: 100%;
+          max-width: 520px;
+          margin: 0 auto 24px;
           display: grid;
-          grid-template-columns: 52px 1fr 52px;
+          grid-template-columns: 44px 1fr 44px;
           align-items: center;
-          margin-bottom: 25px;
-          position: relative;
-          z-index: 2;
         }
 
         .tracking-header h1 {
           margin: 0;
           text-align: center;
-          font-size: 29px;
+          color: #218d83;
+          font-size: 22px;
           font-weight: 800;
-          color: #116f78;
-          letter-spacing: -0.5px;
         }
 
-        .tracking-back {
-          width: 50px;
-          height: 50px;
+        .back-button {
+          width: 42px;
+          height: 42px;
+          border-radius: 14px;
           display: flex;
           align-items: center;
           justify-content: center;
-          border-radius: 50%;
+          color: #218d83;
           text-decoration: none;
-          color: #087d83;
-
-          background: rgba(255, 255, 255, 0.56);
-          border: 1px solid rgba(255, 255, 255, 0.86);
-
+          background: rgba(255, 255, 255, .66);
+          border: 1px solid rgba(255, 255, 255, .9);
           box-shadow:
-            0 9px 25px rgba(31, 143, 135, 0.10),
-            inset 0 1px 0 rgba(255, 255, 255, 0.85);
-
+            0 7px 18px rgba(35, 139, 128, .08),
+            inset 0 1px 0 rgba(255, 255, 255, .9);
           backdrop-filter: blur(12px);
           -webkit-backdrop-filter: blur(12px);
         }
 
-        .tracking-back svg {
-          width: 27px;
-          height: 27px;
+        .back-button svg {
+          width: 21px;
+          height: 21px;
         }
 
         .header-space {
-          width: 52px;
+          width: 42px;
+          height: 42px;
+        }
+
+        /* Intro */
+
+        .tracking-intro {
+          width: 100%;
+          max-width: 520px;
+          margin: 0 auto 16px;
+          padding: 16px;
+          display: flex;
+          align-items: center;
+          gap: 13px;
+          border-radius: 23px;
+          background:
+            linear-gradient(
+              145deg,
+              rgba(255, 255, 255, .82),
+              rgba(225, 247, 243, .75)
+            );
+          border: 1px solid rgba(255, 255, 255, .9);
+          box-shadow:
+            0 10px 28px rgba(42, 128, 128, .08),
+            inset 0 1px 0 rgba(255, 255, 255, .85);
+          backdrop-filter: blur(14px);
+          -webkit-backdrop-filter: blur(14px);
+        }
+
+        .intro-icon {
+          width: 48px;
+          height: 48px;
+          flex-shrink: 0;
+          border-radius: 16px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          color: #159b8a;
+          background: rgba(208, 246, 238, .9);
+          border: 1px solid rgba(255, 255, 255, .8);
+        }
+
+        .intro-icon svg {
+          width: 25px;
+          height: 25px;
+        }
+
+        .tracking-intro h2 {
+          margin: 0 0 4px;
+          color: #286d6d;
+          font-size: 16px;
+          font-weight: 800;
+        }
+
+        .tracking-intro p {
+          margin: 0;
+          color: #789393;
+          font-size: 13px;
         }
 
         /* Timeline */
 
         .timeline-card {
           width: 100%;
-          padding: 20px 12px 18px 10px;
-          border-radius: 28px;
-
-          background: rgba(255, 255, 255, 0.68);
-          border: 1px solid rgba(255, 255, 255, 0.9);
-
+          max-width: 520px;
+          margin: 0 auto;
+          padding: 20px 17px;
+          border-radius: 25px;
+          background:
+            linear-gradient(
+              145deg,
+              rgba(255, 255, 255, .86),
+              rgba(232, 249, 246, .78)
+            );
+          border: 1px solid rgba(255, 255, 255, .92);
           box-shadow:
-            0 18px 45px rgba(44, 143, 137, 0.10),
-            inset 0 1px 0 rgba(255, 255, 255, 0.9);
-
-          backdrop-filter: blur(18px);
-          -webkit-backdrop-filter: blur(18px);
-
-          position: relative;
-          z-index: 1;
+            0 12px 32px rgba(42, 128, 128, .09),
+            inset 0 1px 0 rgba(255, 255, 255, .9);
+          backdrop-filter: blur(15px);
+          -webkit-backdrop-filter: blur(15px);
         }
 
         .timeline-row {
+          min-height: 78px;
           display: flex;
+          flex-direction: row;
           align-items: stretch;
-          min-height: 105px;
-          gap: 10px;
+          gap: 14px;
         }
 
         .timeline-content {
           flex: 1;
-          min-width: 0;
-          padding: 20px 20px;
-          border-radius: 22px;
-
-          background:
-            linear-gradient(
-              145deg,
-              rgba(239, 253, 251, 0.95),
-              rgba(225, 248, 245, 0.82)
-            );
-
-          border: 1px solid rgba(255, 255, 255, 0.9);
-
-          box-shadow:
-            0 8px 22px rgba(49, 145, 138, 0.06),
-            inset 0 1px 0 rgba(255, 255, 255, 0.75);
-
-          display: flex;
-          flex-direction: column;
-          justify-content: center;
+          padding: 2px 0 19px;
+          text-align: right;
         }
 
         .timeline-title {
-          font-size: 19px;
-          font-weight: 800;
-          line-height: 1.45;
-          color: #176b72;
+          color: #789393;
+          font-size: 14px;
+          font-weight: 700;
+          line-height: 1.7;
+        }
+
+        .timeline-title.completed {
+          color: #286d6d;
         }
 
         .timeline-time {
-          margin-top: 8px;
+          margin-top: 5px;
           display: flex;
           align-items: center;
-          gap: 6px;
-          color: #6b9297;
-          font-size: 14px;
-          font-weight: 600;
+          justify-content: flex-start;
+          gap: 5px;
+          color: #91aaaa;
+          font-size: 11px;
         }
 
         .timeline-time svg {
-          width: 18px;
-          height: 18px;
-          flex-shrink: 0;
+          width: 14px;
+          height: 14px;
+        }
+
+        .timeline-pending {
+          margin-top: 5px;
+          color: #a5baba;
+          font-size: 11px;
         }
 
         .timeline-side {
-          width: 48px;
-          display: flex;
-          flex-direction: column;
-          align-items: center;
-        }
-
-        .timeline-check {
-          width: 48px;
-          height: 48px;
-          flex-shrink: 0;
-
-          display: flex;
-          align-items: center;
-          justify-content: center;
-
-          border-radius: 50%;
-
-          background: rgba(214, 244, 239, 0.85);
-          color: #65bdb3;
-          border: 2px solid rgba(255, 255, 255, 0.8);
-
-          box-shadow:
-            0 7px 18px rgba(38, 151, 141, 0.10),
-            inset 0 1px 3px rgba(255, 255, 255, 0.7);
-        }
-
-        .timeline-check.done {
-          color: white;
-          background: linear-gradient(
-            145deg,
-            #22ad98,
-            #109682
-          );
-
-          box-shadow:
-            0 8px 20px rgba(20, 157, 139, 0.22),
-            inset 0 1px 0 rgba(255, 255, 255, 0.28);
-        }
-
-        .timeline-check svg {
-          width: 27px;
-          height: 27px;
-        }
-
-        .timeline-line {
-          width: 6px;
-          flex: 1;
-          min-height: 35px;
-          margin: 5px 0;
-
-          border-radius: 10px;
-          background: #c8eee7;
-        }
-
-        .timeline-line.done {
-          background: linear-gradient(
-            180deg,
-            #39c5b0,
-            #72d7ca
-          );
-        }
-
-        /* Completed card */
-
-        .completed-card {
-          margin-top: 18px;
-          padding: 34px 20px 24px;
-          border-radius: 30px;
-
+          width: 28px;
           position: relative;
-          overflow: hidden;
-          text-align: center;
-          z-index: 1;
-
-          background:
-            radial-gradient(
-              circle at 90% 30%,
-              rgba(91, 211, 193, 0.16),
-              transparent 28%
-            ),
-            linear-gradient(
-              145deg,
-              rgba(226, 251, 247, 0.98),
-              rgba(204, 244, 237, 0.92)
-            );
-
-          border: 1px solid rgba(255, 255, 255, 0.88);
-
-          box-shadow:
-            0 16px 35px rgba(37, 143, 135, 0.11),
-            inset 0 1px 0 rgba(255, 255, 255, 0.75);
-        }
-
-        .completed-check {
-          width: 68px;
-          height: 68px;
-          margin: 0 auto 15px;
-
           display: flex;
-          align-items: center;
           justify-content: center;
-
-          border-radius: 50%;
-          color: white;
-
-          background: linear-gradient(
-            145deg,
-            #20b39b,
-            #079780
-          );
-
-          box-shadow:
-            0 10px 25px rgba(19, 157, 140, 0.23),
-            inset 0 1px 0 rgba(255, 255, 255, 0.28);
-        }
-
-        .completed-check svg {
-          width: 37px;
-          height: 37px;
-        }
-
-        .completed-card h2 {
-          margin: 0;
-          color: #126b73;
-          font-size: 25px;
-          font-weight: 850;
-        }
-
-        .completed-card p {
-          margin: 9px 0 22px;
-          color: #60888e;
-          font-size: 15px;
-          font-weight: 600;
-          line-height: 1.6;
-        }
-
-        .details-button {
-          display: flex;
-          align-items: center;
-          justify-content: center;
-
-          width: 100%;
-          min-height: 55px;
-          border-radius: 30px;
-
-          text-decoration: none;
-          color: white;
-
-          font-size: 17px;
-          font-weight: 800;
-
-          background: linear-gradient(
-            135deg,
-            #19ad98,
-            #079781
-          );
-
-          box-shadow:
-            0 10px 23px rgba(14, 158, 140, 0.20),
-            inset 0 1px 0 rgba(255, 255, 255, 0.20);
-        }
-
-        .completed-decoration {
-          position: absolute;
-          color: rgba(76, 202, 186, 0.10);
-          pointer-events: none;
-          font-size: 80px;
-        }
-
-        .decoration-one {
-          left: -12px;
-          bottom: 35px;
-          transform: rotate(-18deg);
-        }
-
-        .decoration-two {
-          right: -10px;
-          top: 50px;
-          transform: rotate(18deg);
-        }
-
-        /* Bottom navigation */
-
-        .tracking-bottom-nav {
-          position: fixed;
-          left: 14px;
-          right: 14px;
-          bottom: 13px;
-
-          height: 76px;
-          padding: 7px 8px;
-
-          display: grid;
-          grid-template-columns: repeat(4, 1fr);
-          align-items: stretch;
-
-          border-radius: 27px;
-
-          background: rgba(255, 255, 255, 0.78);
-          border: 1px solid rgba(255, 255, 255, 0.92);
-
-          box-shadow:
-            0 14px 35px rgba(35, 130, 128, 0.15),
-            inset 0 1px 0 rgba(255, 255, 255, 0.9);
-
-          backdrop-filter: blur(18px);
-          -webkit-backdrop-filter: blur(18px);
-
-          z-index: 50;
-        }
-
-        .tracking-nav-item {
-          position: relative;
-
-          display: flex;
-          flex-direction: column;
-          align-items: center;
-          justify-content: center;
-          gap: 3px;
-
-          text-decoration: none;
-          color: #6c979c;
-
-          font-size: 11px;
-          font-weight: 700;
-        }
-
-        .tracking-nav-item svg {
-          width: 25px;
-          height: 25px;
-        }
-
-        .tracking-nav-item.active {
-          color: #159b8a;
-        }
-
-        .tracking-nav-item.active::after {
-          content: "";
-          position: absolute;
-          bottom: 1px;
-          width: 45px;
-          height: 3px;
-          border-radius: 5px;
-          background: #159b8a;
-        }
-
-        /* Loading */
-
-        .tracking-loading {
-          min-height: 100vh;
-          display: flex;
-          flex-direction: column;
-          align-items: center;
-          justify-content: center;
-          gap: 12px;
-
-          background:
-            linear-gradient(
-              160deg,
-              #f8ffff,
-              #e4f8f4
-            );
-
-          color: #176b72;
-        }
-
-        .loading-circle {
-          width: 48px;
-          height: 48px;
-          border-radius: 50%;
-
-          border: 4px solid #c8eee7;
-          border-top-color: #159b8a;
-
-          animation: trackingSpin 0.8s linear infinite;
-        }
-
-        .tracking-loading p {
-          margin: 0;
-          font-size: 15px;
-          font-weight: 700;
-        }
-
-        @keyframes trackingSpin {
-          to {
-            transform: rotate(360deg);
-          }
-        }
-
-        @media (max-width: 380px) {
-          .tracking-page {
-            padding-left: 12px;
-            padding-right: 12px;
-          }
-
-          .tracking-header h1 {
-            font-size: 25px;
-          }
-
-          .timeline-title {
-            font-size: 16px;
-          }
-
-          .timeline-content {
-            padding: 17px 14px;
-          }
-
-          .timeline-side {
-            width: 42px;
-          }
-
-          .timeline-check {
-            width: 42px;
-            height: 42px;
-          }
-
-          .timeline-check svg {
-            width: 23px;
-            height: 23px;
-          }
-
-          .tracking-bottom-nav {
-            left: 8px;
-            right: 8px;
-          }
-        }
-      `}</style>
-    </div>
-  );
-}
