@@ -227,12 +227,26 @@ export default function Signup() {
         accountType,
       });
 
+      /*
+       * مهم:
+       * نحفظ البيانات التي كتبها المستخدم بنفسه
+       * بدل الاعتماد على البيانات التي يرجعها الـ API.
+       *
+       * ده يمنع ظهور اسم قديم مثل "زوزو"
+       * في Profile أو Home.
+       */
+      const savedUser = {
+        ...user,
+        name: form.name.trim(),
+        email: form.email.trim(),
+        phone: form.phone.trim(),
+        bloodType: form.bloodType,
+        accountType,
+      };
+
       localStorage.setItem(
         "nabd_user",
-        JSON.stringify({
-          ...user,
-          phone: form.phone,
-        })
+        JSON.stringify(savedUser)
       );
 
       navigate("/verify-phone");
@@ -280,6 +294,7 @@ export default function Signup() {
 
         <div className="signup-heartbeat">
           <span />
+
           <svg
             viewBox="0 0 180 30"
             preserveAspectRatio="none"
@@ -293,6 +308,7 @@ export default function Signup() {
               strokeLinejoin="round"
             />
           </svg>
+
           <span />
         </div>
 
