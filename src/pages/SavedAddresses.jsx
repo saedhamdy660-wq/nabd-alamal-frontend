@@ -784,6 +784,207 @@ export default function SavedAddresses() {
           transform: scale(.98);
         }
 
+        /* =========================================
+           APP DARK MODE
+           Controlled by Settings.jsx
+           ========================================= */
+
+        body.nabd-dark .addresses-page {
+          color: #d9eeeb;
+
+          background:
+            radial-gradient(
+              circle at 10% 5%,
+              rgba(36,132,120,.18),
+              transparent 28%
+            ),
+            radial-gradient(
+              circle at 95% 28%,
+              rgba(26,103,96,.18),
+              transparent 30%
+            ),
+            linear-gradient(
+              160deg,
+              #0c1d1b 0%,
+              #102725 45%,
+              #0d211f 100%
+            );
+        }
+
+        body.nabd-dark .addresses-back {
+          color: #62d2c0;
+
+          background:
+            rgba(25,52,49,.78);
+
+          border-color:
+            rgba(93,180,169,.14);
+
+          box-shadow:
+            0 7px 18px
+              rgba(0,0,0,.20),
+            inset 0 1px 0
+              rgba(255,255,255,.04);
+        }
+
+        body.nabd-dark .addresses-header h1 {
+          color: #6bd7c5;
+        }
+
+        body.nabd-dark .addresses-header p {
+          color: #88aaa6;
+        }
+
+        body.nabd-dark .addresses-section,
+        body.nabd-dark .add-section {
+          background:
+            linear-gradient(
+              145deg,
+              rgba(22,49,46,.92),
+              rgba(17,42,39,.84)
+            );
+
+          border-color:
+            rgba(101,189,178,.10);
+
+          box-shadow:
+            0 12px 30px
+              rgba(0,0,0,.22),
+            inset 0 1px 0
+              rgba(255,255,255,.035);
+        }
+
+        body.nabd-dark .section-title h2,
+        body.nabd-dark .add-title h2 {
+          color: #9ce4d8;
+        }
+
+        body.nabd-dark .section-title p,
+        body.nabd-dark .add-title p {
+          color: #7fa19d;
+        }
+
+        body.nabd-dark .section-icon {
+          color: #67d7c4;
+
+          background:
+            linear-gradient(
+              145deg,
+              rgba(41,117,105,.55),
+              rgba(30,94,86,.55)
+            );
+        }
+
+        body.nabd-dark .address-card {
+          background:
+            rgba(28,58,54,.76);
+
+          border-color:
+            rgba(112,192,182,.10);
+
+          box-shadow:
+            0 6px 17px
+              rgba(0,0,0,.16);
+        }
+
+        body.nabd-dark .address-icon {
+          color: #67d7c4;
+
+          background:
+            linear-gradient(
+              145deg,
+              rgba(42,121,108,.52),
+              rgba(30,93,85,.52)
+            );
+        }
+
+        body.nabd-dark .address-content strong {
+          color: #9ce4d8;
+        }
+
+        body.nabd-dark .address-content p {
+          color: #7fa19d;
+        }
+
+        body.nabd-dark .delete-button {
+          color: #ef8ea0;
+
+          background:
+            rgba(110,48,62,.40);
+        }
+
+        body.nabd-dark .empty-addresses {
+          background:
+            rgba(26,57,53,.55);
+
+          border-color:
+            rgba(103,215,196,.16);
+        }
+
+        body.nabd-dark .empty-icon {
+          color: #67d7c4;
+
+          background:
+            rgba(42,121,108,.34);
+        }
+
+        body.nabd-dark .empty-addresses h3 {
+          color: #9ce4d8;
+        }
+
+        body.nabd-dark .empty-addresses p {
+          color: #7fa19d;
+        }
+
+        body.nabd-dark .input-card {
+          background:
+            rgba(28,58,54,.76);
+
+          border-color:
+            rgba(112,192,182,.10);
+        }
+
+        body.nabd-dark .input-card label {
+          color: #86aaa5;
+        }
+
+        body.nabd-dark .input-card input {
+          color: #b7ebe3;
+        }
+
+        body.nabd-dark .input-card input::placeholder {
+          color: #6f908c;
+        }
+
+        /* Mobile */
+
+        @media (max-width: 600px) {
+
+          .addresses-page {
+            padding:
+              18px 14px 35px;
+          }
+
+          .addresses-header {
+            margin-bottom: 20px;
+          }
+
+          .addresses-header h1 {
+            font-size: 20px;
+          }
+
+          .addresses-section,
+          .add-section {
+            padding: 16px;
+            border-radius: 23px;
+          }
+
+          .address-card {
+            min-height: 70px;
+          }
+
+        }
+
       `}</style>
 
     </div>
