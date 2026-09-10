@@ -211,9 +211,25 @@ function ProfileMenuItem({ icon, title, onClick, danger = false }) {
 export default function Profile() {
   const navigate = useNavigate();
 
-  const [user, setUser] = useState(getSavedUser());
+  // معرفة هل المستخدم دخل كزائر
+  const isGuest =
+    localStorage.getItem("nabd_guest") === "true";
+
+  // لو زائر لا نقرأ بيانات المستخدم القديمة
+  const [user, setUser] = useState(
+    isGuest ? null : getSavedUser()
+  );
 
   useEffect(() => {
+    const guest =
+      localStorage.getItem("nabd_guest") === "true";
+
+    // الزائر لا يتم تحميل بياناته من API
+    if (guest) {
+      setUser(null);
+      return;
+    }
+
     api
       .getUser()
       .then((data) => {
@@ -229,27 +245,40 @@ export default function Profile() {
       .catch(() => {});
   }, []);
 
-  const userName =
-    user?.name ||
-    user?.username ||
-    user?.fullName ||
-    user?.displayName ||
-    "المستخدم";
+  // اسم المستخدم
+  const userName = isGuest
+    ? "المستخدم"
+    : (
+        user?.name ||
+        user?.username ||
+        user?.fullName ||
+        user?.displayName ||
+        "المستخدم"
+      );
 
-  const email =
-    user?.email ||
-    "البريد الإلكتروني";
+  // البريد الإلكتروني
+  const email = isGuest
+    ? "يمكنك تسجيل الدخول لعرض بياناتك"
+    : (
+        user?.email ||
+        "البريد الإلكتروني"
+      );
 
-  const avatar =
-    user?.avatar ||
-    user?.image ||
-    user?.profileImage ||
-    localStorage.getItem("nabd_avatar") ||
-    "";
+  // الصورة
+  const avatar = isGuest
+    ? ""
+    : (
+        user?.avatar ||
+        user?.image ||
+        user?.profileImage ||
+        localStorage.getItem("nabd_avatar") ||
+        ""
+      );
 
   const handleLogout = () => {
     localStorage.removeItem("nabd_user");
     localStorage.removeItem("nabd_avatar");
+    localStorage.removeItem("nabd_guest");
 
     navigate("/login", { replace: true });
   };
