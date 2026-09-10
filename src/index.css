@@ -5221,3 +5221,363 @@ label.field-label {
     box-shadow: 0 0 55px rgba(0,100,100,.12);
   }
 }
+/* =========================================================
+   🌙 NABD AL AMAL — GLOBAL DARK MODE
+   IMPORTANT:
+   This block is ADDITIVE ONLY.
+   Do not delete or modify existing CSS.
+========================================================= */
+
+body.nabd-dark {
+  background: #071a1d !important;
+  color: #e8ffff !important;
+}
+
+/* Main app container */
+body.nabd-dark .app-shell {
+  background: #071a1d !important;
+  color: #e8ffff !important;
+}
+
+/* Common pages */
+body.nabd-dark .page {
+  background: #071a1d !important;
+  color: #e8ffff !important;
+}
+
+/* Common cards */
+body.nabd-dark .card {
+  background: rgba(15, 45, 49, 0.92) !important;
+  color: #e8ffff !important;
+  border-color: rgba(103, 229, 220, 0.18) !important;
+}
+
+/* Common text */
+body.nabd-dark h1,
+body.nabd-dark h2,
+body.nabd-dark h3,
+body.nabd-dark h4,
+body.nabd-dark h5,
+body.nabd-dark h6,
+body.nabd-dark p,
+body.nabd-dark span,
+body.nabd-dark label {
+  color: inherit;
+}
+
+/* Inputs */
+body.nabd-dark input,
+body.nabd-dark textarea,
+body.nabd-dark select {
+  background: rgba(8, 30, 34, 0.95) !important;
+  color: #e8ffff !important;
+  border-color: rgba(103, 229, 220, 0.2) !important;
+}
+
+body.nabd-dark input::placeholder,
+body.nabd-dark textarea::placeholder {
+  color: rgba(232, 255, 255, 0.5) !important;
+}
+
+/* Buttons */
+body.nabd-dark button {
+  color: #e8ffff;
+}
+
+/* Links */
+body.nabd-dark a {
+  color: #65ddd3;
+}
+
+/* =========================================================
+   HOME
+========================================================= */
+
+body.nabd-dark .home-reference {
+  background:
+    radial-gradient(
+      circle at 50% 10%,
+      rgba(54, 173, 165, 0.22),
+      transparent 38%
+    ),
+    linear-gradient(
+      180deg,
+      #071a1d 0%,
+      #09272b 55%,
+      #071a1d 100%
+    ) !important;
+  color: #e8ffff !important;
+}
+
+body.nabd-dark .home-reference .search-bar,
+body.nabd-dark .home-reference .service-card,
+body.nabd-dark .home-reference .urgent-card,
+body.nabd-dark .home-reference .hospital-card {
+  background: rgba(17, 54, 58, 0.82) !important;
+  border-color: rgba(103, 229, 220, 0.16) !important;
+  color: #e8ffff !important;
+}
+
+body.nabd-dark .home-reference .search-bar input {
+  color: #e8ffff !important;
+  background: transparent !important;
+}
+
+body.nabd-dark .home-reference .search-bar input::placeholder {
+  color: rgba(232, 255, 255, 0.55) !important;
+}
+
+/* =========================================================
+   BLOOD DONATION
+========================================================= */
+
+body.nabd-dark .blood-page,
+body.nabd-dark .blood-donation-page {
+  background:
+    linear-gradient(
+      180deg,
+      #071a1d,
+      #09282c
+    ) !important;
+  color: #e8ffff !important;
+}
+
+body.nabd-dark .blood-page .card,
+body.nabd-dark .blood-donation-page .card {
+  background: rgba(14, 49, 53, 0.9) !important;
+  color: #e8ffff !important;
+  border-color: rgba(103, 229, 220, 0.16) !important;
+}
+
+/* =========================================================
+   MEDICINE EXCHANGE
+========================================================= */
+
+body.nabd-dark .medicine-exchange-page,
+body.nabd-dark .medicine-page {
+  background:
+    linear-gradient(
+      180deg,
+      #071a1d,
+      #09272b
+    ) !important;
+  color: #e8ffff !important;
+}
+
+body.nabd-dark .medicine-exchange-page .card,
+body.nabd-dark .medicine-page .card {
+  background: rgba(14, 49, 53, 0.9) !important;
+  color: #e8ffff !important;
+  border-color: rgba(103, 229, 220, 0.16) !important;
+}
+
+/* =========================================================
+   MEDICINE DETAIL
+========================================================= */
+
+body.nabd-dark .medicine-detail-page {
+  background:
+    linear-gradient(
+      180deg,
+      #071a1d,
+      #09272b
+    ) !important;
+  color: #e8ffff !important;
+}
+
+body.nabd-dark .medicine-detail-page .medicine-card,
+body.nabd-dark .medicine-detail-page .card {
+  background: rgba(14, 49, 53, 0.92) !important;
+  color: #e8ffff !important;
+  border-color: rgba(103, 229, 220, 0.18) !important;
+}
+
+/* =========================================================
+   PHARMACY
+========================================================= */
+
+body.nabd-dark .pharmacy-page,
+body.nabd-dark .pharmacy-partner-page {
+  background:
+    linear-gradient(
+      180deg,
+      #071a1d,
+      #09272b
+    ) !important;
+  color: #e8ffff !important;
+}
+
+body.nabd-dark .pharmacy-page .card,
+body.nabd-dark .pharmacy-partner-page .card {
+  background: rgba(14, 49, 53, 0.92) !important;
+  color: #e8ffff !important;
+}
+
+/* =========================================================
+   REQUESTS
+========================================================= */
+
+body.nabd-dark .requests-page,
+body.nabd-dark .request-page,
+body.nabd-dark .request-tracking-page {
+  background:
+    linear-gradient(
+      180deg,
+      #071a1d,
+      #09272b
+    ) !important;
+  color: #e8ffff !important;
+}
+
+body.nabd-dark .requests-page .card,
+body.nabd-dark .request-page .card,
+body.nabd-dark .request-tracking-page .card {
+  background: rgba(14, 49, 53, 0.92) !important;
+  color: #e8ffff !important;
+}
+
+/* =========================================================
+   NOTIFICATIONS
+========================================================= */
+
+body.nabd-dark .notifications-page,
+body.nabd-dark .notification-page,
+body.nabd-dark .notification-settings-page {
+  background:
+    linear-gradient(
+      180deg,
+      #071a1d,
+      #09272b
+    ) !important;
+  color: #e8ffff !important;
+}
+
+body.nabd-dark .notifications-page .card,
+body.nabd-dark .notification-page .card,
+body.nabd-dark .notification-settings-page .card {
+  background: rgba(14, 49, 53, 0.92) !important;
+  color: #e8ffff !important;
+}
+
+/* =========================================================
+   PROFILE
+========================================================= */
+
+body.nabd-dark .profile-page,
+body.nabd-dark .personal-info-page,
+body.nabd-dark .saved-addresses-page,
+body.nabd-dark .favorite-medicines-page {
+  background:
+    linear-gradient(
+      180deg,
+      #071a1d,
+      #09272b
+    ) !important;
+  color: #e8ffff !important;
+}
+
+body.nabd-dark .profile-page .card,
+body.nabd-dark .personal-info-page .card,
+body.nabd-dark .saved-addresses-page .card,
+body.nabd-dark .favorite-medicines-page .card {
+  background: rgba(14, 49, 53, 0.92) !important;
+  color: #e8ffff !important;
+  border-color: rgba(103, 229, 220, 0.17) !important;
+}
+
+/* =========================================================
+   SUPPORT
+========================================================= */
+
+body.nabd-dark .support-page {
+  background:
+    linear-gradient(
+      180deg,
+      #071a1d,
+      #09272b
+    ) !important;
+  color: #e8ffff !important;
+}
+
+body.nabd-dark .support-page .card,
+body.nabd-dark .support-page .faq-item {
+  background: rgba(14, 49, 53, 0.92) !important;
+  color: #e8ffff !important;
+  border-color: rgba(103, 229, 220, 0.17) !important;
+}
+
+/* =========================================================
+   BOTTOM NAVIGATION
+========================================================= */
+
+body.nabd-dark .bottom-nav {
+  background: rgba(7, 28, 32, 0.96) !important;
+  border-color: rgba(103, 229, 220, 0.15) !important;
+  box-shadow:
+    0 -8px 30px rgba(0, 0, 0, 0.25) !important;
+}
+
+body.nabd-dark .bottom-nav span,
+body.nabd-dark .bottom-nav svg {
+  color: rgba(232, 255, 255, 0.65);
+}
+
+body.nabd-dark .bottom-nav .active,
+body.nabd-dark .bottom-nav .active span,
+body.nabd-dark .bottom-nav .active svg {
+  color: #65ddd3 !important;
+}
+
+/* =========================================================
+   APP SETTINGS
+   AppSettings already has its own dark styles.
+========================================================= */
+
+body.nabd-dark .settings-page {
+  color: #e8ffff !important;
+}
+
+/* =========================================================
+   MAP / LEAFLET
+========================================================= */
+
+body.nabd-dark .leaflet-container {
+  background: #10282b !important;
+}
+
+body.nabd-dark .leaflet-control {
+  background: rgba(10, 35, 39, 0.95) !important;
+  color: #e8ffff !important;
+}
+
+body.nabd-dark .leaflet-control a {
+  color: #65ddd3 !important;
+}
+
+/* =========================================================
+   SCROLLBAR
+========================================================= */
+
+body.nabd-dark ::-webkit-scrollbar {
+  width: 6px;
+}
+
+body.nabd-dark ::-webkit-scrollbar-track {
+  background: #071a1d;
+}
+
+body.nabd-dark ::-webkit-scrollbar-thumb {
+  background: rgba(101, 221, 211, 0.35);
+  border-radius: 20px;
+}
+
+/* =========================================================
+   DARK MODE TRANSITION
+========================================================= */
+
+body.nabd-dark,
+body.nabd-dark .app-shell {
+  transition:
+    background-color 0.25s ease,
+    color 0.25s ease;
+}
