@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Routes, Route, useLocation } from "react-router-dom";
 
 import Navbar from "./components/Navbar.jsx";
@@ -37,18 +37,48 @@ const noNavRoutes = [
   "/verify-phone",
   "/location-permission",
 
-  // الـ Home عنده Navbar خاص بيه
   "/home",
 
-  // صفحة إعدادات الإشعارات بدون Navbar
   "/notification-settings",
 
-  // صفحة إعدادات التطبيق بدون Navbar
   "/settings",
 ];
 
 export default function App() {
   const location = useLocation();
+
+  const [theme, setTheme] = useState(() => {
+    return localStorage.getItem("nabd_theme") || "light";
+  });
+
+  useEffect(() => {
+    const applyTheme = () => {
+      const savedTheme =
+        localStorage.getItem("nabd_theme") || "light";
+
+      setTheme(savedTheme);
+
+      document.documentElement.setAttribute(
+        "data-theme",
+        savedTheme
+      );
+
+      document.body.setAttribute(
+        "data-theme",
+        savedTheme
+      );
+    };
+
+    applyTheme();
+
+    window.addEventListener("theme-changed", applyTheme);
+    window.addEventListener("storage", applyTheme);
+
+    return () => {
+      window.removeEventListener("theme-changed", applyTheme);
+      window.removeEventListener("storage", applyTheme);
+    };
+  }, []);
 
   const hideNav =
     noNavRoutes.includes(location.pathname) ||
@@ -58,15 +88,36 @@ export default function App() {
     location.pathname.startsWith("/track/");
 
   return (
-    <div className="app-shell">
+    <div
+      className={`app-shell ${
+        theme === "dark" ? "theme-dark" : "theme-light"
+      }`}
+    >
       <Routes>
+
         {/* ================= ONBOARDING ================= */}
 
         <Route path="/" element={<Splash />} />
-        <Route path="/welcome" element={<Welcome />} />
-        <Route path="/login" element={<Login />} />
-        <Route path="/signup" element={<Signup />} />
-        <Route path="/verify-phone" element={<PhoneVerify />} />
+
+        <Route
+          path="/welcome"
+          element={<Welcome />}
+        />
+
+        <Route
+          path="/login"
+          element={<Login />}
+        />
+
+        <Route
+          path="/signup"
+          element={<Signup />}
+        />
+
+        <Route
+          path="/verify-phone"
+          element={<PhoneVerify />}
+        />
 
         <Route
           path="/location-permission"
@@ -75,51 +126,124 @@ export default function App() {
 
         {/* ================= MAIN APP ================= */}
 
-        <Route path="/home" element={<Home />} />
+        <Route
+          path="/home"
+          element={<Home />}
+        />
 
-        <Route path="/medicines" element={<MedicineExchange />} />
-        <Route path="/medicines/:id" element={<MedicineDetail />} />
+        <Route
+          path="/medicines"
+          element={<MedicineExchange />}
+        />
+
+        <Route
+          path="/medicines/:id"
+          element={<MedicineDetail />}
+        />
 
         <Route
           path="/pharmacy/:medicineId"
           element={<PharmacyPartner />}
         />
 
-        <Route path="/blood" element={<BloodDonation />} />
+        <Route
+          path="/blood"
+          element={<BloodDonation />}
+        />
 
-        <Route path="/donor/:id" element={<DonorDetail />} />
+        <Route
+          path="/donor/:id"
+          element={<DonorDetail />}
+        />
 
-        <Route path="/track/:id" element={<RequestTracking />} />
+        <Route
+          path="/track/:id"
+          element={<RequestTracking />}
+        />
 
-        <Route path="/requests" element={<Requests />} />
+        <Route
+          path="/requests"
+          element={<Requests />}
+        />
 
-        <Route path="/notifications" element={<Notifications />} />
+        <Route
+          path="/notifications"
+          element={<Notifications />}
+        />
 
-        {/* إعدادات الإشعارات */}
         <Route
           path="/notification-settings"
           element={<NotificationSettings />}
         />
 
-        {/* إعدادات التطبيق */}
         <Route
           path="/settings"
           element={<AppSettings />}
         />
 
-        <Route path="/profile" element={<Profile />} />
+        <Route
+          path="/profile"
+          element={<Profile />}
+        />
 
-        <Route path="/personal-info" element={<PersonalInfo />} />
+        <Route
+          path="/personal-info"
+          element={<PersonalInfo />}
+        />
 
-        <Route path="/addresses" element={<SavedAddresses />} />
+        <Route
+          path="/addresses"
+          element={<SavedAddresses />}
+        />
 
-        <Route path="/favorites" element={<FavoriteMedicines />} />
+        <Route
+          path="/favorites"
+          element={<FavoriteMedicines />}
+        />
 
-        <Route path="/support" element={<Support />} />
+        <Route
+          path="/support"
+          element={<Support />}
+        />
+
       </Routes>
 
-      {/* الـ Navbar العام يظهر فقط في الصفحات المطلوبة */}
       {!hideNav && <Navbar />}
+
+      <style>{`
+        html,
+        body,
+        #root {
+          margin: 0;
+          min-height: 100%;
+        }
+
+        body {
+          transition:
+            background-color .25s ease,
+            color .25s ease;
+        }
+
+        .app-shell {
+          min-height: 100vh;
+        }
+
+        /* ================= LIGHT ================= */
+
+        [data-theme="light"] {
+          color-scheme: light;
+        }
+
+        /* ================= DARK ================= */
+
+        [data-theme="dark"] {
+          color-scheme: dark;
+        }
+
+        * {
+          box-sizing: border-box;
+        }
+      `}</style>
     </div>
   );
 }
