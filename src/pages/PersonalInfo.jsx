@@ -845,280 +845,276 @@ export default function PersonalInfo() {
 
 
         /* =========================================
-           DARK MODE
+           DARK MODE - APP CONTROLLED
            ========================================= */
 
-        @media (prefers-color-scheme: dark) {
+        body.nabd-dark .personal-page {
+          background:
+            radial-gradient(
+              circle at 10% 5%,
+              rgba(30,150,135,.16),
+              transparent 28%
+            ),
+            radial-gradient(
+              circle at 95% 28%,
+              rgba(40,120,115,.14),
+              transparent 30%
+            ),
+            linear-gradient(
+              160deg,
+              #071f21 0%,
+              #08292b 48%,
+              #0a3031 100%
+            );
 
-          .personal-page {
-            background:
-              radial-gradient(
-                circle at 10% 5%,
-                rgba(30,150,135,.16),
-                transparent 28%
-              ),
-              radial-gradient(
-                circle at 95% 28%,
-                rgba(40,120,115,.14),
-                transparent 30%
-              ),
-              linear-gradient(
-                160deg,
-                #071f21 0%,
-                #08292b 48%,
-                #0a3031 100%
-              );
+          color: #d9f5f1;
+        }
 
-            color: #d9f5f1;
-          }
 
+        /* HEADER */
 
-          /* HEADER */
+        body.nabd-dark .personal-title h1 {
+          color: #65d6c5;
+        }
 
-          .personal-title h1 {
-            color: #65d6c5;
-          }
+        body.nabd-dark .personal-title p {
+          color: #8eb6b2;
+        }
 
-          .personal-title p {
-            color: #8eb6b2;
-          }
 
+        /* BACK BUTTON */
 
-          /* BACK BUTTON */
+        body.nabd-dark .personal-back {
+          color: #65d6c5;
 
-          .personal-back {
-            color: #65d6c5;
+          background:
+            rgba(18,55,57,.92);
 
-            background:
-              rgba(18,55,57,.92);
+          border-color:
+            rgba(94,184,174,.18);
 
-            border-color:
-              rgba(94,184,174,.18);
+          box-shadow:
+            0 8px 22px rgba(0,0,0,.22),
+            inset 0 1px 0 rgba(255,255,255,.05);
+        }
 
-            box-shadow:
-              0 8px 22px rgba(0,0,0,.22),
-              inset 0 1px 0 rgba(255,255,255,.05);
-          }
 
+        /* USER CARD */
 
-          /* USER CARD */
+        body.nabd-dark .personal-user-card {
+          background:
+            linear-gradient(
+              145deg,
+              rgba(18,55,57,.96),
+              rgba(12,45,47,.94)
+            );
 
-          .personal-user-card {
-            background:
-              linear-gradient(
-                145deg,
-                rgba(18,55,57,.96),
-                rgba(12,45,47,.94)
-              );
+          border-color:
+            rgba(100,205,192,.14);
 
-            border-color:
-              rgba(100,205,192,.14);
+          box-shadow:
+            0 12px 30px rgba(0,0,0,.25),
+            inset 0 1px 0 rgba(255,255,255,.04);
+        }
 
-            box-shadow:
-              0 12px 30px rgba(0,0,0,.25),
-              inset 0 1px 0 rgba(255,255,255,.04);
-          }
 
+        body.nabd-dark .personal-avatar {
+          color: #65d6c5;
 
-          .personal-avatar {
-            color: #65d6c5;
+          background:
+            linear-gradient(
+              145deg,
+              #164e4d,
+              #123e40
+            );
 
-            background:
-              linear-gradient(
-                145deg,
-                #164e4d,
-                #123e40
-              );
+          border-color:
+            rgba(255,255,255,.12);
+        }
 
-            border-color:
-              rgba(255,255,255,.12);
-          }
 
+        body.nabd-dark .personal-user-text h2 {
+          color: #d9f5f1;
+        }
 
-          .personal-user-text h2 {
-            color: #d9f5f1;
-          }
+        body.nabd-dark .personal-user-text p {
+          color: #86aaa7;
+        }
 
-          .personal-user-text p {
-            color: #86aaa7;
-          }
 
+        /* FORM FIELDS */
 
-          /* FORM FIELDS */
+        body.nabd-dark .personal-field {
+          background:
+            linear-gradient(
+              145deg,
+              rgba(18,55,57,.96),
+              rgba(12,45,47,.94)
+            );
 
-          .personal-field {
-            background:
-              linear-gradient(
-                145deg,
-                rgba(18,55,57,.96),
-                rgba(12,45,47,.94)
-              );
+          border-color:
+            rgba(100,205,192,.14);
 
-            border-color:
-              rgba(100,205,192,.14);
+          box-shadow:
+            0 10px 26px rgba(0,0,0,.22),
+            inset 0 1px 0 rgba(255,255,255,.04);
+        }
 
-            box-shadow:
-              0 10px 26px rgba(0,0,0,.22),
-              inset 0 1px 0 rgba(255,255,255,.04);
-          }
 
+        /* FIELD ICONS */
 
-          /* FIELD ICONS */
+        body.nabd-dark .personal-field-icon {
+          color: #63d3c2;
 
-          .personal-field-icon {
-            color: #63d3c2;
+          background:
+            linear-gradient(
+              145deg,
+              #164e4d,
+              #123f40
+            );
+        }
 
-            background:
-              linear-gradient(
-                145deg,
-                #164e4d,
-                #123f40
-              );
-          }
 
+        /* LABEL */
 
-          /* LABEL */
+        body.nabd-dark .personal-field-content label {
+          color: #86aaa7;
+        }
 
-          .personal-field-content label {
-            color: #86aaa7;
-          }
 
+        /* INPUT + SELECT */
 
-          /* INPUT + SELECT */
+        body.nabd-dark .personal-field-content input,
+        body.nabd-dark .personal-field-content select {
+          background: transparent !important;
 
-          .personal-field-content input,
-          .personal-field-content select {
-            background: transparent !important;
+          color: #e7faf7 !important;
 
-            color: #e7faf7 !important;
+          -webkit-text-fill-color: #e7faf7 !important;
 
-            -webkit-text-fill-color: #e7faf7 !important;
+          caret-color: #65d6c5;
 
-            caret-color: #65d6c5;
+          color-scheme: dark;
+        }
 
-            color-scheme: dark;
-          }
 
+        /* PLACEHOLDER */
 
-          /* PLACEHOLDER */
+        body.nabd-dark .personal-field-content input::placeholder {
+          color: #6f9491 !important;
 
-          .personal-field-content input::placeholder {
-            color: #6f9491 !important;
+          opacity: 1;
+        }
 
-            opacity: 1;
-          }
 
+        /* FOCUS */
 
-          /* FOCUS */
+        body.nabd-dark .personal-field-content input:focus,
+        body.nabd-dark .personal-field-content select:focus {
+          background: transparent !important;
 
-          .personal-field-content input:focus,
-          .personal-field-content select:focus {
-            background: transparent !important;
+          color: #e7faf7 !important;
 
-            color: #e7faf7 !important;
+          -webkit-text-fill-color: #e7faf7 !important;
+        }
 
-            -webkit-text-fill-color: #e7faf7 !important;
-          }
 
+        /* AUTOFILL */
 
-          /* AUTOFILL */
+        body.nabd-dark .personal-field-content input:-webkit-autofill,
+        body.nabd-dark .personal-field-content input:-webkit-autofill:hover,
+        body.nabd-dark .personal-field-content input:-webkit-autofill:focus {
+          -webkit-text-fill-color: #e7faf7 !important;
 
-          .personal-field-content input:-webkit-autofill,
-          .personal-field-content input:-webkit-autofill:hover,
-          .personal-field-content input:-webkit-autofill:focus {
-            -webkit-text-fill-color: #e7faf7 !important;
+          -webkit-box-shadow:
+            0 0 0 1000px #123638 inset !important;
 
-            -webkit-box-shadow:
-              0 0 0 1000px #123638 inset !important;
+          box-shadow:
+            0 0 0 1000px #123638 inset !important;
 
-            box-shadow:
-              0 0 0 1000px #123638 inset !important;
+          caret-color: #65d6c5;
+        }
 
-            caret-color: #65d6c5;
-          }
 
+        /* BLOOD */
 
-          /* BLOOD */
+        body.nabd-dark .blood-field-icon {
+          color: #ff8ca0;
 
-          .blood-field-icon {
-            color: #ff8ca0;
+          background:
+            linear-gradient(
+              145deg,
+              #4a2730,
+              #3a2229
+            );
+        }
 
-            background:
-              linear-gradient(
-                145deg,
-                #4a2730,
-                #3a2229
-              );
-          }
 
+        body.nabd-dark .blood-badge {
+          color: #ff9bad;
 
-          .blood-badge {
-            color: #ff9bad;
+          background:
+            linear-gradient(
+              145deg,
+              #4a2730,
+              #3a2229
+            );
+        }
 
-            background:
-              linear-gradient(
-                145deg,
-                #4a2730,
-                #3a2229
-              );
-          }
 
+        /* SELECT */
 
-          /* SELECT */
+        body.nabd-dark .personal-field-content select {
+          color: #e7faf7 !important;
 
-          .personal-field-content select {
-            color: #e7faf7 !important;
+          background-color:
+            transparent !important;
+        }
 
-            background-color:
-              transparent !important;
-          }
+        body.nabd-dark .personal-field-content select option {
+          background: #102f31;
 
-          .personal-field-content select option {
-            background: #102f31;
+          color: #e7faf7;
+        }
 
-            color: #e7faf7;
-          }
 
+        /* SAVE BUTTON */
 
-          /* SAVE BUTTON */
+        body.nabd-dark .personal-save {
+          color: #ffffff;
 
-          .personal-save {
-            color: #ffffff;
+          background:
+            linear-gradient(
+              135deg,
+              #35b8a5,
+              #128f80
+            );
 
-            background:
-              linear-gradient(
-                135deg,
-                #35b8a5,
-                #128f80
-              );
+          box-shadow:
+            0 12px 25px
+            rgba(21,155,138,.22);
+        }
 
-            box-shadow:
-              0 12px 25px
-              rgba(21,155,138,.22);
-          }
 
+        /* SUCCESS */
 
-          /* SUCCESS */
+        body.nabd-dark .personal-saved {
+          color: #76d7c8;
 
-          .personal-saved {
-            color: #76d7c8;
+          background:
+            rgba(21,105,96,.35);
 
-            background:
-              rgba(21,105,96,.35);
+          border-color:
+            rgba(100,205,192,.14);
+        }
 
-            border-color:
-              rgba(100,205,192,.14);
-          }
 
+        /* LOADING */
 
-          /* LOADING */
+        body.nabd-dark .personal-loading {
+          color: #65d6c5;
 
-          .personal-loading {
-            color: #65d6c5;
-
-            background: #071f21;
-          }
-
+          background: #071f21;
         }
 
       `}</style>
