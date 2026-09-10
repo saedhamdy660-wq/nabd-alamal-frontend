@@ -93,6 +93,88 @@ export default function FavoriteMedicines() {
   const [favorites, setFavorites] = useState([]);
   const navigate = useNavigate();
 
+  /* =========================================
+     THEME
+     ========================================= */
+
+  const [theme, setTheme] = useState(() => {
+    return localStorage.getItem("nabd_theme") || "light";
+  });
+
+  const [systemDark, setSystemDark] = useState(() => {
+    if (typeof window === "undefined") return false;
+
+    return (
+      window.matchMedia?.(
+        "(prefers-color-scheme: dark)"
+      ).matches || false
+    );
+  });
+
+  /* =========================================
+     LISTEN FOR THEME CHANGES
+     ========================================= */
+
+  useEffect(() => {
+    const updateTheme = () => {
+      setTheme(
+        localStorage.getItem("nabd_theme") || "light"
+      );
+    };
+
+    window.addEventListener(
+      "nabd-theme-change",
+      updateTheme
+    );
+
+    return () => {
+      window.removeEventListener(
+        "nabd-theme-change",
+        updateTheme
+      );
+    };
+  }, []);
+
+  /* =========================================
+     SYSTEM THEME
+     ========================================= */
+
+  useEffect(() => {
+    const mediaQuery = window.matchMedia?.(
+      "(prefers-color-scheme: dark)"
+    );
+
+    if (!mediaQuery) return;
+
+    const handleChange = (event) => {
+      setSystemDark(event.matches);
+    };
+
+    mediaQuery.addEventListener?.(
+      "change",
+      handleChange
+    );
+
+    return () => {
+      mediaQuery.removeEventListener?.(
+        "change",
+        handleChange
+      );
+    };
+  }, []);
+
+  /* =========================================
+     FINAL DARK STATE
+     ========================================= */
+
+  const isDark =
+    theme === "dark" ||
+    (theme === "system" && systemDark);
+
+  /* =========================================
+     LOAD FAVORITES
+     ========================================= */
+
   useEffect(() => {
     let ids = JSON.parse(
       localStorage.getItem("nabd_favorites") || "null"
@@ -120,7 +202,11 @@ export default function FavoriteMedicines() {
   }, []);
 
   return (
-    <div className="favorites-page">
+    <div
+      className={`favorites-page ${
+        isDark ? "dark-mode" : ""
+      }`}
+    >
 
       {/* Header */}
       <header className="favorites-header">
@@ -932,250 +1018,249 @@ export default function FavoriteMedicines() {
 
         /* =========================================
            DARK MODE
+           مهم:
+           الدارك هنا مربوط بـ .dark-mode
+           وليس بنظام الجهاز مباشرة
            ========================================= */
 
-        @media (prefers-color-scheme: dark) {
+        .favorites-page.dark-mode {
+          color: #d7efec;
 
-          .favorites-page {
-            color: #d7efec;
+          background:
 
-            background:
+            radial-gradient(
+              circle at 10% 5%,
+              rgba(43,157,145,.18),
+              transparent 28%
+            ),
 
-              radial-gradient(
-                circle at 10% 5%,
-                rgba(43,157,145,.18),
-                transparent 28%
-              ),
+            radial-gradient(
+              circle at 95% 28%,
+              rgba(47,130,125,.14),
+              transparent 30%
+            ),
 
-              radial-gradient(
-                circle at 95% 28%,
-                rgba(47,130,125,.14),
-                transparent 30%
-              ),
+            linear-gradient(
+              160deg,
+              #071f21 0%,
+              #092a2c 45%,
+              #0b3537 100%
+            );
+        }
 
-              linear-gradient(
-                160deg,
-                #071f21 0%,
-                #092a2c 45%,
-                #0b3537 100%
-              );
-          }
 
+        /* HEADER */
 
-          /* HEADER */
+        .favorites-page.dark-mode .favorites-back {
+          color: #65d6c5;
 
-          .favorites-back {
-            color: #65d6c5;
+          background:
+            rgba(18,55,57,.90);
 
-            background:
-              rgba(18,55,57,.90);
+          border-color:
+            rgba(100,205,192,.15);
 
-            border-color:
-              rgba(100,205,192,.15);
+          box-shadow:
+            0 7px 18px
+              rgba(0,0,0,.20),
 
-            box-shadow:
-              0 7px 18px
-                rgba(0,0,0,.20),
+            inset 0 1px 0
+              rgba(255,255,255,.04);
+        }
 
-              inset 0 1px 0
-                rgba(255,255,255,.04);
-          }
 
+        .favorites-page.dark-mode .favorites-header h1 {
+          color: #65d6c5;
+        }
 
-          .favorites-header h1 {
-            color: #65d6c5;
-          }
 
+        .favorites-page.dark-mode .favorites-header p {
+          color: #8eb6b2;
+        }
 
-          .favorites-header p {
-            color: #8eb6b2;
-          }
 
+        /* INTRO */
 
-          /* INTRO */
+        .favorites-page.dark-mode .favorites-intro {
+          background:
+            linear-gradient(
+              145deg,
+              rgba(18,55,57,.96),
+              rgba(11,47,49,.96)
+            );
 
-          .favorites-intro {
-            background:
-              linear-gradient(
-                145deg,
-                rgba(18,55,57,.96),
-                rgba(11,47,49,.96)
-              );
+          border-color:
+            rgba(100,205,192,.14);
 
-            border-color:
-              rgba(100,205,192,.14);
+          box-shadow:
+            0 10px 28px
+              rgba(0,0,0,.22),
 
-            box-shadow:
-              0 10px 28px
-                rgba(0,0,0,.22),
+            inset 0 1px 0
+              rgba(255,255,255,.04);
+        }
 
-              inset 0 1px 0
-                rgba(255,255,255,.04);
-          }
 
+        .favorites-page.dark-mode .favorites-intro-icon {
+          color: #ff91a4;
 
-          .favorites-intro-icon {
-            color: #ff91a4;
+          background:
+            linear-gradient(
+              145deg,
+              rgba(116,45,60,.55),
+              rgba(91,39,51,.55)
+            );
+        }
 
-            background:
-              linear-gradient(
-                145deg,
-                rgba(116,45,60,.55),
-                rgba(91,39,51,.55)
-              );
-          }
 
+        .favorites-page.dark-mode .favorites-intro strong {
+          color: #c6e9e5;
+        }
 
-          .favorites-intro strong {
-            color: #c6e9e5;
-          }
 
+        .favorites-page.dark-mode .favorites-intro p {
+          color: #8ab1ae;
+        }
 
-          .favorites-intro p {
-            color: #8ab1ae;
-          }
 
+        /* MEDICINE CARD */
 
-          /* MEDICINE CARD */
+        .favorites-page.dark-mode .medicine-card {
+          background:
+            linear-gradient(
+              145deg,
+              rgba(18,55,57,.97),
+              rgba(10,45,47,.97)
+            );
 
-          .medicine-card {
-            background:
-              linear-gradient(
-                145deg,
-                rgba(18,55,57,.97),
-                rgba(10,45,47,.97)
-              );
+          border-color:
+            rgba(100,205,192,.13);
 
-            border-color:
-              rgba(100,205,192,.13);
+          box-shadow:
+            0 10px 25px
+              rgba(0,0,0,.20),
 
-            box-shadow:
-              0 10px 25px
-                rgba(0,0,0,.20),
+            inset 0 1px 0
+              rgba(255,255,255,.035);
+        }
 
-              inset 0 1px 0
-                rgba(255,255,255,.035);
-          }
 
+        .favorites-page.dark-mode .medicine-card:active {
+          box-shadow:
+            0 6px 18px
+              rgba(0,0,0,.25);
+        }
 
-          .medicine-card:active {
-            box-shadow:
-              0 6px 18px
-                rgba(0,0,0,.25);
-          }
 
+        .favorites-page.dark-mode .medicine-icon {
+          color: #65d6c5;
 
-          .medicine-icon {
-            color: #65d6c5;
+          background:
+            linear-gradient(
+              145deg,
+              rgba(34,113,106,.60),
+              rgba(26,88,84,.60)
+            );
+        }
 
-            background:
-              linear-gradient(
-                145deg,
-                rgba(34,113,106,.60),
-                rgba(26,88,84,.60)
-              );
-          }
 
+        .favorites-page.dark-mode .medicine-title strong {
+          color: #c6e9e5;
+        }
 
-          .medicine-title strong {
-            color: #c6e9e5;
-          }
 
+        .favorites-page.dark-mode .favorite-heart {
+          color: #ff91a4;
 
-          .favorite-heart {
-            color: #ff91a4;
+          background:
+            rgba(110,48,63,.48);
+        }
 
-            background:
-              rgba(110,48,63,.48);
-          }
 
+        .favorites-page.dark-mode .available {
+          color: #65cdb9;
+        }
 
-          .available {
-            color: #65cdb9;
-          }
 
+        .favorites-page.dark-mode .unavailable {
+          color: #ff91a4;
+        }
 
-          .unavailable {
-            color: #ff91a4;
-          }
 
+        .favorites-page.dark-mode .separator {
+          color: #527a78;
+        }
 
-          .separator {
-            color: #527a78;
-          }
 
+        .favorites-page.dark-mode .distance {
+          color: #8ab1ae;
+        }
 
-          .distance {
-            color: #8ab1ae;
-          }
 
+        .favorites-page.dark-mode .medicine-arrow {
+          color: #65d6c5;
 
-          .medicine-arrow {
-            color: #65d6c5;
+          background:
+            rgba(30,105,99,.48);
+        }
 
-            background:
-              rgba(30,105,99,.48);
-          }
 
+        /* EMPTY */
 
-          /* EMPTY */
+        .favorites-page.dark-mode .empty-favorites {
+          background:
+            linear-gradient(
+              145deg,
+              rgba(18,55,57,.96),
+              rgba(10,45,47,.96)
+            );
 
-          .empty-favorites {
-            background:
-              linear-gradient(
-                145deg,
-                rgba(18,55,57,.96),
-                rgba(10,45,47,.96)
-              );
+          border-color:
+            rgba(101,214,197,.20);
 
-            border-color:
-              rgba(101,214,197,.20);
+          box-shadow:
+            0 10px 25px
+              rgba(0,0,0,.20);
+        }
 
-            box-shadow:
-              0 10px 25px
-                rgba(0,0,0,.20);
-          }
 
+        .favorites-page.dark-mode .empty-favorite-icon {
+          color: #ff91a4;
 
-          .empty-favorite-icon {
-            color: #ff91a4;
+          background:
+            linear-gradient(
+              145deg,
+              rgba(110,48,63,.55),
+              rgba(84,40,51,.55)
+            );
+        }
 
-            background:
-              linear-gradient(
-                145deg,
-                rgba(110,48,63,.55),
-                rgba(84,40,51,.55)
-              );
-          }
 
+        .favorites-page.dark-mode .empty-favorites h2 {
+          color: #c6e9e5;
+        }
 
-          .empty-favorites h2 {
-            color: #c6e9e5;
-          }
 
+        .favorites-page.dark-mode .empty-favorites p {
+          color: #8ab1ae;
+        }
 
-          .empty-favorites p {
-            color: #8ab1ae;
-          }
 
+        /* BUTTON */
 
-          /* BUTTON */
+        .favorites-page.dark-mode .browse-button {
+          color: #062523;
 
-          .browse-button {
-            color: #062523;
+          background:
+            linear-gradient(
+              135deg,
+              #72ddcd,
+              #35b8a5
+            );
 
-            background:
-              linear-gradient(
-                135deg,
-                #72ddcd,
-                #35b8a5
-              );
-
-            box-shadow:
-              0 8px 20px
-                rgba(53,184,165,.18);
-          }
-
+          box-shadow:
+            0 8px 20px
+              rgba(53,184,165,.18);
         }
 
 
