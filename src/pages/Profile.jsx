@@ -1,110 +1,71 @@
-import React, { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import React, { useEffect, useRef, useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
 import { api } from "../api.js";
 
 function getSavedUser() {
+  const stored = localStorage.getItem("nabd_user");
+
+  if (!stored) return null;
+
   try {
-    const saved = localStorage.getItem("nabd_user");
-    if (!saved) return null;
-    return JSON.parse(saved);
+    return JSON.parse(stored);
   } catch {
     return null;
   }
 }
 
+function BackIcon() {
+  return (
+    <svg viewBox="0 0 24 24" aria-hidden="true">
+      <path
+        d="M15 5l-7 7 7 7"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="2"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+    </svg>
+  );
+}
+
 function UserIcon() {
   return (
-    <svg viewBox="0 0 24 24">
-      <circle cx="12" cy="8" r="3" fill="none" stroke="currentColor" strokeWidth="1.8" />
-      <path d="M5.5 20c.8-3.3 3-5 6.5-5s5.7 1.7 6.5 5" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" />
-    </svg>
-  );
-}
-
-function LocationIcon() {
-  return (
-    <svg viewBox="0 0 24 24">
-      <path d="M12 21s7-6.1 7-12a7 7 0 1 0-14 0c0 5.9 7 12 7 12Z" fill="none" stroke="currentColor" strokeWidth="1.8" />
-      <circle cx="12" cy="9" r="2.2" fill="none" stroke="currentColor" strokeWidth="1.8" />
-    </svg>
-  );
-}
-
-function CalendarIcon() {
-  return (
-    <svg viewBox="0 0 24 24">
-      <rect x="4" y="5" width="16" height="15" rx="2" fill="none" stroke="currentColor" strokeWidth="1.8" />
-      <path d="M8 3v4M16 3v4M4 9h16" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" />
-    </svg>
-  );
-}
-
-function HeartIcon() {
-  return (
-    <svg viewBox="0 0 24 24">
-      <path d="M20 8.8c0 5.2-8 10-8 10s-8-4.8-8-10a4.2 4.2 0 0 1 8-1.7A4.2 4.2 0 0 1 20 8.8Z" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinejoin="round" />
+    <svg viewBox="0 0 24 24" aria-hidden="true">
+      <circle
+        cx="12"
+        cy="8"
+        r="3"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="1.8"
+      />
+      <path
+        d="M5.5 20c.8-3.3 3-5 6.5-5s5.7 1.7 6.5 5"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="1.8"
+        strokeLinecap="round"
+      />
     </svg>
   );
 }
 
 function SettingsIcon() {
   return (
-    <svg viewBox="0 0 24 24">
-      <circle cx="12" cy="12" r="3" fill="none" stroke="currentColor" strokeWidth="1.8" />
+    <svg viewBox="0 0 24 24" aria-hidden="true">
       <path
-        d="M19 13.2v-2.4l-1.8-.5a5.9 5.9 0 0 0-.6-1.5l1-1.5-1.7-1.7-1.5 1a5.9 5.9 0 0 0-1.5-.6L12.4 4H10l-.5 1.8a5.9 5.9 0 0 0-1.5.6l-1.5-1L4.8 7.1l1.7 1.7a5.9 5.9 0 0 0-.6 1.5l-1.8.5v2.4l1.8.5a5.9 5.9 0 0 0 .6 1.5l-1 1.5 1.7 1.7 1.5-1a5.9 5.9 0 0 0 1.5.6L10 20h2.4l.5-1.8a5.9 5.9 0 0 0 1.5-.6l1.5 1 1.7-1.7-1-1.5a5.9 5.9 0 0 0 .6-1.5l1.8-.7Z"
+        d="M12 8.5a3.5 3.5 0 1 0 0 7 3.5 3.5 0 0 0 0-7Z"
         fill="none"
         stroke="currentColor"
-        strokeWidth="1.4"
+        strokeWidth="1.8"
+      />
+      <path
+        d="M19 13.2v-2.4l-1.9-.6a5.8 5.8 0 0 0-.7-1.6l.9-1.8-1.7-1.7-1.8.9a5.8 5.8 0 0 0-1.6-.7L11.6 3H9.2l-.6 2.3a5.8 5.8 0 0 0-1.6.7l-1.8-.9-1.7 1.7.9 1.8a5.8 5.8 0 0 0-.7 1.6l-2.3.6v2.4l2.3.6c.2.6.4 1.1.7 1.6l-.9 1.8 1.7 1.7 1.8-.9c.5.3 1 .5 1.6.7l.6 2.3h2.4l.6-2.3c.6-.2 1.1-.4 1.6-.7l1.8.9 1.7-1.7-.9-1.8c.3-.5.5-1 .7-1.6l1.9-.6Z"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="1.3"
         strokeLinejoin="round"
-      />
-    </svg>
-  );
-}
-
-function BellSettingsIcon() {
-  return (
-    <svg viewBox="0 0 24 24">
-      <path
-        d="M6 17h12l-1.2-1.7V10a4.8 4.8 0 0 0-9.6 0v5.3L6 17Z"
-        fill="none"
-        stroke="currentColor"
-        strokeWidth="1.8"
-        strokeLinejoin="round"
-      />
-      <path
-        d="M10 20h4"
-        fill="none"
-        stroke="currentColor"
-        strokeWidth="1.8"
-        strokeLinecap="round"
-      />
-    </svg>
-  );
-}
-
-function SupportIcon() {
-  return (
-    <svg viewBox="0 0 24 24">
-      <path
-        d="M4 13v-1a8 8 0 0 1 16 0v1"
-        fill="none"
-        stroke="currentColor"
-        strokeWidth="1.8"
-        strokeLinecap="round"
-      />
-      <path
-        d="M4 13h3v5H5a1 1 0 0 1-1-1v-4Zm16 0h-3v5h2a1 1 0 0 0 1-1v-4Z"
-        fill="none"
-        stroke="currentColor"
-        strokeWidth="1.8"
-      />
-      <path
-        d="M17 18c-.7 1.2-1.9 2-3.5 2H12"
-        fill="none"
-        stroke="currentColor"
-        strokeWidth="1.8"
-        strokeLinecap="round"
       />
     </svg>
   );
@@ -112,7 +73,7 @@ function SupportIcon() {
 
 function LogoutIcon() {
   return (
-    <svg viewBox="0 0 24 24">
+    <svg viewBox="0 0 24 24" aria-hidden="true">
       <path
         d="M10 4H6a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h4"
         fill="none"
@@ -132,305 +93,254 @@ function LogoutIcon() {
   );
 }
 
-function BellIcon() {
-  return (
-    <svg viewBox="0 0 24 24">
-      <path
-        d="M6 17h12l-1.2-1.7V10a4.8 4.8 0 0 0-9.6 0v5.3L6 17Z"
-        fill="none"
-        stroke="currentColor"
-        strokeWidth="1.8"
-      />
-      <path
-        d="M10 20h4"
-        fill="none"
-        stroke="currentColor"
-        strokeWidth="1.8"
-        strokeLinecap="round"
-      />
-    </svg>
-  );
-}
-
-function RequestsIcon() {
-  return (
-    <svg viewBox="0 0 24 24">
-      <rect x="5" y="4" width="14" height="16" rx="2" fill="none" stroke="currentColor" strokeWidth="1.8" />
-      <path d="M8.5 9h7M8.5 13h7M8.5 17h4" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" />
-    </svg>
-  );
-}
-
-function HomeIcon() {
-  return (
-    <svg viewBox="0 0 24 24">
-      <path
-        d="M4 10.5L12 4l8 6.5V20a1 1 0 0 1-1 1h-4.5v-5h-5v5H5a1 1 0 0 1-1-1v-9.5Z"
-        fill="none"
-        stroke="currentColor"
-        strokeWidth="1.8"
-        strokeLinejoin="round"
-      />
-    </svg>
-  );
-}
-
-function ArrowIcon() {
-  return (
-    <svg viewBox="0 0 24 24">
-      <path
-        d="M9 5l7 7-7 7"
-        fill="none"
-        stroke="currentColor"
-        strokeWidth="2"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      />
-    </svg>
-  );
-}
-
-function ProfileMenuItem({ icon, title, onClick, danger = false }) {
-  return (
-    <button
-      type="button"
-      className={`profile-menu-item ${danger ? "danger-item" : ""}`}
-      onClick={onClick}
-    >
-      <div className="menu-icon">{icon}</div>
-
-      <span>{title}</span>
-
-      <div className="menu-arrow">
-        <ArrowIcon />
-      </div>
-    </button>
-  );
-}
-
 export default function Profile() {
   const navigate = useNavigate();
 
-  // معرفة هل المستخدم دخل كزائر
-  const isGuest =
-    localStorage.getItem("nabd_guest") === "true";
+  const isGuest = localStorage.getItem("nabd_guest") === "true";
 
-  // لو زائر لا نقرأ بيانات المستخدم القديمة
-  const [user, setUser] = useState(
-    isGuest ? null : getSavedUser()
-  );
+  const [user, setUser] = useState(() => {
+    return isGuest ? null : getSavedUser();
+  });
+
+  // الصورة المحفوظة
+  const [avatar, setAvatar] = useState(() => {
+    if (isGuest) return "";
+
+    return localStorage.getItem("nabd_avatar") || "";
+  });
+
+  // مرجع لاختيار الصورة
+  const fileInputRef = useRef(null);
 
   useEffect(() => {
-    const guest =
-      localStorage.getItem("nabd_guest") === "true";
+    if (isGuest) return;
 
-    // الزائر لا يتم تحميل بياناته من API
-    if (guest) {
-      setUser(null);
-      return;
+    const savedAvatar = localStorage.getItem("nabd_avatar");
+
+    if (savedAvatar) {
+      setAvatar(savedAvatar);
     }
 
     api
       .getUser()
       .then((data) => {
-        if (data) {
-          setUser(data);
+        if (!data) return;
 
-          localStorage.setItem(
-            "nabd_user",
-            JSON.stringify(data)
-          );
+        setUser(data);
+
+        localStorage.setItem("nabd_user", JSON.stringify(data));
+
+        // لو مفيش صورة محلية، حاول نجيب الصورة من بيانات المستخدم
+        if (!savedAvatar) {
+          const apiAvatar =
+            data.avatar ||
+            data.image ||
+            data.profileImage ||
+            "";
+
+          if (apiAvatar) {
+            setAvatar(apiAvatar);
+          }
         }
       })
       .catch(() => {});
-  }, []);
+  }, [isGuest]);
 
-  // اسم المستخدم
-  const userName = isGuest
-    ? "المستخدم"
-    : (
-        user?.name ||
-        user?.username ||
-        user?.fullName ||
-        user?.displayName ||
-        "المستخدم"
-      );
+  // فتح معرض الصور
+  const openImagePicker = () => {
+    fileInputRef.current?.click();
+  };
 
-  // البريد الإلكتروني
-  const email = isGuest
-    ? "يمكنك تسجيل الدخول لعرض بياناتك"
-    : (
-        user?.email ||
-        "البريد الإلكتروني"
-      );
+  // اختيار الصورة
+  const handleAvatarChange = (e) => {
+    const file = e.target.files?.[0];
 
-  // الصورة
-  const avatar = isGuest
-    ? ""
-    : (
-        user?.avatar ||
-        user?.image ||
-        user?.profileImage ||
-        localStorage.getItem("nabd_avatar") ||
-        ""
-      );
+    if (!file) return;
+
+    // التأكد إن الملف صورة
+    if (!file.type.startsWith("image/")) {
+      alert("من فضلك اختر صورة فقط");
+      return;
+    }
+
+    // قراءة الصورة
+    const reader = new FileReader();
+
+    reader.onload = () => {
+      const image = reader.result;
+
+      // حفظ الصورة
+      localStorage.setItem("nabd_avatar", image);
+
+      // تحديث الصورة فورًا
+      setAvatar(image);
+    };
+
+    reader.readAsDataURL(file);
+
+    // السماح باختيار نفس الصورة مرة أخرى
+    e.target.value = "";
+  };
 
   const handleLogout = () => {
     localStorage.removeItem("nabd_user");
     localStorage.removeItem("nabd_avatar");
     localStorage.removeItem("nabd_guest");
 
-    navigate("/login", { replace: true });
+    navigate("/login");
   };
+
+  const userName =
+    user?.name ||
+    user?.username ||
+    user?.fullName ||
+    user?.displayName ||
+    "المستخدم";
+
+  const email = user?.email || "";
 
   return (
     <div className="profile-page">
 
-      {/* Header */}
-      <header className="profile-header">
-        <button
-          type="button"
-          className="header-back"
-          onClick={() => navigate(-1)}
-        >
-          ←
-        </button>
+      {/* HEADER */}
+      <div className="profile-header">
+        <div>
+          <h1>الملف الشخصي</h1>
+          <p>إدارة حسابك ومعلوماتك الشخصية</p>
+        </div>
 
-        <h1>ملفي الشخصي</h1>
+        <Link to="/home" className="profile-back">
+          <BackIcon />
+        </Link>
+      </div>
 
-        <div className="header-empty" />
-      </header>
+      {/* PROFILE CARD */}
+      <div className="profile-main-card">
 
-      {/* Profile Card */}
-      <section className="profile-card">
-        <div
-          className="profile-avatar"
-          style={{
-            backgroundImage: avatar
-              ? `url(${avatar})`
-              : "none",
-          }}
-        >
-          {!avatar && (
-            <span>
-              {userName.charAt(0)}
-            </span>
-          )}
+        <div className="profile-avatar-wrapper">
 
+          {/* الصورة */}
+          <div
+            className="profile-avatar"
+            style={
+              avatar
+                ? {
+                    backgroundImage: `url(${avatar})`,
+                    backgroundSize: "cover",
+                    backgroundPosition: "center",
+                    backgroundRepeat: "no-repeat",
+                  }
+                : {}
+            }
+          >
+            {!avatar && userName.charAt(0)}
+          </div>
+
+          {/* زر تغيير الصورة */}
           <button
             type="button"
             className="camera-button"
-            onClick={() => navigate("/personal-info")}
+            onClick={openImagePicker}
+            aria-label="اختيار صورة شخصية"
           >
             +
           </button>
+
+          {/* اختيار الصورة مخفي */}
+          <input
+            ref={fileInputRef}
+            type="file"
+            accept="image/*"
+            style={{ display: "none" }}
+            onChange={handleAvatarChange}
+          />
+
         </div>
 
-        <h2>{userName}</h2>
+        <div className="profile-user-info">
+          <h2>{userName}</h2>
 
-        <p>{email}</p>
+          {email && (
+            <p>{email}</p>
+          )}
 
-        <div className="profile-slogan">
-          معًا ننقذ الحياة
+          <span>
+            {isGuest ? "وضع الزائر" : "حسابك الشخصي"}
+          </span>
         </div>
-      </section>
 
-      {/* Menu */}
-      <section className="profile-menu">
+      </div>
 
-        <ProfileMenuItem
-          icon={<UserIcon />}
-          title="المعلومات الشخصية"
-          onClick={() => navigate("/personal-info")}
-        />
+      {/* OPTIONS */}
+      <div className="profile-options">
 
-        <ProfileMenuItem
-          icon={<LocationIcon />}
-          title="العناوين المسجلة"
-          onClick={() => navigate("/addresses")}
-        />
+        <Link to="/personal-info" className="profile-option">
+          <div className="profile-option-icon">
+            <UserIcon />
+          </div>
 
-        <ProfileMenuItem
-          icon={<CalendarIcon />}
-          title="الطلبات السابقة"
-          onClick={() => navigate("/requests")}
-        />
+          <div className="profile-option-text">
+            <strong>المعلومات الشخصية</strong>
+            <span>تعديل الاسم والبيانات الشخصية</span>
+          </div>
 
-        <ProfileMenuItem
-          icon={<HeartIcon />}
-          title="الأدوية المفضلة"
-          onClick={() => navigate("/favorites")}
-        />
+          <div className="profile-option-arrow">
+            ←
+          </div>
+        </Link>
 
-        {/* إعدادات الإشعارات */}
-        <ProfileMenuItem
-          icon={<BellSettingsIcon />}
-          title="إعدادات الإشعارات"
-          onClick={() => navigate("/notification-settings")}
-        />
+        <Link to="/settings" className="profile-option">
+          <div className="profile-option-icon">
+            <SettingsIcon />
+          </div>
 
-        {/* إعدادات التطبيق */}
-        <ProfileMenuItem
-          icon={<SettingsIcon />}
-          title="إعدادات التطبيق"
-          onClick={() => navigate("/settings")}
-        />
+          <div className="profile-option-text">
+            <strong>الإعدادات</strong>
+            <span>إدارة إعدادات التطبيق</span>
+          </div>
 
-        {/* المساعدة والدعم */}
-        <ProfileMenuItem
-          icon={<SupportIcon />}
-          title="المساعدة والدعم"
-          onClick={() => navigate("/support")}
-        />
+          <div className="profile-option-arrow">
+            ←
+          </div>
+        </Link>
 
-        {/* تسجيل الخروج */}
-        <ProfileMenuItem
-          icon={<LogoutIcon />}
-          title="تسجيل الخروج"
-          danger
+      </div>
+
+      {/* LOGOUT */}
+      {!isGuest && (
+        <button
+          type="button"
+          className="profile-logout"
           onClick={handleLogout}
-        />
+        >
+          <LogoutIcon />
 
-      </section>
+          <span>تسجيل الخروج</span>
+        </button>
+      )}
 
-      {/* Bottom Navigation */}
+      {/* BOTTOM NAV */}
       <nav className="profile-bottom-nav">
 
-        <button
-          type="button"
-          className="nav-item active"
-          onClick={() => navigate("/profile")}
-        >
-          <UserIcon />
-          <span>الملف الشخصي</span>
-        </button>
-
-        <button
-          type="button"
-          className="nav-item"
-          onClick={() => navigate("/notifications")}
-        >
-          <BellIcon />
-          <span>الإشعارات</span>
-        </button>
-
-        <button
-          type="button"
-          className="nav-item"
-          onClick={() => navigate("/requests")}
-        >
-          <RequestsIcon />
-          <span>الطلبات</span>
-        </button>
-
-        <button
-          type="button"
-          className="nav-item"
-          onClick={() => navigate("/home")}
-        >
-          <HomeIcon />
+        <Link to="/home">
+          <div>🏠</div>
           <span>الرئيسية</span>
-        </button>
+        </Link>
+
+        <Link to="/requests">
+          <div>📋</div>
+          <span>الطلبات</span>
+        </Link>
+
+        <Link to="/notifications">
+          <div>🔔</div>
+          <span>الإشعارات</span>
+        </Link>
+
+        <Link to="/profile" className="active">
+          <div>👤</div>
+          <span>المزيد</span>
+        </Link>
 
       </nav>
 
@@ -442,9 +352,11 @@ export default function Profile() {
 
         .profile-page {
           min-height: 100vh;
-          padding: 22px 18px 110px;
+          width: 100%;
+
+          padding: 22px 16px 105px;
+
           direction: rtl;
-          color: #24575a;
 
           background:
             radial-gradient(
@@ -464,339 +376,475 @@ export default function Profile() {
               #e8f7f4 100%
             );
 
-          font-family: Arial, Tahoma, sans-serif;
+          color: #286d6d;
+
+          font-family:
+            Arial,
+            Tahoma,
+            sans-serif;
         }
 
-        .profile-header {
-          max-width: 520px;
-          margin: 0 auto 20px;
 
-          display: grid;
-          grid-template-columns: 44px 1fr 44px;
-          align-items: center;
+        /* HEADER */
+
+        .profile-header {
+          width: 100%;
+          max-width: 520px;
+
+          min-height: 54px;
+
+          margin: 0 auto 24px;
+
+          position: relative;
+        }
+
+        .profile-header > div {
+          padding-right: 64px;
+
+          text-align: right;
         }
 
         .profile-header h1 {
-          margin: 0;
-          text-align: center;
+          margin: 0 0 5px;
+
           color: #218d83;
-          font-size: 22px;
+
+          font-size: 23px;
+          line-height: 1.3;
+
           font-weight: 800;
         }
 
-        .header-back {
-          width: 42px;
-          height: 42px;
+        .profile-header p {
+          margin: 0;
 
-          border: 1px solid rgba(255,255,255,.9);
-          border-radius: 14px;
+          color: #8ca6a4;
 
-          background: rgba(255,255,255,.72);
+          font-size: 11px;
+        }
+
+
+        /* BACK */
+
+        .profile-back {
+          position: absolute;
+
+          right: 0;
+          top: 0;
+
+          width: 52px;
+          height: 52px;
+
+          display: flex;
+
+          align-items: center;
+          justify-content: center;
+
+          border-radius: 18px;
 
           color: #218d83;
-          font-size: 25px;
 
-          cursor: pointer;
+          background: rgba(255,255,255,.85);
+
+          border: 1px solid rgba(255,255,255,.95);
 
           box-shadow:
-            0 7px 18px rgba(35,139,128,.08),
-            inset 0 1px 0 rgba(255,255,255,.9);
+            0 8px 22px rgba(35,139,128,.08),
+            inset 0 1px 0 rgba(255,255,255,.95);
+
+          text-decoration: none;
         }
 
-        .header-empty {
-          width: 42px;
-          height: 42px;
+        .profile-back svg {
+          width: 24px;
+          height: 24px;
         }
 
-        .profile-card {
+
+        /* MAIN PROFILE CARD */
+
+        .profile-main-card {
+          width: 100%;
           max-width: 520px;
-          margin: 0 auto 17px;
 
-          min-height: 280px;
-          padding: 25px 18px;
+          min-height: 145px;
 
-          text-align: center;
+          margin: 0 auto 18px;
 
-          border-radius: 28px;
+          padding: 18px;
+
+          display: flex;
+
+          align-items: center;
+
+          gap: 16px;
+
+          border-radius: 30px;
 
           background:
             linear-gradient(
               145deg,
-              rgba(255,255,255,.88),
-              rgba(226,249,245,.78)
+              rgba(255,255,255,.94),
+              rgba(226,248,244,.80)
             );
 
           border: 1px solid rgba(255,255,255,.95);
 
           box-shadow:
-            0 12px 32px rgba(42,128,128,.09),
+            0 12px 30px rgba(42,128,128,.08),
             inset 0 1px 0 rgba(255,255,255,.95);
 
           backdrop-filter: blur(15px);
           -webkit-backdrop-filter: blur(15px);
         }
 
-        .profile-avatar {
+
+        /* AVATAR */
+
+        .profile-avatar-wrapper {
           position: relative;
 
           width: 112px;
           height: 112px;
 
-          margin: 0 auto 13px;
+          flex-shrink: 0;
+        }
 
-          border-radius: 50%;
+        .profile-avatar {
+          width: 112px;
+          height: 112px;
 
           display: flex;
+
           align-items: center;
           justify-content: center;
 
-          color: #218d83;
+          border-radius: 50%;
 
-          font-size: 43px;
-          font-weight: 800;
+          color: #218d83;
 
           background:
             linear-gradient(
               145deg,
-              #dff8f3,
-              #bcece3
+              #dff9f4,
+              #c5eee6
             );
 
-          background-size: cover;
-          background-position: center;
-
-          border: 6px solid rgba(255,255,255,.92);
+          border: 4px solid rgba(255,255,255,.95);
 
           box-shadow:
-            0 9px 26px rgba(35,139,128,.13),
-            inset 0 1px 8px rgba(255,255,255,.8);
+            0 10px 25px rgba(42,128,128,.10);
+
+          font-size: 38px;
+
+          font-weight: 900;
+
+          overflow: hidden;
         }
+
+
+        /* PLUS BUTTON */
 
         .camera-button {
           position: absolute;
 
           right: -2px;
-          bottom: 3px;
+          bottom: 2px;
 
-          width: 36px;
-          height: 36px;
-
-          border: 3px solid white;
-          border-radius: 50%;
+          width: 38px;
+          height: 38px;
 
           display: flex;
+
           align-items: center;
           justify-content: center;
 
-          color: white;
-          background: #159b8a;
+          border: 3px solid white;
 
-          font-size: 23px;
+          border-radius: 50%;
+
+          color: white;
+
+          background:
+            linear-gradient(
+              135deg,
+              #38b7a4,
+              #159b8a
+            );
+
+          font-size: 25px;
+
+          line-height: 1;
+
           font-weight: 500;
 
           cursor: pointer;
 
           box-shadow:
-            0 5px 14px rgba(21,155,138,.2);
+            0 6px 15px rgba(21,155,138,.25);
+
+          z-index: 5;
+
+          padding: 0;
         }
 
-        .profile-card h2 {
-          margin: 0 0 5px;
-          color: #286d6d;
-          font-size: 24px;
-          font-weight: 800;
+        .camera-button:active {
+          transform: scale(.92);
         }
 
-        .profile-card p {
-          margin: 0;
-          color: #729292;
-          font-size: 13px;
-        }
 
-        .profile-slogan {
-          margin: 14px auto 0;
+        /* USER INFO */
 
-          width: fit-content;
+        .profile-user-info {
+          min-width: 0;
 
-          padding: 7px 15px;
-
-          border-radius: 18px;
-
-          color: #159b8a;
-
-          background: rgba(215,247,240,.75);
-
-          font-size: 11px;
-          font-weight: 800;
-        }
-
-        .profile-menu {
-          max-width: 520px;
-          margin: 0 auto;
-
-          padding: 4px 14px;
-
-          overflow: hidden;
-
-          border-radius: 25px;
-
-          background:
-            linear-gradient(
-              145deg,
-              rgba(255,255,255,.9),
-              rgba(236,250,248,.8)
-            );
-
-          border: 1px solid rgba(255,255,255,.92);
-
-          box-shadow:
-            0 12px 30px rgba(42,128,128,.08),
-            inset 0 1px 0 rgba(255,255,255,.9);
-
-          backdrop-filter: blur(14px);
-          -webkit-backdrop-filter: blur(14px);
-        }
-
-        .profile-menu-item {
-          position: relative;
-
-          width: 100%;
-          min-height: 70px;
-
-          padding: 8px 2px;
-
-          border: 0;
-
-          display: flex;
-          align-items: center;
-
-          gap: 13px;
-
-          background: transparent;
-
-          color: #286d6d;
-
-          cursor: pointer;
+          flex: 1;
 
           text-align: right;
         }
 
-        .profile-menu-item + .profile-menu-item {
-          border-top: 1px solid rgba(124,184,177,.14);
+        .profile-user-info h2 {
+          margin: 0 0 7px;
+
+          color: #286d6d;
+
+          font-size: 20px;
+
+          font-weight: 800;
+
+          white-space: nowrap;
+
+          overflow: hidden;
+
+          text-overflow: ellipsis;
         }
 
-        .menu-icon {
-          width: 42px;
-          height: 42px;
+        .profile-user-info p {
+          margin: 0 0 8px;
+
+          color: #829d9a;
+
+          font-size: 11px;
+
+          direction: ltr;
+
+          text-align: right;
+
+          white-space: nowrap;
+
+          overflow: hidden;
+
+          text-overflow: ellipsis;
+        }
+
+        .profile-user-info span {
+          display: inline-block;
+
+          padding: 6px 11px;
+
+          border-radius: 12px;
+
+          color: #218d83;
+
+          background: #e2f7f3;
+
+          font-size: 10px;
+
+          font-weight: 700;
+        }
+
+
+        /* OPTIONS */
+
+        .profile-options {
+          width: 100%;
+          max-width: 520px;
+
+          margin: 0 auto 14px;
+        }
+
+        .profile-option {
+          width: 100%;
+
+          min-height: 78px;
+
+          margin-bottom: 12px;
+
+          padding: 12px 14px;
+
+          display: flex;
+
+          align-items: center;
+
+          gap: 12px;
+
+          border-radius: 22px;
+
+          background:
+            linear-gradient(
+              145deg,
+              rgba(255,255,255,.95),
+              rgba(232,249,246,.82)
+            );
+
+          border: 1px solid rgba(255,255,255,.96);
+
+          box-shadow:
+            0 10px 26px rgba(42,128,128,.07),
+            inset 0 1px 0 rgba(255,255,255,.92);
+
+          text-decoration: none;
+
+          color: inherit;
+        }
+
+        .profile-option-icon {
+          width: 48px;
+          height: 48px;
 
           flex-shrink: 0;
 
           display: flex;
+
           align-items: center;
           justify-content: center;
 
-          border-radius: 15px;
+          border-radius: 16px;
 
           color: #159b8a;
 
           background:
             linear-gradient(
               145deg,
-              #e4faf6,
-              #d3f3ed
+              #e1faf5,
+              #cef0e9
             );
         }
 
-        .menu-icon svg {
-          width: 23px;
-          height: 23px;
+        .profile-option-icon svg {
+          width: 24px;
+          height: 24px;
         }
 
-        .profile-menu-item > span {
+        .profile-option-text {
+          min-width: 0;
+
           flex: 1;
 
+          display: flex;
+
+          flex-direction: column;
+
+          gap: 4px;
+
+          text-align: right;
+        }
+
+        .profile-option-text strong {
           color: #286d6d;
 
           font-size: 14px;
+
           font-weight: 800;
         }
 
-        .menu-arrow {
-          width: 30px;
-          height: 30px;
+        .profile-option-text span {
+          color: #91a8a7;
+
+          font-size: 10px;
+        }
+
+        .profile-option-arrow {
+          color: #159b8a;
+
+          font-size: 18px;
+
+          flex-shrink: 0;
+        }
+
+
+        /* LOGOUT */
+
+        .profile-logout {
+          width: 100%;
+          max-width: 520px;
+
+          height: 54px;
+
+          margin: 4px auto 0;
 
           display: flex;
+
           align-items: center;
           justify-content: center;
 
-          color: #86aaa7;
+          gap: 8px;
+
+          border: 1px solid #f5d9df;
+
+          border-radius: 20px;
+
+          color: #c05267;
+
+          background: rgba(255,241,244,.85);
+
+          font-family:
+            Arial,
+            Tahoma,
+            sans-serif;
+
+          font-size: 13px;
+
+          font-weight: 800;
+
+          cursor: pointer;
         }
 
-        .menu-arrow svg {
-          width: 17px;
-          height: 17px;
+        .profile-logout svg {
+          width: 20px;
+          height: 20px;
         }
 
-        .danger-item .menu-icon {
-          color: #d36a79;
-
-          background:
-            linear-gradient(
-              145deg,
-              #fff0f3,
-              #ffe4e9
-            );
+        .profile-logout:active {
+          transform: scale(.98);
         }
 
-        .danger-item > span {
-          color: #c65f70 !important;
-        }
 
-        .danger-item .menu-arrow {
-          color: #d88a96;
-        }
+        /* BOTTOM NAV */
 
         .profile-bottom-nav {
           position: fixed;
 
-          left: 50%;
-          bottom: 14px;
+          left: 0;
+          right: 0;
+          bottom: 0;
 
-          transform: translateX(-50%);
+          height: 78px;
 
-          z-index: 100;
-
-          width: calc(100% - 28px);
-          max-width: 520px;
-
-          height: 68px;
-
-          padding: 6px;
-
-          display: grid;
-          grid-template-columns: repeat(4, 1fr);
-          gap: 4px;
-
-          border-radius: 24px;
-
-          background: rgba(255,255,255,.82);
-
-          border: 1px solid rgba(255,255,255,.94);
-
-          box-shadow:
-            0 12px 32px rgba(37,111,111,.13),
-            inset 0 1px 0 rgba(255,255,255,.95);
-
-          backdrop-filter: blur(18px);
-          -webkit-backdrop-filter: blur(18px);
-        }
-
-        .nav-item {
-          position: relative;
-
-          border: 0;
+          padding:
+            8px 10px
+            calc(8px + env(safe-area-inset-bottom));
 
           display: flex;
+
+          align-items: center;
+          justify-content: space-around;
+
+          background: rgba(255,255,255,.96);
+
+          border-top: 1px solid rgba(225,239,236,.95);
+
+          box-shadow:
+            0 -8px 25px rgba(42,128,128,.06);
+
+          z-index: 100;
+        }
+
+        .profile-bottom-nav a {
+          min-width: 62px;
+
+          display: flex;
+
           flex-direction: column;
 
           align-items: center;
@@ -804,45 +852,95 @@ export default function Profile() {
 
           gap: 3px;
 
-          border-radius: 18px;
+          color: #8da6a3;
 
-          color: #8aa5a4;
-          background: transparent;
+          text-decoration: none;
 
-          font-size: 9px;
+          font-size: 10px;
+
           font-weight: 700;
-
-          cursor: pointer;
         }
 
-        .nav-item svg {
-          width: 21px;
-          height: 21px;
+        .profile-bottom-nav a div {
+          font-size: 20px;
+
+          line-height: 1;
         }
 
-        .nav-item.active {
+        .profile-bottom-nav a.active {
           color: #159b8a;
-
-          background:
-            rgba(219,248,242,.72);
         }
 
-        .nav-item.active::after {
-          content: "";
 
-          position: absolute;
+        /* SMALL MOBILE */
 
-          bottom: 3px;
+        @media (max-width: 380px) {
 
-          width: 23px;
-          height: 3px;
+          .profile-page {
+            padding-left: 12px;
+            padding-right: 12px;
+          }
 
-          border-radius: 10px;
+          .profile-header > div {
+            padding-right: 60px;
+          }
 
-          background: #159b8a;
+          .profile-header h1 {
+            font-size: 21px;
+          }
+
+          .profile-back {
+            width: 48px;
+            height: 48px;
+          }
+
+          .profile-main-card {
+            padding: 14px;
+
+            gap: 12px;
+
+            min-height: 132px;
+          }
+
+          .profile-avatar-wrapper {
+            width: 94px;
+            height: 94px;
+          }
+
+          .profile-avatar {
+            width: 94px;
+            height: 94px;
+
+            font-size: 32px;
+          }
+
+          .camera-button {
+            width: 34px;
+            height: 34px;
+
+            font-size: 22px;
+          }
+
+          .profile-user-info h2 {
+            font-size: 17px;
+          }
+
+          .profile-option {
+            min-height: 72px;
+          }
+
+          .profile-option-icon {
+            width: 44px;
+            height: 44px;
+          }
+
+          .profile-option-text strong {
+            font-size: 13px;
+          }
         }
 
       `}</style>
+
     </div>
   );
 }
