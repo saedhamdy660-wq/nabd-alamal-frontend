@@ -412,7 +412,8 @@ export default function Profile() {
 
   const isDark =
     theme === "dark" ||
-    (theme === "system" && systemDark);
+    (theme === "system" && systemDark) ||
+    document.body.classList.contains("nabd-dark");
 
   /* =========================
      LOAD USER
@@ -1492,7 +1493,6 @@ export default function Profile() {
 
         /* ==================================================
            DARK PROFILE MENU
-           FIX WHITE BOX
            ================================================== */
 
         .profile-page.dark-mode
@@ -1511,6 +1511,9 @@ export default function Profile() {
           border:
             1px solid
             rgba(100,205,192,.16) !important;
+
+          color:
+            #d8f3ef !important;
 
           box-shadow:
             0 12px 30px
@@ -1535,6 +1538,9 @@ export default function Profile() {
         .profile-menu-item {
 
           background:
+            transparent !important;
+
+          background-color:
             transparent !important;
 
           color:
@@ -1586,6 +1592,9 @@ export default function Profile() {
               rgba(54,170,155,.22),
               rgba(32,130,120,.16)
             ) !important;
+
+          background-color:
+            transparent !important;
 
           border:
             1px solid
@@ -1642,6 +1651,186 @@ export default function Profile() {
 
           color:
             #c77b87 !important;
+        }
+
+
+        /* ==================================================
+           FINAL DARK MODE OVERRIDE
+           FIX THE WHITE PROFILE MENU
+           ================================================== */
+
+        body.nabd-dark
+        .profile-page
+        .profile-menu,
+
+        html.nabd-dark
+        body
+        .profile-page
+        .profile-menu {
+
+          background:
+            #0b3032 !important;
+
+          background-color:
+            #0b3032 !important;
+
+          background-image:
+            linear-gradient(
+              145deg,
+              #123f41 0%,
+              #082b2d 100%
+            ) !important;
+
+          border-color:
+            rgba(100,205,192,.16) !important;
+
+          color:
+            #d8f3ef !important;
+
+          box-shadow:
+            0 12px 30px
+            rgba(0,0,0,.40),
+
+            inset 0 1px 0
+            rgba(255,255,255,.04) !important;
+        }
+
+
+        /* =========================
+           FORCE MENU ITEMS DARK
+        ========================= */
+
+        body.nabd-dark
+        .profile-page
+        .profile-menu
+        .profile-menu-item,
+
+        html.nabd-dark
+        body
+        .profile-page
+        .profile-menu
+        .profile-menu-item {
+
+          background:
+            transparent !important;
+
+          background-color:
+            transparent !important;
+
+          color:
+            #d8f3ef !important;
+        }
+
+
+        /* =========================
+           FORCE MENU TEXT DARK
+        ========================= */
+
+        body.nabd-dark
+        .profile-page
+        .profile-menu
+        .profile-menu-item > span,
+
+        html.nabd-dark
+        body
+        .profile-page
+        .profile-menu
+        .profile-menu-item > span {
+
+          color:
+            #d8f3ef !important;
+        }
+
+
+        /* =========================
+           FORCE MENU ICON DARK
+        ========================= */
+
+        body.nabd-dark
+        .profile-page
+        .profile-menu
+        .menu-icon,
+
+        html.nabd-dark
+        body
+        .profile-page
+        .profile-menu
+        .menu-icon {
+
+          background:
+            linear-gradient(
+              145deg,
+              rgba(54,170,155,.22),
+              rgba(32,130,120,.16)
+            ) !important;
+
+          background-color:
+            transparent !important;
+
+          color:
+            #65d6c5 !important;
+        }
+
+
+        /* =========================
+           FORCE MENU SEPARATORS
+        ========================= */
+
+        body.nabd-dark
+        .profile-page
+        .profile-menu
+        .profile-menu-item
+        + .profile-menu-item,
+
+        html.nabd-dark
+        body
+        .profile-page
+        .profile-menu
+        .profile-menu-item
+        + .profile-menu-item {
+
+          border-top-color:
+            rgba(100,205,192,.10) !important;
+        }
+
+
+        /* =========================
+           FORCE ARROWS DARK
+        ========================= */
+
+        body.nabd-dark
+        .profile-page
+        .profile-menu
+        .menu-arrow,
+
+        html.nabd-dark
+        body
+        .profile-page
+        .profile-menu
+        .menu-arrow {
+
+          color:
+            #79aaa5 !important;
+        }
+
+
+        /* =========================
+           FORCE LOGOUT DARK
+        ========================= */
+
+        body.nabd-dark
+        .profile-page
+        .profile-menu
+        .danger-item > span,
+
+        html.nabd-dark
+        body
+        .profile-page
+        .profile-menu
+        .danger-item > span {
+
+          color:
+            #df7c8b !important;
         }
 
 
