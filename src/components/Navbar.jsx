@@ -56,9 +56,14 @@ export default function Navbar() {
               `global-nav-item ${isActive ? "active" : ""}`
             }
           >
-            <span className="global-nav-icon">{link.icon}</span>
+            <span className="global-nav-icon">
+              {link.icon}
+            </span>
 
-            <span className="global-nav-label" dir="rtl">
+            <span
+              className="global-nav-label"
+              dir="rtl"
+            >
               {link.label}
             </span>
           </NavLink>
@@ -66,108 +71,334 @@ export default function Navbar() {
       </nav>
 
       <style>{`
+
+        /* =========================================
+           BOTTOM NAVBAR
+           ========================================= */
+
         .global-bottom-nav {
+
           position: fixed;
+
           z-index: 1000;
+
           left: 9px;
           right: 9px;
           bottom: 8px;
-          height: 69px;
+
+          height: 72px;
 
           display: flex;
+
           align-items: stretch;
+
           justify-content: space-around;
 
           padding: 6px;
-          border-radius: 24px;
 
-          background: rgba(255, 255, 255, 0.82);
-          border: 1px solid rgba(255, 255, 255, 0.9);
+          border-radius: 25px;
+
+          /* LIGHT MODE */
+
+          background:
+            rgba(255, 255, 255, .94);
+
+          border:
+            1px solid rgba(255,255,255,.98);
 
           box-shadow:
-            0 12px 35px rgba(30, 105, 105, 0.14),
-            inset 0 1px 0 rgba(255, 255, 255, 0.9);
+            0 12px 35px
+              rgba(30,105,105,.16),
+
+            inset 0 1px 0
+              rgba(255,255,255,.95);
 
           backdrop-filter: blur(18px);
           -webkit-backdrop-filter: blur(18px);
+
         }
 
+
+        /* =========================================
+           NAV ITEM
+           ========================================= */
+
         .global-nav-item {
+
           position: relative;
 
           flex: 1;
+
           min-width: 0;
 
           display: flex;
+
           flex-direction: column;
+
           align-items: center;
+
           justify-content: center;
+
           gap: 4px;
 
           text-decoration: none;
-          color: #789596;
+
+          /* غير النشط */
+
+          color: #6f8f90;
 
           transition:
-            color 0.2s ease,
-            transform 0.2s ease;
+            color .2s ease,
+            transform .2s ease;
+
         }
+
 
         .global-nav-item:active {
-          transform: scale(0.94);
+
+          transform: scale(.94);
+
         }
+
+
+        /* =========================================
+           ICON
+           ========================================= */
 
         .global-nav-icon {
-          width: 25px;
-          height: 25px;
+
+          width: 27px;
+          height: 27px;
 
           display: flex;
+
           align-items: center;
           justify-content: center;
+
         }
+
 
         .global-nav-icon svg {
-          width: 23px;
-          height: 23px;
+
+          width: 24px;
+          height: 24px;
 
           stroke: currentColor;
-          stroke-width: 1.8;
+
+          stroke-width: 1.9;
+
           stroke-linecap: round;
+
           stroke-linejoin: round;
+
+          transition:
+            .2s ease;
+
         }
+
+
+        /* =========================================
+           LABEL
+           ========================================= */
 
         .global-nav-label {
+
           font-size: 10px;
-          font-weight: 700;
+
+          font-weight: 800;
+
           white-space: nowrap;
+
+          line-height: 1.2;
+
         }
+
+
+        /* =========================================
+           ACTIVE
+           ========================================= */
 
         .global-nav-item.active {
+
           color: #159b8a;
+
         }
 
+
+        .global-nav-item.active .global-nav-icon svg {
+
+          stroke-width: 2.1;
+
+        }
+
+
         .global-nav-item.active::after {
+
           content: "";
 
           position: absolute;
+
           bottom: -1px;
+
           left: 50%;
+
           transform: translateX(-50%);
 
-          width: 28px;
+          width: 30px;
+
           height: 3px;
 
           border-radius: 10px;
+
           background: #159b8a;
+
+          box-shadow:
+            0 0 8px
+              rgba(21,155,138,.25);
+
         }
 
-        @media (min-width: 600px) {
+
+        /* =========================================
+           DARK MODE
+           ========================================= */
+
+        @media (prefers-color-scheme: dark) {
+
           .global-bottom-nav {
-            width: 390px;
-            left: 50%;
-            right: auto;
-            transform: translateX(-50%);
+
+            background:
+              linear-gradient(
+                145deg,
+                rgba(18,55,57,.97),
+                rgba(10,39,41,.97)
+              );
+
+            border:
+              1px solid
+              rgba(100,205,192,.18);
+
+            box-shadow:
+
+              0 14px 35px
+                rgba(0,0,0,.35),
+
+              inset 0 1px 0
+                rgba(255,255,255,.06);
+
           }
+
+
+          /* غير النشط */
+
+          .global-nav-item {
+
+            color: #8eb5b2;
+
+          }
+
+
+          .global-nav-item .global-nav-icon svg {
+
+            stroke: currentColor;
+
+          }
+
+
+          .global-nav-label {
+
+            color: currentColor;
+
+          }
+
+
+          /* النشط */
+
+          .global-nav-item.active {
+
+            color: #5fd8c7;
+
+          }
+
+
+          .global-nav-item.active::after {
+
+            background: #35b8a5;
+
+            box-shadow:
+              0 0 10px
+                rgba(53,184,165,.35);
+
+          }
+
         }
+
+
+        /* =========================================
+           MOBILE
+           ========================================= */
+
+        @media (max-width: 380px) {
+
+          .global-bottom-nav {
+
+            left: 7px;
+            right: 7px;
+
+            bottom: 7px;
+
+            height: 69px;
+
+            border-radius: 23px;
+
+          }
+
+
+          .global-nav-icon {
+
+            width: 25px;
+            height: 25px;
+
+          }
+
+
+          .global-nav-icon svg {
+
+            width: 22px;
+            height: 22px;
+
+          }
+
+
+          .global-nav-label {
+
+            font-size: 9px;
+
+          }
+
+        }
+
+
+        /* =========================================
+           DESKTOP
+           ========================================= */
+
+        @media (min-width: 600px) {
+
+          .global-bottom-nav {
+
+            width: 390px;
+
+            left: 50%;
+
+            right: auto;
+
+            transform: translateX(-50%);
+
+          }
+
+        }
+
       `}</style>
     </>
   );
