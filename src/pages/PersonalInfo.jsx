@@ -505,11 +505,6 @@ export default function PersonalInfo() {
         }
 
 
-        /*
-          الأيقونة مثبتة تمامًا في اليمين
-          ولا تعتمد على Flex
-        */
-
         .personal-field-icon {
           position: absolute;
 
@@ -546,11 +541,6 @@ export default function PersonalInfo() {
           height: 24px;
         }
 
-
-        /*
-          مساحة النص تبدأ بعد الأيقونة
-          من اليمين، لذلك مستحيل تدخل عليها
-        */
 
         .personal-field-content {
           position: absolute;
@@ -851,6 +841,284 @@ export default function PersonalInfo() {
             left: 12px;
             min-width: 48px;
           }
+        }
+
+
+        /* =========================================
+           DARK MODE
+           ========================================= */
+
+        @media (prefers-color-scheme: dark) {
+
+          .personal-page {
+            background:
+              radial-gradient(
+                circle at 10% 5%,
+                rgba(30,150,135,.16),
+                transparent 28%
+              ),
+              radial-gradient(
+                circle at 95% 28%,
+                rgba(40,120,115,.14),
+                transparent 30%
+              ),
+              linear-gradient(
+                160deg,
+                #071f21 0%,
+                #08292b 48%,
+                #0a3031 100%
+              );
+
+            color: #d9f5f1;
+          }
+
+
+          /* HEADER */
+
+          .personal-title h1 {
+            color: #65d6c5;
+          }
+
+          .personal-title p {
+            color: #8eb6b2;
+          }
+
+
+          /* BACK BUTTON */
+
+          .personal-back {
+            color: #65d6c5;
+
+            background:
+              rgba(18,55,57,.92);
+
+            border-color:
+              rgba(94,184,174,.18);
+
+            box-shadow:
+              0 8px 22px rgba(0,0,0,.22),
+              inset 0 1px 0 rgba(255,255,255,.05);
+          }
+
+
+          /* USER CARD */
+
+          .personal-user-card {
+            background:
+              linear-gradient(
+                145deg,
+                rgba(18,55,57,.96),
+                rgba(12,45,47,.94)
+              );
+
+            border-color:
+              rgba(100,205,192,.14);
+
+            box-shadow:
+              0 12px 30px rgba(0,0,0,.25),
+              inset 0 1px 0 rgba(255,255,255,.04);
+          }
+
+
+          .personal-avatar {
+            color: #65d6c5;
+
+            background:
+              linear-gradient(
+                145deg,
+                #164e4d,
+                #123e40
+              );
+
+            border-color:
+              rgba(255,255,255,.12);
+          }
+
+
+          .personal-user-text h2 {
+            color: #d9f5f1;
+          }
+
+          .personal-user-text p {
+            color: #86aaa7;
+          }
+
+
+          /* FORM FIELDS */
+
+          .personal-field {
+            background:
+              linear-gradient(
+                145deg,
+                rgba(18,55,57,.96),
+                rgba(12,45,47,.94)
+              );
+
+            border-color:
+              rgba(100,205,192,.14);
+
+            box-shadow:
+              0 10px 26px rgba(0,0,0,.22),
+              inset 0 1px 0 rgba(255,255,255,.04);
+          }
+
+
+          /* FIELD ICONS */
+
+          .personal-field-icon {
+            color: #63d3c2;
+
+            background:
+              linear-gradient(
+                145deg,
+                #164e4d,
+                #123f40
+              );
+          }
+
+
+          /* LABEL */
+
+          .personal-field-content label {
+            color: #86aaa7;
+          }
+
+
+          /* INPUT + SELECT */
+
+          .personal-field-content input,
+          .personal-field-content select {
+            background: transparent !important;
+
+            color: #e7faf7 !important;
+
+            -webkit-text-fill-color: #e7faf7 !important;
+
+            caret-color: #65d6c5;
+
+            color-scheme: dark;
+          }
+
+
+          /* PLACEHOLDER */
+
+          .personal-field-content input::placeholder {
+            color: #6f9491 !important;
+
+            opacity: 1;
+          }
+
+
+          /* FOCUS */
+
+          .personal-field-content input:focus,
+          .personal-field-content select:focus {
+            background: transparent !important;
+
+            color: #e7faf7 !important;
+
+            -webkit-text-fill-color: #e7faf7 !important;
+          }
+
+
+          /* AUTOFILL */
+
+          .personal-field-content input:-webkit-autofill,
+          .personal-field-content input:-webkit-autofill:hover,
+          .personal-field-content input:-webkit-autofill:focus {
+            -webkit-text-fill-color: #e7faf7 !important;
+
+            -webkit-box-shadow:
+              0 0 0 1000px #123638 inset !important;
+
+            box-shadow:
+              0 0 0 1000px #123638 inset !important;
+
+            caret-color: #65d6c5;
+          }
+
+
+          /* BLOOD */
+
+          .blood-field-icon {
+            color: #ff8ca0;
+
+            background:
+              linear-gradient(
+                145deg,
+                #4a2730,
+                #3a2229
+              );
+          }
+
+
+          .blood-badge {
+            color: #ff9bad;
+
+            background:
+              linear-gradient(
+                145deg,
+                #4a2730,
+                #3a2229
+              );
+          }
+
+
+          /* SELECT */
+
+          .personal-field-content select {
+            color: #e7faf7 !important;
+
+            background-color:
+              transparent !important;
+          }
+
+          .personal-field-content select option {
+            background: #102f31;
+
+            color: #e7faf7;
+          }
+
+
+          /* SAVE BUTTON */
+
+          .personal-save {
+            color: #ffffff;
+
+            background:
+              linear-gradient(
+                135deg,
+                #35b8a5,
+                #128f80
+              );
+
+            box-shadow:
+              0 12px 25px
+              rgba(21,155,138,.22);
+          }
+
+
+          /* SUCCESS */
+
+          .personal-saved {
+            color: #76d7c8;
+
+            background:
+              rgba(21,105,96,.35);
+
+            border-color:
+              rgba(100,205,192,.14);
+          }
+
+
+          /* LOADING */
+
+          .personal-loading {
+            color: #65d6c5;
+
+            background: #071f21;
+          }
+
         }
 
       `}</style>
