@@ -73,7 +73,8 @@ export default function Navbar() {
       <style>{`
 
         /* =========================================
-           NAVBAR - LIGHT MODE
+           LIGHT MODE
+           الوضع الافتراضي دائمًا فاتح
            ========================================= */
 
         .global-bottom-nav {
@@ -95,17 +96,13 @@ export default function Navbar() {
 
           border-radius: 24px;
 
-          background: rgba(255, 255, 255, 0.82);
+          background: rgba(255, 255, 255, 0.88);
 
-          border: 1px solid
-            rgba(255, 255, 255, 0.9);
+          border: 1px solid rgba(255, 255, 255, 0.95);
 
           box-shadow:
-            0 12px 35px
-              rgba(30, 105, 105, 0.14),
-
-            inset 0 1px 0
-              rgba(255, 255, 255, 0.9);
+            0 12px 35px rgba(30, 105, 105, 0.14),
+            inset 0 1px 0 rgba(255, 255, 255, 0.9);
 
           backdrop-filter: blur(18px);
           -webkit-backdrop-filter: blur(18px);
@@ -158,6 +155,8 @@ export default function Navbar() {
           display: flex;
           align-items: center;
           justify-content: center;
+
+          color: inherit;
         }
 
 
@@ -190,7 +189,7 @@ export default function Navbar() {
 
 
         /* =========================================
-           ACTIVE
+           ACTIVE - LIGHT
            ========================================= */
 
         .global-nav-item.active {
@@ -220,66 +219,73 @@ export default function Navbar() {
 
         /* =========================================
            DARK MODE
+           
+           مهم جدًا:
+           يعتمد على nabd-dark فقط
+           وليس على إعدادات الجهاز
            ========================================= */
 
-        @media (prefers-color-scheme: dark) {
+        body.nabd-dark .global-bottom-nav {
 
-          .global-bottom-nav {
+          background:
+            linear-gradient(
+              145deg,
+              rgba(18, 55, 57, 0.97),
+              rgba(8, 39, 41, 0.97)
+            );
 
-            background:
-              linear-gradient(
-                145deg,
-                rgba(18, 55, 57, 0.97),
-                rgba(8, 39, 41, 0.97)
-              );
+          border-color:
+            rgba(100, 205, 192, 0.14);
 
-            border-color:
-              rgba(100, 205, 192, 0.14);
+          box-shadow:
+            0 12px 35px
+              rgba(0, 0, 0, 0.30),
 
-            box-shadow:
-              0 12px 35px
-                rgba(0, 0, 0, 0.30),
+            inset 0 1px 0
+              rgba(255, 255, 255, 0.04);
 
-              inset 0 1px 0
-                rgba(255, 255, 255, 0.04);
-
-            color-scheme: dark;
-          }
+          color-scheme: dark;
+        }
 
 
-          .global-nav-item {
+        body.nabd-dark .global-nav-item {
 
-            color: #8eb6b2;
+          color: #8eb6b2;
 
-          }
-
-
-          .global-nav-item.active {
-
-            color: #65d6c5;
-
-          }
+        }
 
 
-          .global-nav-label {
+        body.nabd-dark .global-nav-item.active {
 
-            color: inherit;
+          color: #65d6c5;
 
-          }
-
-
-          .global-nav-item.active::after {
-
-            background: #35b8a5;
-
-          }
+        }
 
 
-          .global-nav-icon svg {
+        body.nabd-dark .global-nav-item.active::after {
 
-            stroke: currentColor;
+          background: #35b8a5;
 
-          }
+        }
+
+
+        body.nabd-dark .global-nav-label {
+
+          color: inherit;
+
+        }
+
+
+        body.nabd-dark .global-nav-icon {
+
+          color: inherit;
+
+        }
+
+
+        body.nabd-dark .global-nav-icon svg {
+
+          stroke: currentColor;
 
         }
 
