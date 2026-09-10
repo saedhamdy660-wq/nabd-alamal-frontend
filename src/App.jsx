@@ -21,6 +21,7 @@ import RequestTracking from "./pages/RequestTracking.jsx";
 import Requests from "./pages/Requests.jsx";
 import Notifications from "./pages/Notifications.jsx";
 import NotificationSettings from "./pages/NotificationSettings.jsx";
+import AppSettings from "./pages/AppSettings.jsx";
 
 import Profile from "./pages/Profile.jsx";
 import PersonalInfo from "./pages/PersonalInfo.jsx";
@@ -41,6 +42,9 @@ const noNavRoutes = [
 
   // صفحة إعدادات الإشعارات بدون Navbar
   "/notification-settings",
+
+  // صفحة إعدادات التطبيق بدون Navbar
+  "/settings",
 ];
 
 export default function App() {
@@ -63,6 +67,7 @@ export default function App() {
         <Route path="/login" element={<Login />} />
         <Route path="/signup" element={<Signup />} />
         <Route path="/verify-phone" element={<PhoneVerify />} />
+
         <Route
           path="/location-permission"
           element={<LocationPermission />}
@@ -81,6 +86,7 @@ export default function App() {
         />
 
         <Route path="/blood" element={<BloodDonation />} />
+
         <Route path="/donor/:id" element={<DonorDetail />} />
 
         <Route path="/track/:id" element={<RequestTracking />} />
@@ -89,9 +95,16 @@ export default function App() {
 
         <Route path="/notifications" element={<Notifications />} />
 
+        {/* إعدادات الإشعارات */}
         <Route
           path="/notification-settings"
           element={<NotificationSettings />}
+        />
+
+        {/* إعدادات التطبيق */}
+        <Route
+          path="/settings"
+          element={<AppSettings />}
         />
 
         <Route path="/profile" element={<Profile />} />
