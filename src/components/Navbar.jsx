@@ -73,11 +73,10 @@ export default function Navbar() {
       <style>{`
 
         /* =========================================
-           BOTTOM NAVBAR
+           NAVBAR - LIGHT MODE
            ========================================= */
 
         .global-bottom-nav {
-
           position: fixed;
 
           z-index: 1000;
@@ -86,36 +85,32 @@ export default function Navbar() {
           right: 9px;
           bottom: 8px;
 
-          height: 72px;
+          height: 69px;
 
           display: flex;
-
           align-items: stretch;
-
           justify-content: space-around;
 
           padding: 6px;
 
-          border-radius: 25px;
+          border-radius: 24px;
 
-          /* LIGHT MODE */
+          background: rgba(255, 255, 255, 0.82);
 
-          background:
-            rgba(255, 255, 255, .94);
-
-          border:
-            1px solid rgba(255,255,255,.98);
+          border: 1px solid
+            rgba(255, 255, 255, 0.9);
 
           box-shadow:
             0 12px 35px
-              rgba(30,105,105,.16),
+              rgba(30, 105, 105, 0.14),
 
             inset 0 1px 0
-              rgba(255,255,255,.95);
+              rgba(255, 255, 255, 0.9);
 
           backdrop-filter: blur(18px);
           -webkit-backdrop-filter: blur(18px);
 
+          color-scheme: light;
         }
 
 
@@ -124,40 +119,31 @@ export default function Navbar() {
            ========================================= */
 
         .global-nav-item {
-
           position: relative;
 
           flex: 1;
-
           min-width: 0;
 
           display: flex;
-
           flex-direction: column;
 
           align-items: center;
-
           justify-content: center;
 
           gap: 4px;
 
           text-decoration: none;
 
-          /* غير النشط */
-
-          color: #6f8f90;
+          color: #789596;
 
           transition:
-            color .2s ease,
-            transform .2s ease;
-
+            color 0.2s ease,
+            transform 0.2s ease;
         }
 
 
         .global-nav-item:active {
-
-          transform: scale(.94);
-
+          transform: scale(0.94);
         }
 
 
@@ -166,34 +152,25 @@ export default function Navbar() {
            ========================================= */
 
         .global-nav-icon {
-
-          width: 27px;
-          height: 27px;
+          width: 25px;
+          height: 25px;
 
           display: flex;
-
           align-items: center;
           justify-content: center;
-
         }
 
 
         .global-nav-icon svg {
-
-          width: 24px;
-          height: 24px;
+          width: 23px;
+          height: 23px;
 
           stroke: currentColor;
 
-          stroke-width: 1.9;
+          stroke-width: 1.8;
 
           stroke-linecap: round;
-
           stroke-linejoin: round;
-
-          transition:
-            .2s ease;
-
         }
 
 
@@ -202,15 +179,13 @@ export default function Navbar() {
            ========================================= */
 
         .global-nav-label {
-
           font-size: 10px;
 
-          font-weight: 800;
+          font-weight: 700;
 
           white-space: nowrap;
 
-          line-height: 1.2;
-
+          color: inherit;
         }
 
 
@@ -219,21 +194,11 @@ export default function Navbar() {
            ========================================= */
 
         .global-nav-item.active {
-
           color: #159b8a;
-
-        }
-
-
-        .global-nav-item.active .global-nav-icon svg {
-
-          stroke-width: 2.1;
-
         }
 
 
         .global-nav-item.active::after {
-
           content: "";
 
           position: absolute;
@@ -244,18 +209,12 @@ export default function Navbar() {
 
           transform: translateX(-50%);
 
-          width: 30px;
-
+          width: 28px;
           height: 3px;
 
           border-radius: 10px;
 
           background: #159b8a;
-
-          box-shadow:
-            0 0 8px
-              rgba(21,155,138,.25);
-
         }
 
 
@@ -270,53 +229,41 @@ export default function Navbar() {
             background:
               linear-gradient(
                 145deg,
-                rgba(18,55,57,.97),
-                rgba(10,39,41,.97)
+                rgba(18, 55, 57, 0.97),
+                rgba(8, 39, 41, 0.97)
               );
 
-            border:
-              1px solid
-              rgba(100,205,192,.18);
+            border-color:
+              rgba(100, 205, 192, 0.14);
 
             box-shadow:
-
-              0 14px 35px
-                rgba(0,0,0,.35),
+              0 12px 35px
+                rgba(0, 0, 0, 0.30),
 
               inset 0 1px 0
-                rgba(255,255,255,.06);
+                rgba(255, 255, 255, 0.04);
 
+            color-scheme: dark;
           }
 
-
-          /* غير النشط */
 
           .global-nav-item {
 
-            color: #8eb5b2;
+            color: #8eb6b2;
 
           }
 
 
-          .global-nav-item .global-nav-icon svg {
+          .global-nav-item.active {
 
-            stroke: currentColor;
+            color: #65d6c5;
 
           }
 
 
           .global-nav-label {
 
-            color: currentColor;
-
-          }
-
-
-          /* النشط */
-
-          .global-nav-item.active {
-
-            color: #5fd8c7;
+            color: inherit;
 
           }
 
@@ -325,9 +272,12 @@ export default function Navbar() {
 
             background: #35b8a5;
 
-            box-shadow:
-              0 0 10px
-                rgba(53,184,165,.35);
+          }
+
+
+          .global-nav-icon svg {
+
+            stroke: currentColor;
 
           }
 
@@ -342,25 +292,29 @@ export default function Navbar() {
 
           .global-bottom-nav {
 
-            left: 7px;
-            right: 7px;
+            left: 8px;
+            right: 8px;
+
+            height: 67px;
 
             bottom: 7px;
-
-            height: 69px;
 
             border-radius: 23px;
 
           }
 
+          .global-nav-label {
 
-          .global-nav-icon {
-
-            width: 25px;
-            height: 25px;
+            font-size: 9px;
 
           }
 
+          .global-nav-icon {
+
+            width: 24px;
+            height: 24px;
+
+          }
 
           .global-nav-icon svg {
 
@@ -369,18 +323,11 @@ export default function Navbar() {
 
           }
 
-
-          .global-nav-label {
-
-            font-size: 9px;
-
-          }
-
         }
 
 
         /* =========================================
-           DESKTOP
+           TABLET / DESKTOP
            ========================================= */
 
         @media (min-width: 600px) {
@@ -390,7 +337,6 @@ export default function Navbar() {
             width: 390px;
 
             left: 50%;
-
             right: auto;
 
             transform: translateX(-50%);
