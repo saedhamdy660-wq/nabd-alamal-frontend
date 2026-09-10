@@ -1,5 +1,9 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+
+/* =========================================================
+   ICONS
+========================================================= */
 
 function BackIcon() {
   return (
@@ -46,6 +50,28 @@ function MoonIcon() {
         stroke="currentColor"
         strokeWidth="1.8"
         strokeLinejoin="round"
+      />
+    </svg>
+  );
+}
+
+function SunIcon() {
+  return (
+    <svg viewBox="0 0 24 24">
+      <circle
+        cx="12"
+        cy="12"
+        r="4"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="1.8"
+      />
+      <path
+        d="M12 2.5v2M12 19.5v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2.5 12h2M19.5 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="1.8"
+        strokeLinecap="round"
       />
     </svg>
   );
@@ -199,6 +225,10 @@ function HomeIcon() {
   );
 }
 
+/* =========================================================
+   ILLUSTRATION
+========================================================= */
+
 function SettingsIllustration() {
   return (
     <svg viewBox="0 0 240 150">
@@ -276,6 +306,10 @@ function SettingsIllustration() {
   );
 }
 
+/* =========================================================
+   SETTING ITEM
+========================================================= */
+
 function SettingItem({
   icon,
   title,
@@ -302,12 +336,92 @@ function SettingItem({
   );
 }
 
+/* =========================================================
+   APP SETTINGS
+========================================================= */
+
 export default function AppSettings() {
   const navigate = useNavigate();
 
-  const [notifications, setNotifications] = useState(true);
-  const [darkMode, setDarkMode] = useState(false);
-  const [language, setLanguage] = useState("العربية");
+  /* -------------------------------------------------------
+     SAVED SETTINGS
+  ------------------------------------------------------- */
+
+  const [notifications, setNotifications] = useState(() => {
+    const saved = localStorage.getItem("nabd_notifications");
+
+    return saved === null ? true : saved === "true";
+  });
+
+  const [darkMode, setDarkMode] = useState(() => {
+    return localStorage.getItem("nabd_dark_mode") === "true";
+  });
+
+  const [language, setLanguage] = useState(() => {
+    return localStorage.getItem("nabd_language") || "العربية";
+  });
+
+  /* -------------------------------------------------------
+     APPLY DARK MODE GLOBALLY
+  ------------------------------------------------------- */
+
+  useEffect(() => {
+    const root = document.documentElement;
+    const body = document.body;
+
+    if (darkMode) {
+      root.classList.add("nabd-dark");
+      body.classList.add("nabd-dark");
+      localStorage.setItem("nabd_dark_mode", "true");
+    } else {
+      root.classList.remove("nabd-dark");
+      body.classList.remove("nabd-dark");
+      localStorage.setItem("nabd_dark_mode", "false");
+    }
+
+    return () => {
+      root.classList.remove("nabd-dark");
+      body.classList.remove("nabd-dark");
+    };
+  }, [darkMode]);
+
+  /* -------------------------------------------------------
+     APPLY LANGUAGE
+  ------------------------------------------------------- */
+
+  useEffect(() => {
+    const root = document.documentElement;
+
+    const isEnglish = language === "English";
+
+    root.lang = isEnglish ? "en" : "ar";
+    root.dir = isEnglish ? "ltr" : "rtl";
+
+    if (isEnglish) {
+      root.classList.add("nabd-ltr");
+      root.classList.remove("nabd-rtl");
+    } else {
+      root.classList.add("nabd-rtl");
+      root.classList.remove("nabd-ltr");
+    }
+
+    localStorage.setItem("nabd_language", language);
+  }, [language]);
+
+  /* -------------------------------------------------------
+     NOTIFICATIONS
+  ------------------------------------------------------- */
+
+  useEffect(() => {
+    localStorage.setItem(
+      "nabd_notifications",
+      String(notifications)
+    );
+  }, [notifications]);
+
+  /* -------------------------------------------------------
+     LOGOUT
+  ------------------------------------------------------- */
 
   const handleLogout = () => {
     localStorage.removeItem("nabd_user");
@@ -316,153 +430,277 @@ export default function AppSettings() {
     navigate("/login", { replace: true });
   };
 
+  /* -------------------------------------------------------
+     LANGUAGE
+  ------------------------------------------------------- */
+
   const changeLanguage = () => {
     setLanguage((current) =>
       current === "العربية" ? "English" : "العربية"
     );
   };
 
-  return (
-    <div className="settings-page">
+  const isEnglish = language === "English";
 
-      {/* Header */}
+  /* -------------------------------------------------------
+     TEXT
+  ------------------------------------------------------- */
+
+  const text = isEnglish
+    ? {
+        title: "App Settings",
+        brand: "Nabd Al Amal",
+        heroTitle: "Customize your experience",
+        heroText:
+          "Control the app settings in the way that suits you.",
+
+        preferences: "Preferences",
+
+        notifications: "Notifications",
+        notificationsSub: "Control app notifications",
+        notificationsOn: "Notifications enabled",
+        notificationsOff: "Notifications disabled",
+
+        appearance: "Appearance",
+        light: "Light",
+        dark: "Dark",
+
+        language: "Language",
+        languageSub: "Application interface language",
+
+        securityInfo: "Security & Information",
+
+        privacy: "Privacy & Security",
+        privacySub: "Manage your data and privacy",
+
+        about: "About the app",
+        aboutSub: "Nabd Al Amal",
+
+        logout: "Log out",
+
+        footer: "Together, we save lives",
+
+        aboutMessage:
+          "Nabd Al Amal\n\nA platform designed to make it easier to access blood donation, medicine exchange, and medical assistance services.",
+      }
+    : {
+        title: "إعدادات التطبيق",
+        brand: "نبض الأمل",
+        heroTitle: "خصّص تجربتك",
+        heroText:
+          "تحكم في إعدادات التطبيق بالطريقة التي تناسبك",
+
+        preferences: "التفضيلات",
+
+        notifications: "الإشعارات",
+        notificationsSub: "التحكم في إشعارات التطبيق",
+        notificationsOn: "الإشعارات مفعلة",
+        notificationsOff: "الإشعارات غير مفعلة",
+
+        appearance: "المظهر",
+        light: "فاتح",
+        dark: "داكن",
+
+        language: "اللغة",
+        languageSub: "لغة واجهة التطبيق",
+
+        securityInfo: "الأمان والمعلومات",
+
+        privacy: "الخصوصية والأمان",
+        privacySub: "إدارة بياناتك وخصوصيتك",
+
+        about: "عن التطبيق",
+        aboutSub: "نبض الأمل",
+
+        logout: "تسجيل الخروج",
+
+        footer: "معًا ننقذ الحياة",
+
+        aboutMessage:
+          "نبض الأمل\n\nمنصة تهدف إلى تسهيل الوصول إلى خدمات التبرع بالدم وتبادل الأدوية والمساعدة الطبية.",
+      };
+
+  return (
+    <div
+      className={`settings-page ${
+        isEnglish ? "settings-english" : "settings-arabic"
+      }`}
+    >
+      {/* ===================================================
+          HEADER
+      =================================================== */}
+
       <header className="settings-header">
         <button
           type="button"
           className="settings-back"
           onClick={() => navigate(-1)}
+          aria-label={isEnglish ? "Back" : "رجوع"}
         >
           <BackIcon />
         </button>
 
-        <h1>إعدادات التطبيق</h1>
+        <h1>{text.title}</h1>
 
         <div className="settings-header-space" />
       </header>
 
-      {/* Hero */}
+      {/* ===================================================
+          HERO
+      =================================================== */}
+
       <section className="settings-hero">
-
         <div className="settings-hero-text">
-          <span>نبض الأمل</span>
+          <span>{text.brand}</span>
 
-          <h2>خصّص تجربتك</h2>
+          <h2>{text.heroTitle}</h2>
 
-          <p>
-            تحكم في إعدادات التطبيق
-            بالطريقة التي تناسبك
-          </p>
+          <p>{text.heroText}</p>
         </div>
 
         <div className="settings-illustration">
           <SettingsIllustration />
         </div>
-
       </section>
 
-      {/* Settings */}
-      <section className="settings-card">
+      {/* ===================================================
+          PREFERENCES
+      =================================================== */}
 
+      <section className="settings-card">
         <div className="settings-section-title">
-          <span>التفضيلات</span>
+          <span>{text.preferences}</span>
         </div>
+
+        {/* Notifications */}
 
         <SettingItem
           icon={<BellIcon />}
-          title="الإشعارات"
-          subtitle="التحكم في إشعارات التطبيق"
+          title={text.notifications}
+          subtitle={text.notificationsSub}
         >
           <div
-            className={`switch ${notifications ? "on" : ""}`}
+            className={`switch ${
+              notifications ? "on" : ""
+            }`}
             onClick={(e) => {
               e.stopPropagation();
-              setNotifications(!notifications);
+              setNotifications((value) => !value);
             }}
           >
             <div className="switch-circle" />
           </div>
         </SettingItem>
 
+        {/* Appearance */}
+
         <SettingItem
-          icon={<MoonIcon />}
-          title="المظهر"
-          subtitle={darkMode ? "الوضع الداكن" : "الوضع الفاتح"}
+          icon={darkMode ? <MoonIcon /> : <SunIcon />}
+          title={text.appearance}
+          subtitle={
+            darkMode
+              ? text.dark
+              : text.light
+          }
         >
           <div
-            className="setting-value"
+            className="appearance-toggle"
             onClick={(e) => {
               e.stopPropagation();
-              setDarkMode(!darkMode);
+              setDarkMode((value) => !value);
             }}
           >
-            {darkMode ? "داكن" : "فاتح"}
+            <span
+              className={
+                !darkMode ? "appearance-active" : ""
+              }
+            >
+              <SunIcon />
+              {text.light}
+            </span>
+
+            <span
+              className={
+                darkMode ? "appearance-active" : ""
+              }
+            >
+              <MoonIcon />
+              {text.dark}
+            </span>
           </div>
         </SettingItem>
 
+        {/* Language */}
+
         <SettingItem
           icon={<LanguageIcon />}
-          title="اللغة"
-          subtitle="لغة واجهة التطبيق"
+          title={text.language}
+          subtitle={text.languageSub}
           onClick={changeLanguage}
         >
           <div className="setting-value">
             {language}
           </div>
         </SettingItem>
-
       </section>
 
-      {/* Privacy */}
-      <section className="settings-card">
+      {/* ===================================================
+          SECURITY
+      =================================================== */}
 
+      <section className="settings-card">
         <div className="settings-section-title">
-          <span>الأمان والمعلومات</span>
+          <span>{text.securityInfo}</span>
         </div>
 
         <SettingItem
           icon={<ShieldIcon />}
-          title="الخصوصية والأمان"
-          subtitle="إدارة بياناتك وخصوصيتك"
+          title={text.privacy}
+          subtitle={text.privacySub}
           onClick={() => navigate("/support")}
         />
 
         <SettingItem
           icon={<InfoIcon />}
-          title="عن التطبيق"
-          subtitle="نبض الأمل"
+          title={text.about}
+          subtitle={text.aboutSub}
           onClick={() => {
-            alert(
-              "نبض الأمل\n\nمنصة تهدف إلى تسهيل الوصول إلى خدمات التبرع بالدم وتبادل الأدوية والمساعدة الطبية."
-            );
+            alert(text.aboutMessage);
           }}
         />
-
       </section>
 
-      {/* Logout */}
+      {/* ===================================================
+          LOGOUT
+      =================================================== */}
+
       <button
         type="button"
         className="logout-button"
         onClick={handleLogout}
       >
         <LogoutIcon />
-        <span>تسجيل الخروج</span>
+        <span>{text.logout}</span>
       </button>
 
       <p className="settings-footer">
-        معًا ننقذ الحياة
+        {text.footer}
       </p>
 
-      {/* Bottom Navigation */}
-      <nav className="settings-bottom-nav">
+      {/* ===================================================
+          BOTTOM NAVIGATION
+      =================================================== */}
 
+      <nav className="settings-bottom-nav">
         <button
           type="button"
           className="nav-item"
           onClick={() => navigate("/profile")}
         >
           <UserIcon />
-          <span>الملف الشخصي</span>
+          <span>
+            {isEnglish ? "Profile" : "الملف الشخصي"}
+          </span>
         </button>
 
         <button
@@ -471,7 +709,9 @@ export default function AppSettings() {
           onClick={() => navigate("/notifications")}
         >
           <BellIcon />
-          <span>الإشعارات</span>
+          <span>
+            {isEnglish ? "Notifications" : "الإشعارات"}
+          </span>
         </button>
 
         <button
@@ -480,7 +720,9 @@ export default function AppSettings() {
           onClick={() => navigate("/requests")}
         >
           <RequestsIcon />
-          <span>الطلبات</span>
+          <span>
+            {isEnglish ? "Requests" : "الطلبات"}
+          </span>
         </button>
 
         <button
@@ -489,10 +731,15 @@ export default function AppSettings() {
           onClick={() => navigate("/home")}
         >
           <HomeIcon />
-          <span>الرئيسية</span>
+          <span>
+            {isEnglish ? "Home" : "الرئيسية"}
+          </span>
         </button>
-
       </nav>
+
+      {/* ===================================================
+          PAGE CSS
+      =================================================== */}
 
       <style>{`
 
@@ -528,7 +775,13 @@ export default function AppSettings() {
           font-family: Arial, Tahoma, sans-serif;
         }
 
-        /* Header */
+        .settings-page.settings-english {
+          direction: ltr;
+        }
+
+        /* ===================================================
+           HEADER
+        =================================================== */
 
         .settings-header {
           max-width: 520px;
@@ -585,7 +838,9 @@ export default function AppSettings() {
           height: 42px;
         }
 
-        /* Hero */
+        /* ===================================================
+           HERO
+        =================================================== */
 
         .settings-hero {
           max-width: 520px;
@@ -679,7 +934,9 @@ export default function AppSettings() {
           height: auto;
         }
 
-        /* Cards */
+        /* ===================================================
+           CARDS
+        =================================================== */
 
         .settings-card {
           max-width: 520px;
@@ -737,6 +994,11 @@ export default function AppSettings() {
           text-align: right;
 
           cursor: pointer;
+        }
+
+        .settings-page.settings-english
+        .setting-item {
+          text-align: left;
         }
 
         .settings-section-title + .setting-item {
@@ -809,7 +1071,9 @@ export default function AppSettings() {
           font-weight: 800;
         }
 
-        /* Switch */
+        /* ===================================================
+           SWITCH
+        =================================================== */
 
         .switch {
           position: relative;
@@ -842,7 +1106,8 @@ export default function AppSettings() {
 
           background: white;
 
-          box-shadow: 0 2px 6px rgba(0,0,0,.12);
+          box-shadow:
+            0 2px 6px rgba(0,0,0,.12);
 
           transition: .2s;
 
@@ -853,7 +1118,67 @@ export default function AppSettings() {
           transform: translateX(-20px);
         }
 
-        /* Logout */
+        .settings-page.settings-english
+        .switch.on .switch-circle {
+          transform: translateX(20px);
+        }
+
+        /* ===================================================
+           APPEARANCE
+        =================================================== */
+
+        .appearance-toggle {
+          flex-shrink: 0;
+
+          display: flex;
+          align-items: center;
+
+          gap: 4px;
+
+          padding: 4px;
+
+          border-radius: 14px;
+
+          background: rgba(224,241,238,.72);
+        }
+
+        .appearance-toggle span {
+          min-height: 28px;
+
+          padding: 4px 7px;
+
+          display: flex;
+          align-items: center;
+          justify-content: center;
+
+          gap: 4px;
+
+          border-radius: 10px;
+
+          color: #88a4a1;
+
+          font-size: 9px;
+          font-weight: 800;
+        }
+
+        .appearance-toggle span svg {
+          width: 13px;
+          height: 13px;
+        }
+
+        .appearance-toggle
+        span.appearance-active {
+          color: #159b8a;
+
+          background: rgba(255,255,255,.92);
+
+          box-shadow:
+            0 3px 8px rgba(37,130,120,.09);
+        }
+
+        /* ===================================================
+           LOGOUT
+        =================================================== */
 
         .logout-button {
           width: 100%;
@@ -908,7 +1233,9 @@ export default function AppSettings() {
           font-weight: 700;
         }
 
-        /* Bottom Navigation */
+        /* ===================================================
+           BOTTOM NAV
+        =================================================== */
 
         .settings-bottom-nav {
           position: fixed;
@@ -978,6 +1305,236 @@ export default function AppSettings() {
         .settings-bottom-nav .nav-item:hover {
           color: #159b8a;
           background: rgba(219,248,242,.55);
+        }
+
+        /* ===================================================
+           DARK MODE - SETTINGS ONLY
+           لا يعمل إلا عند تفعيل الوضع الداكن
+        =================================================== */
+
+        body.nabd-dark .settings-page {
+          color: #dcefeb;
+
+          background:
+            radial-gradient(
+              circle at 8% 8%,
+              rgba(21,155,138,.16),
+              transparent 28%
+            ),
+            radial-gradient(
+              circle at 95% 30%,
+              rgba(42,126,135,.14),
+              transparent 30%
+            ),
+            linear-gradient(
+              160deg,
+              #0b191b 0%,
+              #102526 48%,
+              #0d2022 100%
+            );
+        }
+
+        body.nabd-dark .settings-header h1 {
+          color: #65d5c3;
+        }
+
+        body.nabd-dark .settings-back {
+          color: #65d5c3;
+
+          background: rgba(30,55,57,.78);
+
+          border-color: rgba(101,213,195,.12);
+
+          box-shadow:
+            0 7px 18px rgba(0,0,0,.18),
+            inset 0 1px 0 rgba(255,255,255,.04);
+        }
+
+        body.nabd-dark .settings-hero {
+          background:
+            linear-gradient(
+              135deg,
+              rgba(27,52,53,.95),
+              rgba(18,67,65,.88)
+            );
+
+          border-color: rgba(110,220,204,.10);
+
+          box-shadow:
+            0 13px 32px rgba(0,0,0,.22),
+            inset 0 1px 0 rgba(255,255,255,.04);
+        }
+
+        body.nabd-dark
+        .settings-hero-text > span {
+          color: #69d7c5;
+          background: rgba(36,107,98,.42);
+        }
+
+        body.nabd-dark .settings-hero-text h2 {
+          color: #e2f8f4;
+        }
+
+        body.nabd-dark .settings-hero-text p {
+          color: #9dbbb8;
+        }
+
+        body.nabd-dark .settings-card {
+          background:
+            linear-gradient(
+              145deg,
+              rgba(25,47,48,.95),
+              rgba(18,42,43,.9)
+            );
+
+          border-color: rgba(110,220,204,.08);
+
+          box-shadow:
+            0 11px 28px rgba(0,0,0,.2),
+            inset 0 1px 0 rgba(255,255,255,.035);
+        }
+
+        body.nabd-dark .settings-section-title {
+          color: #80aaa6;
+        }
+
+        body.nabd-dark .setting-item {
+          color: #dcefeb;
+
+          border-top-color: rgba(130,190,183,.10);
+        }
+
+        body.nabd-dark .setting-content strong {
+          color: #dff6f1;
+        }
+
+        body.nabd-dark .setting-content span {
+          color: #91aaa8;
+        }
+
+        body.nabd-dark .setting-icon {
+          color: #65d5c3;
+
+          background:
+            linear-gradient(
+              145deg,
+              #173c3b,
+              #1b4946
+            );
+        }
+
+        body.nabd-dark .setting-value {
+          color: #72d9c8;
+          background: rgba(31,93,86,.58);
+        }
+
+        body.nabd-dark .appearance-toggle {
+          background: rgba(13,34,35,.82);
+        }
+
+        body.nabd-dark
+        .appearance-toggle span.appearance-active {
+          color: #65d5c3;
+
+          background: rgba(35,70,69,.95);
+
+          box-shadow:
+            0 3px 8px rgba(0,0,0,.2);
+        }
+
+        body.nabd-dark .appearance-toggle span {
+          color: #789592;
+        }
+
+        body.nabd-dark .switch {
+          background: #385150;
+        }
+
+        body.nabd-dark .switch.on {
+          background: #159b8a;
+        }
+
+        body.nabd-dark .logout-button {
+          color: #f08a9a;
+
+          background:
+            linear-gradient(
+              145deg,
+              rgba(67,35,42,.95),
+              rgba(58,29,36,.9)
+            );
+
+          border-color: rgba(240,138,154,.12);
+        }
+
+        body.nabd-dark .settings-footer {
+          color: #76918f;
+        }
+
+        body.nabd-dark .settings-bottom-nav {
+          background: rgba(19,39,40,.91);
+
+          border-color: rgba(255,255,255,.07);
+
+          box-shadow:
+            0 12px 32px rgba(0,0,0,.28),
+            inset 0 1px 0 rgba(255,255,255,.04);
+        }
+
+        body.nabd-dark
+        .settings-bottom-nav .nav-item {
+          color: #789795;
+        }
+
+        body.nabd-dark
+        .settings-bottom-nav .nav-item:hover {
+          color: #65d5c3;
+
+          background: rgba(32,91,84,.38);
+        }
+
+        /* ===================================================
+           MOBILE
+        =================================================== */
+
+        @media (max-width: 430px) {
+
+          .settings-page {
+            padding-left: 14px;
+            padding-right: 14px;
+          }
+
+          .settings-hero {
+            min-height: 170px;
+
+            padding-left: 13px;
+            padding-right: 13px;
+          }
+
+          .settings-hero-text {
+            width: 56%;
+          }
+
+          .settings-hero-text h2 {
+            font-size: 20px;
+          }
+
+          .settings-illustration {
+            width: 44%;
+          }
+
+          .settings-illustration svg {
+            max-width: 175px;
+          }
+
+          .appearance-toggle {
+            gap: 2px;
+          }
+
+          .appearance-toggle span {
+            padding-left: 5px;
+            padding-right: 5px;
+          }
         }
 
       `}</style>
