@@ -424,6 +424,12 @@ export default function Profile() {
 
     if (guest) {
       setUser(null);
+
+      const savedAvatar =
+        localStorage.getItem("nabd_avatar");
+
+      setAvatar(savedAvatar || "");
+
       return;
     }
 
@@ -986,10 +992,6 @@ export default function Profile() {
           z-index: 5;
 
           padding: 0;
-
-          transition:
-            transform .15s ease,
-            background .2s ease;
         }
 
         .camera-button:active {
@@ -1043,7 +1045,7 @@ export default function Profile() {
 
 
         /* =========================
-           PROFILE MENU
+           PROFILE MENU - LIGHT
         ========================= */
 
         .profile-menu {
@@ -1081,11 +1083,6 @@ export default function Profile() {
 
           -webkit-backdrop-filter:
             blur(14px);
-
-          transition:
-            background .3s ease,
-            border-color .3s ease,
-            box-shadow .3s ease;
         }
 
 
@@ -1223,7 +1220,7 @@ export default function Profile() {
 
 
         /* =========================
-           BOTTOM NAV
+           BOTTOM NAV - LIGHT
         ========================= */
 
         .profile-bottom-nav {
@@ -1341,7 +1338,7 @@ export default function Profile() {
 
         /* ==================================================
            DARK MODE
-        ================================================== */
+           ================================================== */
 
         .profile-page.dark-mode {
 
@@ -1379,7 +1376,7 @@ export default function Profile() {
         .profile-page.dark-mode
         .header-back {
           background:
-            rgba(18,55,57,.92) !important;
+            rgba(18,55,57,.85) !important;
 
           border-color:
             rgba(100,205,192,.14) !important;
@@ -1391,7 +1388,7 @@ export default function Profile() {
             rgba(0,0,0,.20),
 
             inset 0 1px 0
-            rgba(255,255,255,.04) !important;
+            rgba(255,255,255,.04);
         }
 
 
@@ -1401,11 +1398,12 @@ export default function Profile() {
 
         .profile-page.dark-mode
         .profile-card {
+
           background:
             linear-gradient(
               145deg,
-              #123b3d 0%,
-              #092b2d 100%
+              #123739,
+              #092b2d
             ) !important;
 
           border-color:
@@ -1426,6 +1424,7 @@ export default function Profile() {
 
         .profile-page.dark-mode
         .profile-avatar {
+
           color: #65d6c5 !important;
 
           background:
@@ -1443,7 +1442,7 @@ export default function Profile() {
             rgba(0,0,0,.30),
 
             inset 0 1px 8px
-            rgba(255,255,255,.06) !important;
+            rgba(255,255,255,.06);
         }
 
 
@@ -1453,6 +1452,7 @@ export default function Profile() {
 
         .profile-page.dark-mode
         .camera-button {
+
           color: white !important;
 
           background: #35b8a5 !important;
@@ -1462,7 +1462,7 @@ export default function Profile() {
 
           box-shadow:
             0 5px 14px
-            rgba(0,0,0,.25) !important;
+            rgba(0,0,0,.25);
         }
 
 
@@ -1482,6 +1482,7 @@ export default function Profile() {
 
         .profile-page.dark-mode
         .profile-slogan {
+
           color: #65d6c5 !important;
 
           background:
@@ -1491,30 +1492,29 @@ export default function Profile() {
 
         /* ==================================================
            DARK PROFILE MENU
-           IMPORTANT:
-           !important لمنع index.css من عمل مربع أبيض
-        ================================================== */
+           FIX WHITE BOX
+           ================================================== */
 
         .profile-page.dark-mode
         .profile-menu {
 
-          background:
+          background-color:
             #0b3032 !important;
 
           background-image:
             linear-gradient(
               145deg,
-              #123f41 0%,
-              #092b2d 100%
+              #123f41,
+              #082b2d
             ) !important;
 
           border:
             1px solid
-            rgba(100,205,192,.14) !important;
+            rgba(100,205,192,.16) !important;
 
           box-shadow:
             0 12px 30px
-            rgba(0,0,0,.35),
+            rgba(0,0,0,.40),
 
             inset 0 1px 0
             rgba(255,255,255,.04) !important;
@@ -1538,14 +1538,14 @@ export default function Profile() {
             transparent !important;
 
           color:
-            #d4efeb !important;
+            #d8f3ef !important;
         }
 
         .profile-page.dark-mode
         .profile-menu-item:hover {
 
           background:
-            rgba(54,170,155,.06) !important;
+            rgba(65,180,165,.06) !important;
         }
 
         .profile-page.dark-mode
@@ -1566,7 +1566,7 @@ export default function Profile() {
         .profile-menu-item > span {
 
           color:
-            #d4efeb !important;
+            #d8f3ef !important;
         }
 
 
@@ -1589,7 +1589,7 @@ export default function Profile() {
 
           border:
             1px solid
-            rgba(100,205,192,.08);
+            rgba(101,214,197,.08);
         }
 
 
@@ -1655,17 +1655,17 @@ export default function Profile() {
           background:
             linear-gradient(
               145deg,
-              #123b3d 0%,
-              #08282a 100%
+              #123739,
+              #082b2d
             ) !important;
 
           border:
             1px solid
-            rgba(100,205,192,.14) !important;
+            rgba(100,205,192,.16) !important;
 
           box-shadow:
             0 12px 32px
-            rgba(0,0,0,.35),
+            rgba(0,0,0,.40),
 
             inset 0 1px 0
             rgba(255,255,255,.04) !important;
