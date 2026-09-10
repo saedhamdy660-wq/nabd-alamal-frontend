@@ -378,11 +378,6 @@ export default function AppSettings() {
       body.classList.remove("nabd-dark");
       localStorage.setItem("nabd_dark_mode", "false");
     }
-
-    return () => {
-      root.classList.remove("nabd-dark");
-      body.classList.remove("nabd-dark");
-    };
   }, [darkMode]);
 
   /* -------------------------------------------------------
@@ -1308,8 +1303,7 @@ export default function AppSettings() {
         }
 
         /* ===================================================
-           DARK MODE - SETTINGS ONLY
-           لا يعمل إلا عند تفعيل الوضع الداكن
+           DARK MODE
         =================================================== */
 
         body.nabd-dark .settings-page {
