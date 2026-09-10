@@ -634,7 +634,9 @@ export default function Profile() {
         }
 
 
-        /* HEADER */
+        /* =========================================
+           HEADER
+           ========================================= */
 
         .profile-header {
           max-width: 520px;
@@ -695,7 +697,9 @@ export default function Profile() {
         }
 
 
-        /* PROFILE CARD */
+        /* =========================================
+           PROFILE CARD
+           ========================================= */
 
         .profile-card {
           max-width: 520px;
@@ -738,7 +742,9 @@ export default function Profile() {
         }
 
 
-        /* AVATAR */
+        /* =========================================
+           AVATAR
+           ========================================= */
 
         .profile-avatar {
           position: relative;
@@ -790,7 +796,9 @@ export default function Profile() {
         }
 
 
-        /* PLUS / PHOTO BUTTON */
+        /* =========================================
+           PLUS / PHOTO BUTTON
+           ========================================= */
 
         .camera-button {
           position: absolute;
@@ -838,7 +846,9 @@ export default function Profile() {
         }
 
 
-        /* USER INFO */
+        /* =========================================
+           USER INFO
+           ========================================= */
 
         .profile-card h2 {
           margin:
@@ -881,7 +891,9 @@ export default function Profile() {
         }
 
 
-        /* PROFILE MENU */
+        /* =========================================
+           PROFILE MENU
+           ========================================= */
 
         .profile-menu {
           max-width: 520px;
@@ -921,7 +933,9 @@ export default function Profile() {
         }
 
 
-        /* MENU ITEM */
+        /* =========================================
+           MENU ITEM
+           ========================================= */
 
         .profile-menu-item {
           position: relative;
@@ -958,7 +972,9 @@ export default function Profile() {
         }
 
 
-        /* MENU ICON */
+        /* =========================================
+           MENU ICON
+           ========================================= */
 
         .menu-icon {
           width: 42px;
@@ -989,7 +1005,9 @@ export default function Profile() {
         }
 
 
-        /* MENU TEXT */
+        /* =========================================
+           MENU TEXT
+           ========================================= */
 
         .profile-menu-item > span {
           flex: 1;
@@ -1002,7 +1020,9 @@ export default function Profile() {
         }
 
 
-        /* ARROW */
+        /* =========================================
+           ARROW
+           ========================================= */
 
         .menu-arrow {
           width: 30px;
@@ -1022,7 +1042,9 @@ export default function Profile() {
         }
 
 
-        /* DANGER */
+        /* =========================================
+           DANGER
+           ========================================= */
 
         .danger-item .menu-icon {
           color: #d36a79;
@@ -1044,7 +1066,9 @@ export default function Profile() {
         }
 
 
-        /* BOTTOM NAV */
+        /* =========================================
+           BOTTOM NAV
+           ========================================= */
 
         .profile-bottom-nav {
           position: fixed;
@@ -1098,7 +1122,9 @@ export default function Profile() {
         }
 
 
-        /* NAV ITEM */
+        /* =========================================
+           NAV ITEM
+           ========================================= */
 
         .nav-item {
           position: relative;
@@ -1157,7 +1183,263 @@ export default function Profile() {
         }
 
 
-        /* SMALL MOBILE */
+        /* =========================================
+           DARK MODE
+           ========================================= */
+
+        @media (prefers-color-scheme: dark) {
+
+          .profile-page {
+            color: #d8f3ef;
+
+            background:
+              radial-gradient(
+                circle at 10% 5%,
+                rgba(35,150,140,.16),
+                transparent 28%
+              ),
+              radial-gradient(
+                circle at 95% 28%,
+                rgba(45,170,155,.12),
+                transparent 30%
+              ),
+              linear-gradient(
+                160deg,
+                #071f21 0%,
+                #082b2d 50%,
+                #0a3637 100%
+              );
+          }
+
+
+          /* HEADER */
+
+          .profile-header h1 {
+            color: #65d6c5;
+          }
+
+          .header-back {
+            background:
+              rgba(18,55,57,.85);
+
+            border-color:
+              rgba(100,205,192,.14);
+
+            color: #65d6c5;
+
+            box-shadow:
+              0 7px 18px
+              rgba(0,0,0,.20),
+
+              inset 0 1px 0
+              rgba(255,255,255,.04);
+          }
+
+
+          /* PROFILE CARD */
+
+          .profile-card {
+            background:
+              linear-gradient(
+                145deg,
+                rgba(18,55,57,.96),
+                rgba(9,43,45,.96)
+              );
+
+            border-color:
+              rgba(100,205,192,.14);
+
+            box-shadow:
+              0 12px 32px
+              rgba(0,0,0,.25),
+
+              inset 0 1px 0
+              rgba(255,255,255,.04);
+          }
+
+
+          /* AVATAR */
+
+          .profile-avatar {
+            color: #65d6c5;
+
+            background:
+              linear-gradient(
+                145deg,
+                #163f41,
+                #0d3032
+              );
+
+            border-color:
+              rgba(255,255,255,.85);
+
+            box-shadow:
+              0 9px 26px
+              rgba(0,0,0,.30),
+
+              inset 0 1px 8px
+              rgba(255,255,255,.06);
+          }
+
+
+          /* PHOTO BUTTON */
+
+          .camera-button {
+            color: white;
+
+            background: #35b8a5;
+
+            border-color:
+              rgba(255,255,255,.9);
+
+            box-shadow:
+              0 5px 14px
+              rgba(0,0,0,.25);
+          }
+
+
+          /* USER INFO */
+
+          .profile-card h2 {
+            color: #d9f4f0;
+          }
+
+          .profile-card p {
+            color: #91b8b5;
+          }
+
+          .profile-slogan {
+            color: #65d6c5;
+
+            background:
+              rgba(36,135,124,.20);
+          }
+
+
+          /* PROFILE MENU */
+
+          .profile-menu {
+            background:
+              linear-gradient(
+                145deg,
+                rgba(18,55,57,.97),
+                rgba(9,43,45,.97)
+              );
+
+            border-color:
+              rgba(100,205,192,.14);
+
+            box-shadow:
+              0 12px 30px
+              rgba(0,0,0,.25),
+
+              inset 0 1px 0
+              rgba(255,255,255,.04);
+          }
+
+
+          /* MENU ITEMS */
+
+          .profile-menu-item {
+            color: #d4efeb;
+          }
+
+          .profile-menu-item
+          + .profile-menu-item {
+            border-top-color:
+              rgba(100,205,192,.10);
+          }
+
+          .profile-menu-item > span {
+            color: #d4efeb;
+          }
+
+
+          /* MENU ICON */
+
+          .menu-icon {
+            color: #65d6c5;
+
+            background:
+              linear-gradient(
+                145deg,
+                rgba(54,170,155,.20),
+                rgba(32,130,120,.16)
+              );
+          }
+
+
+          /* ARROW */
+
+          .menu-arrow {
+            color: #79aaa5;
+          }
+
+
+          /* LOGOUT */
+
+          .danger-item .menu-icon {
+            color: #e58b98;
+
+            background:
+              linear-gradient(
+                145deg,
+                rgba(210,90,110,.16),
+                rgba(170,65,85,.12)
+              );
+          }
+
+          .danger-item > span {
+            color: #df7c8b !important;
+          }
+
+          .danger-item .menu-arrow {
+            color: #c77b87;
+          }
+
+
+          /* BOTTOM NAV */
+
+          .profile-bottom-nav {
+            background:
+              linear-gradient(
+                145deg,
+                rgba(18,55,57,.97),
+                rgba(8,39,41,.97)
+              );
+
+            border-color:
+              rgba(100,205,192,.14);
+
+            box-shadow:
+              0 12px 32px
+              rgba(0,0,0,.30),
+
+              inset 0 1px 0
+              rgba(255,255,255,.04);
+          }
+
+          .nav-item {
+            color: #8eb6b2;
+          }
+
+          .nav-item.active {
+            color: #65d6c5;
+
+            background:
+              rgba(45,170,155,.16);
+          }
+
+          .nav-item.active::after {
+            background: #35b8a5;
+          }
+
+        }
+
+
+        /* =========================================
+           SMALL MOBILE
+           ========================================= */
 
         @media (max-width: 380px) {
 
@@ -1238,6 +1520,7 @@ export default function Profile() {
 
             bottom: 10px;
           }
+
         }
 
       `}</style>
