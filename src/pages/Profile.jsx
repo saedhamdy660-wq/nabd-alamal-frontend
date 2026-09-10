@@ -52,11 +52,32 @@ function SettingsIcon() {
     <svg viewBox="0 0 24 24">
       <circle cx="12" cy="12" r="3" fill="none" stroke="currentColor" strokeWidth="1.8" />
       <path
-        d="M19 13.2v-2.4l-1.8-.5a5.9 5.9 0 0 0-.6-1.5l1-1.5-1.7-1.7-1.5 1a5.9 5.9 0 0 0-1.5-.6L12.4 4H10l-.5 1.8a5.9 5.9 0 0 0-1.5.6l-1.5-1L4.8 7.1l1 1.5a5.9 5.9 0 0 0-.6 1.5l-1.8.5v2.4l1.8.5a5.9 5.9 0 0 0 .6 1.5l-1 1.5 1.7 1.7 1.5-1a5.9 5.9 0 0 0 1.5.6L10 20h2.4l.5-1.8a5.9 5.9 0 0 0 1.5-.6l1.5 1 1.7-1.7-1-1.5a5.9 5.9 0 0 0 .6-1.5l1.8-.7Z"
+        d="M19 13.2v-2.4l-1.8-.5a5.9 5.9 0 0 0-.6-1.5l1-1.5-1.7-1.7-1.5 1a5.9 5.9 0 0 0-1.5-.6L12.4 4H10l-.5 1.8a5.9 5.9 0 0 0-1.5.6l-1.5-1L4.8 7.1l1.7 1.7a5.9 5.9 0 0 0-.6 1.5l-1.8.5v2.4l1.8.5a5.9 5.9 0 0 0 .6 1.5l-1 1.5 1.7 1.7 1.5-1a5.9 5.9 0 0 0 1.5.6L10 20h2.4l.5-1.8a5.9 5.9 0 0 0 1.5-.6l1.5 1 1.7-1.7-1-1.5a5.9 5.9 0 0 0 .6-1.5l1.8-.7Z"
         fill="none"
         stroke="currentColor"
         strokeWidth="1.4"
         strokeLinejoin="round"
+      />
+    </svg>
+  );
+}
+
+function BellSettingsIcon() {
+  return (
+    <svg viewBox="0 0 24 24">
+      <path
+        d="M6 17h12l-1.2-1.7V10a4.8 4.8 0 0 0-9.6 0v5.3L6 17Z"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="1.8"
+        strokeLinejoin="round"
+      />
+      <path
+        d="M10 20h4"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="1.8"
+        strokeLinecap="round"
       />
     </svg>
   );
@@ -114,8 +135,19 @@ function LogoutIcon() {
 function BellIcon() {
   return (
     <svg viewBox="0 0 24 24">
-      <path d="M6 17h12l-1.2-1.7V10a4.8 4.8 0 0 0-9.6 0v5.3L6 17Z" fill="none" stroke="currentColor" strokeWidth="1.8" />
-      <path d="M10 20h4" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" />
+      <path
+        d="M6 17h12l-1.2-1.7V10a4.8 4.8 0 0 0-9.6 0v5.3L6 17Z"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="1.8"
+      />
+      <path
+        d="M10 20h4"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="1.8"
+        strokeLinecap="round"
+      />
     </svg>
   );
 }
@@ -132,7 +164,13 @@ function RequestsIcon() {
 function HomeIcon() {
   return (
     <svg viewBox="0 0 24 24">
-      <path d="M4 10.5L12 4l8 6.5V20a1 1 0 0 1-1 1h-4.5v-5h-5v5H5a1 1 0 0 1-1-1v-9.5Z" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinejoin="round" />
+      <path
+        d="M4 10.5L12 4l8 6.5V20a1 1 0 0 1-1 1h-4.5v-5h-5v5H5a1 1 0 0 1-1-1v-9.5Z"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="1.8"
+        strokeLinejoin="round"
+      />
     </svg>
   );
 }
@@ -140,7 +178,14 @@ function HomeIcon() {
 function ArrowIcon() {
   return (
     <svg viewBox="0 0 24 24">
-      <path d="M9 5l7 7-7 7" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+      <path
+        d="M9 5l7 7-7 7"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="2"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
     </svg>
   );
 }
@@ -148,6 +193,7 @@ function ArrowIcon() {
 function ProfileMenuItem({ icon, title, onClick, danger = false }) {
   return (
     <button
+      type="button"
       className={`profile-menu-item ${danger ? "danger-item" : ""}`}
       onClick={onClick}
     >
@@ -201,7 +247,6 @@ export default function Profile() {
     localStorage.getItem("nabd_avatar") ||
     "";
 
-  // تسجيل الخروج
   const handleLogout = () => {
     localStorage.removeItem("nabd_user");
     localStorage.removeItem("nabd_avatar");
@@ -214,8 +259,8 @@ export default function Profile() {
 
       {/* Header */}
       <header className="profile-header">
-
         <button
+          type="button"
           className="header-back"
           onClick={() => navigate(-1)}
         >
@@ -225,12 +270,10 @@ export default function Profile() {
         <h1>ملفي الشخصي</h1>
 
         <div className="header-empty" />
-
       </header>
 
       {/* Profile Card */}
       <section className="profile-card">
-
         <div
           className="profile-avatar"
           style={{
@@ -246,6 +289,7 @@ export default function Profile() {
           )}
 
           <button
+            type="button"
             className="camera-button"
             onClick={() => navigate("/personal-info")}
           >
@@ -260,7 +304,6 @@ export default function Profile() {
         <div className="profile-slogan">
           معًا ننقذ الحياة
         </div>
-
       </section>
 
       {/* Menu */}
@@ -290,10 +333,18 @@ export default function Profile() {
           onClick={() => navigate("/favorites")}
         />
 
+        {/* إعدادات الإشعارات */}
+        <ProfileMenuItem
+          icon={<BellSettingsIcon />}
+          title="إعدادات الإشعارات"
+          onClick={() => navigate("/notification-settings")}
+        />
+
+        {/* إعدادات التطبيق */}
         <ProfileMenuItem
           icon={<SettingsIcon />}
           title="إعدادات التطبيق"
-          onClick={() => navigate("/notification-settings")}
+          onClick={() => navigate("/settings")}
         />
 
         {/* المساعدة والدعم */}
@@ -317,6 +368,7 @@ export default function Profile() {
       <nav className="profile-bottom-nav">
 
         <button
+          type="button"
           className="nav-item active"
           onClick={() => navigate("/profile")}
         >
@@ -325,6 +377,7 @@ export default function Profile() {
         </button>
 
         <button
+          type="button"
           className="nav-item"
           onClick={() => navigate("/notifications")}
         >
@@ -333,6 +386,7 @@ export default function Profile() {
         </button>
 
         <button
+          type="button"
           className="nav-item"
           onClick={() => navigate("/requests")}
         >
@@ -341,6 +395,7 @@ export default function Profile() {
         </button>
 
         <button
+          type="button"
           className="nav-item"
           onClick={() => navigate("/home")}
         >
@@ -423,8 +478,6 @@ export default function Profile() {
           width: 42px;
           height: 42px;
         }
-
-        /* Profile Card */
 
         .profile-card {
           max-width: 520px;
@@ -548,8 +601,6 @@ export default function Profile() {
           font-weight: 800;
         }
 
-        /* Menu */
-
         .profile-menu {
           max-width: 520px;
           margin: 0 auto;
@@ -632,7 +683,7 @@ export default function Profile() {
           height: 23px;
         }
 
-        .profile-menu-item span {
+        .profile-menu-item > span {
           flex: 1;
 
           color: #286d6d;
@@ -657,8 +708,6 @@ export default function Profile() {
           height: 17px;
         }
 
-        /* Logout */
-
         .danger-item .menu-icon {
           color: #d36a79;
 
@@ -670,15 +719,13 @@ export default function Profile() {
             );
         }
 
-        .danger-item span {
+        .danger-item > span {
           color: #c65f70 !important;
         }
 
         .danger-item .menu-arrow {
           color: #d88a96;
         }
-
-        /* Bottom Nav */
 
         .profile-bottom-nav {
           position: fixed;
