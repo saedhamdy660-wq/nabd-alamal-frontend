@@ -13,6 +13,10 @@ function getSavedUser() {
   }
 }
 
+/* =========================
+   ICONS
+========================= */
+
 function UserIcon() {
   return (
     <svg viewBox="0 0 24 24">
@@ -105,6 +109,7 @@ function SettingsIcon() {
         stroke="currentColor"
         strokeWidth="1.8"
       />
+
       <path
         d="M19 13.2v-2.4l-1.8-.5a5.9 5.9 0 0 0-.6-1.5l1-1.5-1.7-1.7-1.5 1a5.9 5.9 0 0 0-1.5-.6L12.4 4H10l-.5 1.8a5.9 5.9 0 0 0-1.5.6l-1.5-1L4.8 7.1l1.7 1.7a5.9 5.9 0 0 0-.6 1.5l-1.8.5v2.4l1.8.5a5.9 5.9 0 0 0 .6 1.5l-1 1.5 1.7 1.7 1.5-1a5.9 5.9 0 0 0 1.5.6L10 20h2.4l.5-1.8a5.9 5.9 0 0 0 1.5-.6l1.5 1 1.7-1.7-1-1.5a5.9 5.9 0 0 0 .6-1.5l1.8-.7Z"
         fill="none"
@@ -126,6 +131,7 @@ function BellSettingsIcon() {
         strokeWidth="1.8"
         strokeLinejoin="round"
       />
+
       <path
         d="M10 20h4"
         fill="none"
@@ -147,12 +153,14 @@ function SupportIcon() {
         strokeWidth="1.8"
         strokeLinecap="round"
       />
+
       <path
         d="M4 13h3v5H5a1 1 0 0 1-1-1v-4Zm16 0h-3v5h2a1 1 0 0 1 1-1v-4Z"
         fill="none"
         stroke="currentColor"
         strokeWidth="1.8"
       />
+
       <path
         d="M17 18c-.7 1.2-1.9 2-3.5 2H12"
         fill="none"
@@ -174,6 +182,7 @@ function LogoutIcon() {
         strokeWidth="1.8"
         strokeLinecap="round"
       />
+
       <path
         d="M14 8l4 4-4 4M9 12h9"
         fill="none"
@@ -195,6 +204,7 @@ function BellIcon() {
         stroke="currentColor"
         strokeWidth="1.8"
       />
+
       <path
         d="M10 20h4"
         fill="none"
@@ -219,6 +229,7 @@ function RequestsIcon() {
         stroke="currentColor"
         strokeWidth="1.8"
       />
+
       <path
         d="M8.5 9h7M8.5 13h7M8.5 17h4"
         fill="none"
@@ -259,6 +270,10 @@ function ArrowIcon() {
   );
 }
 
+/* =========================
+   MENU ITEM
+========================= */
+
 function ProfileMenuItem({
   icon,
   title,
@@ -273,7 +288,9 @@ function ProfileMenuItem({
       }`}
       onClick={onClick}
     >
-      <div className="menu-icon">{icon}</div>
+      <div className="menu-icon">
+        {icon}
+      </div>
 
       <span>{title}</span>
 
@@ -284,47 +301,147 @@ function ProfileMenuItem({
   );
 }
 
+/* =========================
+   PROFILE
+========================= */
+
 export default function Profile() {
   const navigate = useNavigate();
 
-  // معرفة هل المستخدم دخل كزائر
+  /* =========================
+     GUEST
+  ========================= */
+
   const isGuest =
     localStorage.getItem("nabd_guest") === "true";
 
-  // قراءة بيانات المستخدم المحفوظة محليًا
+  /* =========================
+     USER
+  ========================= */
+
   const [user, setUser] = useState(
     isGuest ? null : getSavedUser()
   );
 
-  // الصورة الحالية
+  /* =========================
+     AVATAR
+  ========================= */
+
   const [avatar, setAvatar] = useState(() => {
     if (isGuest) return "";
 
-    return localStorage.getItem("nabd_avatar") || "";
+    return (
+      localStorage.getItem("nabd_avatar") || ""
+    );
   });
 
-  // مرجع لاختيار الصورة من الهاتف
   const fileInputRef = useRef(null);
+
+  /* =========================
+     THEME
+     
+     light = فاتح
+     dark  = دارك
+     system = حسب الجهاز
+  ========================= */
+
+  const [theme, setTheme] = useState(() => {
+    return (
+      localStorage.getItem("nabd_theme") ||
+      "light"
+    );
+  });
+
+  const [systemDark, setSystemDark] =
+    useState(() =>
+      window.matchMedia &&
+      window.matchMedia(
+        "(prefers-color-scheme: dark)"
+      ).matches
+    );
+
+  /* =========================
+     THEME UPDATE
+  ========================= */
+
+  useEffect(() => {
+    const updateTheme = () => {
+      const savedTheme =
+        localStorage.getItem("nabd_theme") ||
+        "light";
+
+      setTheme(savedTheme);
+    };
+
+    window.addEventListener(
+      "nabd-theme-change",
+      updateTheme
+    );
+
+    return () => {
+      window.removeEventListener(
+        "nabd-theme-change",
+        updateTheme
+      );
+    };
+  }, []);
+
+  /* =========================
+     SYSTEM THEME
+  ========================= */
+
+  useEffect(() => {
+    if (!window.matchMedia) return;
+
+    const mediaQuery = window.matchMedia(
+      "(prefers-color-scheme: dark)"
+    );
+
+    const handleChange = (event) => {
+      setSystemDark(event.matches);
+    };
+
+    mediaQuery.addEventListener(
+      "change",
+      handleChange
+    );
+
+    return () => {
+      mediaQuery.removeEventListener(
+        "change",
+        handleChange
+      );
+    };
+  }, []);
+
+  /* =========================
+     IS DARK
+  ========================= */
+
+  const isDark =
+    theme === "dark" ||
+    (theme === "system" && systemDark);
+
+  /* =========================
+     LOAD USER
+  ========================= */
 
   useEffect(() => {
     const guest =
       localStorage.getItem("nabd_guest") === "true";
 
-    // الزائر لا يتم تحميل بياناته
     if (guest) {
       setUser(null);
       setAvatar("");
       return;
     }
 
-    // تحديث بيانات المستخدم من localStorage فقط
     const savedUser = getSavedUser();
 
     if (savedUser) {
       setUser(savedUser);
     }
 
-    // استرجاع الصورة المحفوظة
     const savedAvatar =
       localStorage.getItem("nabd_avatar");
 
@@ -333,18 +450,19 @@ export default function Profile() {
     }
   }, []);
 
-  // فتح معرض الصور
+  /* =========================
+     IMAGE PICKER
+  ========================= */
+
   const openImagePicker = () => {
     fileInputRef.current?.click();
   };
 
-  // عند اختيار صورة
   const handleAvatarChange = (e) => {
     const file = e.target.files?.[0];
 
     if (!file) return;
 
-    // التأكد أن الملف صورة
     if (!file.type.startsWith("image/")) {
       alert("من فضلك اختر صورة فقط");
       return;
@@ -355,23 +473,23 @@ export default function Profile() {
     reader.onload = () => {
       const image = reader.result;
 
-      // حفظ الصورة
       localStorage.setItem(
         "nabd_avatar",
         image
       );
 
-      // عرض الصورة فورًا
       setAvatar(image);
     };
 
     reader.readAsDataURL(file);
 
-    // يسمح باختيار نفس الصورة مرة أخرى
     e.target.value = "";
   };
 
-  // اسم المستخدم
+  /* =========================
+     USER DATA
+  ========================= */
+
   const userName = isGuest
     ? "المستخدم"
     : (
@@ -382,7 +500,6 @@ export default function Profile() {
         "المستخدم"
       );
 
-  // البريد الإلكتروني
   const email = isGuest
     ? "يمكنك تسجيل الدخول لعرض بياناتك"
     : (
@@ -390,7 +507,10 @@ export default function Profile() {
         "البريد الإلكتروني"
       );
 
-  // تسجيل الخروج
+  /* =========================
+     LOGOUT
+  ========================= */
+
   const handleLogout = () => {
     localStorage.removeItem("nabd_user");
     localStorage.removeItem("nabd_avatar");
@@ -402,9 +522,16 @@ export default function Profile() {
   };
 
   return (
-    <div className="profile-page">
+    <div
+      className={`profile-page ${
+        isDark ? "dark-mode" : ""
+      }`}
+    >
 
-      {/* Header */}
+      {/* =========================
+          HEADER
+      ========================= */}
+
       <header className="profile-header">
 
         <button
@@ -415,14 +542,19 @@ export default function Profile() {
           ←
         </button>
 
-        <h1>ملفي الشخصي</h1>
+        <h1>
+          ملفي الشخصي
+        </h1>
 
         <div className="header-empty" />
 
       </header>
 
 
-      {/* Profile Card */}
+      {/* =========================
+          PROFILE CARD
+      ========================= */}
+
       <section className="profile-card">
 
         <div
@@ -440,7 +572,6 @@ export default function Profile() {
             </span>
           )}
 
-          {/* زر إضافة / تغيير الصورة */}
           <button
             type="button"
             className="camera-button"
@@ -450,7 +581,6 @@ export default function Profile() {
             +
           </button>
 
-          {/* اختيار الصورة - مخفي */}
           <input
             ref={fileInputRef}
             type="file"
@@ -463,9 +593,13 @@ export default function Profile() {
 
         </div>
 
-        <h2>{userName}</h2>
+        <h2>
+          {userName}
+        </h2>
 
-        <p>{email}</p>
+        <p>
+          {email}
+        </p>
 
         <div className="profile-slogan">
           معًا ننقذ الحياة
@@ -474,7 +608,10 @@ export default function Profile() {
       </section>
 
 
-      {/* Menu */}
+      {/* =========================
+          PROFILE MENU
+      ========================= */}
+
       <section className="profile-menu">
 
         <ProfileMenuItem
@@ -543,7 +680,10 @@ export default function Profile() {
       </section>
 
 
-      {/* Bottom Navigation */}
+      {/* =========================
+          BOTTOM NAVIGATION
+      ========================= */}
+
       <nav className="profile-bottom-nav">
 
         <button
@@ -554,7 +694,9 @@ export default function Profile() {
           }
         >
           <UserIcon />
-          <span>الملف الشخصي</span>
+          <span>
+            الملف الشخصي
+          </span>
         </button>
 
         <button
@@ -565,7 +707,9 @@ export default function Profile() {
           }
         >
           <BellIcon />
-          <span>الإشعارات</span>
+          <span>
+            الإشعارات
+          </span>
         </button>
 
         <button
@@ -576,7 +720,9 @@ export default function Profile() {
           }
         >
           <RequestsIcon />
-          <span>الطلبات</span>
+          <span>
+            الطلبات
+          </span>
         </button>
 
         <button
@@ -587,11 +733,17 @@ export default function Profile() {
           }
         >
           <HomeIcon />
-          <span>الرئيسية</span>
+          <span>
+            الرئيسية
+          </span>
         </button>
 
       </nav>
 
+
+      {/* =========================
+          STYLE
+      ========================= */}
 
       <style>{`
 
@@ -631,12 +783,16 @@ export default function Profile() {
             Arial,
             Tahoma,
             sans-serif;
+
+          transition:
+            background .3s ease,
+            color .3s ease;
         }
 
 
-        /* =========================================
+        /* =========================
            HEADER
-           ========================================= */
+        ========================= */
 
         .profile-header {
           max-width: 520px;
@@ -697,9 +853,9 @@ export default function Profile() {
         }
 
 
-        /* =========================================
+        /* =========================
            PROFILE CARD
-           ========================================= */
+        ========================= */
 
         .profile-card {
           max-width: 520px;
@@ -742,9 +898,9 @@ export default function Profile() {
         }
 
 
-        /* =========================================
+        /* =========================
            AVATAR
-           ========================================= */
+        ========================= */
 
         .profile-avatar {
           position: relative;
@@ -796,9 +952,9 @@ export default function Profile() {
         }
 
 
-        /* =========================================
-           PLUS / PHOTO BUTTON
-           ========================================= */
+        /* =========================
+           PHOTO BUTTON
+        ========================= */
 
         .camera-button {
           position: absolute;
@@ -846,9 +1002,9 @@ export default function Profile() {
         }
 
 
-        /* =========================================
+        /* =========================
            USER INFO
-           ========================================= */
+        ========================= */
 
         .profile-card h2 {
           margin:
@@ -891,9 +1047,9 @@ export default function Profile() {
         }
 
 
-        /* =========================================
+        /* =========================
            PROFILE MENU
-           ========================================= */
+        ========================= */
 
         .profile-menu {
           max-width: 520px;
@@ -933,9 +1089,9 @@ export default function Profile() {
         }
 
 
-        /* =========================================
+        /* =========================
            MENU ITEM
-           ========================================= */
+        ========================= */
 
         .profile-menu-item {
           position: relative;
@@ -972,9 +1128,9 @@ export default function Profile() {
         }
 
 
-        /* =========================================
+        /* =========================
            MENU ICON
-           ========================================= */
+        ========================= */
 
         .menu-icon {
           width: 42px;
@@ -1005,9 +1161,9 @@ export default function Profile() {
         }
 
 
-        /* =========================================
+        /* =========================
            MENU TEXT
-           ========================================= */
+        ========================= */
 
         .profile-menu-item > span {
           flex: 1;
@@ -1020,9 +1176,9 @@ export default function Profile() {
         }
 
 
-        /* =========================================
+        /* =========================
            ARROW
-           ========================================= */
+        ========================= */
 
         .menu-arrow {
           width: 30px;
@@ -1042,9 +1198,9 @@ export default function Profile() {
         }
 
 
-        /* =========================================
-           DANGER
-           ========================================= */
+        /* =========================
+           LOGOUT
+        ========================= */
 
         .danger-item .menu-icon {
           color: #d36a79;
@@ -1066,9 +1222,9 @@ export default function Profile() {
         }
 
 
-        /* =========================================
+        /* =========================
            BOTTOM NAV
-           ========================================= */
+        ========================= */
 
         .profile-bottom-nav {
           position: fixed;
@@ -1122,9 +1278,9 @@ export default function Profile() {
         }
 
 
-        /* =========================================
+        /* =========================
            NAV ITEM
-           ========================================= */
+        ========================= */
 
         .nav-item {
           position: relative;
@@ -1183,263 +1339,282 @@ export default function Profile() {
         }
 
 
-        /* =========================================
+        /* ==================================================
            DARK MODE
-           ========================================= */
-
-        @media (prefers-color-scheme: dark) {
-
-          .profile-page {
-            color: #d8f3ef;
-
-            background:
-              radial-gradient(
-                circle at 10% 5%,
-                rgba(35,150,140,.16),
-                transparent 28%
-              ),
-              radial-gradient(
-                circle at 95% 28%,
-                rgba(45,170,155,.12),
-                transparent 30%
-              ),
-              linear-gradient(
-                160deg,
-                #071f21 0%,
-                #082b2d 50%,
-                #0a3637 100%
-              );
-          }
-
-
-          /* HEADER */
-
-          .profile-header h1 {
-            color: #65d6c5;
-          }
-
-          .header-back {
-            background:
-              rgba(18,55,57,.85);
-
-            border-color:
-              rgba(100,205,192,.14);
-
-            color: #65d6c5;
-
-            box-shadow:
-              0 7px 18px
-              rgba(0,0,0,.20),
-
-              inset 0 1px 0
-              rgba(255,255,255,.04);
-          }
-
-
-          /* PROFILE CARD */
-
-          .profile-card {
-            background:
-              linear-gradient(
-                145deg,
-                rgba(18,55,57,.96),
-                rgba(9,43,45,.96)
-              );
-
-            border-color:
-              rgba(100,205,192,.14);
-
-            box-shadow:
-              0 12px 32px
-              rgba(0,0,0,.25),
-
-              inset 0 1px 0
-              rgba(255,255,255,.04);
-          }
-
-
-          /* AVATAR */
-
-          .profile-avatar {
-            color: #65d6c5;
-
-            background:
-              linear-gradient(
-                145deg,
-                #163f41,
-                #0d3032
-              );
-
-            border-color:
-              rgba(255,255,255,.85);
-
-            box-shadow:
-              0 9px 26px
-              rgba(0,0,0,.30),
-
-              inset 0 1px 8px
-              rgba(255,255,255,.06);
-          }
-
-
-          /* PHOTO BUTTON */
-
-          .camera-button {
-            color: white;
-
-            background: #35b8a5;
-
-            border-color:
-              rgba(255,255,255,.9);
-
-            box-shadow:
-              0 5px 14px
-              rgba(0,0,0,.25);
-          }
-
-
-          /* USER INFO */
-
-          .profile-card h2 {
-            color: #d9f4f0;
-          }
-
-          .profile-card p {
-            color: #91b8b5;
-          }
-
-          .profile-slogan {
-            color: #65d6c5;
-
-            background:
-              rgba(36,135,124,.20);
-          }
-
-
-          /* PROFILE MENU */
-
-          .profile-menu {
-            background:
-              linear-gradient(
-                145deg,
-                rgba(18,55,57,.97),
-                rgba(9,43,45,.97)
-              );
-
-            border-color:
-              rgba(100,205,192,.14);
-
-            box-shadow:
-              0 12px 30px
-              rgba(0,0,0,.25),
-
-              inset 0 1px 0
-              rgba(255,255,255,.04);
-          }
-
-
-          /* MENU ITEMS */
-
-          .profile-menu-item {
-            color: #d4efeb;
-          }
-
-          .profile-menu-item
-          + .profile-menu-item {
-            border-top-color:
-              rgba(100,205,192,.10);
-          }
-
-          .profile-menu-item > span {
-            color: #d4efeb;
-          }
-
-
-          /* MENU ICON */
-
-          .menu-icon {
-            color: #65d6c5;
-
-            background:
-              linear-gradient(
-                145deg,
-                rgba(54,170,155,.20),
-                rgba(32,130,120,.16)
-              );
-          }
-
-
-          /* ARROW */
-
-          .menu-arrow {
-            color: #79aaa5;
-          }
-
-
-          /* LOGOUT */
-
-          .danger-item .menu-icon {
-            color: #e58b98;
-
-            background:
-              linear-gradient(
-                145deg,
-                rgba(210,90,110,.16),
-                rgba(170,65,85,.12)
-              );
-          }
-
-          .danger-item > span {
-            color: #df7c8b !important;
-          }
-
-          .danger-item .menu-arrow {
-            color: #c77b87;
-          }
-
-
-          /* BOTTOM NAV */
-
-          .profile-bottom-nav {
-            background:
-              linear-gradient(
-                145deg,
-                rgba(18,55,57,.97),
-                rgba(8,39,41,.97)
-              );
-
-            border-color:
-              rgba(100,205,192,.14);
-
-            box-shadow:
-              0 12px 32px
-              rgba(0,0,0,.30),
-
-              inset 0 1px 0
-              rgba(255,255,255,.04);
-          }
-
-          .nav-item {
-            color: #8eb6b2;
-          }
-
-          .nav-item.active {
-            color: #65d6c5;
-
-            background:
-              rgba(45,170,155,.16);
-          }
-
-          .nav-item.active::after {
-            background: #35b8a5;
-          }
-
+           هنا الدارك بيتحكم فيه التطبيق فقط
+           ================================================== */
+
+        .profile-page.dark-mode {
+
+          color: #d8f3ef;
+
+          background:
+            radial-gradient(
+              circle at 10% 5%,
+              rgba(35,150,140,.16),
+              transparent 28%
+            ),
+            radial-gradient(
+              circle at 95% 28%,
+              rgba(45,170,155,.12),
+              transparent 30%
+            ),
+            linear-gradient(
+              160deg,
+              #071f21 0%,
+              #082b2d 50%,
+              #0a3637 100%
+            );
         }
 
 
-        /* =========================================
+        /* HEADER */
+
+        .profile-page.dark-mode
+        .profile-header h1 {
+          color: #65d6c5;
+        }
+
+        .profile-page.dark-mode
+        .header-back {
+          background:
+            rgba(18,55,57,.85);
+
+          border-color:
+            rgba(100,205,192,.14);
+
+          color: #65d6c5;
+
+          box-shadow:
+            0 7px 18px
+            rgba(0,0,0,.20),
+
+            inset 0 1px 0
+            rgba(255,255,255,.04);
+        }
+
+
+        /* PROFILE CARD */
+
+        .profile-page.dark-mode
+        .profile-card {
+          background:
+            linear-gradient(
+              145deg,
+              rgba(18,55,57,.96),
+              rgba(9,43,45,.96)
+            );
+
+          border-color:
+            rgba(100,205,192,.14);
+
+          box-shadow:
+            0 12px 32px
+            rgba(0,0,0,.25),
+
+            inset 0 1px 0
+            rgba(255,255,255,.04);
+        }
+
+
+        /* AVATAR */
+
+        .profile-page.dark-mode
+        .profile-avatar {
+          color: #65d6c5;
+
+          background:
+            linear-gradient(
+              145deg,
+              #163f41,
+              #0d3032
+            );
+
+          border-color:
+            rgba(255,255,255,.85);
+
+          box-shadow:
+            0 9px 26px
+            rgba(0,0,0,.30),
+
+            inset 0 1px 8px
+            rgba(255,255,255,.06);
+        }
+
+
+        /* PHOTO BUTTON */
+
+        .profile-page.dark-mode
+        .camera-button {
+          color: white;
+
+          background: #35b8a5;
+
+          border-color:
+            rgba(255,255,255,.9);
+
+          box-shadow:
+            0 5px 14px
+            rgba(0,0,0,.25);
+        }
+
+
+        /* USER INFO */
+
+        .profile-page.dark-mode
+        .profile-card h2 {
+          color: #d9f4f0;
+        }
+
+        .profile-page.dark-mode
+        .profile-card p {
+          color: #91b8b5;
+        }
+
+        .profile-page.dark-mode
+        .profile-slogan {
+          color: #65d6c5;
+
+          background:
+            rgba(36,135,124,.20);
+        }
+
+
+        /* PROFILE MENU */
+
+        .profile-page.dark-mode
+        .profile-menu {
+          background:
+            linear-gradient(
+              145deg,
+              rgba(18,55,57,.97),
+              rgba(9,43,45,.97)
+            );
+
+          border-color:
+            rgba(100,205,192,.14);
+
+          box-shadow:
+            0 12px 30px
+            rgba(0,0,0,.25),
+
+            inset 0 1px 0
+            rgba(255,255,255,.04);
+        }
+
+
+        /* MENU ITEMS */
+
+        .profile-page.dark-mode
+        .profile-menu-item {
+          color: #d4efeb;
+        }
+
+        .profile-page.dark-mode
+        .profile-menu-item
+        + .profile-menu-item {
+          border-top-color:
+            rgba(100,205,192,.10);
+        }
+
+        .profile-page.dark-mode
+        .profile-menu-item > span {
+          color: #d4efeb;
+        }
+
+
+        /* MENU ICON */
+
+        .profile-page.dark-mode
+        .menu-icon {
+          color: #65d6c5;
+
+          background:
+            linear-gradient(
+              145deg,
+              rgba(54,170,155,.20),
+              rgba(32,130,120,.16)
+            );
+        }
+
+
+        /* ARROW */
+
+        .profile-page.dark-mode
+        .menu-arrow {
+          color: #79aaa5;
+        }
+
+
+        /* LOGOUT */
+
+        .profile-page.dark-mode
+        .danger-item .menu-icon {
+          color: #e58b98;
+
+          background:
+            linear-gradient(
+              145deg,
+              rgba(210,90,110,.16),
+              rgba(170,65,85,.12)
+            );
+        }
+
+        .profile-page.dark-mode
+        .danger-item > span {
+          color: #df7c8b !important;
+        }
+
+        .profile-page.dark-mode
+        .danger-item .menu-arrow {
+          color: #c77b87;
+        }
+
+
+        /* BOTTOM NAV */
+
+        .profile-page.dark-mode
+        .profile-bottom-nav {
+          background:
+            linear-gradient(
+              145deg,
+              rgba(18,55,57,.97),
+              rgba(8,39,41,.97)
+            );
+
+          border-color:
+            rgba(100,205,192,.14);
+
+          box-shadow:
+            0 12px 32px
+            rgba(0,0,0,.30),
+
+            inset 0 1px 0
+            rgba(255,255,255,.04);
+        }
+
+        .profile-page.dark-mode
+        .nav-item {
+          color: #8eb6b2;
+        }
+
+        .profile-page.dark-mode
+        .nav-item.active {
+          color: #65d6c5;
+
+          background:
+            rgba(45,170,155,.16);
+        }
+
+        .profile-page.dark-mode
+        .nav-item.active::after {
+          background: #35b8a5;
+        }
+
+
+        /* =========================
            SMALL MOBILE
-           ========================================= */
+        ========================= */
 
         @media (max-width: 380px) {
 
