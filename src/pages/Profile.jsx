@@ -335,10 +335,6 @@ export default function Profile() {
 
   /* =========================
      THEME
-     
-     light = فاتح
-     dark  = دارك
-     system = حسب الجهاز
   ========================= */
 
   const [theme, setTheme] = useState(() => {
@@ -428,12 +424,6 @@ export default function Profile() {
 
     if (guest) {
       setUser(null);
-
-      const savedAvatar =
-        localStorage.getItem("nabd_avatar");
-
-      setAvatar(savedAvatar || "");
-
       return;
     }
 
@@ -562,7 +552,7 @@ export default function Profile() {
           className="profile-avatar"
           style={{
             backgroundImage: avatar
-              ? `url(${avatar})`
+              ? `url("${avatar}")`
               : "none",
           }}
         >
@@ -996,6 +986,10 @@ export default function Profile() {
           z-index: 5;
 
           padding: 0;
+
+          transition:
+            transform .15s ease,
+            background .2s ease;
         }
 
         .camera-button:active {
@@ -1087,6 +1081,11 @@ export default function Profile() {
 
           -webkit-backdrop-filter:
             blur(14px);
+
+          transition:
+            background .3s ease,
+            border-color .3s ease,
+            box-shadow .3s ease;
         }
 
 
@@ -1346,7 +1345,7 @@ export default function Profile() {
 
         .profile-page.dark-mode {
 
-          color: #d8f3ef;
+          color: #d8f3ef !important;
 
           background:
             radial-gradient(
@@ -1364,7 +1363,7 @@ export default function Profile() {
               #071f21 0%,
               #082b2d 50%,
               #0a3637 100%
-            );
+            ) !important;
         }
 
 
@@ -1380,10 +1379,9 @@ export default function Profile() {
         .profile-page.dark-mode
         .header-back {
           background:
-            rgba(18,55,57,.90) !important;
+            rgba(18,55,57,.92) !important;
 
-          border:
-            1px solid
+          border-color:
             rgba(100,205,192,.14) !important;
 
           color: #65d6c5 !important;
@@ -1393,7 +1391,7 @@ export default function Profile() {
             rgba(0,0,0,.20),
 
             inset 0 1px 0
-            rgba(255,255,255,.04);
+            rgba(255,255,255,.04) !important;
         }
 
 
@@ -1406,20 +1404,19 @@ export default function Profile() {
           background:
             linear-gradient(
               145deg,
-              rgba(18,55,57,.97),
-              rgba(7,35,37,.98)
+              #123b3d 0%,
+              #092b2d 100%
             ) !important;
 
-          border:
-            1px solid
-            rgba(100,205,192,.15) !important;
+          border-color:
+            rgba(100,205,192,.14) !important;
 
           box-shadow:
             0 12px 32px
-            rgba(0,0,0,.30),
+            rgba(0,0,0,.35),
 
             inset 0 1px 0
-            rgba(255,255,255,.04);
+            rgba(255,255,255,.04) !important;
         }
 
 
@@ -1439,14 +1436,14 @@ export default function Profile() {
             ) !important;
 
           border-color:
-            rgba(255,255,255,.88) !important;
+            rgba(255,255,255,.85) !important;
 
           box-shadow:
             0 9px 26px
             rgba(0,0,0,.30),
 
             inset 0 1px 8px
-            rgba(255,255,255,.06);
+            rgba(255,255,255,.06) !important;
         }
 
 
@@ -1465,7 +1462,7 @@ export default function Profile() {
 
           box-shadow:
             0 5px 14px
-            rgba(0,0,0,.25);
+            rgba(0,0,0,.25) !important;
         }
 
 
@@ -1475,7 +1472,7 @@ export default function Profile() {
 
         .profile-page.dark-mode
         .profile-card h2 {
-          color: #e0f7f3 !important;
+          color: #d9f4f0 !important;
         }
 
         .profile-page.dark-mode
@@ -1494,26 +1491,30 @@ export default function Profile() {
 
         /* ==================================================
            DARK PROFILE MENU
-           مهم جدًا لإلغاء تأثير index.css
+           IMPORTANT:
+           !important لمنع index.css من عمل مربع أبيض
         ================================================== */
 
         .profile-page.dark-mode
         .profile-menu {
 
           background:
+            #0b3032 !important;
+
+          background-image:
             linear-gradient(
               145deg,
-              rgba(18,55,57,.97),
-              rgba(7,35,37,.98)
+              #123f41 0%,
+              #092b2d 100%
             ) !important;
 
           border:
             1px solid
-            rgba(100,205,192,.16) !important;
+            rgba(100,205,192,.14) !important;
 
           box-shadow:
             0 12px 30px
-            rgba(0,0,0,.30),
+            rgba(0,0,0,.35),
 
             inset 0 1px 0
             rgba(255,255,255,.04) !important;
@@ -1537,7 +1538,14 @@ export default function Profile() {
             transparent !important;
 
           color:
-            #d8f3ef !important;
+            #d4efeb !important;
+        }
+
+        .profile-page.dark-mode
+        .profile-menu-item:hover {
+
+          background:
+            rgba(54,170,155,.06) !important;
         }
 
         .profile-page.dark-mode
@@ -1549,16 +1557,21 @@ export default function Profile() {
             rgba(100,205,192,.10) !important;
         }
 
+
+        /* =========================
+           DARK MENU TEXT
+        ========================= */
+
         .profile-page.dark-mode
         .profile-menu-item > span {
 
           color:
-            #d8f3ef !important;
+            #d4efeb !important;
         }
 
 
         /* =========================
-           DARK MENU ICONS
+           DARK MENU ICON
         ========================= */
 
         .profile-page.dark-mode
@@ -1570,8 +1583,8 @@ export default function Profile() {
           background:
             linear-gradient(
               145deg,
-              rgba(54,170,155,.20),
-              rgba(32,130,120,.12)
+              rgba(54,170,155,.22),
+              rgba(32,130,120,.16)
             ) !important;
 
           border:
@@ -1579,26 +1592,14 @@ export default function Profile() {
             rgba(100,205,192,.08);
         }
 
-        .profile-page.dark-mode
-        .menu-icon svg {
-          color:
-            #65d6c5 !important;
-        }
-
 
         /* =========================
-           DARK ARROWS
+           DARK ARROW
         ========================= */
 
         .profile-page.dark-mode
         .menu-arrow {
 
-          color:
-            #79aaa5 !important;
-        }
-
-        .profile-page.dark-mode
-        .menu-arrow svg {
           color:
             #79aaa5 !important;
         }
@@ -1645,7 +1646,7 @@ export default function Profile() {
 
 
         /* ==================================================
-           DARK BOTTOM NAVIGATION
+           DARK BOTTOM NAV
         ================================================== */
 
         .profile-page.dark-mode
@@ -1654,13 +1655,13 @@ export default function Profile() {
           background:
             linear-gradient(
               145deg,
-              rgba(18,55,57,.98),
-              rgba(7,35,37,.98)
+              #123b3d 0%,
+              #08282a 100%
             ) !important;
 
           border:
             1px solid
-            rgba(100,205,192,.16) !important;
+            rgba(100,205,192,.14) !important;
 
           box-shadow:
             0 12px 32px
@@ -1668,12 +1669,6 @@ export default function Profile() {
 
             inset 0 1px 0
             rgba(255,255,255,.04) !important;
-
-          backdrop-filter:
-            blur(18px);
-
-          -webkit-backdrop-filter:
-            blur(18px);
         }
 
 
@@ -1692,13 +1687,6 @@ export default function Profile() {
         }
 
         .profile-page.dark-mode
-        .nav-item svg {
-
-          color:
-            #8eb6b2 !important;
-        }
-
-        .profile-page.dark-mode
         .nav-item.active {
 
           color:
@@ -1706,13 +1694,6 @@ export default function Profile() {
 
           background:
             rgba(45,170,155,.16) !important;
-        }
-
-        .profile-page.dark-mode
-        .nav-item.active svg {
-
-          color:
-            #65d6c5 !important;
         }
 
         .profile-page.dark-mode
