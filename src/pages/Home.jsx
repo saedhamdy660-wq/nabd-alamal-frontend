@@ -9,16 +9,27 @@ export default function Home() {
   const avatar = localStorage.getItem("nabd_avatar");
 
   useEffect(() => {
-    const stored = localStorage.getItem("nabd_user");
+    const isGuest = localStorage.getItem("nabd_guest") === "true";
 
-    if (stored) {
-      try {
-        setUser(JSON.parse(stored));
-      } catch {
-        setUser(null);
-      }
+    // لو دخل كزائر، ممنوع نقرأ أي مستخدم محفوظ قديم
+    if (isGuest) {
+      setUser(null);
     } else {
-      api.getUser().then(setUser).catch(() => {});
+      const stored = localStorage.getItem("nabd_user");
+
+      if (stored) {
+        try {
+          setUser(JSON.parse(stored));
+        } catch {
+          setUser(null);
+        }
+      } else {
+        api.getUser()
+          .then(setUser)
+          .catch(() => {
+            setUser(null);
+          });
+      }
     }
 
     api.getBloodRequests()
