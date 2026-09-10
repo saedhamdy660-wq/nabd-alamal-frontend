@@ -191,6 +191,9 @@ export default function NotificationSettings() {
     );
   };
 
+  // نسبة تقدم الـ range
+  const rangePercent = ((radius - 1) / 19) * 100;
+
   return (
     <div className="notification-settings-page">
 
@@ -214,33 +217,21 @@ export default function NotificationSettings() {
 
           <div>
             <h1>إعدادات الإشعارات</h1>
-
-            <p>
-              تحكم في التنبيهات التي تصلك
-            </p>
+            <p>تحكم في التنبيهات التي تصلك</p>
           </div>
 
         </div>
 
       </header>
 
-
       {/* ================= NOTIFICATIONS ================= */}
 
       <section className="settings-section">
 
         <div className="section-heading">
-
-          <h2>
-            التنبيهات
-          </h2>
-
-          <span>
-            اختر ما تريد استقباله
-          </span>
-
+          <h2>التنبيهات</h2>
+          <span>اختر ما تريد استقباله</span>
         </div>
-
 
         <div className="settings-card">
 
@@ -255,7 +246,6 @@ export default function NotificationSettings() {
                 {getIcon(setting.key)}
               </div>
 
-
               <div className="setting-text">
 
                 <strong>
@@ -268,15 +258,12 @@ export default function NotificationSettings() {
 
               </div>
 
-
               <label className="switch">
 
                 <input
                   type="checkbox"
                   checked={setting.checked}
-                  onChange={() =>
-                    toggle(setting.key)
-                  }
+                  onChange={() => toggle(setting.key)}
                 />
 
                 <span className="slider"></span>
@@ -291,10 +278,9 @@ export default function NotificationSettings() {
 
       </section>
 
-
       {/* ================= GEOGRAPHIC ================= */}
 
-      <section className="settings-section">
+      <section className="settings-section geographic-section">
 
         <div className="section-heading">
 
@@ -308,8 +294,9 @@ export default function NotificationSettings() {
 
         </div>
 
-
         <div className="radius-card">
+
+          {/* TOP */}
 
           <div className="radius-top">
 
@@ -317,23 +304,24 @@ export default function NotificationSettings() {
               <LocationIcon />
             </div>
 
-
-            <div>
+            <div className="radius-info">
 
               <strong>
                 المسافة المحيطة بك
               </strong>
 
               <p>
-                ستصلك التنبيهات من داخل هذه المسافة
+                ستصلك التنبيهات من الحالات الموجودة
+                داخل هذه المسافة.
               </p>
 
             </div>
 
-
             <div className="radius-value">
 
-              {radius}
+              <span>
+                {radius}
+              </span>
 
               <small>
                 كم
@@ -343,6 +331,7 @@ export default function NotificationSettings() {
 
           </div>
 
+          {/* RANGE */}
 
           <div className="range-container">
 
@@ -351,14 +340,19 @@ export default function NotificationSettings() {
               min="1"
               max="20"
               value={radius}
-              style={{
-                "--range-value": radius,
-              }}
               onChange={(e) =>
                 setRadius(Number(e.target.value))
               }
+              style={{
+                background: `linear-gradient(
+                  to left,
+                  #159b8a 0%,
+                  #159b8a ${rangePercent}%,
+                  var(--range-empty) ${rangePercent}%,
+                  var(--range-empty) 100%
+                )`,
+              }}
             />
-
 
             <div className="range-labels">
 
@@ -378,8 +372,7 @@ export default function NotificationSettings() {
 
       </section>
 
-
-      {/* ================= INFO ================= */}
+      {/* ================= NOTE ================= */}
 
       <div className="settings-note">
 
@@ -392,8 +385,7 @@ export default function NotificationSettings() {
 
       </div>
 
-
-      {/* ================= STYLE ================= */}
+      {/* ================= CSS ================= */}
 
       <style>{`
 
@@ -401,41 +393,50 @@ export default function NotificationSettings() {
           box-sizing: border-box;
         }
 
-
-        /* =========================================
-           LIGHT MODE
-        ========================================= */
+        /* ================= PAGE ================= */
 
         .notification-settings-page {
+
+          --page-bg-1: #fbffff;
+          --page-bg-2: #f1fbfa;
+          --page-bg-3: #e8f7f4;
+
+          --card-bg-1: rgba(255,255,255,.92);
+          --card-bg-2: rgba(232,249,246,.82);
+
+          --main-text: #286d6d;
+          --secondary-text: #8aa3a2;
+          --primary: #159b8a;
+
+          --range-empty: #dcebe9;
 
           min-height: 100vh;
 
           padding:
-            22px 18px 40px;
+            24px
+            18px
+            45px;
 
           direction: rtl;
 
-          color: #24575a;
+          color: var(--main-text);
 
           background:
-
             radial-gradient(
               circle at 10% 5%,
               rgba(70,193,177,.17),
               transparent 28%
             ),
-
             radial-gradient(
               circle at 95% 28%,
               rgba(154,231,216,.18),
               transparent 30%
             ),
-
             linear-gradient(
               160deg,
-              #fbffff 0%,
-              #f1fbfa 45%,
-              #e8f7f4 100%
+              var(--page-bg-1) 0%,
+              var(--page-bg-2) 45%,
+              var(--page-bg-3) 100%
             );
 
           font-family:
@@ -448,30 +449,28 @@ export default function NotificationSettings() {
             color .25s ease;
         }
 
-
-        /* =========================================
-           HEADER
-        ========================================= */
+        /* ================= HEADER ================= */
 
         .settings-header {
 
           max-width: 520px;
 
           margin:
-            0 auto 25px;
+            0
+            auto
+            28px;
 
           display: flex;
 
           align-items: center;
 
-          gap: 13px;
+          gap: 14px;
         }
-
 
         .back-button {
 
-          width: 43px;
-          height: 43px;
+          width: 46px;
+          height: 46px;
 
           flex-shrink: 0;
 
@@ -482,38 +481,29 @@ export default function NotificationSettings() {
 
           border-radius: 15px;
 
-          color: #218d83;
+          color: var(--primary);
 
           background:
-            rgba(255,255,255,.75);
+            rgba(255,255,255,.78);
 
           border:
             1px solid
-            rgba(255,255,255,.9);
+            rgba(255,255,255,.92);
 
           box-shadow:
-
             0 7px 18px
-              rgba(35,139,128,.08),
-
-            inset 0 1px 0
-              rgba(255,255,255,.9);
+            rgba(35,139,128,.08);
 
           text-decoration: none;
 
-          transition:
-            background .25s ease,
-            color .25s ease,
-            border .25s ease;
+          transition: .2s;
         }
-
 
         .back-button svg {
 
-          width: 21px;
-          height: 21px;
+          width: 22px;
+          height: 22px;
         }
-
 
         .settings-title {
 
@@ -521,14 +511,13 @@ export default function NotificationSettings() {
 
           align-items: center;
 
-          gap: 12px;
+          gap: 13px;
         }
-
 
         .settings-title-icon {
 
-          width: 48px;
-          height: 48px;
+          width: 52px;
+          height: 52px;
 
           flex-shrink: 0;
 
@@ -537,12 +526,11 @@ export default function NotificationSettings() {
           align-items: center;
           justify-content: center;
 
-          border-radius: 16px;
+          border-radius: 17px;
 
-          color: #159b8a;
+          color: var(--primary);
 
           background:
-
             linear-gradient(
               145deg,
               #e3faf6,
@@ -554,92 +542,86 @@ export default function NotificationSettings() {
             rgba(255,255,255,.9);
 
           box-shadow:
-
             0 7px 18px
-              rgba(35,139,128,.08),
-
-            inset 0 1px 0
-              rgba(255,255,255,.85);
-
-          transition:
-            background .25s ease,
-            border .25s ease;
+            rgba(35,139,128,.08);
         }
-
 
         .settings-title-icon svg {
 
-          width: 25px;
-          height: 25px;
+          width: 27px;
+          height: 27px;
         }
-
 
         .settings-title h1 {
 
           margin:
-            0 0 4px;
+            0
+            0
+            5px;
 
-          color: #218d83;
+          color: var(--primary);
 
-          font-size: 20px;
+          font-size: 22px;
 
           font-weight: 800;
-        }
 
+          line-height: 1.3;
+        }
 
         .settings-title p {
 
           margin: 0;
 
-          color: #88a3a2;
+          color: var(--secondary-text);
 
-          font-size: 10px;
+          font-size: 12px;
+
+          line-height: 1.5;
         }
 
-
-        /* =========================================
-           SECTION
-        ========================================= */
+        /* ================= SECTION ================= */
 
         .settings-section {
 
           max-width: 520px;
 
           margin:
-            0 auto 23px;
+            0
+            auto
+            26px;
         }
-
 
         .section-heading {
 
-          margin-bottom: 11px;
+          margin-bottom: 12px;
         }
-
 
         .section-heading h2 {
 
           margin:
-            0 0 4px;
+            0
+            0
+            5px;
 
-          color: #286d6d;
+          color: var(--main-text);
 
-          font-size: 16px;
+          font-size: 18px;
 
           font-weight: 800;
-        }
 
+          line-height: 1.4;
+        }
 
         .section-heading span {
 
-          color: #8aa3a2;
+          color: var(--secondary-text);
 
-          font-size: 10px;
+          font-size: 11px;
+
+          line-height: 1.5;
         }
 
-
-        /* =========================================
-           SETTINGS CARD
-        ========================================= */
+        /* ================= SETTINGS CARD ================= */
 
         .settings-card {
 
@@ -648,11 +630,10 @@ export default function NotificationSettings() {
           border-radius: 25px;
 
           background:
-
             linear-gradient(
               145deg,
-              rgba(255,255,255,.9),
-              rgba(232,249,246,.8)
+              var(--card-bg-1),
+              var(--card-bg-2)
             );
 
           border:
@@ -660,12 +641,8 @@ export default function NotificationSettings() {
             rgba(255,255,255,.92);
 
           box-shadow:
-
             0 12px 30px
-              rgba(42,128,128,.08),
-
-            inset 0 1px 0
-              rgba(255,255,255,.9);
+            rgba(42,128,128,.08);
 
           backdrop-filter:
             blur(14px);
@@ -674,38 +651,34 @@ export default function NotificationSettings() {
             blur(14px);
         }
 
-
-        /* =========================================
-           SETTING ROW
-        ========================================= */
+        /* ================= ROW ================= */
 
         .setting-row {
 
-          min-height: 78px;
+          min-height: 82px;
 
           padding:
-            10px 14px;
+            12px
+            15px;
 
           display: flex;
 
           align-items: center;
 
-          gap: 11px;
+          gap: 12px;
         }
-
 
         .setting-row + .setting-row {
 
           border-top:
             1px solid
-            rgba(124,184,177,.14);
+            rgba(124,184,177,.15);
         }
-
 
         .setting-icon {
 
-          width: 42px;
-          height: 42px;
+          width: 46px;
+          height: 46px;
 
           flex-shrink: 0;
 
@@ -714,12 +687,11 @@ export default function NotificationSettings() {
           align-items: center;
           justify-content: center;
 
-          border-radius: 14px;
+          border-radius: 15px;
 
-          color: #159b8a;
+          color: var(--primary);
 
           background:
-
             linear-gradient(
               145deg,
               #e4faf6,
@@ -727,13 +699,11 @@ export default function NotificationSettings() {
             );
         }
 
-
         .setting-icon svg {
 
-          width: 22px;
-          height: 22px;
+          width: 24px;
+          height: 24px;
         }
-
 
         .setting-text {
 
@@ -745,46 +715,42 @@ export default function NotificationSettings() {
 
           flex-direction: column;
 
-          gap: 3px;
+          gap: 4px;
         }
-
 
         .setting-text strong {
 
-          color: #286d6d;
+          color: var(--main-text);
 
-          font-size: 13px;
+          font-size: 14px;
 
           font-weight: 800;
-        }
 
+          line-height: 1.4;
+        }
 
         .setting-text span {
 
-          color: #8aa3a2;
+          color: var(--secondary-text);
 
-          font-size: 9px;
+          font-size: 10px;
 
-          line-height: 1.5;
+          line-height: 1.6;
         }
 
-
-        /* =========================================
-           SWITCH
-        ========================================= */
+        /* ================= SWITCH ================= */
 
         .switch {
 
           position: relative;
 
-          width: 45px;
-          height: 25px;
+          width: 47px;
+          height: 26px;
 
           flex-shrink: 0;
 
           cursor: pointer;
         }
-
 
         .switch input {
 
@@ -793,7 +759,6 @@ export default function NotificationSettings() {
 
           opacity: 0;
         }
-
 
         .slider {
 
@@ -808,15 +773,14 @@ export default function NotificationSettings() {
           transition: .25s;
         }
 
-
         .slider::before {
 
           content: "";
 
           position: absolute;
 
-          width: 19px;
-          height: 19px;
+          width: 20px;
+          height: 20px;
 
           top: 3px;
           right: 3px;
@@ -827,16 +791,14 @@ export default function NotificationSettings() {
 
           box-shadow:
             0 2px 6px
-            rgba(0,0,0,.12);
+            rgba(0,0,0,.15);
 
           transition: .25s;
         }
 
-
         .switch input:checked + .slider {
 
           background:
-
             linear-gradient(
               135deg,
               #39b8a5,
@@ -844,30 +806,26 @@ export default function NotificationSettings() {
             );
         }
 
-
         .switch input:checked + .slider::before {
 
           transform:
-            translateX(-20px);
+            translateX(-21px);
         }
 
-
-        /* =========================================
-           RADIUS
-        ========================================= */
+        /* ================= GEOGRAPHIC CARD ================= */
 
         .radius-card {
 
-          padding: 17px;
+          padding:
+            18px;
 
           border-radius: 25px;
 
           background:
-
             linear-gradient(
               145deg,
-              rgba(255,255,255,.9),
-              rgba(224,248,243,.8)
+              var(--card-bg-1),
+              var(--card-bg-2)
             );
 
           border:
@@ -875,12 +833,8 @@ export default function NotificationSettings() {
             rgba(255,255,255,.92);
 
           box-shadow:
-
             0 12px 30px
-              rgba(42,128,128,.08),
-
-            inset 0 1px 0
-              rgba(255,255,255,.9);
+            rgba(42,128,128,.08);
 
           backdrop-filter:
             blur(14px);
@@ -889,21 +843,19 @@ export default function NotificationSettings() {
             blur(14px);
         }
 
-
         .radius-top {
 
           display: flex;
 
           align-items: center;
 
-          gap: 11px;
+          gap: 12px;
         }
-
 
         .radius-icon {
 
-          width: 45px;
-          height: 45px;
+          width: 49px;
+          height: 49px;
 
           flex-shrink: 0;
 
@@ -912,12 +864,11 @@ export default function NotificationSettings() {
           align-items: center;
           justify-content: center;
 
-          border-radius: 15px;
+          border-radius: 16px;
 
-          color: #159b8a;
+          color: var(--primary);
 
           background:
-
             linear-gradient(
               145deg,
               #e0f9f4,
@@ -925,116 +876,120 @@ export default function NotificationSettings() {
             );
         }
 
-
         .radius-icon svg {
 
-          width: 23px;
-          height: 23px;
+          width: 25px;
+          height: 25px;
         }
 
-
-        .radius-top > div:nth-child(2) {
+        .radius-info {
 
           flex: 1;
+
+          min-width: 0;
         }
 
+        .radius-info strong {
 
-        .radius-top strong {
+          display: block;
 
-          color: #286d6d;
+          color: var(--main-text);
 
-          font-size: 13px;
+          font-size: 14px;
+
+          font-weight: 800;
+
+          line-height: 1.4;
         }
 
-
-        .radius-top p {
+        .radius-info p {
 
           margin:
-            4px 0 0;
+            5px
+            0
+            0;
 
-          color: #8aa3a2;
+          color: var(--secondary-text);
 
-          font-size: 9px;
+          font-size: 10px;
 
-          line-height: 1.5;
+          line-height: 1.6;
         }
 
+        /* ================= VALUE ================= */
 
         .radius-value {
 
-          min-width: 53px;
+          min-width: 62px;
+
+          min-height: 52px;
 
           padding:
-            8px 7px;
+            6px
+            8px;
 
-          text-align: center;
+          display: flex;
 
-          border-radius: 15px;
+          align-items: center;
+          justify-content: center;
 
-          color: #159b8a;
+          gap: 4px;
+
+          border-radius: 16px;
+
+          color: var(--primary);
 
           background:
-            rgba(213,247,240,.8);
+            rgba(213,247,240,.82);
 
-          font-size: 17px;
-
-          font-weight: 900;
+          border:
+            1px solid
+            rgba(255,255,255,.55);
         }
 
+        .radius-value span {
+
+          font-size: 21px;
+
+          font-weight: 900;
+
+          line-height: 1;
+        }
 
         .radius-value small {
 
-          margin-right: 3px;
+          font-size: 10px;
 
-          font-size: 9px;
-
-          font-weight: 700;
+          font-weight: 800;
         }
 
-
-        /* =========================================
-           RANGE
-        ========================================= */
+        /* ================= RANGE ================= */
 
         .range-container {
 
-          margin-top: 19px;
+          margin-top: 22px;
         }
-
 
         .range-container input {
 
           width: 100%;
 
-          height: 6px;
+          height: 7px;
 
           appearance: none;
 
           -webkit-appearance: none;
 
+          display: block;
+
+          border: none;
+
           border-radius: 10px;
 
-          background:
-
-            linear-gradient(
-              to left,
-              #159b8a 0%,
-              #159b8a
-                calc(
-                  (var(--range-value, 5) - 1)
-                  / 19 * 100%
-                ),
-              #dcebe9
-                calc(
-                  (var(--range-value, 5) - 1)
-                  / 19 * 100%
-                ),
-              #dcebe9 100%
-            );
-
           outline: none;
-        }
 
+          cursor: pointer;
+        }
 
         .range-container input::-webkit-slider-thumb {
 
@@ -1042,47 +997,47 @@ export default function NotificationSettings() {
 
           -webkit-appearance: none;
 
-          width: 21px;
-          height: 21px;
+          width: 23px;
+          height: 23px;
 
           border-radius: 50%;
 
-          background: #159b8a;
+          background: var(--primary);
 
           border:
-            4px solid white;
+            4px solid
+            white;
 
           box-shadow:
-            0 3px 9px
-              rgba(21,155,138,.22);
+            0 3px 10px
+            rgba(21,155,138,.28);
 
           cursor: pointer;
         }
-
 
         .range-container input::-moz-range-thumb {
 
-          width: 17px;
-          height: 17px;
+          width: 18px;
+          height: 18px;
 
           border-radius: 50%;
 
-          background: #159b8a;
+          background: var(--primary);
 
           border:
-            3px solid white;
+            3px solid
+            white;
 
           box-shadow:
-            0 3px 9px
-              rgba(21,155,138,.22);
+            0 3px 10px
+            rgba(21,155,138,.28);
 
           cursor: pointer;
         }
 
-
         .range-labels {
 
-          margin-top: 7px;
+          margin-top: 9px;
 
           display: flex;
 
@@ -1090,35 +1045,37 @@ export default function NotificationSettings() {
 
           direction: ltr;
 
-          color: #91aaa8;
+          color: var(--secondary-text);
 
-          font-size: 9px;
+          font-size: 10px;
+
+          font-weight: 600;
         }
 
-
-        /* =========================================
-           NOTE
-        ========================================= */
+        /* ================= NOTE ================= */
 
         .settings-note {
 
           max-width: 520px;
 
           margin:
-            5px auto 0;
+            5px
+            auto
+            0;
 
           padding:
-            13px 15px;
+            14px
+            16px;
 
           display: flex;
 
           align-items: center;
 
-          gap: 9px;
+          gap: 10px;
 
           border-radius: 18px;
 
-          color: #5e8885;
+          color: var(--secondary-text);
 
           background:
             rgba(255,255,255,.5);
@@ -1126,522 +1083,396 @@ export default function NotificationSettings() {
           border:
             1px solid
             rgba(255,255,255,.7);
-
-          transition:
-            background .25s ease,
-            border .25s ease,
-            color .25s ease;
         }
-
 
         .settings-note svg {
 
-          width: 19px;
-          height: 19px;
+          width: 20px;
+          height: 20px;
 
           flex-shrink: 0;
 
-          color: #159b8a;
+          color: var(--primary);
         }
-
 
         .settings-note p {
 
           margin: 0;
 
-          font-size: 9px;
+          color: var(--secondary-text);
 
-          line-height: 1.6;
+          font-size: 10px;
+
+          line-height: 1.7;
         }
 
-
-        /* =========================================
+        /* =====================================================
            DARK MODE
-        ========================================= */
+           ===================================================== */
 
-        html.dark .notification-settings-page,
-        body.dark .notification-settings-page,
-        .dark .notification-settings-page {
-
-          color: #d9eeee;
-
-          background:
-
-            radial-gradient(
-              circle at 10% 5%,
-              rgba(21,155,138,.16),
-              transparent 30%
-            ),
-
-            radial-gradient(
-              circle at 95% 28%,
-              rgba(40,120,115,.14),
-              transparent 32%
-            ),
-
-            linear-gradient(
-              160deg,
-              #0d181a 0%,
-              #112326 48%,
-              #0b1719 100%
-            );
-        }
-
-
-        /* =========================================
-           DARK HEADER
-        ========================================= */
-
-        html.dark .back-button,
-        body.dark .back-button,
-        .dark .back-button {
-
-          color: #62d3c2;
-
-          background:
-            rgba(27,49,51,.88);
-
-          border-color:
-            rgba(104,194,184,.12);
-
-          box-shadow:
-
-            0 8px 20px
-              rgba(0,0,0,.25),
-
-            inset 0 1px 0
-              rgba(255,255,255,.035);
-        }
-
-
-        html.dark .settings-title-icon,
-        body.dark .settings-title-icon,
-        .dark .settings-title-icon {
-
-          color: #5dd0be;
-
-          background:
-
-            linear-gradient(
-              145deg,
-              #183b39,
-              #173331
-            );
-
-          border-color:
-            rgba(104,194,184,.10);
-
-          box-shadow:
-
-            0 8px 20px
-              rgba(0,0,0,.24),
-
-            inset 0 1px 0
-              rgba(255,255,255,.035);
-        }
-
-
-        html.dark .settings-title h1,
-        body.dark .settings-title h1,
-        .dark .settings-title h1 {
-
-          color: #67d4c3;
-        }
-
-
-        html.dark .settings-title p,
-        body.dark .settings-title p,
-        .dark .settings-title p {
-
-          color: #789796;
-        }
-
-
-        /* =========================================
-           DARK SECTION
-        ========================================= */
-
-        html.dark .section-heading h2,
-        body.dark .section-heading h2,
-        .dark .section-heading h2 {
-
-          color: #c9e6e4;
-        }
-
-
-        html.dark .section-heading span,
-        body.dark .section-heading span,
-        .dark .section-heading span {
-
-          color: #789695;
-        }
-
-
-        /* =========================================
-           DARK SETTINGS CARD
-        ========================================= */
-
-        html.dark .settings-card,
-        body.dark .settings-card,
-        .dark .settings-card {
-
-          background:
-
-            linear-gradient(
-              145deg,
-              rgba(27,50,52,.96),
-              rgba(19,39,41,.94)
-            );
-
-          border-color:
-            rgba(112,190,181,.10);
-
-          box-shadow:
-
-            0 14px 35px
-              rgba(0,0,0,.30),
-
-            inset 0 1px 0
-              rgba(255,255,255,.035);
-        }
-
-
-        html.dark .setting-row + .setting-row,
-        body.dark .setting-row + .setting-row,
-        .dark .setting-row + .setting-row {
-
-          border-top-color:
-            rgba(120,184,179,.10);
-        }
-
-
-        /* =========================================
-           DARK ICONS
-        ========================================= */
-
-        html.dark .setting-icon,
-        body.dark .setting-icon,
-        .dark .setting-icon {
-
-          color: #5bd0be;
-
-          background:
-
-            linear-gradient(
-              145deg,
-              #193d3b,
-              #173330
-            );
-        }
-
-
-        /* =========================================
-           DARK TEXT
-        ========================================= */
-
-        html.dark .setting-text strong,
-        body.dark .setting-text strong,
-        .dark .setting-text strong {
-
-          color: #c9e5e3;
-        }
-
-
-        html.dark .setting-text span,
-        body.dark .setting-text span,
-        .dark .setting-text span {
-
-          color: #7f9d9b;
-        }
-
-
-        /* =========================================
-           DARK SWITCH
-        ========================================= */
-
-        html.dark .slider,
-        body.dark .slider,
-        .dark .slider {
-
-          background: #30494b;
-        }
-
-
-        html.dark .slider::before,
-        body.dark .slider::before,
-        .dark .slider::before {
-
-          background: #d9eeee;
-
-          box-shadow:
-            0 2px 7px
-            rgba(0,0,0,.38);
-        }
-
-
-        html.dark
-        .switch input:checked + .slider,
-        body.dark
-        .switch input:checked + .slider,
-        .dark
-        .switch input:checked + .slider {
-
-          background:
-
-            linear-gradient(
-              135deg,
-              #39b8a5,
-              #159b8a
-            );
-        }
-
-
-        /* =========================================
-           DARK RADIUS
-        ========================================= */
-
-        html.dark .radius-card,
-        body.dark .radius-card,
-        .dark .radius-card {
-
-          background:
-
-            linear-gradient(
-              145deg,
-              rgba(27,51,52,.96),
-              rgba(19,41,43,.94)
-            );
-
-          border-color:
-            rgba(112,190,181,.10);
-
-          box-shadow:
-
-            0 14px 35px
-              rgba(0,0,0,.30),
-
-            inset 0 1px 0
-              rgba(255,255,255,.035);
-        }
-
-
-        html.dark .radius-icon,
-        body.dark .radius-icon,
-        .dark .radius-icon {
-
-          color: #5bd0be;
-
-          background:
-
-            linear-gradient(
-              145deg,
-              #193d3b,
-              #173330
-            );
-        }
-
-
-        html.dark .radius-top strong,
-        body.dark .radius-top strong,
-        .dark .radius-top strong {
-
-          color: #c9e5e3;
-        }
-
-
-        html.dark .radius-top p,
-        body.dark .radius-top p,
-        .dark .radius-top p {
-
-          color: #7f9d9b;
-        }
-
-
-        html.dark .radius-value,
-        body.dark .radius-value,
-        .dark .radius-value {
-
-          color: #62d3c2;
-
-          background:
-            rgba(24,82,76,.58);
-        }
-
-
-        /* =========================================
-           DARK RANGE
-        ========================================= */
-
-        html.dark .range-container input,
-        body.dark .range-container input,
-        .dark .range-container input {
-
-          background:
-
-            linear-gradient(
-              to left,
-              #159b8a 0%,
-              #159b8a
-                calc(
-                  (var(--range-value, 5) - 1)
-                  / 19 * 100%
-                ),
-              #30494b
-                calc(
-                  (var(--range-value, 5) - 1)
-                  / 19 * 100%
-                ),
-              #30494b 100%
-            );
-        }
-
-
-        html.dark
-        .range-container input::-webkit-slider-thumb,
-        body.dark
-        .range-container input::-webkit-slider-thumb,
-        .dark
-        .range-container input::-webkit-slider-thumb {
-
-          border-color:
-            #183436;
-        }
-
-
-        html.dark
-        .range-container input::-moz-range-thumb,
-        body.dark
-        .range-container input::-moz-range-thumb,
-        .dark
-        .range-container input::-moz-range-thumb {
-
-          border-color:
-            #183436;
-        }
-
-
-        html.dark .range-labels,
-        body.dark .range-labels,
-        .dark .range-labels {
-
-          color: #76918f;
-        }
-
-
-        /* =========================================
-           DARK NOTE
-        ========================================= */
-
-        html.dark .settings-note,
-        body.dark .settings-note,
-        .dark .settings-note {
-
-          color: #91b4b1;
-
-          background:
-            rgba(25,46,48,.70);
-
-          border-color:
-            rgba(113,190,182,.09);
-        }
-
-
-        html.dark .settings-note svg,
-        body.dark .settings-note svg,
-        .dark .settings-note svg {
-
-          color: #5bd0be;
-        }
-
-
-        /* =========================================
-           MOBILE
-        ========================================= */
-
-        @media (max-width: 380px) {
+        @media (prefers-color-scheme: dark) {
 
           .notification-settings-page {
 
-            padding-left: 12px;
-            padding-right: 12px;
+            --page-bg-1: #061f21;
+            --page-bg-2: #08292b;
+            --page-bg-3: #0a3234;
+
+            --card-bg-1: rgba(13,48,50,.96);
+            --card-bg-2: rgba(9,40,42,.94);
+
+            --main-text: #d8eeee;
+            --secondary-text: #9bbdbc;
+
+            --range-empty: #123b3d;
+
+            background:
+              radial-gradient(
+                circle at 10% 5%,
+                rgba(42,177,160,.12),
+                transparent 28%
+              ),
+              radial-gradient(
+                circle at 95% 28%,
+                rgba(49,154,144,.10),
+                transparent 30%
+              ),
+              linear-gradient(
+                160deg,
+                #061f21 0%,
+                #08292b 48%,
+                #0a3234 100%
+              );
           }
 
+          .back-button {
+
+            color: #61d1c1;
+
+            background:
+              rgba(255,255,255,.12);
+
+            border:
+              1px solid
+              rgba(255,255,255,.16);
+
+            box-shadow:
+              0 7px 18px
+              rgba(0,0,0,.18);
+          }
 
           .settings-title h1 {
 
-            font-size: 18px;
+            color: #70d8ca;
           }
-
 
           .settings-title p {
 
-            font-size: 9px;
+            color: #9bbdbc;
           }
 
-
           .settings-title-icon {
+
+            color: #55cdbb;
+
+            background:
+              linear-gradient(
+                145deg,
+                rgba(61,188,171,.22),
+                rgba(32,125,116,.24)
+              );
+
+            border:
+              1px solid
+              rgba(255,255,255,.10);
+          }
+
+          .section-heading h2 {
+
+            color: #d8eeee;
+          }
+
+          .section-heading span {
+
+            color: #9bbdbc;
+          }
+
+          .settings-card,
+          .radius-card {
+
+            border:
+              1px solid
+              rgba(111,205,194,.15);
+
+            box-shadow:
+              0 15px 35px
+              rgba(0,0,0,.20),
+              inset 0 1px 0
+              rgba(255,255,255,.035);
+          }
+
+          .setting-row + .setting-row {
+
+            border-top:
+              1px solid
+              rgba(111,205,194,.12);
+          }
+
+          .setting-icon,
+          .radius-icon {
+
+            color: #61d1c1;
+
+            background:
+              linear-gradient(
+                145deg,
+                rgba(64,190,174,.20),
+                rgba(31,119,112,.22)
+              );
+
+            border:
+              1px solid
+              rgba(255,255,255,.06);
+          }
+
+          .setting-text strong,
+          .radius-info strong {
+
+            color: #d8eeee;
+          }
+
+          .setting-text span,
+          .radius-info p {
+
+            color: #9bbdbc;
+          }
+
+          /* أهم تعديل: كارت النطاق في الدارك */
+
+          .radius-card {
+
+            background:
+              linear-gradient(
+                145deg,
+                #103c3e,
+                #0b2d2f
+              );
+
+            border:
+              1px solid
+              rgba(93,201,190,.20);
+          }
+
+          .radius-value {
+
+            color: #73dfcf;
+
+            background:
+              rgba(39,151,137,.20);
+
+            border:
+              1px solid
+              rgba(100,218,204,.12);
+          }
+
+          .radius-value span {
+
+            color: #75dfd0;
+          }
+
+          .radius-value small {
+
+            color: #9bbdbc;
+          }
+
+          .range-labels {
+
+            color: #9bbdbc;
+          }
+
+          .settings-note {
+
+            color: #9bbdbc;
+
+            background:
+              rgba(255,255,255,.055);
+
+            border:
+              1px solid
+              rgba(255,255,255,.08);
+          }
+
+          .settings-note p {
+
+            color: #9bbdbc;
+          }
+
+          .settings-note svg {
+
+            color: #61d1c1;
+          }
+        }
+
+        /* =====================================================
+           DARK CLASS SUPPORT
+           لو مشروعك بيستخدم class="dark"
+           ===================================================== */
+
+        .dark .notification-settings-page {
+
+          --page-bg-1: #061f21;
+          --page-bg-2: #08292b;
+          --page-bg-3: #0a3234;
+
+          --card-bg-1: rgba(13,48,50,.96);
+          --card-bg-2: rgba(9,40,42,.94);
+
+          --main-text: #d8eeee;
+          --secondary-text: #9bbdbc;
+
+          --range-empty: #123b3d;
+
+          background:
+            radial-gradient(
+              circle at 10% 5%,
+              rgba(42,177,160,.12),
+              transparent 28%
+            ),
+            radial-gradient(
+              circle at 95% 28%,
+              rgba(49,154,144,.10),
+              transparent 30%
+            ),
+            linear-gradient(
+              160deg,
+              #061f21 0%,
+              #08292b 48%,
+              #0a3234 100%
+            );
+        }
+
+        .dark .radius-card {
+
+          background:
+            linear-gradient(
+              145deg,
+              #103c3e,
+              #0b2d2f
+            );
+
+          border:
+            1px solid
+            rgba(93,201,190,.20);
+        }
+
+        .dark .section-heading h2,
+        .dark .setting-text strong,
+        .dark .radius-info strong {
+
+          color: #d8eeee;
+        }
+
+        .dark .section-heading span,
+        .dark .setting-text span,
+        .dark .radius-info p,
+        .dark .range-labels {
+
+          color: #9bbdbc;
+        }
+
+        .dark .radius-value {
+
+          color: #73dfcf;
+
+          background:
+            rgba(39,151,137,.20);
+        }
+
+        .dark .settings-card {
+
+          border-color:
+            rgba(111,205,194,.15);
+        }
+
+        .dark .setting-row + .setting-row {
+
+          border-top-color:
+            rgba(111,205,194,.12);
+        }
+
+        /* ================= MOBILE ================= */
+
+        @media (max-width: 420px) {
+
+          .notification-settings-page {
+
+            padding:
+              20px
+              14px
+              40px;
+          }
+
+          .settings-title h1 {
+
+            font-size: 20px;
+          }
+
+          .settings-title p {
+
+            font-size: 11px;
+          }
+
+          .section-heading h2 {
+
+            font-size: 17px;
+          }
+
+          .setting-row {
+
+            min-height: 80px;
+
+            padding:
+              11px
+              12px;
+
+            gap: 10px;
+          }
+
+          .setting-icon {
 
             width: 44px;
             height: 44px;
           }
 
-
-          .back-button {
-
-            width: 40px;
-            height: 40px;
-          }
-
-
-          .setting-row {
-
-            min-height: 74px;
-
-            padding:
-              9px 11px;
-
-            gap: 9px;
-          }
-
-
-          .setting-icon {
-
-            width: 39px;
-            height: 39px;
-          }
-
-
           .setting-text strong {
 
-            font-size: 12px;
+            font-size: 13px;
           }
-
 
           .setting-text span {
 
-            font-size: 8px;
+            font-size: 9px;
           }
-
-
-          .switch {
-
-            width: 42px;
-            height: 24px;
-          }
-
-
-          .slider::before {
-
-            width: 18px;
-            height: 18px;
-          }
-
 
           .radius-card {
 
-            padding: 14px;
+            padding: 16px;
           }
 
+          .radius-info strong {
+
+            font-size: 13px;
+          }
+
+          .radius-info p {
+
+            font-size: 9px;
+          }
+
+          .radius-value {
+
+            min-width: 58px;
+          }
         }
 
       `}</style>
