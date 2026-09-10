@@ -35,10 +35,6 @@ export default function Welcome() {
           color: #087f70;
         }
 
-        /* =========================
-           BACKGROUND
-        ========================= */
-
         .welcome-bg-glow {
           position: absolute;
           border-radius: 50%;
@@ -70,7 +66,6 @@ export default function Welcome() {
           background: rgba(255, 255, 255, 0.2);
         }
 
-        /* دوائر */
         .welcome-ring {
           position: absolute;
           border: 2px solid rgba(255, 255, 255, 0.55);
@@ -100,7 +95,6 @@ export default function Welcome() {
           border-width: 1px;
         }
 
-        /* علامة طبية */
         .welcome-cross {
           position: absolute;
           top: 8%;
@@ -133,7 +127,6 @@ export default function Welcome() {
           top: 18px;
         }
 
-        /* نقاط */
         .welcome-dot {
           position: absolute;
           border-radius: 50%;
@@ -160,10 +153,6 @@ export default function Welcome() {
           bottom: 23%;
           left: 14%;
         }
-
-        /* =========================
-           MAIN CONTENT
-        ========================= */
 
         .welcome-content {
           position: relative;
@@ -196,10 +185,6 @@ export default function Welcome() {
             transform: translateY(0);
           }
         }
-
-        /* =========================
-           LOGO
-        ========================= */
 
         .welcome-logo {
           position: relative;
@@ -252,10 +237,6 @@ export default function Welcome() {
           height: 85px;
         }
 
-        /* =========================
-           TITLE
-        ========================= */
-
         .welcome-title {
           margin: 0;
 
@@ -277,10 +258,6 @@ export default function Welcome() {
 
           color: #397f7a;
         }
-
-        /* =========================
-           ECG
-        ========================= */
 
         .welcome-small-ecg {
           width: 230px;
@@ -319,10 +296,6 @@ export default function Welcome() {
           }
         }
 
-        /* =========================
-           DESCRIPTION
-        ========================= */
-
         .welcome-description {
           max-width: 430px;
 
@@ -334,10 +307,6 @@ export default function Welcome() {
 
           color: #285e5a;
         }
-
-        /* =========================
-           BUTTONS
-        ========================= */
 
         .welcome-buttons {
           width: min(100%, 390px);
@@ -372,7 +341,6 @@ export default function Welcome() {
           transform: scale(0.97);
         }
 
-        /* ابدأ الآن */
         .welcome-primary {
           border: none;
 
@@ -403,7 +371,6 @@ export default function Welcome() {
           vertical-align: -2px;
         }
 
-        /* تسجيل الدخول */
         .welcome-secondary {
           border: 3px solid #0aa88f;
 
@@ -425,7 +392,6 @@ export default function Welcome() {
           font-size: 21px;
         }
 
-        /* تخطي */
         .welcome-skip {
           margin-top: 2px;
 
@@ -442,10 +408,6 @@ export default function Welcome() {
 
           cursor: pointer;
         }
-
-        /* =========================
-           BOTTOM WAVES
-        ========================= */
 
         .welcome-waves {
           position: absolute;
@@ -482,7 +444,6 @@ export default function Welcome() {
           transform: rotate(5deg);
         }
 
-        /* نبضة كبيرة أسفل الشاشة */
         .welcome-bottom-ecg {
           position: absolute;
           bottom: 18px;
@@ -507,10 +468,6 @@ export default function Welcome() {
           stroke-linecap: round;
           stroke-linejoin: round;
         }
-
-        /* =========================
-           MOBILE
-        ========================= */
 
         @media (max-width: 480px) {
           .welcome-content {
@@ -568,7 +525,6 @@ export default function Welcome() {
 
       <div className="welcome-page" dir="rtl">
 
-        {/* Background */}
         <div className="welcome-bg-glow welcome-glow-1" />
         <div className="welcome-bg-glow welcome-glow-2" />
         <div className="welcome-bg-glow welcome-glow-3" />
@@ -583,10 +539,8 @@ export default function Welcome() {
         <div className="welcome-dot welcome-dot-2" />
         <div className="welcome-dot welcome-dot-3" />
 
-        {/* Main */}
         <main className="welcome-content">
 
-          {/* Logo */}
           <div className="welcome-logo">
             <div className="welcome-logo-glow" />
 
@@ -595,7 +549,6 @@ export default function Welcome() {
                 viewBox="0 0 100 100"
                 xmlns="http://www.w3.org/2000/svg"
               >
-                {/* Heart */}
                 <path
                   d="
                     M50 82
@@ -613,7 +566,6 @@ export default function Welcome() {
                   strokeLinejoin="round"
                 />
 
-                {/* ECG */}
                 <path
                   d="
                     M23 49
@@ -634,7 +586,6 @@ export default function Welcome() {
             </div>
           </div>
 
-          {/* Title */}
           <h1 className="welcome-title">
             نبض الأمل
           </h1>
@@ -643,7 +594,6 @@ export default function Welcome() {
             استجابة طبية طارئة
           </p>
 
-          {/* ECG */}
           <svg
             className="welcome-small-ecg"
             viewBox="0 0 300 60"
@@ -670,14 +620,12 @@ export default function Welcome() {
             />
           </svg>
 
-          {/* Description */}
           <p className="welcome-description">
             منصة موثوقة تربط بين من يحتاج ومن يقدم
             <br />
             المساعدة بشكل عاجل
           </p>
 
-          {/* Buttons */}
           <div className="welcome-buttons">
 
             <button
@@ -696,9 +644,14 @@ export default function Welcome() {
               تسجيل الدخول
             </button>
 
+            {/* تم تعديل زر التخطي فقط */}
             <button
               className="welcome-skip"
-              onClick={() => navigate("/home")}
+              onClick={() => {
+                localStorage.setItem("nabd_guest", "true");
+                localStorage.removeItem("nabd_user");
+                navigate("/home");
+              }}
             >
               تخطي
             </button>
@@ -706,13 +659,11 @@ export default function Welcome() {
           </div>
         </main>
 
-        {/* Bottom waves */}
         <div className="welcome-waves">
           <div className="welcome-wave welcome-wave-1" />
           <div className="welcome-wave welcome-wave-2" />
         </div>
 
-        {/* Bottom heartbeat */}
         <svg
           className="welcome-bottom-ecg"
           viewBox="0 0 500 80"
