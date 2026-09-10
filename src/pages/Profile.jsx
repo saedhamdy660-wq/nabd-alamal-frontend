@@ -335,6 +335,10 @@ export default function Profile() {
 
   /* =========================
      THEME
+     
+     light = فاتح
+     dark  = دارك
+     system = حسب الجهاز
   ========================= */
 
   const [theme, setTheme] = useState(() => {
@@ -992,10 +996,6 @@ export default function Profile() {
           z-index: 5;
 
           padding: 0;
-
-          transition:
-            transform .15s ease,
-            box-shadow .2s ease;
         }
 
         .camera-button:active {
@@ -1345,34 +1345,25 @@ export default function Profile() {
         ================================================== */
 
         .profile-page.dark-mode {
-          min-height: 100vh;
 
-          color: #e8fffb;
+          color: #d8f3ef;
 
           background:
             radial-gradient(
-              circle at 8% 0%,
-              rgba(22,173,157,.18),
+              circle at 10% 5%,
+              rgba(35,150,140,.16),
+              transparent 28%
+            ),
+            radial-gradient(
+              circle at 95% 28%,
+              rgba(45,170,155,.12),
               transparent 30%
             ),
-
-            radial-gradient(
-              circle at 95% 25%,
-              rgba(19,126,126,.16),
-              transparent 32%
-            ),
-
-            radial-gradient(
-              circle at 50% 100%,
-              rgba(7,91,91,.16),
-              transparent 38%
-            ),
-
             linear-gradient(
-              180deg,
-              #031b1d 0%,
-              #05272a 48%,
-              #031a1c 100%
+              160deg,
+              #071f21 0%,
+              #082b2d 50%,
+              #0a3637 100%
             );
         }
 
@@ -1382,68 +1373,27 @@ export default function Profile() {
         ========================= */
 
         .profile-page.dark-mode
-        .profile-header {
-          position: relative;
-
-          padding:
-            13px 12px;
-
-          border-radius: 28px;
-
-          background:
-            linear-gradient(
-              145deg,
-              rgba(10,55,57,.90),
-              rgba(5,39,42,.78)
-            );
-
-          border:
-            1px solid
-            rgba(72,207,193,.22);
-
-          box-shadow:
-            0 12px 30px
-            rgba(0,0,0,.28),
-
-            inset 0 1px 0
-            rgba(140,255,241,.06);
-
-          backdrop-filter:
-            blur(16px);
-
-          -webkit-backdrop-filter:
-            blur(16px);
-        }
-
-        .profile-page.dark-mode
         .profile-header h1 {
-          color: #72ead7;
-
-          text-shadow:
-            0 0 18px
-            rgba(72,224,204,.20);
+          color: #65d6c5 !important;
         }
 
         .profile-page.dark-mode
         .header-back {
           background:
-            linear-gradient(
-              145deg,
-              rgba(20,92,91,.90),
-              rgba(8,58,61,.90)
-            );
+            rgba(18,55,57,.90) !important;
 
-          border-color:
-            rgba(74,218,202,.20);
+          border:
+            1px solid
+            rgba(100,205,192,.14) !important;
 
-          color: #72ead7;
+          color: #65d6c5 !important;
 
           box-shadow:
-            0 8px 20px
-            rgba(0,0,0,.28),
+            0 7px 18px
+            rgba(0,0,0,.20),
 
             inset 0 1px 0
-            rgba(255,255,255,.05);
+            rgba(255,255,255,.04);
         }
 
 
@@ -1453,77 +1403,23 @@ export default function Profile() {
 
         .profile-page.dark-mode
         .profile-card {
-          position: relative;
-
-          overflow: hidden;
-
           background:
             linear-gradient(
               145deg,
-              rgba(8,51,54,.96),
-              rgba(4,35,38,.96)
-            );
+              rgba(18,55,57,.97),
+              rgba(7,35,37,.98)
+            ) !important;
 
           border:
             1px solid
-            rgba(67,207,193,.20);
+            rgba(100,205,192,.15) !important;
 
           box-shadow:
-            0 16px 38px
-            rgba(0,0,0,.34),
+            0 12px 32px
+            rgba(0,0,0,.30),
 
             inset 0 1px 0
-            rgba(132,255,239,.06);
-
-          backdrop-filter:
-            blur(18px);
-
-          -webkit-backdrop-filter:
-            blur(18px);
-        }
-
-        .profile-page.dark-mode
-        .profile-card::before {
-          content: "";
-
-          position: absolute;
-
-          width: 180px;
-          height: 180px;
-
-          left: -80px;
-          top: -70px;
-
-          border-radius: 50%;
-
-          background:
-            rgba(27,177,160,.10);
-
-          filter: blur(10px);
-
-          pointer-events: none;
-        }
-
-        .profile-page.dark-mode
-        .profile-card::after {
-          content: "";
-
-          position: absolute;
-
-          width: 150px;
-          height: 150px;
-
-          right: -75px;
-          bottom: -70px;
-
-          border-radius: 50%;
-
-          background:
-            rgba(24,156,147,.09);
-
-          filter: blur(8px);
-
-          pointer-events: none;
+            rgba(255,255,255,.04);
         }
 
 
@@ -1533,67 +1429,43 @@ export default function Profile() {
 
         .profile-page.dark-mode
         .profile-avatar {
-          color: #72ead7;
-
-          background:
-            radial-gradient(
-              circle,
-              rgba(24,112,111,.75),
-              rgba(5,43,45,.98)
-            );
-
-          border:
-            5px solid
-            rgba(104,240,220,.92);
-
-          box-shadow:
-            0 0 0 2px
-            rgba(43,204,189,.12),
-
-            0 0 24px
-            rgba(38,207,190,.18),
-
-            0 12px 30px
-            rgba(0,0,0,.40),
-
-            inset 0 0 22px
-            rgba(66,220,204,.10);
-        }
-
-
-        /* =========================
-           DARK PLUS BUTTON
-        ========================= */
-
-        .profile-page.dark-mode
-        .camera-button {
-          width: 38px;
-          height: 38px;
-
-          color: white;
+          color: #65d6c5 !important;
 
           background:
             linear-gradient(
               145deg,
-              #18c4ae,
-              #079f90
-            );
+              #163f41,
+              #0d3032
+            ) !important;
 
-          border:
-            3px solid
-            #073d3e;
+          border-color:
+            rgba(255,255,255,.88) !important;
 
           box-shadow:
-            0 0 18px
-            rgba(31,211,190,.25),
+            0 9px 26px
+            rgba(0,0,0,.30),
 
-            0 6px 16px
-            rgba(0,0,0,.30);
+            inset 0 1px 8px
+            rgba(255,255,255,.06);
         }
 
+
+        /* =========================
+           DARK PHOTO BUTTON
+        ========================= */
+
         .profile-page.dark-mode
-        .camera-button:hover {
-          transform: scale(1.05);
+        .camera-button {
+          color: white !important;
+
+          background: #35b8a5 !important;
+
+          border-color:
+            rgba(255,255,255,.9) !important;
+
+          box-shadow:
+            0 5px 14px
+            rgba(0,0,0,.25);
         }
 
 
@@ -1603,117 +1475,132 @@ export default function Profile() {
 
         .profile-page.dark-mode
         .profile-card h2 {
-          color: #ecfffc;
-
-          text-shadow:
-            0 0 14px
-            rgba(114,234,215,.08);
+          color: #e0f7f3 !important;
         }
 
         .profile-page.dark-mode
         .profile-card p {
-          color: #91b9b6;
+          color: #91b8b5 !important;
         }
 
         .profile-page.dark-mode
         .profile-slogan {
-          color: #70e5d3;
+          color: #65d6c5 !important;
 
           background:
-            rgba(30,159,145,.18);
+            rgba(36,135,124,.20) !important;
+        }
+
+
+        /* ==================================================
+           DARK PROFILE MENU
+           مهم جدًا لإلغاء تأثير index.css
+        ================================================== */
+
+        .profile-page.dark-mode
+        .profile-menu {
+
+          background:
+            linear-gradient(
+              145deg,
+              rgba(18,55,57,.97),
+              rgba(7,35,37,.98)
+            ) !important;
 
           border:
             1px solid
-            rgba(75,216,199,.10);
+            rgba(100,205,192,.16) !important;
 
           box-shadow:
+            0 12px 30px
+            rgba(0,0,0,.30),
+
             inset 0 1px 0
-            rgba(255,255,255,.03);
+            rgba(255,255,255,.04) !important;
+
+          backdrop-filter:
+            blur(14px);
+
+          -webkit-backdrop-filter:
+            blur(14px);
         }
 
 
         /* =========================
-           DARK MENU
+           DARK MENU ITEMS
         ========================= */
 
         .profile-page.dark-mode
-        .profile-menu {
-          background:
-            linear-gradient(
-              145deg,
-              rgba(7,48,51,.97),
-              rgba(4,34,37,.97)
-            );
-
-          border:
-            1px solid
-            rgba(70,209,195,.18);
-
-          box-shadow:
-            0 16px 36px
-            rgba(0,0,0,.34),
-
-            inset 0 1px 0
-            rgba(129,255,239,.04);
-
-          backdrop-filter:
-            blur(18px);
-
-          -webkit-backdrop-filter:
-            blur(18px);
-        }
-
-        .profile-page.dark-mode
         .profile-menu-item {
-          min-height: 70px;
 
-          color: #dff8f4;
+          background:
+            transparent !important;
+
+          color:
+            #d8f3ef !important;
         }
 
         .profile-page.dark-mode
         .profile-menu-item
         + .profile-menu-item {
+
           border-top:
             1px solid
-            rgba(77,205,192,.09);
+            rgba(100,205,192,.10) !important;
         }
 
         .profile-page.dark-mode
         .profile-menu-item > span {
-          color: #e1f8f4;
+
+          color:
+            #d8f3ef !important;
         }
 
 
         /* =========================
-           DARK MENU ICON
+           DARK MENU ICONS
         ========================= */
 
         .profile-page.dark-mode
         .menu-icon {
-          color: #70ead8;
+
+          color:
+            #65d6c5 !important;
 
           background:
             linear-gradient(
               145deg,
-              rgba(39,174,158,.24),
-              rgba(17,103,100,.18)
-            );
+              rgba(54,170,155,.20),
+              rgba(32,130,120,.12)
+            ) !important;
 
           border:
             1px solid
-            rgba(81,219,202,.08);
-
-          box-shadow:
-            0 5px 15px
-            rgba(0,0,0,.14),
-
-            inset 0 1px 0
-            rgba(255,255,255,.04);
+            rgba(100,205,192,.08);
         }
 
         .profile-page.dark-mode
+        .menu-icon svg {
+          color:
+            #65d6c5 !important;
+        }
+
+
+        /* =========================
+           DARK ARROWS
+        ========================= */
+
+        .profile-page.dark-mode
         .menu-arrow {
-          color: #69b4ae;
+
+          color:
+            #79aaa5 !important;
+        }
+
+        .profile-page.dark-mode
+        .menu-arrow svg {
+          color:
+            #79aaa5 !important;
         }
 
 
@@ -1722,91 +1609,117 @@ export default function Profile() {
         ========================= */
 
         .profile-page.dark-mode
+        .danger-item {
+
+          background:
+            transparent !important;
+        }
+
+        .profile-page.dark-mode
         .danger-item .menu-icon {
-          color: #ff8b9c;
+
+          color:
+            #e58b98 !important;
 
           background:
             linear-gradient(
               145deg,
-              rgba(210,79,104,.22),
-              rgba(130,46,65,.18)
-            );
+              rgba(210,90,110,.18),
+              rgba(170,65,85,.12)
+            ) !important;
         }
 
         .profile-page.dark-mode
         .danger-item > span {
-          color: #ff8293 !important;
+
+          color:
+            #df7c8b !important;
         }
 
         .profile-page.dark-mode
         .danger-item .menu-arrow {
-          color: #dc7888;
+
+          color:
+            #c77b87 !important;
+        }
+
+
+        /* ==================================================
+           DARK BOTTOM NAVIGATION
+        ================================================== */
+
+        .profile-page.dark-mode
+        .profile-bottom-nav {
+
+          background:
+            linear-gradient(
+              145deg,
+              rgba(18,55,57,.98),
+              rgba(7,35,37,.98)
+            ) !important;
+
+          border:
+            1px solid
+            rgba(100,205,192,.16) !important;
+
+          box-shadow:
+            0 12px 32px
+            rgba(0,0,0,.35),
+
+            inset 0 1px 0
+            rgba(255,255,255,.04) !important;
+
+          backdrop-filter:
+            blur(18px);
+
+          -webkit-backdrop-filter:
+            blur(18px);
         }
 
 
         /* =========================
-           DARK BOTTOM NAV
+           DARK NAV ITEMS
         ========================= */
 
         .profile-page.dark-mode
-        .profile-bottom-nav {
+        .nav-item {
+
+          color:
+            #8eb6b2 !important;
+
           background:
-            linear-gradient(
-              145deg,
-              rgba(7,48,51,.98),
-              rgba(3,30,33,.98)
-            );
-
-          border:
-            1px solid
-            rgba(71,209,195,.18);
-
-          box-shadow:
-            0 15px 36px
-            rgba(0,0,0,.40),
-
-            inset 0 1px 0
-            rgba(128,255,239,.05);
-
-          backdrop-filter:
-            blur(20px);
-
-          -webkit-backdrop-filter:
-            blur(20px);
+            transparent !important;
         }
 
         .profile-page.dark-mode
-        .nav-item {
-          color: #83aaa7;
+        .nav-item svg {
+
+          color:
+            #8eb6b2 !important;
         }
 
         .profile-page.dark-mode
         .nav-item.active {
-          color: #70ead8;
+
+          color:
+            #65d6c5 !important;
 
           background:
-            rgba(37,178,160,.13);
+            rgba(45,170,155,.16) !important;
+        }
 
-          text-shadow:
-            0 0 12px
-            rgba(72,220,201,.18);
+        .profile-page.dark-mode
+        .nav-item.active svg {
+
+          color:
+            #65d6c5 !important;
         }
 
         .profile-page.dark-mode
         .nav-item.active::after {
-          width: 28px;
-          height: 4px;
 
           background:
-            linear-gradient(
-              90deg,
-              #48ddc6,
-              #1db39f
-            );
-
-          box-shadow:
-            0 0 10px
-            rgba(64,221,199,.35);
+            #35b8a5 !important;
         }
 
 
