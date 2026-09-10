@@ -1,11 +1,12 @@
 import React, { useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { api } from "../api.js";
 
 function getSavedUser() {
   try {
     const saved = localStorage.getItem("nabd_user");
+
     if (!saved) return null;
+
     return JSON.parse(saved);
   } catch {
     return null;
@@ -147,7 +148,7 @@ function SupportIcon() {
         strokeLinecap="round"
       />
       <path
-        d="M4 13h3v5H5a1 1 0 0 1-1-1v-4Zm16 0h-3v5h2a1 1 0 0 0 1-1v-4Z"
+        d="M4 13h3v5H5a1 1 0 0 1-1-1v-4Zm16 0h-3v5h2a1 1 0 0 1 1-1v-4Z"
         fill="none"
         stroke="currentColor"
         strokeWidth="1.8"
@@ -290,7 +291,7 @@ export default function Profile() {
   const isGuest =
     localStorage.getItem("nabd_guest") === "true";
 
-  // لو زائر لا نقرأ بيانات المستخدم القديمة
+  // قراءة بيانات المستخدم المحفوظة محليًا
   const [user, setUser] = useState(
     isGuest ? null : getSavedUser()
   );
@@ -309,11 +310,18 @@ export default function Profile() {
     const guest =
       localStorage.getItem("nabd_guest") === "true";
 
-    // الزائر لا يتم تحميل بياناته من API
+    // الزائر لا يتم تحميل بياناته
     if (guest) {
       setUser(null);
       setAvatar("");
       return;
+    }
+
+    // تحديث بيانات المستخدم من localStorage فقط
+    const savedUser = getSavedUser();
+
+    if (savedUser) {
+      setUser(savedUser);
     }
 
     // استرجاع الصورة المحفوظة
@@ -323,34 +331,6 @@ export default function Profile() {
     if (savedAvatar) {
       setAvatar(savedAvatar);
     }
-
-    api
-      .getUser()
-      .then((data) => {
-        if (data) {
-          setUser(data);
-
-          localStorage.setItem(
-            "nabd_user",
-            JSON.stringify(data)
-          );
-
-          // لو مفيش صورة محفوظة محليًا
-          // نستخدم الصورة الموجودة في بيانات المستخدم
-          if (!savedAvatar) {
-            const apiAvatar =
-              data.avatar ||
-              data.image ||
-              data.profileImage ||
-              "";
-
-            if (apiAvatar) {
-              setAvatar(apiAvatar);
-            }
-          }
-        }
-      })
-      .catch(() => {});
   }, []);
 
   // فتح معرض الصور
@@ -529,7 +509,6 @@ export default function Profile() {
           }
         />
 
-        {/* إعدادات الإشعارات */}
         <ProfileMenuItem
           icon={<BellSettingsIcon />}
           title="إعدادات الإشعارات"
@@ -538,7 +517,6 @@ export default function Profile() {
           }
         />
 
-        {/* إعدادات التطبيق */}
         <ProfileMenuItem
           icon={<SettingsIcon />}
           title="إعدادات التطبيق"
@@ -547,7 +525,6 @@ export default function Profile() {
           }
         />
 
-        {/* المساعدة والدعم */}
         <ProfileMenuItem
           icon={<SupportIcon />}
           title="المساعدة والدعم"
@@ -556,7 +533,6 @@ export default function Profile() {
           }
         />
 
-        {/* تسجيل الخروج */}
         <ProfileMenuItem
           icon={<LogoutIcon />}
           title="تسجيل الخروج"
