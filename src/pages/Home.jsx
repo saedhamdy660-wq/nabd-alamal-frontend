@@ -26,11 +26,17 @@ export default function Home() {
       .catch(() => {});
   }, []);
 
-  const userName =
-    user?.name ||
-    user?.fullName ||
-    user?.username ||
-    "بك";
+  const isGuest =
+    localStorage.getItem("nabd_guest") === "true";
+
+  const userName = isGuest
+    ? ""
+    : (
+        user?.name ||
+        user?.fullName ||
+        user?.username ||
+        ""
+      );
 
   const request = urgentRequests[0];
 
@@ -145,7 +151,7 @@ export default function Home() {
         <section className="welcome-section">
 
           <h2>
-            مرحبًا، <span>{userName}</span>
+            مرحبًا{userName ? `، ${userName}` : ""} 👋
           </h2>
 
           <p>معًا ننقذ الحياة</p>
