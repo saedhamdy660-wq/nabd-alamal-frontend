@@ -98,27 +98,23 @@ export default function FavoriteMedicines() {
   ========================================= */
 
   const getCurrentTheme = () => {
-    const savedTheme =
-      localStorage.getItem("nabd_theme");
+    const savedTheme = localStorage.getItem("nabd_theme");
 
-    if (savedTheme) {
-      return savedTheme;
-    }
-
-    // دعم الـDark Mode عن طريق html
+    /*
+      الأولوية للـ class الموجودة فعليًا
+      على html أو body
+    */
     if (
       document.documentElement.classList.contains("dark") ||
-      document.documentElement.classList.contains("dark-mode")
-    ) {
-      return "dark";
-    }
-
-    // دعم الـDark Mode عن طريق body
-    if (
+      document.documentElement.classList.contains("dark-mode") ||
       document.body.classList.contains("dark") ||
       document.body.classList.contains("dark-mode")
     ) {
       return "dark";
+    }
+
+    if (savedTheme) {
+      return savedTheme;
     }
 
     return "light";
@@ -145,7 +141,7 @@ export default function FavoriteMedicines() {
   });
 
   /* =========================================
-     متابعة تغيير الـTHEME
+     متابعة تغيير الـ THEME
   ========================================= */
 
   useEffect(() => {
@@ -156,19 +152,21 @@ export default function FavoriteMedicines() {
     // قراءة الثيم عند فتح الصفحة
     updateTheme();
 
-    // الحدث المستخدم في التطبيق
+    // الثيم داخل التطبيق
     window.addEventListener(
       "nabd-theme-change",
       updateTheme
     );
 
-    // متابعة تغييرات localStorage
+    // تغييرات localStorage
     window.addEventListener(
       "storage",
       updateTheme
     );
 
-    // مراقبة class على html و body
+    /*
+      مراقبة html
+    */
     const observer = new MutationObserver(() => {
       updateTheme();
     });
@@ -181,6 +179,9 @@ export default function FavoriteMedicines() {
       }
     );
 
+    /*
+      مراقبة body
+    */
     observer.observe(
       document.body,
       {
@@ -241,10 +242,7 @@ export default function FavoriteMedicines() {
 
   const isDark =
     theme === "dark" ||
-    (
-      theme === "system" &&
-      systemDark
-    );
+    (theme === "system" && systemDark);
 
   /* =========================================
      LOAD FAVORITES
@@ -478,6 +476,7 @@ export default function FavoriteMedicines() {
         * {
           box-sizing: border-box;
         }
+
 
         /* =========================================
            PAGE - LIGHT
