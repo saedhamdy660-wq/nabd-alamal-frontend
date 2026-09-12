@@ -95,14 +95,16 @@ export default function FavoriteMedicines() {
 
   /* =========================================
      THEME
-     ========================================= */
+  ========================================= */
 
   const [theme, setTheme] = useState(() => {
     return localStorage.getItem("nabd_theme") || "light";
   });
 
   const [systemDark, setSystemDark] = useState(() => {
-    if (typeof window === "undefined") return false;
+    if (typeof window === "undefined") {
+      return false;
+    }
 
     return (
       window.matchMedia?.(
@@ -112,42 +114,97 @@ export default function FavoriteMedicines() {
   });
 
   /* =========================================
-     LISTEN FOR THEME CHANGES
-     ========================================= */
+     APPLY THEME
+  ========================================= */
 
   useEffect(() => {
-    const updateTheme = () => {
-      setTheme(
-        localStorage.getItem("nabd_theme") || "light"
+    const applyTheme = () => {
+      const savedTheme =
+        localStorage.getItem("nabd_theme") || "light";
+
+      const mediaQuery =
+        window.matchMedia?.(
+          "(prefers-color-scheme: dark)"
+        );
+
+      const shouldDark =
+        savedTheme === "dark" ||
+        (
+          savedTheme === "system" &&
+          mediaQuery?.matches
+        );
+
+      /* HTML */
+      document.documentElement.classList.toggle(
+        "nabd-dark",
+        shouldDark
       );
+
+      /* BODY */
+      document.body.classList.toggle(
+        "nabd-dark",
+        shouldDark
+      );
+
+      setTheme(savedTheme);
+
+      if (mediaQuery) {
+        setSystemDark(mediaQuery.matches);
+      }
+    };
+
+    /* Apply when page opens */
+    applyTheme();
+
+    /* Listen to global theme changes */
+    const handleThemeChange = () => {
+      applyTheme();
     };
 
     window.addEventListener(
       "nabd-theme-change",
-      updateTheme
+      handleThemeChange
     );
 
     return () => {
       window.removeEventListener(
         "nabd-theme-change",
-        updateTheme
+        handleThemeChange
       );
     };
   }, []);
 
   /* =========================================
      SYSTEM THEME
-     ========================================= */
+  ========================================= */
 
   useEffect(() => {
-    const mediaQuery = window.matchMedia?.(
-      "(prefers-color-scheme: dark)"
-    );
+    const mediaQuery =
+      window.matchMedia?.(
+        "(prefers-color-scheme: dark)"
+      );
 
-    if (!mediaQuery) return;
+    if (!mediaQuery) {
+      return;
+    }
 
     const handleChange = (event) => {
       setSystemDark(event.matches);
+
+      const savedTheme =
+        localStorage.getItem("nabd_theme") || "light";
+
+      if (savedTheme === "system") {
+        document.documentElement.classList.toggle(
+          "nabd-dark",
+          event.matches
+        );
+
+        document.body.classList.toggle(
+          "nabd-dark",
+          event.matches
+        );
+      }
     };
 
     mediaQuery.addEventListener?.(
@@ -165,15 +222,18 @@ export default function FavoriteMedicines() {
 
   /* =========================================
      FINAL DARK STATE
-     ========================================= */
+  ========================================= */
 
   const isDark =
     theme === "dark" ||
-    (theme === "system" && systemDark);
+    (
+      theme === "system" &&
+      systemDark
+    );
 
   /* =========================================
      LOAD FAVORITES
-     ========================================= */
+  ========================================= */
 
   useEffect(() => {
     let ids = JSON.parse(
@@ -193,7 +253,9 @@ export default function FavoriteMedicines() {
       .getMedicines()
       .then((all) => {
         setFavorites(
-          all.filter((m) => ids.includes(m.id))
+          all.filter((m) =>
+            ids.includes(m.id)
+          )
         );
       })
       .catch(() => {
@@ -204,11 +266,16 @@ export default function FavoriteMedicines() {
   return (
     <div
       className={`favorites-page ${
-        isDark ? "dark-mode" : "light-mode"
+        isDark
+          ? "dark-mode"
+          : "light-mode"
       }`}
     >
 
-      {/* Header */}
+      {/* =========================================
+          HEADER
+      ========================================= */}
+
       <header className="favorites-header">
 
         <Link
@@ -220,17 +287,24 @@ export default function FavoriteMedicines() {
         </Link>
 
         <div className="favorites-header-text">
-          <h1>أدويتي المفضلة</h1>
+
+          <h1>
+            أدويتي المفضلة
+          </h1>
 
           <p>
             الأدوية التي حفظتها للوصول إليها بسرعة
           </p>
+
         </div>
 
       </header>
 
 
-      {/* Intro */}
+      {/* =========================================
+          INTRO
+      ========================================= */}
+
       <section className="favorites-intro">
 
         <div className="favorites-intro-icon">
@@ -252,7 +326,10 @@ export default function FavoriteMedicines() {
       </section>
 
 
-      {/* Medicines */}
+      {/* =========================================
+          MEDICINES
+      ========================================= */}
+
       {favorites.length > 0 ? (
 
         <div className="favorites-list">
@@ -268,7 +345,9 @@ export default function FavoriteMedicines() {
                 type="button"
                 className="medicine-card"
                 onClick={() =>
-                  navigate(`/medicines/${m.id}`)
+                  navigate(
+                    `/medicines/${m.id}`
+                  )
                 }
               >
 
@@ -301,11 +380,13 @@ export default function FavoriteMedicines() {
                           : "unavailable"
                       }
                     >
+
                       <span className="status-dot" />
 
                       {available
                         ? "متوفر"
                         : "غير متوفر"}
+
                     </span>
 
 
@@ -340,7 +421,10 @@ export default function FavoriteMedicines() {
 
       ) : (
 
-        /* Empty State */
+        /* =========================================
+           EMPTY STATE
+        ========================================= */
+
         <div className="empty-favorites">
 
           <div className="empty-favorite-icon">
@@ -368,6 +452,10 @@ export default function FavoriteMedicines() {
       )}
 
 
+      {/* =========================================
+          STYLE
+      ========================================= */}
+
       <style>{`
 
         * {
@@ -376,8 +464,8 @@ export default function FavoriteMedicines() {
 
 
         /* =========================================
-           PAGE
-           ========================================= */
+           PAGE - LIGHT
+        ========================================= */
 
         .favorites-page {
           min-height: 100vh;
@@ -413,12 +501,16 @@ export default function FavoriteMedicines() {
             Arial,
             Tahoma,
             sans-serif;
+
+          transition:
+            background .3s ease,
+            color .3s ease;
         }
 
 
         /* =========================================
            HEADER
-           ========================================= */
+        ========================================= */
 
         .favorites-header {
           max-width: 520px;
@@ -454,26 +546,21 @@ export default function FavoriteMedicines() {
 
           border:
             1px solid
-            rgba(255,255,255,.92);
+            rgba(255,255,255,.94);
 
           box-shadow:
             0 7px 18px
-              rgba(35,139,128,.08),
+            rgba(35,139,128,.08),
 
             inset 0 1px 0
-              rgba(255,255,255,.9);
+            rgba(255,255,255,.9);
 
           text-decoration: none;
 
           transition:
-            background .2s ease,
-            color .2s ease,
-            transform .2s ease;
-        }
-
-
-        .favorites-back:active {
-          transform: scale(.94);
+            background .3s ease,
+            color .3s ease,
+            border-color .3s ease;
         }
 
 
@@ -485,27 +572,28 @@ export default function FavoriteMedicines() {
 
         .favorites-header-text {
           flex: 1;
+          min-width: 0;
         }
 
 
         .favorites-header h1 {
-          margin:
-            0 0 5px;
+          margin: 0;
 
           color: #218d83;
 
-          font-size: 24px;
-
-          line-height: 1.3;
+          font-size: 25px;
 
           font-weight: 800;
+
+          line-height: 1.35;
         }
 
 
         .favorites-header p {
-          margin: 0;
+          margin:
+            4px 0 0;
 
-          color: #789897;
+          color: #829e9c;
 
           font-size: 13px;
 
@@ -515,29 +603,30 @@ export default function FavoriteMedicines() {
 
         /* =========================================
            INTRO
-           ========================================= */
+        ========================================= */
 
         .favorites-intro {
           max-width: 520px;
 
           margin:
-            0 auto 18px;
+            0 auto 17px;
 
-          padding: 17px;
+          padding:
+            16px;
 
           display: flex;
 
           align-items: center;
 
-          gap: 14px;
+          gap: 13px;
 
-          border-radius: 23px;
+          border-radius: 22px;
 
           background:
             linear-gradient(
               145deg,
-              rgba(255,255,255,.9),
-              rgba(232,249,246,.8)
+              rgba(255,255,255,.88),
+              rgba(232,249,246,.76)
             );
 
           border:
@@ -545,23 +634,28 @@ export default function FavoriteMedicines() {
             rgba(255,255,255,.94);
 
           box-shadow:
-            0 10px 25px
-              rgba(42,128,128,.07),
+            0 10px 28px
+            rgba(42,128,128,.07),
 
             inset 0 1px 0
-              rgba(255,255,255,.9);
+            rgba(255,255,255,.9);
 
           backdrop-filter:
-            blur(13px);
+            blur(14px);
 
           -webkit-backdrop-filter:
-            blur(13px);
+            blur(14px);
+
+          transition:
+            background .3s ease,
+            border-color .3s ease,
+            box-shadow .3s ease;
         }
 
 
         .favorites-intro-icon {
-          width: 52px;
-          height: 52px;
+          width: 53px;
+          height: 53px;
 
           flex-shrink: 0;
 
@@ -570,15 +664,15 @@ export default function FavoriteMedicines() {
           align-items: center;
           justify-content: center;
 
-          border-radius: 16px;
+          border-radius: 17px;
 
-          color: #c05267;
+          color: #dc6378;
 
           background:
             linear-gradient(
               145deg,
-              #ffe9ee,
-              #f8d9e1
+              #fff0f3,
+              #fbe1e7
             );
         }
 
@@ -590,20 +684,18 @@ export default function FavoriteMedicines() {
 
 
         .favorites-intro-text {
-          flex: 1;
+          min-width: 0;
         }
 
 
         .favorites-intro strong {
           display: block;
 
-          margin-bottom: 5px;
+          margin-bottom: 4px;
 
           color: #286d6d;
 
-          font-size: 16px;
-
-          line-height: 1.4;
+          font-size: 15px;
 
           font-weight: 800;
         }
@@ -614,15 +706,15 @@ export default function FavoriteMedicines() {
 
           color: #829e9c;
 
-          font-size: 13px;
+          font-size: 12px;
 
-          line-height: 1.6;
+          line-height: 1.7;
         }
 
 
         /* =========================================
-           LIST
-           ========================================= */
+           FAVORITES LIST
+        ========================================= */
 
         .favorites-list {
           max-width: 520px;
@@ -633,51 +725,51 @@ export default function FavoriteMedicines() {
 
           flex-direction: column;
 
-          gap: 12px;
+          gap: 11px;
         }
 
 
         /* =========================================
            MEDICINE CARD
-           ========================================= */
+        ========================================= */
 
         .medicine-card {
           width: 100%;
 
-          min-height: 90px;
+          min-height: 92px;
 
           padding:
-            12px 14px;
+            11px 13px;
 
           display: flex;
 
           align-items: center;
 
-          gap: 13px;
-
-          text-align: right;
+          gap: 12px;
 
           border:
             1px solid
-            rgba(255,255,255,.94);
+            rgba(255,255,255,.92);
 
-          border-radius: 22px;
+          border-radius: 21px;
 
           background:
             linear-gradient(
               145deg,
               rgba(255,255,255,.92),
-              rgba(232,249,246,.79)
+              rgba(237,250,248,.80)
             );
 
           box-shadow:
-            0 10px 25px
-              rgba(42,128,128,.07),
+            0 9px 23px
+            rgba(42,128,128,.07),
 
             inset 0 1px 0
-              rgba(255,255,255,.92);
+            rgba(255,255,255,.9);
 
           cursor: pointer;
+
+          text-align: right;
 
           font-family:
             Arial,
@@ -685,19 +777,32 @@ export default function FavoriteMedicines() {
             sans-serif;
 
           transition:
-            transform .18s ease,
-            box-shadow .18s ease;
+            transform .2s ease,
+            background .3s ease,
+            border-color .3s ease,
+            box-shadow .3s ease;
+        }
+
+
+        .medicine-card:hover {
+          transform:
+            translateY(-2px);
         }
 
 
         .medicine-card:active {
-          transform: scale(.985);
+          transform:
+            scale(.985);
         }
 
 
+        /* =========================================
+           MEDICINE ICON
+        ========================================= */
+
         .medicine-icon {
-          width: 52px;
-          height: 52px;
+          width: 53px;
+          height: 53px;
 
           flex-shrink: 0;
 
@@ -706,24 +811,28 @@ export default function FavoriteMedicines() {
           align-items: center;
           justify-content: center;
 
-          border-radius: 16px;
+          border-radius: 17px;
 
           color: #159b8a;
 
           background:
             linear-gradient(
               145deg,
-              #e1faf5,
-              #cdeee7
+              #e5faf6,
+              #d5f3ed
             );
         }
 
 
         .medicine-icon svg {
-          width: 27px;
-          height: 27px;
+          width: 28px;
+          height: 28px;
         }
 
+
+        /* =========================================
+           MEDICINE INFO
+        ========================================= */
 
         .medicine-info {
           flex: 1;
@@ -737,22 +846,22 @@ export default function FavoriteMedicines() {
 
           align-items: center;
 
-          justify-content: space-between;
-
           gap: 8px;
         }
 
 
         .medicine-title strong {
-          color: #286d6d;
+          flex: 1;
 
-          font-size: 17px;
-
-          line-height: 1.4;
-
-          font-weight: 800;
+          min-width: 0;
 
           overflow: hidden;
+
+          color: #286d6d;
+
+          font-size: 16px;
+
+          font-weight: 800;
 
           text-overflow: ellipsis;
 
@@ -761,8 +870,8 @@ export default function FavoriteMedicines() {
 
 
         .favorite-heart {
-          width: 30px;
-          height: 30px;
+          width: 31px;
+          height: 31px;
 
           flex-shrink: 0;
 
@@ -771,12 +880,12 @@ export default function FavoriteMedicines() {
           align-items: center;
           justify-content: center;
 
-          color: #c05267;
+          border-radius: 10px;
+
+          color: #dc6378;
 
           background:
-            rgba(255,230,236,.72);
-
-          border-radius: 10px;
+            rgba(255,230,235,.72);
         }
 
 
@@ -786,6 +895,10 @@ export default function FavoriteMedicines() {
         }
 
 
+        /* =========================================
+           MEDICINE DETAILS
+        ========================================= */
+
         .medicine-details {
           margin-top: 7px;
 
@@ -793,11 +906,9 @@ export default function FavoriteMedicines() {
 
           align-items: center;
 
+          flex-wrap: wrap;
+
           gap: 7px;
-
-          font-size: 12px;
-
-          line-height: 1.4;
         }
 
 
@@ -833,7 +944,8 @@ export default function FavoriteMedicines() {
 
           border-radius: 50%;
 
-          background: currentColor;
+          background:
+            currentColor;
         }
 
 
@@ -863,6 +975,10 @@ export default function FavoriteMedicines() {
         }
 
 
+        /* =========================================
+           MEDICINE ARROW
+        ========================================= */
+
         .medicine-arrow {
           width: 34px;
           height: 34px;
@@ -880,6 +996,10 @@ export default function FavoriteMedicines() {
 
           background:
             rgba(221,247,241,.72);
+
+          transition:
+            background .3s ease,
+            color .3s ease;
         }
 
 
@@ -891,7 +1011,7 @@ export default function FavoriteMedicines() {
 
         /* =========================================
            EMPTY STATE
-           ========================================= */
+        ========================================= */
 
         .empty-favorites {
           max-width: 520px;
@@ -919,7 +1039,12 @@ export default function FavoriteMedicines() {
 
           box-shadow:
             0 10px 25px
-              rgba(42,128,128,.05);
+            rgba(42,128,128,.05);
+
+          transition:
+            background .3s ease,
+            border-color .3s ease,
+            box-shadow .3s ease;
         }
 
 
@@ -982,6 +1107,10 @@ export default function FavoriteMedicines() {
         }
 
 
+        /* =========================================
+           BROWSE BUTTON
+        ========================================= */
+
         .browse-button {
           min-height: 46px;
 
@@ -1006,7 +1135,7 @@ export default function FavoriteMedicines() {
 
           box-shadow:
             0 8px 18px
-              rgba(21,155,138,.16);
+            rgba(21,155,138,.16);
 
           text-decoration: none;
 
@@ -1017,8 +1146,287 @@ export default function FavoriteMedicines() {
 
 
         /* =========================================
+           DARK MODE
+        ========================================= */
+
+        .favorites-page.dark-mode {
+          color: #d7efec;
+
+          background:
+            radial-gradient(
+              circle at 10% 5%,
+              rgba(43,157,145,.18),
+              transparent 28%
+            ),
+
+            radial-gradient(
+              circle at 95% 28%,
+              rgba(47,130,125,.14),
+              transparent 30%
+            ),
+
+            linear-gradient(
+              160deg,
+              #071f21 0%,
+              #092a2c 45%,
+              #0b3537 100%
+            ) !important;
+        }
+
+
+        /* =========================================
+           DARK HEADER
+        ========================================= */
+
+        .favorites-page.dark-mode
+        .favorites-back {
+          color: #65d6c5 !important;
+
+          background:
+            rgba(18,55,57,.90) !important;
+
+          border-color:
+            rgba(100,205,192,.15) !important;
+
+          box-shadow:
+            0 7px 18px
+            rgba(0,0,0,.20),
+
+            inset 0 1px 0
+            rgba(255,255,255,.04);
+        }
+
+
+        .favorites-page.dark-mode
+        .favorites-header h1 {
+          color: #65d6c5 !important;
+        }
+
+
+        .favorites-page.dark-mode
+        .favorites-header p {
+          color: #8eb6b2 !important;
+        }
+
+
+        /* =========================================
+           DARK INTRO
+        ========================================= */
+
+        .favorites-page.dark-mode
+        .favorites-intro {
+          background:
+            linear-gradient(
+              145deg,
+              rgba(18,55,57,.96),
+              rgba(11,47,49,.96)
+            ) !important;
+
+          border-color:
+            rgba(100,205,192,.14) !important;
+
+          box-shadow:
+            0 10px 28px
+            rgba(0,0,0,.22),
+
+            inset 0 1px 0
+            rgba(255,255,255,.04);
+        }
+
+
+        .favorites-page.dark-mode
+        .favorites-intro-icon {
+          color: #ff91a4 !important;
+
+          background:
+            linear-gradient(
+              145deg,
+              rgba(116,45,60,.55),
+              rgba(91,39,51,.55)
+            ) !important;
+        }
+
+
+        .favorites-page.dark-mode
+        .favorites-intro strong {
+          color: #c6e9e5 !important;
+        }
+
+
+        .favorites-page.dark-mode
+        .favorites-intro p {
+          color: #8ab1ae !important;
+        }
+
+
+        /* =========================================
+           DARK MEDICINE CARD
+        ========================================= */
+
+        .favorites-page.dark-mode
+        .medicine-card {
+          background:
+            linear-gradient(
+              145deg,
+              rgba(18,55,57,.97),
+              rgba(10,45,47,.97)
+            ) !important;
+
+          border-color:
+            rgba(100,205,192,.13) !important;
+
+          box-shadow:
+            0 10px 25px
+            rgba(0,0,0,.20),
+
+            inset 0 1px 0
+            rgba(255,255,255,.035);
+        }
+
+
+        .favorites-page.dark-mode
+        .medicine-card:active {
+          box-shadow:
+            0 6px 18px
+            rgba(0,0,0,.25);
+        }
+
+
+        .favorites-page.dark-mode
+        .medicine-icon {
+          color: #65d6c5 !important;
+
+          background:
+            linear-gradient(
+              145deg,
+              rgba(34,113,106,.60),
+              rgba(26,88,84,.60)
+            ) !important;
+        }
+
+
+        .favorites-page.dark-mode
+        .medicine-title strong {
+          color: #c6e9e5 !important;
+        }
+
+
+        .favorites-page.dark-mode
+        .favorite-heart {
+          color: #ff91a4 !important;
+
+          background:
+            rgba(110,48,63,.48) !important;
+        }
+
+
+        .favorites-page.dark-mode
+        .available {
+          color: #65cdb9 !important;
+        }
+
+
+        .favorites-page.dark-mode
+        .unavailable {
+          color: #ff91a4 !important;
+        }
+
+
+        .favorites-page.dark-mode
+        .separator {
+          color: #527a78 !important;
+        }
+
+
+        .favorites-page.dark-mode
+        .distance {
+          color: #8ab1ae !important;
+        }
+
+
+        .favorites-page.dark-mode
+        .medicine-arrow {
+          color: #65d6c5 !important;
+
+          background:
+            rgba(30,105,99,.48) !important;
+        }
+
+
+        /* =========================================
+           DARK EMPTY STATE
+        ========================================= */
+
+        .favorites-page.dark-mode
+        .empty-favorites {
+          background:
+            linear-gradient(
+              145deg,
+              rgba(18,55,57,.96),
+              rgba(10,45,47,.96)
+            ) !important;
+
+          border-color:
+            rgba(101,214,197,.20) !important;
+
+          box-shadow:
+            0 10px 25px
+            rgba(0,0,0,.20);
+        }
+
+
+        .favorites-page.dark-mode
+        .empty-favorite-icon {
+          color: #ff91a4 !important;
+
+          background:
+            linear-gradient(
+              145deg,
+              rgba(110,48,63,.55),
+              rgba(84,40,51,.55)
+            ) !important;
+        }
+
+
+        .favorites-page.dark-mode
+        .empty-favorites h2 {
+          color: #c6e9e5 !important;
+        }
+
+
+        .favorites-page.dark-mode
+        .empty-favorites p {
+          color: #8ab1ae !important;
+        }
+
+
+        /* =========================================
+           DARK BUTTON
+        ========================================= */
+
+        .favorites-page.dark-mode
+        .browse-button {
+          color: #062523 !important;
+
+          background:
+            linear-gradient(
+              135deg,
+              #72ddcd,
+              #35b8a5
+            ) !important;
+
+          box-shadow:
+            0 8px 20px
+            rgba(53,184,165,.18);
+        }
+
+
+        /* =========================================
            FORCE LIGHT MODE
-           ========================================= */
+           مهم جدًا:
+           يمنع CSS العالمي من جعل الصفحة Dark
+           عندما يكون الاختيار Light
+        ========================================= */
 
         .favorites-page.light-mode {
           color: #24575a !important;
@@ -1045,56 +1453,37 @@ export default function FavoriteMedicines() {
         }
 
 
-        .favorites-page.light-mode .favorites-back {
+        .favorites-page.light-mode
+        .favorites-back {
           color: #218d83 !important;
 
           background:
             rgba(255,255,255,.76) !important;
 
           border-color:
-            rgba(255,255,255,.92) !important;
+            rgba(255,255,255,.94) !important;
         }
 
 
-        .favorites-page.light-mode .favorites-header h1 {
+        .favorites-page.light-mode
+        .favorites-header h1 {
           color: #218d83 !important;
         }
 
 
-        .favorites-page.light-mode .favorites-header p {
-          color: #789897 !important;
-        }
-
-
-        .favorites-page.light-mode .favorites-intro {
-          background:
-            linear-gradient(
-              145deg,
-              rgba(255,255,255,.9),
-              rgba(232,249,246,.8)
-            ) !important;
-
-          border-color:
-            rgba(255,255,255,.94) !important;
-        }
-
-
-        .favorites-page.light-mode .favorites-intro strong {
-          color: #286d6d !important;
-        }
-
-
-        .favorites-page.light-mode .favorites-intro p {
+        .favorites-page.light-mode
+        .favorites-header p {
           color: #829e9c !important;
         }
 
 
-        .favorites-page.light-mode .medicine-card {
+        .favorites-page.light-mode
+        .favorites-intro {
           background:
             linear-gradient(
               145deg,
-              rgba(255,255,255,.92),
-              rgba(232,249,246,.79)
+              rgba(255,255,255,.88),
+              rgba(232,249,246,.76)
             ) !important;
 
           border-color:
@@ -1102,52 +1491,88 @@ export default function FavoriteMedicines() {
         }
 
 
-        .favorites-page.light-mode .medicine-title strong {
+        .favorites-page.light-mode
+        .favorites-intro strong {
           color: #286d6d !important;
         }
 
 
-        .favorites-page.light-mode .medicine-icon {
+        .favorites-page.light-mode
+        .favorites-intro p {
+          color: #829e9c !important;
+        }
+
+
+        .favorites-page.light-mode
+        .medicine-card {
+          color: #24575a !important;
+
+          background:
+            linear-gradient(
+              145deg,
+              rgba(255,255,255,.92),
+              rgba(237,250,248,.80)
+            ) !important;
+
+          border-color:
+            rgba(255,255,255,.92) !important;
+        }
+
+
+        .favorites-page.light-mode
+        .medicine-title strong {
+          color: #286d6d !important;
+        }
+
+
+        .favorites-page.light-mode
+        .medicine-icon {
           color: #159b8a !important;
 
           background:
             linear-gradient(
               145deg,
-              #e1faf5,
-              #cdeee7
+              #e5faf6,
+              #d5f3ed
             ) !important;
         }
 
 
-        .favorites-page.light-mode .favorite-heart {
-          color: #c05267 !important;
+        .favorites-page.light-mode
+        .favorite-heart {
+          color: #dc6378 !important;
 
           background:
-            rgba(255,230,236,.72) !important;
+            rgba(255,230,235,.72) !important;
         }
 
 
-        .favorites-page.light-mode .available {
+        .favorites-page.light-mode
+        .available {
           color: #2d907e !important;
         }
 
 
-        .favorites-page.light-mode .unavailable {
+        .favorites-page.light-mode
+        .unavailable {
           color: #c05267 !important;
         }
 
 
-        .favorites-page.light-mode .separator {
+        .favorites-page.light-mode
+        .separator {
           color: #b7c9c7 !important;
         }
 
 
-        .favorites-page.light-mode .distance {
+        .favorites-page.light-mode
+        .distance {
           color: #829e9c !important;
         }
 
 
-        .favorites-page.light-mode .medicine-arrow {
+        .favorites-page.light-mode
+        .medicine-arrow {
           color: #159b8a !important;
 
           background:
@@ -1155,7 +1580,8 @@ export default function FavoriteMedicines() {
         }
 
 
-        .favorites-page.light-mode .empty-favorites {
+        .favorites-page.light-mode
+        .empty-favorites {
           background:
             linear-gradient(
               145deg,
@@ -1168,291 +1594,21 @@ export default function FavoriteMedicines() {
         }
 
 
-        .favorites-page.light-mode .empty-favorite-icon {
-          color: #c05267 !important;
-
-          background:
-            linear-gradient(
-              145deg,
-              #ffecef,
-              #f8dce3
-            ) !important;
-        }
-
-
-        .favorites-page.light-mode .empty-favorites h2 {
+        .favorites-page.light-mode
+        .empty-favorites h2 {
           color: #286d6d !important;
         }
 
 
-        .favorites-page.light-mode .empty-favorites p {
+        .favorites-page.light-mode
+        .empty-favorites p {
           color: #829e9c !important;
-        }
-
-
-        .favorites-page.light-mode .browse-button {
-          color: white !important;
-
-          background:
-            linear-gradient(
-              135deg,
-              #39b8a5,
-              #159b8a
-            ) !important;
-        }
-
-
-        /* =========================================
-           DARK MODE
-           مهم:
-           الدارك هنا مربوط بـ .dark-mode
-           وليس بنظام الجهاز مباشرة
-           ========================================= */
-
-        .favorites-page.dark-mode {
-          color: #d7efec;
-
-          background:
-
-            radial-gradient(
-              circle at 10% 5%,
-              rgba(43,157,145,.18),
-              transparent 28%
-            ),
-
-            radial-gradient(
-              circle at 95% 28%,
-              rgba(47,130,125,.14),
-              transparent 30%
-            ),
-
-            linear-gradient(
-              160deg,
-              #071f21 0%,
-              #092a2c 45%,
-              #0b3537 100%
-            );
-        }
-
-
-        /* HEADER */
-
-        .favorites-page.dark-mode .favorites-back {
-          color: #65d6c5;
-
-          background:
-            rgba(18,55,57,.90);
-
-          border-color:
-            rgba(100,205,192,.15);
-
-          box-shadow:
-            0 7px 18px
-              rgba(0,0,0,.20),
-
-            inset 0 1px 0
-              rgba(255,255,255,.04);
-        }
-
-
-        .favorites-page.dark-mode .favorites-header h1 {
-          color: #65d6c5;
-        }
-
-
-        .favorites-page.dark-mode .favorites-header p {
-          color: #8eb6b2;
-        }
-
-
-        /* INTRO */
-
-        .favorites-page.dark-mode .favorites-intro {
-          background:
-            linear-gradient(
-              145deg,
-              rgba(18,55,57,.96),
-              rgba(11,47,49,.96)
-            );
-
-          border-color:
-            rgba(100,205,192,.14);
-
-          box-shadow:
-            0 10px 28px
-              rgba(0,0,0,.22),
-
-            inset 0 1px 0
-              rgba(255,255,255,.04);
-        }
-
-
-        .favorites-page.dark-mode .favorites-intro-icon {
-          color: #ff91a4;
-
-          background:
-            linear-gradient(
-              145deg,
-              rgba(116,45,60,.55),
-              rgba(91,39,51,.55)
-            );
-        }
-
-
-        .favorites-page.dark-mode .favorites-intro strong {
-          color: #c6e9e5;
-        }
-
-
-        .favorites-page.dark-mode .favorites-intro p {
-          color: #8ab1ae;
-        }
-
-
-        /* MEDICINE CARD */
-
-        .favorites-page.dark-mode .medicine-card {
-          background:
-            linear-gradient(
-              145deg,
-              rgba(18,55,57,.97),
-              rgba(10,45,47,.97)
-            );
-
-          border-color:
-            rgba(100,205,192,.13);
-
-          box-shadow:
-            0 10px 25px
-              rgba(0,0,0,.20),
-
-            inset 0 1px 0
-              rgba(255,255,255,.035);
-        }
-
-
-        .favorites-page.dark-mode .medicine-card:active {
-          box-shadow:
-            0 6px 18px
-              rgba(0,0,0,.25);
-        }
-
-
-        .favorites-page.dark-mode .medicine-icon {
-          color: #65d6c5;
-
-          background:
-            linear-gradient(
-              145deg,
-              rgba(34,113,106,.60),
-              rgba(26,88,84,.60)
-            );
-        }
-
-
-        .favorites-page.dark-mode .medicine-title strong {
-          color: #c6e9e5;
-        }
-
-
-        .favorites-page.dark-mode .favorite-heart {
-          color: #ff91a4;
-
-          background:
-            rgba(110,48,63,.48);
-        }
-
-
-        .favorites-page.dark-mode .available {
-          color: #65cdb9;
-        }
-
-
-        .favorites-page.dark-mode .unavailable {
-          color: #ff91a4;
-        }
-
-
-        .favorites-page.dark-mode .separator {
-          color: #527a78;
-        }
-
-
-        .favorites-page.dark-mode .distance {
-          color: #8ab1ae;
-        }
-
-
-        .favorites-page.dark-mode .medicine-arrow {
-          color: #65d6c5;
-
-          background:
-            rgba(30,105,99,.48);
-        }
-
-
-        /* EMPTY */
-
-        .favorites-page.dark-mode .empty-favorites {
-          background:
-            linear-gradient(
-              145deg,
-              rgba(18,55,57,.96),
-              rgba(10,45,47,.96)
-            );
-
-          border-color:
-            rgba(101,214,197,.20);
-
-          box-shadow:
-            0 10px 25px
-              rgba(0,0,0,.20);
-        }
-
-
-        .favorites-page.dark-mode .empty-favorite-icon {
-          color: #ff91a4;
-
-          background:
-            linear-gradient(
-              145deg,
-              rgba(110,48,63,.55),
-              rgba(84,40,51,.55)
-            );
-        }
-
-
-        .favorites-page.dark-mode .empty-favorites h2 {
-          color: #c6e9e5;
-        }
-
-
-        .favorites-page.dark-mode .empty-favorites p {
-          color: #8ab1ae;
-        }
-
-
-        /* BUTTON */
-
-        .favorites-page.dark-mode .browse-button {
-          color: #062523;
-
-          background:
-            linear-gradient(
-              135deg,
-              #72ddcd,
-              #35b8a5
-            );
-
-          box-shadow:
-            0 8px 20px
-              rgba(53,184,165,.18);
         }
 
 
         /* =========================================
            SMALL MOBILE
-           ========================================= */
+        ========================================= */
 
         @media (max-width: 380px) {
 
