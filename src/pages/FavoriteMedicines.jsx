@@ -114,62 +114,34 @@ export default function FavoriteMedicines() {
   });
 
   /* =========================================
-     APPLY THEME
+     READ GLOBAL THEME
+     
+     مهم:
+     الصفحة تقرأ الثيم فقط.
+     لا تقوم بتغيير html أو body.
   ========================================= */
 
   useEffect(() => {
-    const applyTheme = () => {
+    const updateTheme = () => {
       const savedTheme =
         localStorage.getItem("nabd_theme") || "light";
 
-      const mediaQuery =
-        window.matchMedia?.(
-          "(prefers-color-scheme: dark)"
-        );
-
-      const shouldDark =
-        savedTheme === "dark" ||
-        (
-          savedTheme === "system" &&
-          mediaQuery?.matches
-        );
-
-      /* HTML */
-      document.documentElement.classList.toggle(
-        "nabd-dark",
-        shouldDark
-      );
-
-      /* BODY */
-      document.body.classList.toggle(
-        "nabd-dark",
-        shouldDark
-      );
-
       setTheme(savedTheme);
-
-      if (mediaQuery) {
-        setSystemDark(mediaQuery.matches);
-      }
     };
 
-    /* Apply when page opens */
-    applyTheme();
+    // قراءة الثيم عند فتح الصفحة
+    updateTheme();
 
-    /* Listen to global theme changes */
-    const handleThemeChange = () => {
-      applyTheme();
-    };
-
+    // متابعة أي تغيير من صفحة الإعدادات
     window.addEventListener(
       "nabd-theme-change",
-      handleThemeChange
+      updateTheme
     );
 
     return () => {
       window.removeEventListener(
         "nabd-theme-change",
-        handleThemeChange
+        updateTheme
       );
     };
   }, []);
@@ -190,21 +162,6 @@ export default function FavoriteMedicines() {
 
     const handleChange = (event) => {
       setSystemDark(event.matches);
-
-      const savedTheme =
-        localStorage.getItem("nabd_theme") || "light";
-
-      if (savedTheme === "system") {
-        document.documentElement.classList.toggle(
-          "nabd-dark",
-          event.matches
-        );
-
-        document.body.classList.toggle(
-          "nabd-dark",
-          event.matches
-        );
-      }
     };
 
     mediaQuery.addEventListener?.(
@@ -1422,10 +1379,11 @@ export default function FavoriteMedicines() {
 
 
         /* =========================================
-           FORCE LIGHT MODE
-           مهم جدًا:
-           يمنع CSS العالمي من جعل الصفحة Dark
-           عندما يكون الاختيار Light
+           LIGHT MODE
+           
+           مهم:
+           بنخلي الصفحة Light فقط لما theme = light
+           من غير ما نغير الـ global theme.
         ========================================= */
 
         .favorites-page.light-mode {
@@ -1488,6 +1446,19 @@ export default function FavoriteMedicines() {
 
           border-color:
             rgba(255,255,255,.94) !important;
+        }
+
+
+        .favorites-page.light-mode
+        .favorites-intro-icon {
+          color: #dc6378 !important;
+
+          background:
+            linear-gradient(
+              145deg,
+              #fff0f3,
+              #fbe1e7
+            ) !important;
         }
 
 
@@ -1595,6 +1566,19 @@ export default function FavoriteMedicines() {
 
 
         .favorites-page.light-mode
+        .empty-favorite-icon {
+          color: #c05267 !important;
+
+          background:
+            linear-gradient(
+              145deg,
+              #ffecef,
+              #f8dce3
+            ) !important;
+        }
+
+
+        .favorites-page.light-mode
         .empty-favorites h2 {
           color: #286d6d !important;
         }
@@ -1603,6 +1587,23 @@ export default function FavoriteMedicines() {
         .favorites-page.light-mode
         .empty-favorites p {
           color: #829e9c !important;
+        }
+
+
+        .favorites-page.light-mode
+        .browse-button {
+          color: white !important;
+
+          background:
+            linear-gradient(
+              135deg,
+              #39b8a5,
+              #159b8a
+            ) !important;
+
+          box-shadow:
+            0 8px 18px
+            rgba(21,155,138,.16);
         }
 
 
