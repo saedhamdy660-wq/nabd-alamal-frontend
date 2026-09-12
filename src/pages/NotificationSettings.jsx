@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 
 const defaultSettings = [
@@ -137,7 +137,7 @@ function GiftIcon() {
         strokeWidth="1.8"
       />
       <path
-        d="M3.5 9h17M12 9v11M7 5.5c0-1 1-1.8 2-1.8 1.8 0 3 3.3 3 5.3H8.5c-.8 0-1.5-.7-1.5-1.5 0-1.1.9-2 2-2Zm10 0c0-1-1-1.8-2-1.8-1.8 0-3 3.3-3 5.3h3.5c.8 0 1.5-.7 1.5-1.5 0-1.1-.9-2-2-2Z"
+        d="M3.5 9h17M12 9v11M7 5.5c0-1 0-1.8 2-1.8 1.8 0 3 3.3 3 5.3H8.5c-.8 0-1.5-.7-1.5-1.5 0-1.1.9-2 2-2Zm10 0c0-1-1-1.8-2-1.8-1.8 0-3 3.3-3 5.3h3.5c.8 0 1.5-.7 1.5-1.5 0-1.1-.9-2-2-2Z"
         fill="none"
         stroke="currentColor"
         strokeWidth="1.5"
@@ -178,6 +178,60 @@ export default function NotificationSettings() {
   const [settings, setSettings] = useState(defaultSettings);
   const [radius, setRadius] = useState(5);
 
+  /* =====================================================
+     GLOBAL THEME
+     ===================================================== */
+
+  const [theme, setTheme] = useState(() => {
+    return localStorage.getItem("nabd_theme") || "light";
+  });
+
+  const [systemDark, setSystemDark] = useState(() => {
+    if (typeof window === "undefined") return false;
+
+    return (
+      window.matchMedia?.("(prefers-color-scheme: dark)").matches || false
+    );
+  });
+
+  /* Listen for theme changes from Profile / other pages */
+  useEffect(() => {
+    const updateTheme = () => {
+      setTheme(localStorage.getItem("nabd_theme") || "light");
+    };
+
+    window.addEventListener("nabd-theme-change", updateTheme);
+
+    return () => {
+      window.removeEventListener("nabd-theme-change", updateTheme);
+    };
+  }, []);
+
+  /* System theme listener */
+  useEffect(() => {
+    const mediaQuery = window.matchMedia?.("(prefers-color-scheme: dark)");
+
+    if (!mediaQuery) return;
+
+    const handleChange = (event) => {
+      setSystemDark(event.matches);
+    };
+
+    mediaQuery.addEventListener?.("change", handleChange);
+
+    return () => {
+      mediaQuery.removeEventListener?.("change", handleChange);
+    };
+  }, []);
+
+  const isDark =
+    theme === "dark" ||
+    (theme === "system" && systemDark);
+
+  /* =====================================================
+     NOTIFICATION TOGGLE
+     ===================================================== */
+
   const toggle = (key) => {
     setSettings((currentSettings) =>
       currentSettings.map((setting) =>
@@ -191,16 +245,18 @@ export default function NotificationSettings() {
     );
   };
 
-  // نسبة تقدم الـ range
+  /* نسبة تقدم الـ range */
   const rangePercent = ((radius - 1) / 19) * 100;
 
   return (
-    <div className="notification-settings-page">
-
+    <div
+      className={`notification-settings-page ${
+        isDark ? "dark-mode" : ""
+      }`}
+    >
       {/* ================= HEADER ================= */}
 
       <header className="settings-header">
-
         <Link
           to="/profile"
           className="back-button"
@@ -210,7 +266,6 @@ export default function NotificationSettings() {
         </Link>
 
         <div className="settings-title">
-
           <div className="settings-title-icon">
             <BellIcon />
           </div>
@@ -219,35 +274,28 @@ export default function NotificationSettings() {
             <h1>إعدادات الإشعارات</h1>
             <p>تحكم في التنبيهات التي تصلك</p>
           </div>
-
         </div>
-
       </header>
 
       {/* ================= NOTIFICATIONS ================= */}
 
       <section className="settings-section">
-
         <div className="section-heading">
           <h2>التنبيهات</h2>
           <span>اختر ما تريد استقباله</span>
         </div>
 
         <div className="settings-card">
-
           {settings.map((setting) => (
-
             <div
               key={setting.key}
               className="setting-row"
             >
-
               <div className="setting-icon">
                 {getIcon(setting.key)}
               </div>
 
               <div className="setting-text">
-
                 <strong>
                   {setting.label}
                 </strong>
@@ -255,11 +303,9 @@ export default function NotificationSettings() {
                 <span>
                   {setting.description}
                 </span>
-
               </div>
 
               <label className="switch">
-
                 <input
                   type="checkbox"
                   checked={setting.checked}
@@ -267,23 +313,16 @@ export default function NotificationSettings() {
                 />
 
                 <span className="slider"></span>
-
               </label>
-
             </div>
-
           ))}
-
         </div>
-
       </section>
 
       {/* ================= GEOGRAPHIC ================= */}
 
       <section className="settings-section geographic-section">
-
         <div className="section-heading">
-
           <h2>
             نطاق التنبيهات الجغرافية
           </h2>
@@ -291,21 +330,17 @@ export default function NotificationSettings() {
           <span>
             تحديد المسافة التي تظهر منها الحالات القريبة
           </span>
-
         </div>
 
         <div className="radius-card">
-
           {/* TOP */}
 
           <div className="radius-top">
-
             <div className="radius-icon">
               <LocationIcon />
             </div>
 
             <div className="radius-info">
-
               <strong>
                 المسافة المحيطة بك
               </strong>
@@ -314,11 +349,9 @@ export default function NotificationSettings() {
                 ستصلك التنبيهات من الحالات الموجودة
                 داخل هذه المسافة.
               </p>
-
             </div>
 
             <div className="radius-value">
-
               <span>
                 {radius}
               </span>
@@ -326,15 +359,12 @@ export default function NotificationSettings() {
               <small>
                 كم
               </small>
-
             </div>
-
           </div>
 
           {/* RANGE */}
 
           <div className="range-container">
-
             <input
               type="range"
               min="1"
@@ -355,7 +385,6 @@ export default function NotificationSettings() {
             />
 
             <div className="range-labels">
-
               <span>
                 1 كم
               </span>
@@ -363,26 +392,20 @@ export default function NotificationSettings() {
               <span>
                 20 كم
               </span>
-
             </div>
-
           </div>
-
         </div>
-
       </section>
 
       {/* ================= NOTE ================= */}
 
       <div className="settings-note">
-
         <BellIcon />
 
         <p>
           يمكنك تغيير إعدادات الإشعارات في أي وقت
           لتناسب احتياجاتك.
         </p>
-
       </div>
 
       {/* ================= CSS ================= */}
@@ -1108,217 +1131,10 @@ export default function NotificationSettings() {
 
         /* =====================================================
            DARK MODE
+           يعتمد على اختيار التطبيق وليس نظام الجهاز
            ===================================================== */
 
-        @media (prefers-color-scheme: dark) {
-
-          .notification-settings-page {
-
-            --page-bg-1: #061f21;
-            --page-bg-2: #08292b;
-            --page-bg-3: #0a3234;
-
-            --card-bg-1: rgba(13,48,50,.96);
-            --card-bg-2: rgba(9,40,42,.94);
-
-            --main-text: #d8eeee;
-            --secondary-text: #9bbdbc;
-
-            --range-empty: #123b3d;
-
-            background:
-              radial-gradient(
-                circle at 10% 5%,
-                rgba(42,177,160,.12),
-                transparent 28%
-              ),
-              radial-gradient(
-                circle at 95% 28%,
-                rgba(49,154,144,.10),
-                transparent 30%
-              ),
-              linear-gradient(
-                160deg,
-                #061f21 0%,
-                #08292b 48%,
-                #0a3234 100%
-              );
-          }
-
-          .back-button {
-
-            color: #61d1c1;
-
-            background:
-              rgba(255,255,255,.12);
-
-            border:
-              1px solid
-              rgba(255,255,255,.16);
-
-            box-shadow:
-              0 7px 18px
-              rgba(0,0,0,.18);
-          }
-
-          .settings-title h1 {
-
-            color: #70d8ca;
-          }
-
-          .settings-title p {
-
-            color: #9bbdbc;
-          }
-
-          .settings-title-icon {
-
-            color: #55cdbb;
-
-            background:
-              linear-gradient(
-                145deg,
-                rgba(61,188,171,.22),
-                rgba(32,125,116,.24)
-              );
-
-            border:
-              1px solid
-              rgba(255,255,255,.10);
-          }
-
-          .section-heading h2 {
-
-            color: #d8eeee;
-          }
-
-          .section-heading span {
-
-            color: #9bbdbc;
-          }
-
-          .settings-card,
-          .radius-card {
-
-            border:
-              1px solid
-              rgba(111,205,194,.15);
-
-            box-shadow:
-              0 15px 35px
-              rgba(0,0,0,.20),
-              inset 0 1px 0
-              rgba(255,255,255,.035);
-          }
-
-          .setting-row + .setting-row {
-
-            border-top:
-              1px solid
-              rgba(111,205,194,.12);
-          }
-
-          .setting-icon,
-          .radius-icon {
-
-            color: #61d1c1;
-
-            background:
-              linear-gradient(
-                145deg,
-                rgba(64,190,174,.20),
-                rgba(31,119,112,.22)
-              );
-
-            border:
-              1px solid
-              rgba(255,255,255,.06);
-          }
-
-          .setting-text strong,
-          .radius-info strong {
-
-            color: #d8eeee;
-          }
-
-          .setting-text span,
-          .radius-info p {
-
-            color: #9bbdbc;
-          }
-
-          /* أهم تعديل: كارت النطاق في الدارك */
-
-          .radius-card {
-
-            background:
-              linear-gradient(
-                145deg,
-                #103c3e,
-                #0b2d2f
-              );
-
-            border:
-              1px solid
-              rgba(93,201,190,.20);
-          }
-
-          .radius-value {
-
-            color: #73dfcf;
-
-            background:
-              rgba(39,151,137,.20);
-
-            border:
-              1px solid
-              rgba(100,218,204,.12);
-          }
-
-          .radius-value span {
-
-            color: #75dfd0;
-          }
-
-          .radius-value small {
-
-            color: #9bbdbc;
-          }
-
-          .range-labels {
-
-            color: #9bbdbc;
-          }
-
-          .settings-note {
-
-            color: #9bbdbc;
-
-            background:
-              rgba(255,255,255,.055);
-
-            border:
-              1px solid
-              rgba(255,255,255,.08);
-          }
-
-          .settings-note p {
-
-            color: #9bbdbc;
-          }
-
-          .settings-note svg {
-
-            color: #61d1c1;
-          }
-        }
-
-        /* =====================================================
-           DARK CLASS SUPPORT
-           لو مشروعك بيستخدم class="dark"
-           ===================================================== */
-
-        .dark .notification-settings-page {
+        .notification-settings-page.dark-mode {
 
           --page-bg-1: #061f21;
           --page-bg-2: #08292b;
@@ -1351,7 +1167,111 @@ export default function NotificationSettings() {
             );
         }
 
-        .dark .radius-card {
+        .notification-settings-page.dark-mode .back-button {
+
+          color: #61d1c1;
+
+          background:
+            rgba(255,255,255,.12);
+
+          border:
+            1px solid
+            rgba(255,255,255,.16);
+
+          box-shadow:
+            0 7px 18px
+            rgba(0,0,0,.18);
+        }
+
+        .notification-settings-page.dark-mode .settings-title h1 {
+
+          color: #70d8ca;
+        }
+
+        .notification-settings-page.dark-mode .settings-title p {
+
+          color: #9bbdbc;
+        }
+
+        .notification-settings-page.dark-mode .settings-title-icon {
+
+          color: #55cdbb;
+
+          background:
+            linear-gradient(
+              145deg,
+              rgba(61,188,171,.22),
+              rgba(32,125,116,.24)
+            );
+
+          border:
+            1px solid
+            rgba(255,255,255,.10);
+        }
+
+        .notification-settings-page.dark-mode .section-heading h2 {
+
+          color: #d8eeee;
+        }
+
+        .notification-settings-page.dark-mode .section-heading span {
+
+          color: #9bbdbc;
+        }
+
+        .notification-settings-page.dark-mode .settings-card,
+        .notification-settings-page.dark-mode .radius-card {
+
+          border:
+            1px solid
+            rgba(111,205,194,.15);
+
+          box-shadow:
+            0 15px 35px
+            rgba(0,0,0,.20),
+            inset 0 1px 0
+            rgba(255,255,255,.035);
+        }
+
+        .notification-settings-page.dark-mode .setting-row + .setting-row {
+
+          border-top:
+            1px solid
+            rgba(111,205,194,.12);
+        }
+
+        .notification-settings-page.dark-mode .setting-icon,
+        .notification-settings-page.dark-mode .radius-icon {
+
+          color: #61d1c1;
+
+          background:
+            linear-gradient(
+              145deg,
+              rgba(64,190,174,.20),
+              rgba(31,119,112,.22)
+            );
+
+          border:
+            1px solid
+            rgba(255,255,255,.06);
+        }
+
+        .notification-settings-page.dark-mode .setting-text strong,
+        .notification-settings-page.dark-mode .radius-info strong {
+
+          color: #d8eeee;
+        }
+
+        .notification-settings-page.dark-mode .setting-text span,
+        .notification-settings-page.dark-mode .radius-info p {
+
+          color: #9bbdbc;
+        }
+
+        /* أهم تعديل: كارت النطاق في الدارك */
+
+        .notification-settings-page.dark-mode .radius-card {
 
           background:
             linear-gradient(
@@ -1365,39 +1285,53 @@ export default function NotificationSettings() {
             rgba(93,201,190,.20);
         }
 
-        .dark .section-heading h2,
-        .dark .setting-text strong,
-        .dark .radius-info strong {
-
-          color: #d8eeee;
-        }
-
-        .dark .section-heading span,
-        .dark .setting-text span,
-        .dark .radius-info p,
-        .dark .range-labels {
-
-          color: #9bbdbc;
-        }
-
-        .dark .radius-value {
+        .notification-settings-page.dark-mode .radius-value {
 
           color: #73dfcf;
 
           background:
             rgba(39,151,137,.20);
+
+          border:
+            1px solid
+            rgba(100,218,204,.12);
         }
 
-        .dark .settings-card {
+        .notification-settings-page.dark-mode .radius-value span {
 
-          border-color:
-            rgba(111,205,194,.15);
+          color: #75dfd0;
         }
 
-        .dark .setting-row + .setting-row {
+        .notification-settings-page.dark-mode .radius-value small {
 
-          border-top-color:
-            rgba(111,205,194,.12);
+          color: #9bbdbc;
+        }
+
+        .notification-settings-page.dark-mode .range-labels {
+
+          color: #9bbdbc;
+        }
+
+        .notification-settings-page.dark-mode .settings-note {
+
+          color: #9bbdbc;
+
+          background:
+            rgba(255,255,255,.055);
+
+          border:
+            1px solid
+            rgba(255,255,255,.08);
+        }
+
+        .notification-settings-page.dark-mode .settings-note p {
+
+          color: #9bbdbc;
+        }
+
+        .notification-settings-page.dark-mode .settings-note svg {
+
+          color: #61d1c1;
         }
 
         /* ================= MOBILE ================= */
@@ -1476,7 +1410,6 @@ export default function NotificationSettings() {
         }
 
       `}</style>
-
     </div>
   );
 }
