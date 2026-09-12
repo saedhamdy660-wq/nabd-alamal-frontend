@@ -204,7 +204,7 @@ export default function FavoriteMedicines() {
   return (
     <div
       className={`favorites-page ${
-        isDark ? "dark-mode" : ""
+        isDark ? "dark-mode" : "light-mode"
       }`}
     >
 
@@ -1013,6 +1013,192 @@ export default function FavoriteMedicines() {
           font-size: 13px;
 
           font-weight: 800;
+        }
+
+
+        /* =========================================
+           FORCE LIGHT MODE
+           ========================================= */
+
+        .favorites-page.light-mode {
+          color: #24575a !important;
+
+          background:
+            radial-gradient(
+              circle at 10% 5%,
+              rgba(70,193,177,.17),
+              transparent 28%
+            ),
+
+            radial-gradient(
+              circle at 95% 28%,
+              rgba(154,231,216,.18),
+              transparent 30%
+            ),
+
+            linear-gradient(
+              160deg,
+              #fbffff 0%,
+              #f1fbfa 45%,
+              #e8f7f4 100%
+            ) !important;
+        }
+
+
+        .favorites-page.light-mode .favorites-back {
+          color: #218d83 !important;
+
+          background:
+            rgba(255,255,255,.76) !important;
+
+          border-color:
+            rgba(255,255,255,.92) !important;
+        }
+
+
+        .favorites-page.light-mode .favorites-header h1 {
+          color: #218d83 !important;
+        }
+
+
+        .favorites-page.light-mode .favorites-header p {
+          color: #789897 !important;
+        }
+
+
+        .favorites-page.light-mode .favorites-intro {
+          background:
+            linear-gradient(
+              145deg,
+              rgba(255,255,255,.9),
+              rgba(232,249,246,.8)
+            ) !important;
+
+          border-color:
+            rgba(255,255,255,.94) !important;
+        }
+
+
+        .favorites-page.light-mode .favorites-intro strong {
+          color: #286d6d !important;
+        }
+
+
+        .favorites-page.light-mode .favorites-intro p {
+          color: #829e9c !important;
+        }
+
+
+        .favorites-page.light-mode .medicine-card {
+          background:
+            linear-gradient(
+              145deg,
+              rgba(255,255,255,.92),
+              rgba(232,249,246,.79)
+            ) !important;
+
+          border-color:
+            rgba(255,255,255,.94) !important;
+        }
+
+
+        .favorites-page.light-mode .medicine-title strong {
+          color: #286d6d !important;
+        }
+
+
+        .favorites-page.light-mode .medicine-icon {
+          color: #159b8a !important;
+
+          background:
+            linear-gradient(
+              145deg,
+              #e1faf5,
+              #cdeee7
+            ) !important;
+        }
+
+
+        .favorites-page.light-mode .favorite-heart {
+          color: #c05267 !important;
+
+          background:
+            rgba(255,230,236,.72) !important;
+        }
+
+
+        .favorites-page.light-mode .available {
+          color: #2d907e !important;
+        }
+
+
+        .favorites-page.light-mode .unavailable {
+          color: #c05267 !important;
+        }
+
+
+        .favorites-page.light-mode .separator {
+          color: #b7c9c7 !important;
+        }
+
+
+        .favorites-page.light-mode .distance {
+          color: #829e9c !important;
+        }
+
+
+        .favorites-page.light-mode .medicine-arrow {
+          color: #159b8a !important;
+
+          background:
+            rgba(221,247,241,.72) !important;
+        }
+
+
+        .favorites-page.light-mode .empty-favorites {
+          background:
+            linear-gradient(
+              145deg,
+              rgba(255,255,255,.88),
+              rgba(232,249,246,.72)
+            ) !important;
+
+          border-color:
+            rgba(33,141,131,.17) !important;
+        }
+
+
+        .favorites-page.light-mode .empty-favorite-icon {
+          color: #c05267 !important;
+
+          background:
+            linear-gradient(
+              145deg,
+              #ffecef,
+              #f8dce3
+            ) !important;
+        }
+
+
+        .favorites-page.light-mode .empty-favorites h2 {
+          color: #286d6d !important;
+        }
+
+
+        .favorites-page.light-mode .empty-favorites p {
+          color: #829e9c !important;
+        }
+
+
+        .favorites-page.light-mode .browse-button {
+          color: white !important;
+
+          background:
+            linear-gradient(
+              135deg,
+              #39b8a5,
+              #159b8a
+            ) !important;
         }
 
 
