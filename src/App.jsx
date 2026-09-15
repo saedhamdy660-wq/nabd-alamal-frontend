@@ -8,6 +8,7 @@ import Welcome from "./pages/Welcome.jsx";
 import Login from "./pages/Login.jsx";
 import Signup from "./pages/Signup.jsx";
 import PhoneVerify from "./pages/PhoneVerify.jsx";
+import VerifyIdentity from "./pages/VerifyIdentity.jsx";
 import LocationPermission from "./pages/LocationPermission.jsx";
 
 import Home from "./pages/Home.jsx";
@@ -35,6 +36,7 @@ const noNavRoutes = [
   "/login",
   "/signup",
   "/verify-phone",
+  "/verify-identity",
   "/location-permission",
 
   "/home",
@@ -75,8 +77,15 @@ export default function App() {
     window.addEventListener("storage", applyTheme);
 
     return () => {
-      window.removeEventListener("theme-changed", applyTheme);
-      window.removeEventListener("storage", applyTheme);
+      window.removeEventListener(
+        "theme-changed",
+        applyTheme
+      );
+
+      window.removeEventListener(
+        "storage",
+        applyTheme
+      );
     };
   }, []);
 
@@ -90,14 +99,19 @@ export default function App() {
   return (
     <div
       className={`app-shell ${
-        theme === "dark" ? "theme-dark" : "theme-light"
+        theme === "dark"
+          ? "theme-dark"
+          : "theme-light"
       }`}
     >
       <Routes>
 
         {/* ================= ONBOARDING ================= */}
 
-        <Route path="/" element={<Splash />} />
+        <Route
+          path="/"
+          element={<Splash />}
+        />
 
         <Route
           path="/welcome"
@@ -117,6 +131,13 @@ export default function App() {
         <Route
           path="/verify-phone"
           element={<PhoneVerify />}
+        />
+
+        {/* ================= IDENTITY VERIFICATION ================= */}
+
+        <Route
+          path="/verify-identity"
+          element={<VerifyIdentity />}
         />
 
         <Route
