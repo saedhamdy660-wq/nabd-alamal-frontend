@@ -94,7 +94,34 @@ export default function PhoneVerify() {
       return;
     }
 
-    navigate("/location-permission");
+    /*
+      حفظ حالة تأكيد رقم الهاتف
+      بحيث لا نحتاج لتأكيده مرة أخرى
+      بعد إنشاء الحساب.
+    */
+
+    const currentUser = JSON.parse(
+      localStorage.getItem("nabd_user") || "null"
+    );
+
+    if (currentUser) {
+      const updatedUser = {
+        ...currentUser,
+        phoneVerified: true,
+      };
+
+      localStorage.setItem(
+        "nabd_user",
+        JSON.stringify(updatedUser)
+      );
+    }
+
+    /*
+      بعد تأكيد الهاتف ننتقل إلى
+      توثيق الهوية بالبطاقة الشخصية.
+    */
+
+    navigate("/verify-identity");
   };
 
   return (
