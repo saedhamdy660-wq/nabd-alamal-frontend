@@ -100,6 +100,56 @@ const PhoneIcon = () => (
   </svg>
 );
 
+const IdCardIcon = () => (
+  <svg viewBox="0 0 24 24" fill="none">
+    <rect
+      x="3"
+      y="5"
+      width="18"
+      height="14"
+      rx="2.5"
+      stroke="currentColor"
+      strokeWidth="1.8"
+    />
+
+    <circle
+      cx="8"
+      cy="10"
+      r="1.8"
+      stroke="currentColor"
+      strokeWidth="1.5"
+    />
+
+    <path
+      d="M5.5 15C6 13.7 6.8 13 8 13C9.2 13 10 13.7 10.5 15"
+      stroke="currentColor"
+      strokeWidth="1.5"
+      strokeLinecap="round"
+    />
+
+    <path
+      d="M13 9H18"
+      stroke="currentColor"
+      strokeWidth="1.6"
+      strokeLinecap="round"
+    />
+
+    <path
+      d="M13 13H18"
+      stroke="currentColor"
+      strokeWidth="1.6"
+      strokeLinecap="round"
+    />
+
+    <path
+      d="M13 16H16"
+      stroke="currentColor"
+      strokeWidth="1.6"
+      strokeLinecap="round"
+    />
+  </svg>
+);
+
 const LockIcon = () => (
   <svg viewBox="0 0 24 24" fill="none">
     <rect
@@ -162,23 +212,21 @@ const BackIcon = () => (
 export default function Signup() {
   const navigate = useNavigate();
 
-  const [accountType, setAccountType] =
-    useState("user");
+  const [accountType, setAccountType] = useState("user");
 
   const [form, setForm] = useState({
     name: "",
     email: "",
     phone: "",
+    nationalId: "",
     password: "",
     confirm: "",
     bloodType: "O+",
   });
 
-  const [showPassword, setShowPassword] =
-    useState(false);
+  const [showPassword, setShowPassword] = useState(false);
 
-  const [showConfirm, setShowConfirm] =
-    useState(false);
+  const [showConfirm, setShowConfirm] = useState(false);
 
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
@@ -190,6 +238,15 @@ export default function Signup() {
     });
   };
 
+  const handleNationalIdChange = (e) => {
+    const value = e.target.value.replace(/\D/g, "").slice(0, 14);
+
+    setForm({
+      ...form,
+      nationalId: value,
+    });
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError("");
@@ -198,6 +255,7 @@ export default function Signup() {
       !form.name ||
       !form.email ||
       !form.phone ||
+      !form.nationalId ||
       !form.password ||
       !form.confirm
     ) {
@@ -205,17 +263,18 @@ export default function Signup() {
       return;
     }
 
+    if (!/^\d{14}$/.test(form.nationalId)) {
+      setError("الرقم القومي يجب أن يتكون من 14 رقم");
+      return;
+    }
+
     if (form.password.length < 6) {
-      setError(
-        "كلمة المرور يجب أن تكون 6 أحرف على الأقل"
-      );
+      setError("كلمة المرور يجب أن تكون 6 أحرف على الأقل");
       return;
     }
 
     if (form.password !== form.confirm) {
-      setError(
-        "كلمة المرور وتأكيد كلمة المرور غير متطابقين"
-      );
+      setError("كلمة المرور وتأكيد كلمة المرور غير متطابقين");
       return;
     }
 
@@ -224,24 +283,28 @@ export default function Signup() {
 
       const user = await api.register({
         ...form,
+        nationalId: form.nationalId,
         accountType,
       });
 
       /*
-       * مهم:
        * نحفظ البيانات التي كتبها المستخدم بنفسه
        * بدل الاعتماد على البيانات التي يرجعها الـ API.
        *
-       * ده يمنع ظهور اسم قديم مثل "زوزو"
-       * في Profile أو Home.
+       * الرقم القومي يتم حفظه مؤقتًا مع بيانات الحساب
+       * لاستخدامه في خطوة توثيق الهوية التالية.
        */
       const savedUser = {
         ...user,
         name: form.name.trim(),
         email: form.email.trim(),
         phone: form.phone.trim(),
+        nationalId: form.nationalId,
         bloodType: form.bloodType,
         accountType,
+        phoneVerified: false,
+        identityVerified: false,
+        verificationStatus: "pending",
       };
 
       localStorage.setItem(
@@ -249,6 +312,11 @@ export default function Signup() {
         JSON.stringify(savedUser)
       );
 
+      /*
+       * بعد إنشاء الحساب لأول مرة:
+       * 1- تأكيد رقم الهاتف
+       * 2- بعدها توثيق الهوية
+       */
       navigate("/verify-phone");
     } catch (err) {
       setError(
@@ -320,9 +388,7 @@ export default function Signup() {
                 ? "account-type active"
                 : "account-type"
             }
-            onClick={() =>
-              setAccountType("donor")
-            }
+            onClick={() => setAccountType("donor")}
           >
             <span className="account-icon">
               <HeartIcon />
@@ -338,9 +404,7 @@ export default function Signup() {
                 ? "account-type active"
                 : "account-type"
             }
-            onClick={() =>
-              setAccountType("user")
-            }
+            onClick={() => setAccountType("user")}
           >
             <span className="account-icon">
               <UserIcon />
@@ -397,6 +461,24 @@ export default function Signup() {
             />
           </div>
 
+          {/* الرقم القومي */}
+          <div className="signup-field">
+            <div className="signup-field-icon">
+              <IdCardIcon />
+            </div>
+
+            <input
+              type="text"
+              inputMode="numeric"
+              value={form.nationalId}
+              onChange={handleNationalIdChange}
+              placeholder="الرقم القومي - 14 رقم"
+              autoComplete="off"
+              dir="ltr"
+              maxLength={14}
+            />
+          </div>
+
           <div className="signup-field">
             <div className="signup-field-icon">
               <LockIcon />
@@ -418,14 +500,10 @@ export default function Signup() {
               type="button"
               className="signup-eye"
               onClick={() =>
-                setShowPassword(
-                  !showPassword
-                )
+                setShowPassword(!showPassword)
               }
             >
-              <EyeIcon
-                off={!showPassword}
-              />
+              <EyeIcon off={!showPassword} />
             </button>
           </div>
 
@@ -450,14 +528,10 @@ export default function Signup() {
               type="button"
               className="signup-eye"
               onClick={() =>
-                setShowConfirm(
-                  !showConfirm
-                )
+                setShowConfirm(!showConfirm)
               }
             >
-              <EyeIcon
-                off={!showConfirm}
-              />
+              <EyeIcon off={!showConfirm} />
             </button>
           </div>
 
