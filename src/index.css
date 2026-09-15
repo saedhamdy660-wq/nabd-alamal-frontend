@@ -5806,3 +5806,586 @@ body.nabd-dark::before,
 body.nabd-dark::after {
   background: #071a1d !important;
 }
+/* =========================================================
+   IDENTITY VERIFICATION PAGE
+   ========================================================= */
+
+.verify-identity-page {
+  min-height: 100vh;
+  width: 100%;
+  position: relative;
+  overflow: hidden;
+  direction: rtl;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  padding: 30px 20px;
+
+  font-family: "Tajawal", sans-serif;
+
+  background:
+    radial-gradient(
+      circle at 15% 10%,
+      rgba(10, 168, 143, 0.16),
+      transparent 30%
+    ),
+    linear-gradient(
+      145deg,
+      #f4fffd 0%,
+      #e3f8f4 38%,
+      #bdeee6 70%,
+      #72d2c2 100%
+    );
+
+  color: #17332e;
+}
+
+.verify-identity-content {
+  width: 100%;
+  max-width: 430px;
+  position: relative;
+  z-index: 5;
+  text-align: center;
+}
+
+.verify-identity-logo {
+  width: 82px;
+  height: 82px;
+  margin: 0 auto 18px;
+}
+
+.verify-identity-logo svg {
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+.verify-identity-content h1 {
+  margin: 0 0 8px;
+  font-size: 28px;
+  font-weight: 800;
+  color: #173f39;
+}
+
+.verify-identity-subtitle {
+  margin: 0 auto 24px;
+  max-width: 350px;
+
+  font-size: 14px;
+  line-height: 1.8;
+
+  color: #64837e;
+}
+
+.verify-identity-note {
+  width: 100%;
+  padding: 14px 16px;
+  margin-bottom: 20px;
+
+  border-radius: 18px;
+
+  background: rgba(255, 255, 255, 0.58);
+  border: 1px solid rgba(255, 255, 255, 0.7);
+
+  box-shadow:
+    0 10px 30px rgba(7, 136, 118, 0.08);
+
+  color: #47736c;
+  font-size: 13px;
+  line-height: 1.8;
+}
+
+.verify-identity-note strong {
+  color: #078876;
+}
+
+/* =========================
+   ID CARD BOXES
+   ========================= */
+
+.verify-identity-cards {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 14px;
+  margin-bottom: 20px;
+}
+
+.verify-identity-card {
+  width: 100%;
+  min-height: 145px;
+
+  position: relative;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+
+  padding: 18px;
+
+  border-radius: 22px;
+
+  background: rgba(255, 255, 255, 0.62);
+  border: 1px solid rgba(255, 255, 255, 0.75);
+
+  box-shadow:
+    0 12px 35px rgba(7, 136, 118, 0.09);
+
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+
+  transition:
+    transform 0.2s ease,
+    box-shadow 0.2s ease,
+    border-color 0.2s ease;
+}
+
+.verify-identity-card:hover {
+  transform: translateY(-2px);
+
+  box-shadow:
+    0 16px 38px rgba(7, 136, 118, 0.13);
+}
+
+.verify-identity-card.has-image {
+  padding: 10px;
+}
+
+.verify-identity-card-title {
+  margin: 8px 0 4px;
+
+  color: #173f39;
+  font-size: 16px;
+  font-weight: 800;
+}
+
+.verify-identity-card-subtitle {
+  margin: 0;
+
+  color: #718c87;
+  font-size: 12px;
+}
+
+.verify-identity-card-icon {
+  width: 48px;
+  height: 48px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  border-radius: 15px;
+
+  color: #078876;
+
+  background: #e6f7f4;
+}
+
+.verify-identity-card-icon svg {
+  width: 26px;
+  height: 26px;
+}
+
+/* =========================
+   UPLOAD BUTTON
+   ========================= */
+
+.verify-identity-upload {
+  margin-top: 12px;
+
+  min-width: 150px;
+  height: 40px;
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+
+  padding: 0 18px;
+
+  border: none;
+  border-radius: 20px;
+
+  background: linear-gradient(
+    135deg,
+    #0aa88f,
+    #078876
+  );
+
+  color: white;
+
+  font-family: "Tajawal", sans-serif;
+  font-size: 13px;
+  font-weight: 700;
+
+  cursor: pointer;
+
+  box-shadow:
+    0 8px 20px rgba(10, 168, 143, 0.2);
+
+  transition:
+    transform 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+.verify-identity-upload:hover {
+  transform: translateY(-1px);
+
+  box-shadow:
+    0 10px 24px rgba(10, 168, 143, 0.27);
+}
+
+.verify-identity-upload:active {
+  transform: translateY(0);
+}
+
+.verify-identity-upload svg {
+  width: 18px;
+  height: 18px;
+}
+
+/* =========================
+   IMAGE PREVIEW
+   ========================= */
+
+.verify-identity-preview {
+  width: 100%;
+  height: 150px;
+
+  position: relative;
+
+  overflow: hidden;
+
+  border-radius: 17px;
+
+  background: #e8f5f2;
+}
+
+.verify-identity-preview img {
+  width: 100%;
+  height: 100%;
+
+  display: block;
+
+  object-fit: cover;
+}
+
+.verify-identity-preview-overlay {
+  position: absolute;
+  inset: 0;
+
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+
+  padding: 10px;
+
+  background: linear-gradient(
+    to top,
+    rgba(0, 0, 0, 0.48),
+    transparent 55%
+  );
+}
+
+.verify-identity-retake {
+  height: 36px;
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+
+  padding: 0 15px;
+
+  border: none;
+  border-radius: 18px;
+
+  background: rgba(255, 255, 255, 0.92);
+
+  color: #078876;
+
+  font-family: "Tajawal", sans-serif;
+  font-size: 12px;
+  font-weight: 800;
+
+  cursor: pointer;
+}
+
+.verify-identity-retake svg {
+  width: 16px;
+  height: 16px;
+}
+
+/* =========================
+   CONTINUE BUTTON
+   ========================= */
+
+.verify-identity-submit {
+  width: 100%;
+  height: 52px;
+
+  border: none;
+  border-radius: 28px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+
+  background: linear-gradient(
+    135deg,
+    #0aa88f,
+    #078876
+  );
+
+  color: white;
+
+  font-family: "Tajawal", sans-serif;
+  font-size: 15px;
+  font-weight: 800;
+
+  cursor: pointer;
+
+  box-shadow:
+    0 12px 28px rgba(10, 168, 143, 0.23);
+
+  transition:
+    opacity 0.2s ease,
+    transform 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+.verify-identity-submit:hover:not(:disabled) {
+  transform: translateY(-1px);
+
+  box-shadow:
+    0 15px 32px rgba(10, 168, 143, 0.3);
+}
+
+.verify-identity-submit:active:not(:disabled) {
+  transform: translateY(0);
+}
+
+.verify-identity-submit:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+  box-shadow: none;
+}
+
+.verify-identity-submit svg {
+  width: 20px;
+  height: 20px;
+}
+
+/* =========================
+   BACK BUTTON
+   ========================= */
+
+.verify-identity-back {
+  position: absolute;
+
+  top: 22px;
+  right: 20px;
+
+  width: 46px;
+  height: 46px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  border: 1px solid rgba(255, 255, 255, 0.72);
+  border-radius: 50%;
+
+  background: rgba(255, 255, 255, 0.48);
+
+  color: #078876;
+
+  cursor: pointer;
+
+  z-index: 10;
+
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+}
+
+.verify-identity-back svg {
+  width: 22px;
+  height: 22px;
+}
+
+/* =========================
+   DECORATION
+   ========================= */
+
+.verify-identity-orb {
+  position: absolute;
+  border-radius: 50%;
+  pointer-events: none;
+}
+
+.verify-identity-orb-1 {
+  width: 180px;
+  height: 180px;
+
+  top: -70px;
+  left: -70px;
+
+  background: rgba(10, 168, 143, 0.12);
+}
+
+.verify-identity-orb-2 {
+  width: 230px;
+  height: 230px;
+
+  right: -100px;
+  bottom: -90px;
+
+  background: rgba(7, 136, 118, 0.1);
+}
+
+.verify-identity-plus {
+  position: absolute;
+
+  color: rgba(7, 136, 118, 0.2);
+
+  font-size: 34px;
+  font-weight: 300;
+
+  pointer-events: none;
+}
+
+.verify-identity-plus.plus-1 {
+  top: 22%;
+  left: 10%;
+}
+
+.verify-identity-plus.plus-2 {
+  bottom: 20%;
+  right: 8%;
+}
+
+/* =========================
+   MOBILE
+   ========================= */
+
+@media (max-width: 480px) {
+  .verify-identity-page {
+    padding: 24px 16px;
+  }
+
+  .verify-identity-content h1 {
+    font-size: 25px;
+  }
+
+  .verify-identity-logo {
+    width: 74px;
+    height: 74px;
+    margin-bottom: 14px;
+  }
+
+  .verify-identity-subtitle {
+    font-size: 13px;
+    margin-bottom: 20px;
+  }
+
+  .verify-identity-card {
+    min-height: 135px;
+  }
+
+  .verify-identity-preview {
+    height: 135px;
+  }
+
+  .verify-identity-back {
+    top: 16px;
+    right: 16px;
+  }
+}
+
+/* =========================================================
+   IDENTITY VERIFICATION - DARK MODE
+   ========================================================= */
+
+body.nabd-dark .verify-identity-page,
+html.nabd-dark .verify-identity-page {
+  background:
+    radial-gradient(
+      circle at 15% 10%,
+      rgba(21, 155, 138, 0.12),
+      transparent 30%
+    ),
+    linear-gradient(
+      145deg,
+      #071a1d 0%,
+      #092326 55%,
+      #071a1d 100%
+    );
+
+  color: #e9ffff;
+}
+
+body.nabd-dark .verify-identity-content h1,
+html.nabd-dark .verify-identity-content h1 {
+  color: #e9ffff;
+}
+
+body.nabd-dark .verify-identity-subtitle,
+html.nabd-dark .verify-identity-subtitle {
+  color: #9bbdbc;
+}
+
+body.nabd-dark .verify-identity-note,
+html.nabd-dark .verify-identity-note {
+  background: rgba(13, 42, 46, 0.9);
+  border-color: rgba(170, 230, 225, 0.14);
+  color: #9bbdbc;
+}
+
+body.nabd-dark .verify-identity-note strong,
+html.nabd-dark .verify-identity-note strong {
+  color: #5ed9c5;
+}
+
+body.nabd-dark .verify-identity-card,
+html.nabd-dark .verify-identity-card {
+  background: #0d2a2e;
+  border-color: rgba(170, 230, 225, 0.14);
+  box-shadow: 0 12px 35px rgba(0, 0, 0, 0.2);
+}
+
+body.nabd-dark .verify-identity-card-title,
+html.nabd-dark .verify-identity-card-title {
+  color: #e9ffff;
+}
+
+body.nabd-dark .verify-identity-card-subtitle,
+html.nabd-dark .verify-identity-card-subtitle {
+  color: #9bbdbc;
+}
+
+body.nabd-dark .verify-identity-card-icon,
+html.nabd-dark .verify-identity-card-icon {
+  background: #123d40;
+  color: #5ed9c5;
+}
+
+body.nabd-dark .verify-identity-preview,
+html.nabd-dark .verify-identity-preview {
+  background: #123d40;
+}
+
+body.nabd-dark .verify-identity-back,
+html.nabd-dark .verify-identity-back {
+  background: rgba(13, 42, 46, 0.7);
+  border-color: rgba(170, 230, 225, 0.14);
+  color: #5ed9c5;
+}
+
+body.nabd-dark .verify-identity-retake,
+html.nabd-dark .verify-identity-retake {
+  background: rgba(13, 42, 46, 0.94);
+  color: #5ed9c5;
+}
