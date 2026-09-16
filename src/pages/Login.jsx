@@ -175,9 +175,19 @@ export default function Login() {
         password,
       });
 
+      // نحافظ على بيانات المستخدم القديمة وبيانات التحقق
+      const oldUser = JSON.parse(
+        localStorage.getItem("nabd_user") || "null"
+      );
+
+      const loggedInUser = {
+        ...oldUser,
+        ...user,
+      };
+
       localStorage.setItem(
         "nabd_user",
-        JSON.stringify(user)
+        JSON.stringify(loggedInUser)
       );
 
       if (remember) {
@@ -187,7 +197,8 @@ export default function Login() {
         );
       }
 
-      navigate("/verify-phone");
+      // المستخدم الموجود يدخل للصفحة الرئيسية مباشرة
+      navigate("/home");
     } catch (err) {
       setError(
         err?.message ||
