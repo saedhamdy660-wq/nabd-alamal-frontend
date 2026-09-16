@@ -1,6 +1,5 @@
 import React, { useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
-hhhhhhhh
 const Logo = () => (
   <svg viewBox="0 0 100 100" fill="none">
     <circle cx="50" cy="50" r="46" fill="url(#identityGradient)" />
