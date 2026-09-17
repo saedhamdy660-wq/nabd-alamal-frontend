@@ -8,7 +8,7 @@ import Welcome from "./pages/Welcome.jsx";
 import Login from "./pages/Login.jsx";
 import Signup from "./pages/Signup.jsx";
 import PhoneVerify from "./pages/PhoneVerify.jsx";
-import VerifyIdentity from "./pages/VerifyIdentity";
+import VerifyIdentity from "./pages/VerifyIdentity.jsx";
 import LocationPermission from "./pages/LocationPermission.jsx";
 
 import Home from "./pages/Home.jsx";
