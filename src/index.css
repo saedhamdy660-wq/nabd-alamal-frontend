@@ -6541,11 +6541,11 @@ html.nabd-dark .verify-identity-retake {
   outline: none;
   background: transparent;
 
-  color: #216d72;
+  color: #999999;
 
   font-family: inherit;
   font-size: 16px;
-  font-weight: 600;
+  font-weight: 400;
   line-height: normal;
 
   direction: rtl;
@@ -6560,9 +6560,10 @@ html.nabd-dark .verify-identity-retake {
 .signup-donor-select-field select option {
   background: white;
   color: #216d72;
+
   font-family: inherit;
   font-size: 16px;
-  font-weight: 600;
+  font-weight: 400;
 }
 
 
@@ -6585,11 +6586,11 @@ html.nabd-dark .verify-identity-retake {
   top: 50%;
   transform: translateY(-50%);
 
-  color: #216d72;
+  color: #999999;
 
   font-family: inherit;
   font-size: 16px;
-  font-weight: 600;
+  font-weight: 400;
   line-height: normal;
 
   text-align: right;
