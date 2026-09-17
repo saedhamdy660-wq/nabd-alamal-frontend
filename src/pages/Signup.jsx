@@ -221,7 +221,11 @@ export default function Signup() {
     nationalId: "",
     password: "",
     confirm: "",
+
+    // بيانات المتبرع
     bloodType: "O+",
+    lastDonation: "",
+    chronicDisease: "",
   });
 
   const [showPassword, setShowPassword] = useState(false);
@@ -245,6 +249,20 @@ export default function Signup() {
       ...form,
       nationalId: value,
     });
+  };
+
+  const handleAccountTypeChange = (type) => {
+    setAccountType(type);
+
+    // عند اختيار مستخدم عادي نمسح بيانات المتبرع
+    if (type === "user") {
+      setForm((prev) => ({
+        ...prev,
+        bloodType: "O+",
+        lastDonation: "",
+        chronicDisease: "",
+      }));
+    }
   };
 
   const handleSubmit = async (e) => {
@@ -278,21 +296,57 @@ export default function Signup() {
       return;
     }
 
+    // التحقق من بيانات المتبرع فقط
+    if (accountType === "donor") {
+      if (!form.bloodType) {
+        setError("من فضلك اختر فصيلة الدم");
+        return;
+      }
+
+      if (!form.lastDonation) {
+        setError("من فضلك أدخل تاريخ آخر تبرع بالدم");
+        return;
+      }
+
+      if (!form.chronicDisease) {
+        setError("من فضلك حدد هل لديك أمراض مزمنة أم لا");
+        return;
+      }
+    }
+
     try {
       setLoading(true);
 
-      const user = await api.register({
-        ...form,
+      const registerData = {
+        name: form.name.trim(),
+        email: form.email.trim(),
+        phone: form.phone.trim(),
         nationalId: form.nationalId,
+        password: form.password,
         accountType,
-      });
+
+        // بيانات المتبرع يتم إرسالها فقط لو الحساب متبرع
+        bloodType:
+          accountType === "donor"
+            ? form.bloodType
+            : "",
+
+        lastDonation:
+          accountType === "donor"
+            ? form.lastDonation
+            : "",
+
+        chronicDisease:
+          accountType === "donor"
+            ? form.chronicDisease === "نعم"
+            : false,
+      };
+
+      const user = await api.register(registerData);
 
       /*
        * نحفظ البيانات التي كتبها المستخدم بنفسه
        * بدل الاعتماد على البيانات التي يرجعها الـ API.
-       *
-       * الرقم القومي يتم حفظه مؤقتًا مع بيانات الحساب
-       * لاستخدامه في خطوة توثيق الهوية التالية.
        */
       const savedUser = {
         ...user,
@@ -300,7 +354,22 @@ export default function Signup() {
         email: form.email.trim(),
         phone: form.phone.trim(),
         nationalId: form.nationalId,
-        bloodType: form.bloodType,
+
+        bloodType:
+          accountType === "donor"
+            ? form.bloodType
+            : "",
+
+        lastDonation:
+          accountType === "donor"
+            ? form.lastDonation
+            : "",
+
+        chronicDisease:
+          accountType === "donor"
+            ? form.chronicDisease === "نعم"
+            : false,
+
         accountType,
         phoneVerified: false,
         identityVerified: false,
@@ -388,7 +457,9 @@ export default function Signup() {
                 ? "account-type active"
                 : "account-type"
             }
-            onClick={() => setAccountType("donor")}
+            onClick={() =>
+              handleAccountTypeChange("donor")
+            }
           >
             <span className="account-icon">
               <HeartIcon />
@@ -404,7 +475,9 @@ export default function Signup() {
                 ? "account-type active"
                 : "account-type"
             }
-            onClick={() => setAccountType("user")}
+            onClick={() =>
+              handleAccountTypeChange("user")
+            }
           >
             <span className="account-icon">
               <UserIcon />
@@ -478,6 +551,70 @@ export default function Signup() {
               maxLength={14}
             />
           </div>
+
+          {/* بيانات المتبرع */}
+          {accountType === "donor" && (
+            <>
+              <div className="signup-field">
+                <div className="signup-field-icon">
+                  <HeartIcon />
+                </div>
+
+                <input
+                  type="text"
+                  value={form.bloodType}
+                  onChange={update("bloodType")}
+                  placeholder="فصيلة الدم - مثال O+"
+                  list="blood-types"
+                  dir="ltr"
+                />
+
+                <datalist id="blood-types">
+                  <option value="A+" />
+                  <option value="A-" />
+                  <option value="B+" />
+                  <option value="B-" />
+                  <option value="AB+" />
+                  <option value="AB-" />
+                  <option value="O+" />
+                  <option value="O-" />
+                </datalist>
+              </div>
+
+              <div className="signup-field">
+                <div className="signup-field-icon">
+                  <HeartIcon />
+                </div>
+
+                <input
+                  type="date"
+                  value={form.lastDonation}
+                  onChange={update("lastDonation")}
+                  placeholder="تاريخ آخر تبرع بالدم"
+                  dir="ltr"
+                />
+              </div>
+
+              <div className="signup-field">
+                <div className="signup-field-icon">
+                  <HeartIcon />
+                </div>
+
+                <input
+                  type="text"
+                  value={form.chronicDisease}
+                  onChange={update("chronicDisease")}
+                  placeholder="هل لديك أمراض مزمنة؟ نعم / لا"
+                  list="chronic-disease-options"
+                />
+
+                <datalist id="chronic-disease-options">
+                  <option value="نعم" />
+                  <option value="لا" />
+                </datalist>
+              </div>
+            </>
+          )}
 
           <div className="signup-field">
             <div className="signup-field-icon">
