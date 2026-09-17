@@ -470,10 +470,6 @@ export default function DonorDetail() {
 
       </section>
 
-      <h2 className="details-title">
-        تفاصيل المتبرع
-      </h2>
-
       <style>{`
 
         * {
@@ -848,16 +844,6 @@ export default function DonorDetail() {
         .action-button svg {
           width: 21px;
           height: 21px;
-        }
-
-        .details-title {
-          max-width: 520px;
-          margin: 0 auto;
-
-          color: #286d6d;
-
-          font-size: 17px;
-          font-weight: 800;
         }
 
         .loading {
