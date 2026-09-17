@@ -6522,7 +6522,7 @@ html.nabd-dark .verify-identity-retake {
   font: inherit;
 }
 /* =========================
-   DONOR FIELDS - SAME AS NORMAL FIELDS
+   DONOR FIELDS
 ========================= */
 
 .signup-donor-select-field {
@@ -6539,14 +6539,14 @@ html.nabd-dark .verify-identity-retake {
 
   border: none;
   outline: none;
-
   background: transparent;
 
-  color: #7b9ea1;
+  color: #216d72;
 
   font-family: inherit;
   font-size: 16px;
   font-weight: 600;
+  line-height: normal;
 
   direction: rtl;
 
@@ -6554,14 +6554,12 @@ html.nabd-dark .verify-identity-retake {
   -webkit-appearance: none;
 
   cursor: pointer;
-
   box-sizing: border-box;
 }
 
 .signup-donor-select-field select option {
   background: white;
-  color: #245f72;
-
+  color: #216d72;
   font-family: inherit;
   font-size: 16px;
   font-weight: 600;
@@ -6569,7 +6567,7 @@ html.nabd-dark .verify-identity-retake {
 
 
 /* =========================
-   DATE
+   DONOR DATE
 ========================= */
 
 .signup-date-field {
@@ -6587,12 +6585,11 @@ html.nabd-dark .verify-identity-retake {
   top: 50%;
   transform: translateY(-50%);
 
-  color: #7b9ea1;
+  color: #216d72;
 
   font-family: inherit;
   font-size: 16px;
   font-weight: 600;
-
   line-height: normal;
 
   text-align: right;
@@ -6607,7 +6604,7 @@ html.nabd-dark .verify-identity-retake {
 }
 
 .signup-donor-date-text.selected {
-  color: #245f72;
+  color: #216d72;
 }
 
 .signup-date-field input[type="date"] {
