@@ -540,15 +540,26 @@ export default function Signup() {
 
           {accountType === "donor" && (
             <>
-              <div className="signup-field">
+              <div className="signup-field donor-field">
                 <div className="signup-field-icon">
                   <HeartIcon />
                 </div>
+
+                {!form.bloodType && (
+                  <span className="donor-placeholder">
+                    اختر فصيلة الدم
+                  </span>
+                )}
 
                 <select
                   value={form.bloodType}
                   onChange={update("bloodType")}
                   aria-label="فصيلة الدم"
+                  className={
+                    form.bloodType
+                      ? "donor-select has-value"
+                      : "donor-select"
+                  }
                 >
                   <option value="" disabled>
                     اختر فصيلة الدم
@@ -595,15 +606,26 @@ export default function Signup() {
                 />
               </div>
 
-              <div className="signup-field">
+              <div className="signup-field donor-field">
                 <div className="signup-field-icon">
                   <HeartIcon />
                 </div>
+
+                {!form.chronicDisease && (
+                  <span className="donor-placeholder">
+                    هل لديك أمراض مزمنة؟
+                  </span>
+                )}
 
                 <select
                   value={form.chronicDisease}
                   onChange={update("chronicDisease")}
                   aria-label="هل لديك أمراض مزمنة"
+                  className={
+                    form.chronicDisease
+                      ? "donor-select has-value"
+                      : "donor-select"
+                  }
                 >
                   <option value="" disabled>
                     هل لديك أمراض مزمنة؟
