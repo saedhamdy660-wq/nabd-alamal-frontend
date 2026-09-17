@@ -2,356 +2,96 @@ import React, { useRef, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import api from "../api";
 
-/* =========================
-   Logo
-========================= */
-
 const Logo = () => (
-  <svg viewBox="0 0 100 100" fill="none">
-    <circle cx="50" cy="50" r="46" fill="url(#signupLogoGradient)" />
-
+  <svg viewBox="0 0 64 64" width="64" height="64">
+    <circle cx="32" cy="32" r="30" fill="#0aa88f" />
     <path
-      d="M50 73C47 70 27 56 23 43C19 31 27 22 38 22C44 22 49 25 52 30C55 25 60 22 66 22C77 22 85 31 81 43C77 56 55 70 50 73Z"
+      d="M32 48C29 44 18 36 18 27C18 21 22 18 27 18C30 18 32 20 32 23C32 20 34 18 37 18C42 18 46 21 46 27C46 36 35 44 32 48Z"
       fill="white"
     />
-
-    <path
-      d="M20 49H34L39 41L45 57L52 34L58 49H80"
-      stroke="#0AA88F"
-      strokeWidth="4"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-    />
-
-    <defs>
-      <linearGradient
-        id="signupLogoGradient"
-        x1="15"
-        y1="15"
-        x2="85"
-        y2="85"
-      >
-        <stop stopColor="#0AA88F" />
-        <stop offset="1" stopColor="#078876" />
-      </linearGradient>
-    </defs>
   </svg>
 );
-
-/* =========================
-   User Icon
-========================= */
 
 const UserIcon = () => (
-  <svg viewBox="0 0 24 24" fill="none">
-    <circle
-      cx="12"
-      cy="8"
-      r="3.5"
-      stroke="currentColor"
-      strokeWidth="1.8"
-    />
-
-    <path
-      d="M5 20C5.8 16.7 8.2 15 12 15C15.8 15 18.2 16.7 19 20"
-      stroke="currentColor"
-      strokeWidth="1.8"
-      strokeLinecap="round"
-    />
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+    <circle cx="12" cy="8" r="4" />
+    <path d="M4 21c0-4 3.5-7 8-7s8 3 8 7" />
   </svg>
 );
-
-/* =========================
-   Heart Icon
-========================= */
 
 const HeartIcon = () => (
-  <svg viewBox="0 0 24 24" fill="none">
-    <path
-      d="M20.8 8.8C20.8 14 12 20 12 20S3.2 14 3.2 8.8C3.2 5.9 5.3 4 8 4C9.8 4 11.2 4.9 12 6.2C12.8 4.9 14.2 4 16 4C18.7 4 20.8 5.9 20.8 8.8Z"
-      stroke="currentColor"
-      strokeWidth="1.8"
-      strokeLinejoin="round"
-    />
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+    <path d="M20.8 8.8C20.8 14 12 20 12 20S3.2 14 3.2 8.8A5 5 0 0 1 12 6a5 5 0 0 1 8.8 2.8Z" />
   </svg>
 );
-
-/* =========================
-   Blood Drop Icon
-========================= */
 
 const BloodDropIcon = () => (
-  <svg viewBox="0 0 24 24" fill="none">
-    <path
-      d="M12 3C12 3 6 9.5 6 14.3C6 17.8 8.7 20.5 12 20.5C15.3 20.5 18 17.8 18 14.3C18 9.5 12 3 12 3Z"
-      stroke="currentColor"
-      strokeWidth="1.8"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-    />
+  <svg viewBox="0 0 24 24" fill="currentColor">
+    <path d="M12 2S5 10 5 15a7 7 0 0 0 14 0c0-5-7-13-7-13Z" />
   </svg>
 );
-
-/* =========================
-   Calendar Icon
-========================= */
 
 const CalendarIcon = () => (
-  <svg viewBox="0 0 24 24" fill="none">
-    <rect
-      x="3.5"
-      y="5"
-      width="17"
-      height="16"
-      rx="2.5"
-      stroke="currentColor"
-      strokeWidth="1.8"
-    />
-
-    <path
-      d="M7 3.5V7"
-      stroke="currentColor"
-      strokeWidth="1.8"
-      strokeLinecap="round"
-    />
-
-    <path
-      d="M17 3.5V7"
-      stroke="currentColor"
-      strokeWidth="1.8"
-      strokeLinecap="round"
-    />
-
-    <path
-      d="M3.5 9H20.5"
-      stroke="currentColor"
-      strokeWidth="1.8"
-    />
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+    <rect x="3" y="4" width="18" height="17" rx="2" />
+    <path d="M16 2v4M8 2v4M3 10h18" />
   </svg>
 );
-
-/* =========================
-   Plus Circle Icon
-========================= */
 
 const PlusCircleIcon = () => (
-  <svg viewBox="0 0 24 24" fill="none">
-    <circle
-      cx="12"
-      cy="12"
-      r="8.5"
-      stroke="currentColor"
-      strokeWidth="1.8"
-    />
-
-    <path
-      d="M12 8V16"
-      stroke="currentColor"
-      strokeWidth="1.8"
-      strokeLinecap="round"
-    />
-
-    <path
-      d="M8 12H16"
-      stroke="currentColor"
-      strokeWidth="1.8"
-      strokeLinecap="round"
-    />
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+    <circle cx="12" cy="12" r="9" />
+    <path d="M12 8v8M8 12h8" />
   </svg>
 );
-
-/* =========================
-   Chevron Icon
-========================= */
 
 const ChevronDownIcon = () => (
-  <svg viewBox="0 0 24 24" fill="none">
-    <path
-      d="M7 9L12 14L17 9"
-      stroke="currentColor"
-      strokeWidth="1.8"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-    />
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+    <path d="m6 9 6 6 6-6" />
   </svg>
 );
-
-/* =========================
-   Mail Icon
-========================= */
 
 const MailIcon = () => (
-  <svg viewBox="0 0 24 24" fill="none">
-    <rect
-      x="3"
-      y="5"
-      width="18"
-      height="14"
-      rx="3"
-      stroke="currentColor"
-      strokeWidth="1.8"
-    />
-
-    <path
-      d="M4 7L12 13L20 7"
-      stroke="currentColor"
-      strokeWidth="1.8"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-    />
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+    <rect x="3" y="5" width="18" height="14" rx="2" />
+    <path d="m3 7 9 6 9-6" />
   </svg>
 );
-
-/* =========================
-   Phone Icon
-========================= */
 
 const PhoneIcon = () => (
-  <svg viewBox="0 0 24 24" fill="none">
-    <path
-      d="M7 3H17C18.1 3 19 3.9 19 5V19C19 20.1 18.1 21 17 21H7C5.9 21 5 20.1 5 19V5C5 3.9 5.9 3 7 3Z"
-      stroke="currentColor"
-      strokeWidth="1.8"
-    />
-
-    <path
-      d="M9 18H15"
-      stroke="currentColor"
-      strokeWidth="1.8"
-      strokeLinecap="round"
-    />
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+    <path d="M7 3h3l2 5-2 2c1 2 2 3 4 4l2-2 5 2v3c0 1-1 2-2 2C11 19 5 13 5 5c0-1 1-2 2-2Z" />
   </svg>
 );
-
-/* =========================
-   ID Card Icon
-========================= */
 
 const IdCardIcon = () => (
-  <svg viewBox="0 0 24 24" fill="none">
-    <rect
-      x="3"
-      y="5"
-      width="18"
-      height="14"
-      rx="2.5"
-      stroke="currentColor"
-      strokeWidth="1.8"
-    />
-
-    <circle
-      cx="8"
-      cy="10"
-      r="1.8"
-      stroke="currentColor"
-      strokeWidth="1.5"
-    />
-
-    <path
-      d="M5.5 15C6 13.7 6.8 13 8 13C9.2 13 10 13.7 10.5 15"
-      stroke="currentColor"
-      strokeWidth="1.5"
-      strokeLinecap="round"
-    />
-
-    <path
-      d="M13 9H18"
-      stroke="currentColor"
-      strokeWidth="1.6"
-      strokeLinecap="round"
-    />
-
-    <path
-      d="M13 13H18"
-      stroke="currentColor"
-      strokeWidth="1.6"
-      strokeLinecap="round"
-    />
-
-    <path
-      d="M13 16H16"
-      stroke="currentColor"
-      strokeWidth="1.6"
-      strokeLinecap="round"
-    />
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+    <rect x="3" y="5" width="18" height="14" rx="2" />
+    <circle cx="8" cy="12" r="2" />
+    <path d="M13 10h5M13 14h5" />
   </svg>
 );
-
-/* =========================
-   Lock Icon
-========================= */
 
 const LockIcon = () => (
-  <svg viewBox="0 0 24 24" fill="none">
-    <rect
-      x="4"
-      y="10"
-      width="16"
-      height="11"
-      rx="3"
-      stroke="currentColor"
-      strokeWidth="1.8"
-    />
-
-    <path
-      d="M8 10V7.5C8 5 9.8 3 12 3C14.2 3 16 5 16 7.5V10"
-      stroke="currentColor"
-      strokeWidth="1.8"
-      strokeLinecap="round"
-    />
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+    <rect x="4" y="10" width="16" height="11" rx="2" />
+    <path d="M8 10V7a4 4 0 0 1 8 0v3" />
   </svg>
 );
-
-/* =========================
-   Eye Icon
-========================= */
 
 const EyeIcon = ({ off = false }) => (
-  <svg viewBox="0 0 24 24" fill="none">
-    <path
-      d="M2.5 12S6 5.5 12 5.5S21.5 12 21.5 12S18 18.5 12 18.5S2.5 12 2.5 12Z"
-      stroke="currentColor"
-      strokeWidth="1.7"
-    />
-
-    <circle
-      cx="12"
-      cy="12"
-      r="2.7"
-      stroke="currentColor"
-      strokeWidth="1.7"
-    />
-
-    {off && (
-      <path
-        d="M4 4L20 20"
-        stroke="currentColor"
-        strokeWidth="1.8"
-        strokeLinecap="round"
-      />
-    )}
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+    <path d="M2 12s3.5-6 10-6 10 6 10 6-3.5 6-10 6S2 12 2 12Z" />
+    <circle cx="12" cy="12" r="3" />
+    {off && <path d="M4 4l16 16" />}
   </svg>
 );
-
-/* =========================
-   Back Icon
-========================= */
 
 const BackIcon = () => (
-  <svg viewBox="0 0 24 24" fill="none">
-    <path
-      d="M15 18L9 12L15 6"
-      stroke="currentColor"
-      strokeWidth="2"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-    />
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+    <path d="M15 18l-6-6 6-6" />
   </svg>
 );
-
-/* =========================
-   Signup
-========================= */
 
 export default function Signup() {
   const navigate = useNavigate();
@@ -372,15 +112,10 @@ export default function Signup() {
 
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirm, setShowConfirm] = useState(false);
-
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
 
   const dateInputRef = useRef(null);
-
-  /* =========================
-     Update Form
-  ========================= */
 
   const update = (field) => (e) => {
     setForm({
@@ -389,24 +124,14 @@ export default function Signup() {
     });
   };
 
-  /* =========================
-     National ID
-  ========================= */
-
   const handleNationalIdChange = (e) => {
-    const value = e.target.value
-      .replace(/\D/g, "")
-      .slice(0, 14);
+    const value = e.target.value.replace(/\D/g, "").slice(0, 14);
 
     setForm({
       ...form,
       nationalId: value,
     });
   };
-
-  /* =========================
-     Account Type
-  ========================= */
 
   const handleAccountTypeChange = (type) => {
     setAccountType(type);
@@ -422,16 +147,9 @@ export default function Signup() {
     }
   };
 
-  /* =========================
-     Date Picker
-  ========================= */
-
   const openDatePicker = () => {
     if (dateInputRef.current) {
-      if (
-        typeof dateInputRef.current.showPicker ===
-        "function"
-      ) {
+      if (typeof dateInputRef.current.showPicker === "function") {
         dateInputRef.current.showPicker();
       } else {
         dateInputRef.current.focus();
@@ -440,13 +158,8 @@ export default function Signup() {
     }
   };
 
-  /* =========================
-     Submit
-  ========================= */
-
   const handleSubmit = async (e) => {
     e.preventDefault();
-
     setError("");
 
     if (
@@ -462,23 +175,17 @@ export default function Signup() {
     }
 
     if (!/^\d{14}$/.test(form.nationalId)) {
-      setError(
-        "الرقم القومي يجب أن يتكون من 14 رقم"
-      );
+      setError("الرقم القومي يجب أن يتكون من 14 رقم");
       return;
     }
 
     if (form.password.length < 6) {
-      setError(
-        "كلمة المرور يجب أن تكون 6 أحرف على الأقل"
-      );
+      setError("كلمة المرور يجب أن تكون 6 أحرف على الأقل");
       return;
     }
 
     if (form.password !== form.confirm) {
-      setError(
-        "كلمة المرور وتأكيد كلمة المرور غير متطابقين"
-      );
+      setError("كلمة المرور وتأكيد كلمة المرور غير متطابقين");
       return;
     }
 
@@ -489,16 +196,12 @@ export default function Signup() {
       }
 
       if (!form.lastDonation) {
-        setError(
-          "من فضلك أدخل تاريخ آخر تبرع بالدم"
-        );
+        setError("من فضلك أدخل تاريخ آخر تبرع بالدم");
         return;
       }
 
       if (!form.chronicDisease) {
-        setError(
-          "من فضلك حدد هل لديك أمراض مزمنة أم لا"
-        );
+        setError("من فضلك حدد هل لديك أمراض مزمنة أم لا");
         return;
       }
     }
@@ -513,17 +216,8 @@ export default function Signup() {
         nationalId: form.nationalId,
         password: form.password,
         accountType,
-
-        bloodType:
-          accountType === "donor"
-            ? form.bloodType
-            : "",
-
-        lastDonation:
-          accountType === "donor"
-            ? form.lastDonation
-            : "",
-
+        bloodType: accountType === "donor" ? form.bloodType : "",
+        lastDonation: accountType === "donor" ? form.lastDonation : "",
         chronicDisease:
           accountType === "donor"
             ? form.chronicDisease === "نعم"
@@ -532,45 +226,27 @@ export default function Signup() {
 
       const savedUser = {
         ...user,
-
         name: form.name.trim(),
         email: form.email.trim(),
         phone: form.phone.trim(),
         nationalId: form.nationalId,
-
-        bloodType:
-          accountType === "donor"
-            ? form.bloodType
-            : "",
-
-        lastDonation:
-          accountType === "donor"
-            ? form.lastDonation
-            : "",
-
+        bloodType: accountType === "donor" ? form.bloodType : "",
+        lastDonation: accountType === "donor" ? form.lastDonation : "",
         chronicDisease:
           accountType === "donor"
             ? form.chronicDisease === "نعم"
             : false,
-
         accountType,
-
         phoneVerified: false,
         identityVerified: false,
         verificationStatus: "pending",
       };
 
-      localStorage.setItem(
-        "nabd_user",
-        JSON.stringify(savedUser)
-      );
+      localStorage.setItem("nabd_user", JSON.stringify(savedUser));
 
       navigate("/verify-phone");
     } catch (err) {
-      setError(
-        err?.message ||
-          "حدث خطأ أثناء إنشاء الحساب"
-      );
+      setError(err?.message || "حدث خطأ أثناء إنشاء الحساب");
     } finally {
       setLoading(false);
     }
@@ -578,132 +254,78 @@ export default function Signup() {
 
   return (
     <div className="signup-page">
-
-      {/* =================================================
-          توحيد شكل ومكان النصوص داخل الحقول
-      ================================================= */}
-
       <style>{`
-
-        /* =========================================
-           الحقل الأساسي
-        ========================================= */
-
         .signup-field {
           position: relative !important;
           direction: rtl !important;
           box-sizing: border-box !important;
         }
 
-
-        /* =========================================
-           جميع الـ Inputs
-        ========================================= */
-
         .signup-field input {
           width: 100% !important;
           box-sizing: border-box !important;
-
           direction: rtl !important;
           text-align: right !important;
-
-          padding-right: 68px !important;
-          padding-left: 58px !important;
-
+          padding-right: 58px !important;
+          padding-left: 48px !important;
           color: #999 !important;
-
           font-family: inherit !important;
           font-size: inherit !important;
           line-height: 1.5 !important;
         }
 
-
-        /* =========================================
-           جميع الـ Placeholders
-        ========================================= */
-
         .signup-field input::placeholder {
           color: #999 !important;
           opacity: 1 !important;
-
           direction: rtl !important;
           text-align: right !important;
         }
 
-
-        /* =========================================
-           الهاتف والرقم القومي
-        ========================================= */
-
         .signup-field input[dir="ltr"] {
           direction: ltr !important;
           text-align: right !important;
-
-          padding-right: 68px !important;
-          padding-left: 58px !important;
+          padding-right: 58px !important;
+          padding-left: 48px !important;
         }
 
         .signup-field input[dir="ltr"]::placeholder {
           direction: rtl !important;
           text-align: right !important;
-
           color: #999 !important;
           opacity: 1 !important;
         }
 
-
-        /* =========================================
-           الأيقونات
-        ========================================= */
-
         .signup-field-icon {
           position: absolute !important;
-
-          right: 20px !important;
+          right: 16px !important;
           left: auto !important;
-
           top: 50% !important;
           transform: translateY(-50%) !important;
-
-          width: 28px !important;
-          height: 28px !important;
-
+          width: 23px !important;
+          height: 23px !important;
           display: flex !important;
           align-items: center !important;
           justify-content: center !important;
-
           z-index: 3 !important;
-
           color: #0a9685 !important;
         }
 
         .signup-field-icon svg {
-          width: 28px !important;
-          height: 28px !important;
+          width: 23px !important;
+          height: 23px !important;
         }
-
-
-        /* =========================================
-           Select
-        ========================================= */
 
         .signup-donor-select {
           width: 100% !important;
-
           box-sizing: border-box !important;
-
           direction: rtl !important;
           text-align: right !important;
-
-          padding-right: 68px !important;
-          padding-left: 58px !important;
-
+          padding-right: 58px !important;
+          padding-left: 48px !important;
           color: #999 !important;
-
           font-family: inherit !important;
           font-size: inherit !important;
           line-height: 1.5 !important;
-
           appearance: none !important;
           -webkit-appearance: none !important;
         }
@@ -718,63 +340,43 @@ export default function Signup() {
           color: #555 !important;
         }
 
-
-        /* =========================================
-           سهم الـ Select
-        ========================================= */
-
         .signup-donor-chevron {
           position: absolute !important;
-
-          left: 20px !important;
+          left: 16px !important;
           right: auto !important;
-
           top: 50% !important;
           transform: translateY(-50%) !important;
-
-          width: 24px !important;
-          height: 24px !important;
-
+          width: 20px !important;
+          height: 20px !important;
           display: flex !important;
           align-items: center !important;
           justify-content: center !important;
-
           pointer-events: none !important;
-
           color: #0a9685 !important;
-
           z-index: 3 !important;
         }
 
         .signup-donor-chevron svg {
-          width: 24px !important;
-          height: 24px !important;
+          width: 20px !important;
+          height: 20px !important;
         }
-
-
-        /* =========================================
-           تاريخ آخر تبرع
-        ========================================= */
 
         .signup-date-field {
           position: relative !important;
         }
 
         .signup-donor-date-text {
-          display: block !important;
-
+          display: flex !important;
+          align-items: center !important;
           width: 100% !important;
-
+          height: 50px !important;
           box-sizing: border-box !important;
-
           direction: rtl !important;
           text-align: right !important;
-
-          padding-right: 68px !important;
-          padding-left: 58px !important;
-
+          margin: 0 !important;
+          padding-right: 58px !important;
+          padding-left: 48px !important;
           color: #999 !important;
-
           font-family: inherit !important;
           font-size: inherit !important;
           line-height: 1.5 !important;
@@ -784,60 +386,35 @@ export default function Signup() {
           color: #555 !important;
         }
 
-
-        /* =========================================
-           Input التاريخ الحقيقي
-        ========================================= */
-
         .signup-date-field input[type="date"] {
           position: absolute !important;
-
           width: 1px !important;
           height: 1px !important;
-
           opacity: 0 !important;
-
           pointer-events: none !important;
         }
 
-
-        /* =========================================
-           زر إظهار كلمة المرور
-        ========================================= */
-
         .signup-eye {
           position: absolute !important;
-
-          left: 18px !important;
+          left: 14px !important;
           right: auto !important;
-
           top: 50% !important;
           transform: translateY(-50%) !important;
-
-          width: 32px !important;
-          height: 32px !important;
-
+          width: 28px !important;
+          height: 28px !important;
           padding: 0 !important;
           margin: 0 !important;
-
           display: flex !important;
           align-items: center !important;
           justify-content: center !important;
-
           color: #78938f !important;
-
           z-index: 4 !important;
         }
 
         .signup-eye svg {
-          width: 25px !important;
-          height: 25px !important;
+          width: 21px !important;
+          height: 21px !important;
         }
-
-
-        /* =========================================
-           منع اختلاف الـ Box Sizing
-        ========================================= */
 
         .signup-field *,
         .signup-field *::before,
@@ -845,29 +422,138 @@ export default function Signup() {
           box-sizing: border-box !important;
         }
 
+        /* 📱 ضبط المقاسات للموبايل */
+        @media (max-width: 480px) {
+          .signup-content {
+            padding-left: 16px !important;
+            padding-right: 16px !important;
+          }
+
+          .signup-content h1 {
+            font-size: 24px !important;
+            margin-bottom: 6px !important;
+          }
+
+          .signup-subtitle {
+            font-size: 14px !important;
+          }
+
+          .signup-account-types {
+            gap: 8px !important;
+          }
+
+          .account-type {
+            min-height: 44px !important;
+            font-size: 14px !important;
+          }
+
+          .signup-form {
+            gap: 10px !important;
+          }
+
+          .signup-field {
+            height: 50px !important;
+            min-height: 50px !important;
+          }
+
+          .signup-field input,
+          .signup-donor-select {
+            height: 50px !important;
+            font-size: 14px !important;
+            padding-right: 56px !important;
+            padding-left: 46px !important;
+          }
+
+          .signup-field input::placeholder {
+            font-size: 14px !important;
+          }
+
+          .signup-donor-date-text {
+            height: 50px !important;
+            font-size: 14px !important;
+            padding-right: 56px !important;
+            padding-left: 46px !important;
+          }
+
+          .signup-field-icon {
+            right: 15px !important;
+            width: 22px !important;
+            height: 22px !important;
+          }
+
+          .signup-field-icon svg {
+            width: 22px !important;
+            height: 22px !important;
+          }
+
+          .signup-donor-chevron {
+            left: 15px !important;
+            width: 19px !important;
+            height: 19px !important;
+          }
+
+          .signup-donor-chevron svg {
+            width: 19px !important;
+            height: 19px !important;
+          }
+
+          .signup-eye {
+            left: 12px !important;
+            width: 27px !important;
+            height: 27px !important;
+          }
+
+          .signup-eye svg {
+            width: 20px !important;
+            height: 20px !important;
+          }
+
+          .signup-submit {
+            min-height: 48px !important;
+            font-size: 15px !important;
+          }
+
+          .signup-login {
+            font-size: 13px !important;
+          }
+        }
+
+        /* 📱 موبايلات صغيرة جدًا */
+        @media (max-width: 360px) {
+          .signup-content {
+            padding-left: 12px !important;
+            padding-right: 12px !important;
+          }
+
+          .signup-content h1 {
+            font-size: 22px !important;
+          }
+
+          .signup-field,
+          .signup-field input,
+          .signup-donor-select,
+          .signup-donor-date-text {
+            height: 48px !important;
+            min-height: 48px !important;
+          }
+
+          .signup-field input,
+          .signup-donor-select,
+          .signup-donor-date-text {
+            font-size: 13px !important;
+          }
+
+          .signup-field input::placeholder {
+            font-size: 13px !important;
+          }
+        }
       `}</style>
 
-
-      {/* =========================
-          Background
-      ========================= */}
-
       <div className="signup-orb signup-orb-1" />
-
       <div className="signup-orb signup-orb-2" />
 
-      <div className="signup-plus signup-plus-1">
-        +
-      </div>
-
-      <div className="signup-plus signup-plus-2">
-        +
-      </div>
-
-
-      {/* =========================
-          Back
-      ========================= */}
+      <div className="signup-plus signup-plus-1">+</div>
+      <div className="signup-plus signup-plus-2">+</div>
 
       <button
         type="button"
@@ -877,31 +563,18 @@ export default function Signup() {
         <BackIcon />
       </button>
 
-
       <main className="signup-content">
-
-        {/* Logo */}
-
         <div className="signup-logo">
           <Logo />
         </div>
 
-
-        {/* Title */}
-
-        <h1>
-          إنشاء حساب جديد
-        </h1>
+        <h1>إنشاء حساب جديد</h1>
 
         <p className="signup-subtitle">
           انضم إلى منصة نبض الأمل
         </p>
 
-
-        {/* Heartbeat */}
-
         <div className="signup-heartbeat">
-
           <span />
 
           <svg
@@ -919,18 +592,9 @@ export default function Signup() {
           </svg>
 
           <span />
-
         </div>
 
-
-        {/* =========================
-            Account Types
-        ========================= */}
-
         <div className="signup-account-types">
-
-          {/* Donor */}
-
           <button
             type="button"
             className={
@@ -938,23 +602,14 @@ export default function Signup() {
                 ? "account-type active"
                 : "account-type"
             }
-            onClick={() =>
-              handleAccountTypeChange("donor")
-            }
+            onClick={() => handleAccountTypeChange("donor")}
           >
-
             <span className="account-icon">
               <HeartIcon />
             </span>
 
-            <span>
-              متبرع
-            </span>
-
+            <span>متبرع</span>
           </button>
-
-
-          {/* User */}
 
           <button
             type="button"
@@ -963,39 +618,18 @@ export default function Signup() {
                 ? "account-type active"
                 : "account-type"
             }
-            onClick={() =>
-              handleAccountTypeChange("user")
-            }
+            onClick={() => handleAccountTypeChange("user")}
           >
-
             <span className="account-icon">
               <UserIcon />
             </span>
 
-            <span>
-              مستخدم
-            </span>
-
+            <span>مستخدم</span>
           </button>
-
         </div>
 
-
-        {/* =========================
-            Form
-        ========================= */}
-
-        <form
-          className="signup-form"
-          onSubmit={handleSubmit}
-        >
-
-          {/* =========================
-              الاسم
-          ========================= */}
-
+        <form className="signup-form" onSubmit={handleSubmit}>
           <div className="signup-field">
-
             <div className="signup-field-icon">
               <UserIcon />
             </div>
@@ -1008,16 +642,9 @@ export default function Signup() {
               placeholder="الاسم الكامل"
               autoComplete="name"
             />
-
           </div>
 
-
-          {/* =========================
-              البريد الإلكتروني
-          ========================= */}
-
           <div className="signup-field">
-
             <div className="signup-field-icon">
               <MailIcon />
             </div>
@@ -1030,16 +657,9 @@ export default function Signup() {
               placeholder="البريد الإلكتروني"
               autoComplete="email"
             />
-
           </div>
 
-
-          {/* =========================
-              رقم الهاتف
-          ========================= */}
-
           <div className="signup-field">
-
             <div className="signup-field-icon">
               <PhoneIcon />
             </div>
@@ -1053,16 +673,9 @@ export default function Signup() {
               autoComplete="tel"
               dir="ltr"
             />
-
           </div>
 
-
-          {/* =========================
-              الرقم القومي
-          ========================= */}
-
           <div className="signup-field">
-
             <div className="signup-field-icon">
               <IdCardIcon />
             </div>
@@ -1078,23 +691,11 @@ export default function Signup() {
               dir="ltr"
               maxLength={14}
             />
-
           </div>
-
-
-          {/* =================================================
-              DONOR FIELDS
-          ================================================= */}
 
           {accountType === "donor" && (
             <>
-
-              {/* =========================
-                  فصيلة الدم
-              ========================= */}
-
               <div className="signup-field signup-donor-field">
-
                 <div className="signup-field-icon">
                   <BloodDropIcon />
                 </div>
@@ -1106,64 +707,29 @@ export default function Signup() {
                   aria-label="فصيلة الدم"
                   required
                 >
-
-                  <option
-                    value=""
-                    disabled
-                  >
+                  <option value="" disabled>
                     اختر فصيلة الدم
                   </option>
 
-                  <option value="A+">
-                    A+
-                  </option>
-
-                  <option value="A-">
-                    A-
-                  </option>
-
-                  <option value="B+">
-                    B+
-                  </option>
-
-                  <option value="B-">
-                    B-
-                  </option>
-
-                  <option value="AB+">
-                    AB+
-                  </option>
-
-                  <option value="AB-">
-                    AB-
-                  </option>
-
-                  <option value="O+">
-                    O+
-                  </option>
-
-                  <option value="O-">
-                    O-
-                  </option>
-
+                  <option value="A+">A+</option>
+                  <option value="A-">A-</option>
+                  <option value="B+">B+</option>
+                  <option value="B-">B-</option>
+                  <option value="AB+">AB+</option>
+                  <option value="AB-">AB-</option>
+                  <option value="O+">O+</option>
+                  <option value="O-">O-</option>
                 </select>
 
                 <div className="signup-donor-chevron">
                   <ChevronDownIcon />
                 </div>
-
               </div>
-
-
-              {/* =========================
-                  تاريخ آخر تبرع
-              ========================= */}
 
               <div
                 className="signup-field signup-donor-field signup-date-field"
                 onClick={openDatePicker}
               >
-
                 <div className="signup-field-icon">
                   <CalendarIcon />
                 </div>
@@ -1175,11 +741,9 @@ export default function Signup() {
                       : "signup-donor-date-text"
                   }
                 >
-
                   {form.lastDonation
                     ? form.lastDonation
                     : "تاريخ آخر تبرع بالدم"}
-
                 </span>
 
                 <input
@@ -1187,23 +751,12 @@ export default function Signup() {
                   type="date"
                   value={form.lastDonation}
                   onChange={update("lastDonation")}
-                  max={
-                    new Date()
-                      .toISOString()
-                      .split("T")[0]
-                  }
+                  max={new Date().toISOString().split("T")[0]}
                   aria-label="تاريخ آخر تبرع بالدم"
                 />
-
               </div>
 
-
-              {/* =========================
-                  الأمراض المزمنة
-              ========================= */}
-
               <div className="signup-field signup-donor-field">
-
                 <div className="signup-field-icon">
                   <PlusCircleIcon />
                 </div>
@@ -1215,51 +768,29 @@ export default function Signup() {
                   aria-label="الأمراض المزمنة"
                   required
                 >
-
-                  <option
-                    value=""
-                    disabled
-                  >
+                  <option value="" disabled>
                     هل لديك أمراض مزمنة؟
                   </option>
 
-                  <option value="نعم">
-                    نعم
-                  </option>
-
-                  <option value="لا">
-                    لا
-                  </option>
-
+                  <option value="نعم">نعم</option>
+                  <option value="لا">لا</option>
                 </select>
 
                 <div className="signup-donor-chevron">
                   <ChevronDownIcon />
                 </div>
-
               </div>
-
             </>
           )}
 
-
-          {/* =========================
-              كلمة المرور
-          ========================= */}
-
           <div className="signup-field">
-
             <div className="signup-field-icon">
               <LockIcon />
             </div>
 
             <input
               className="signup-input"
-              type={
-                showPassword
-                  ? "text"
-                  : "password"
-              }
+              type={showPassword ? "text" : "password"}
               value={form.password}
               onChange={update("password")}
               placeholder="كلمة المرور"
@@ -1269,42 +800,25 @@ export default function Signup() {
             <button
               type="button"
               className="signup-eye"
-              onClick={() =>
-                setShowPassword(!showPassword)
-              }
+              onClick={() => setShowPassword(!showPassword)}
               aria-label={
                 showPassword
                   ? "إخفاء كلمة المرور"
                   : "إظهار كلمة المرور"
               }
             >
-
-              <EyeIcon
-                off={!showPassword}
-              />
-
+              <EyeIcon off={!showPassword} />
             </button>
-
           </div>
 
-
-          {/* =========================
-              تأكيد كلمة المرور
-          ========================= */}
-
           <div className="signup-field">
-
             <div className="signup-field-icon">
               <LockIcon />
             </div>
 
             <input
               className="signup-input"
-              type={
-                showConfirm
-                  ? "text"
-                  : "password"
-              }
+              type={showConfirm ? "text" : "password"}
               value={form.confirm}
               onChange={update("confirm")}
               placeholder="تأكيد كلمة المرور"
@@ -1314,28 +828,16 @@ export default function Signup() {
             <button
               type="button"
               className="signup-eye"
-              onClick={() =>
-                setShowConfirm(!showConfirm)
-              }
+              onClick={() => setShowConfirm(!showConfirm)}
               aria-label={
                 showConfirm
                   ? "إخفاء تأكيد كلمة المرور"
                   : "إظهار تأكيد كلمة المرور"
               }
             >
-
-              <EyeIcon
-                off={!showConfirm}
-              />
-
+              <EyeIcon off={!showConfirm} />
             </button>
-
           </div>
-
-
-          {/* =========================
-              Error
-          ========================= */}
 
           {error && (
             <div className="signup-error">
@@ -1343,56 +845,31 @@ export default function Signup() {
             </div>
           )}
 
-
-          {/* =========================
-              Submit
-          ========================= */}
-
           <button
             className="signup-submit"
             type="submit"
             disabled={loading}
           >
-
             {loading
               ? "جاري إنشاء الحساب..."
               : "إنشاء الحساب"}
-
           </button>
-
         </form>
 
-
-        {/* =========================
-            Login
-        ========================= */}
-
         <div className="signup-login">
-
-          <span>
-            لديك حساب بالفعل؟
-          </span>
+          <span>لديك حساب بالفعل؟</span>
 
           <Link to="/login">
             تسجيل الدخول
           </Link>
-
         </div>
-
       </main>
 
-
-      {/* =========================
-          Bottom Wave
-      ========================= */}
-
       <div className="signup-bottom">
-
         <svg
           viewBox="0 0 500 120"
           preserveAspectRatio="none"
         >
-
           <path
             d="M0 65C80 30 120 85 190 57C250 33 280 76 340 55C405 32 450 70 500 42V120H0Z"
             fill="rgba(10,168,143,.25)"
@@ -1410,11 +887,8 @@ export default function Signup() {
             strokeWidth="2.5"
             opacity=".9"
           />
-
         </svg>
-
       </div>
-
     </div>
   );
 }
