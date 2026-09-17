@@ -223,7 +223,7 @@ export default function Signup() {
     confirm: "",
 
     // بيانات المتبرع
-    bloodType: "O+",
+    bloodType: "",
     lastDonation: "",
     chronicDisease: "",
   });
@@ -254,11 +254,10 @@ export default function Signup() {
   const handleAccountTypeChange = (type) => {
     setAccountType(type);
 
-    // عند اختيار مستخدم عادي نمسح بيانات المتبرع
     if (type === "user") {
       setForm((prev) => ({
         ...prev,
-        bloodType: "O+",
+        bloodType: "",
         lastDonation: "",
         chronicDisease: "",
       }));
@@ -296,7 +295,7 @@ export default function Signup() {
       return;
     }
 
-    // التحقق من بيانات المتبرع فقط
+    // التحقق من بيانات المتبرع
     if (accountType === "donor") {
       if (!form.bloodType) {
         setError("من فضلك اختر فصيلة الدم");
@@ -325,7 +324,6 @@ export default function Signup() {
         password: form.password,
         accountType,
 
-        // بيانات المتبرع يتم إرسالها فقط لو الحساب متبرع
         bloodType:
           accountType === "donor"
             ? form.bloodType
@@ -344,12 +342,9 @@ export default function Signup() {
 
       const user = await api.register(registerData);
 
-      /*
-       * نحفظ البيانات التي كتبها المستخدم بنفسه
-       * بدل الاعتماد على البيانات التي يرجعها الـ API.
-       */
       const savedUser = {
         ...user,
+
         name: form.name.trim(),
         email: form.email.trim(),
         phone: form.phone.trim(),
@@ -371,6 +366,7 @@ export default function Signup() {
             : false,
 
         accountType,
+
         phoneVerified: false,
         identityVerified: false,
         verificationStatus: "pending",
@@ -552,35 +548,61 @@ export default function Signup() {
             />
           </div>
 
-          {/* بيانات المتبرع */}
+          {/* =========================
+              بيانات المتبرع
+          ========================== */}
           {accountType === "donor" && (
             <>
+              {/* فصيلة الدم */}
               <div className="signup-field">
                 <div className="signup-field-icon">
                   <HeartIcon />
                 </div>
 
-                <input
-                  type="text"
+                <select
                   value={form.bloodType}
                   onChange={update("bloodType")}
-                  placeholder="فصيلة الدم - مثال O+"
-                  list="blood-types"
-                  dir="ltr"
-                />
+                  aria-label="فصيلة الدم"
+                >
+                  <option value="" disabled>
+                    اختر فصيلة الدم
+                  </option>
 
-                <datalist id="blood-types">
-                  <option value="A+" />
-                  <option value="A-" />
-                  <option value="B+" />
-                  <option value="B-" />
-                  <option value="AB+" />
-                  <option value="AB-" />
-                  <option value="O+" />
-                  <option value="O-" />
-                </datalist>
+                  <option value="A+">
+                    A+
+                  </option>
+
+                  <option value="A-">
+                    A-
+                  </option>
+
+                  <option value="B+">
+                    B+
+                  </option>
+
+                  <option value="B-">
+                    B-
+                  </option>
+
+                  <option value="AB+">
+                    AB+
+                  </option>
+
+                  <option value="AB-">
+                    AB-
+                  </option>
+
+                  <option value="O+">
+                    O+
+                  </option>
+
+                  <option value="O-">
+                    O-
+                  </option>
+                </select>
               </div>
 
+              {/* تاريخ آخر تبرع */}
               <div className="signup-field">
                 <div className="signup-field-icon">
                   <HeartIcon />
@@ -590,28 +612,38 @@ export default function Signup() {
                   type="date"
                   value={form.lastDonation}
                   onChange={update("lastDonation")}
-                  placeholder="تاريخ آخر تبرع بالدم"
-                  dir="ltr"
+                  aria-label="تاريخ آخر تبرع بالدم"
+                  max={
+                    new Date()
+                      .toISOString()
+                      .split("T")[0]
+                  }
                 />
               </div>
 
+              {/* الأمراض المزمنة */}
               <div className="signup-field">
                 <div className="signup-field-icon">
                   <HeartIcon />
                 </div>
 
-                <input
-                  type="text"
+                <select
                   value={form.chronicDisease}
                   onChange={update("chronicDisease")}
-                  placeholder="هل لديك أمراض مزمنة؟ نعم / لا"
-                  list="chronic-disease-options"
-                />
+                  aria-label="هل لديك أمراض مزمنة"
+                >
+                  <option value="" disabled>
+                    هل لديك أمراض مزمنة؟
+                  </option>
 
-                <datalist id="chronic-disease-options">
-                  <option value="نعم" />
-                  <option value="لا" />
-                </datalist>
+                  <option value="نعم">
+                    نعم
+                  </option>
+
+                  <option value="لا">
+                    لا
+                  </option>
+                </select>
               </div>
             </>
           )}
