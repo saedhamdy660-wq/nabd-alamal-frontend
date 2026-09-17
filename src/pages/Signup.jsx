@@ -1,4 +1,3 @@
-
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import api from "../api";
@@ -222,12 +221,11 @@ export default function Signup() {
     nationalId: "",
     password: "",
     confirm: "",
-    bloodType: "",
-    lastDonation: "",
-    chronicDisease: "",
+    bloodType: "O+",
   });
 
   const [showPassword, setShowPassword] = useState(false);
+
   const [showConfirm, setShowConfirm] = useState(false);
 
   const [error, setError] = useState("");
@@ -247,19 +245,6 @@ export default function Signup() {
       ...form,
       nationalId: value,
     });
-  };
-
-  const handleAccountTypeChange = (type) => {
-    setAccountType(type);
-
-    if (type === "user") {
-      setForm((prev) => ({
-        ...prev,
-        bloodType: "",
-        lastDonation: "",
-        chronicDisease: "",
-      }));
-    }
   };
 
   const handleSubmit = async (e) => {
@@ -293,77 +278,30 @@ export default function Signup() {
       return;
     }
 
-    if (accountType === "donor") {
-      if (!form.bloodType) {
-        setError("من فضلك اختر فصيلة الدم");
-        return;
-      }
-
-      if (!form.lastDonation) {
-        setError("من فضلك أدخل تاريخ آخر تبرع بالدم");
-        return;
-      }
-
-      if (!form.chronicDisease) {
-        setError("من فضلك حدد هل لديك أمراض مزمنة أم لا");
-        return;
-      }
-    }
-
     try {
       setLoading(true);
 
-      const registerData = {
-        name: form.name.trim(),
-        email: form.email.trim(),
-        phone: form.phone.trim(),
+      const user = await api.register({
+        ...form,
         nationalId: form.nationalId,
-        password: form.password,
         accountType,
+      });
 
-        bloodType:
-          accountType === "donor"
-            ? form.bloodType
-            : "",
-
-        lastDonation:
-          accountType === "donor"
-            ? form.lastDonation
-            : "",
-
-        chronicDisease:
-          accountType === "donor"
-            ? form.chronicDisease === "نعم"
-            : false,
-      };
-
-      const user = await api.register(registerData);
-
+      /*
+       * نحفظ البيانات التي كتبها المستخدم بنفسه
+       * بدل الاعتماد على البيانات التي يرجعها الـ API.
+       *
+       * الرقم القومي يتم حفظه مؤقتًا مع بيانات الحساب
+       * لاستخدامه في خطوة توثيق الهوية التالية.
+       */
       const savedUser = {
         ...user,
-
         name: form.name.trim(),
         email: form.email.trim(),
         phone: form.phone.trim(),
         nationalId: form.nationalId,
-
-        bloodType:
-          accountType === "donor"
-            ? form.bloodType
-            : "",
-
-        lastDonation:
-          accountType === "donor"
-            ? form.lastDonation
-            : "",
-
-        chronicDisease:
-          accountType === "donor"
-            ? form.chronicDisease === "نعم"
-            : false,
-
+        bloodType: form.bloodType,
         accountType,
-
         phoneVerified: false,
         identityVerified: false,
         verificationStatus: "pending",
@@ -374,6 +312,11 @@ export default function Signup() {
         JSON.stringify(savedUser)
       );
 
+      /*
+       * بعد إنشاء الحساب لأول مرة:
+       * 1- تأكيد رقم الهاتف
+       * 2- بعدها توثيق الهوية
+       */
       navigate("/verify-phone");
     } catch (err) {
       setError(
@@ -445,9 +388,7 @@ export default function Signup() {
                 ? "account-type active"
                 : "account-type"
             }
-            onClick={() =>
-              handleAccountTypeChange("donor")
-            }
+            onClick={() => setAccountType("donor")}
           >
             <span className="account-icon">
               <HeartIcon />
@@ -463,9 +404,7 @@ export default function Signup() {
                 ? "account-type active"
                 : "account-type"
             }
-            onClick={() =>
-              handleAccountTypeChange("user")
-            }
+            onClick={() => setAccountType("user")}
           >
             <span className="account-icon">
               <UserIcon />
@@ -522,6 +461,7 @@ export default function Signup() {
             />
           </div>
 
+          {/* الرقم القومي */}
           <div className="signup-field">
             <div className="signup-field-icon">
               <IdCardIcon />
@@ -538,83 +478,6 @@ export default function Signup() {
               maxLength={14}
             />
           </div>
-
-          {accountType === "donor" && (
-            <>
-              <div className="signup-field">
-                <div className="signup-field-icon">
-                  <HeartIcon />
-                </div>
-
-                <select
-                  value={form.bloodType}
-                  onChange={update("bloodType")}
-                  aria-label="فصيلة الدم"
-                >
-                  <option value="" disabled>
-                    اختر فصيلة الدم
-                  </option>
-
-                  <option value="A+">A+</option>
-                  <option value="A-">A-</option>
-                  <option value="B+">B+</option>
-                  <option value="B-">B-</option>
-                  <option value="AB+">AB+</option>
-                  <option value="AB-">AB-</option>
-                  <option value="O+">O+</option>
-                  <option value="O-">O-</option>
-                </select>
-              </div>
-
-              <div className="signup-field signup-date-field">
-                <div className="signup-field-icon">
-                  <HeartIcon />
-                </div>
-
-                {!form.lastDonation && (
-                  <span className="signup-date-placeholder">
-                    أدخل تاريخ آخر تبرع بالدم
-                  </span>
-                )}
-
-                <input
-                  type="date"
-                  value={form.lastDonation}
-                  onChange={update("lastDonation")}
-                  aria-label="تاريخ آخر تبرع بالدم"
-                  max={
-                    new Date()
-                      .toISOString()
-                      .split("T")[0]
-                  }
-                />
-              </div>
-
-              <div className="signup-field">
-                <div className="signup-field-icon">
-                  <HeartIcon />
-                </div>
-
-                <select
-                  value={form.chronicDisease}
-                  onChange={update("chronicDisease")}
-                  aria-label="هل لديك أمراض مزمنة"
-                >
-                  <option value="" disabled>
-                    هل لديك أمراض مزمنة؟
-                  </option>
-
-                  <option value="نعم">
-                    نعم
-                  </option>
-
-                  <option value="لا">
-                    لا
-                  </option>
-                </select>
-              </div>
-            </>
-          )}
 
           <div className="signup-field">
             <div className="signup-field-icon">
@@ -725,4 +588,3 @@ export default function Signup() {
     </div>
   );
 }
-```
