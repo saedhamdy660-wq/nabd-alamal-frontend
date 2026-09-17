@@ -6487,3 +6487,37 @@ html.nabd-dark .verify-identity-retake {
 .signup-date-field.has-value .signup-date-placeholder {
   display: none;
 }
+.signup-field select {
+  color: inherit;
+  font: inherit;
+}
+
+.signup-field select option {
+  color: #333;
+  font-size: inherit;
+}
+
+.signup-date-placeholder {
+  position: absolute;
+  right: 58px;
+  top: 50%;
+  transform: translateY(-50%);
+  pointer-events: none;
+  z-index: 2;
+  white-space: nowrap;
+  color: inherit;
+  font: inherit;
+}
+
+.signup-date-has-value .signup-date-placeholder {
+  display: none;
+}
+
+.signup-field:has(input[type="date"]) {
+  position: relative;
+}
+
+.signup-field:has(input[type="date"]) input[type="date"] {
+  color: inherit;
+  font: inherit;
+}
