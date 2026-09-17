@@ -1,3 +1,4 @@
+```jsx
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import api from "../api";
@@ -549,7 +550,6 @@ export default function Signup() {
                   value={form.bloodType}
                   onChange={update("bloodType")}
                   aria-label="فصيلة الدم"
-                  required
                 >
                   <option value="" disabled>
                     اختر فصيلة الدم
@@ -566,10 +566,16 @@ export default function Signup() {
                 </select>
               </div>
 
-              <div className="signup-field">
+              <div className="signup-field signup-date-field">
                 <div className="signup-field-icon">
                   <HeartIcon />
                 </div>
+
+                {!form.lastDonation && (
+                  <span className="signup-date-placeholder">
+                    أدخل تاريخ آخر تبرع بالدم
+                  </span>
+                )}
 
                 <input
                   type="date"
@@ -581,7 +587,6 @@ export default function Signup() {
                       .toISOString()
                       .split("T")[0]
                   }
-                  required
                 />
               </div>
 
@@ -594,7 +599,6 @@ export default function Signup() {
                   value={form.chronicDisease}
                   onChange={update("chronicDisease")}
                   aria-label="هل لديك أمراض مزمنة"
-                  required
                 >
                   <option value="" disabled>
                     هل لديك أمراض مزمنة؟
@@ -721,3 +725,4 @@ export default function Signup() {
     </div>
   );
 }
+```
