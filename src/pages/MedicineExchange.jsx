@@ -1,6 +1,6 @@
 import React, { useEffect, useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import api from "../services/api";
+import api from "../api";
 
 const categories = [
   { key: "all", label: "الكل", icon: "💊" },
@@ -101,15 +101,12 @@ export default function MedicineExchange() {
 
     await loadMedicines(value);
 
-    // عند البحث نرجع للكل
-    // والكل هنا يعرض الأقسام فقط إذا لم يتم اختيار قسم
     setSelectedCategory("all");
   };
 
   const handleCategoryClick = (categoryKey) => {
     setSelectedCategory(categoryKey);
 
-    // عند الضغط على الكل نمسح البحث
     if (categoryKey === "all") {
       setSearch("");
       loadMedicines("");
@@ -117,9 +114,8 @@ export default function MedicineExchange() {
   };
 
   const filteredMedicines = useMemo(() => {
+    // الكل يعرض الأقسام فقط
     if (selectedCategory === "all") {
-      // مهم جدًا:
-      // "الكل" لا يعرض أي دواء
       return [];
     }
 
@@ -144,7 +140,9 @@ export default function MedicineExchange() {
       <div className="medicine-header">
         <div>
           <h1>تبادل الأدوية</h1>
-          <p>تبرع بالأدوية التي لا تحتاجها أو ابحث عن دواء تحتاجه</p>
+          <p>
+            تبرع بالأدوية التي لا تحتاجها أو ابحث عن دواء تحتاجه
+          </p>
         </div>
       </div>
 
@@ -157,9 +155,7 @@ export default function MedicineExchange() {
           placeholder="ابحث عن اسم الدواء..."
         />
 
-        <button type="submit">
-          🔍 بحث
-        </button>
+        <button type="submit">🔍 بحث</button>
       </form>
 
       {/* Categories Filter */}
@@ -181,21 +177,19 @@ export default function MedicineExchange() {
         ))}
       </div>
 
-      {error && (
-        <div className="medicine-error">
-          {error}
-        </div>
-      )}
+      {/* Error */}
+      {error && <div className="medicine-error">{error}</div>}
 
+      {/* Loading */}
       {loading ? (
         <div className="medicine-loading">
           جاري تحميل البيانات...
         </div>
       ) : (
         <>
-          {/* ========================= */}
-          {/* ALL = CATEGORIES ONLY */}
-          {/* ========================= */}
+          {/* ========================================= */}
+          {/* الكل = عرض الأقسام فقط */}
+          {/* ========================================= */}
 
           {selectedCategory === "all" && (
             <section className="medicine-categories-section">
@@ -226,9 +220,7 @@ export default function MedicineExchange() {
                         <div className="medicine-category-info">
                           <h3>{category.label}</h3>
 
-                          <span>
-                            {count} أدوية
-                          </span>
+                          <span>{count} أدوية</span>
                         </div>
 
                         <div className="medicine-category-arrow">
@@ -241,18 +233,20 @@ export default function MedicineExchange() {
             </section>
           )}
 
-          {/* ========================= */}
-          {/* SELECTED CATEGORY */}
-          {/* ========================= */}
+          {/* ========================================= */}
+          {/* القسم المختار = عرض أدوية القسم */}
+          {/* ========================================= */}
 
           {selectedCategory !== "all" && (
             <section className="medicine-list-section">
               <div className="section-title">
                 <h2>
-                  {categories.find(
-                    (category) =>
-                      category.key === selectedCategory
-                  )?.icon}{" "}
+                  {
+                    categories.find(
+                      (category) =>
+                        category.key === selectedCategory
+                    )?.icon
+                  }{" "}
                   {selectedCategory}
                 </h2>
 
@@ -302,9 +296,7 @@ export default function MedicineExchange() {
                         )}
 
                         {medicine.description && (
-                          <p>
-                            {medicine.description}
-                          </p>
+                          <p>{medicine.description}</p>
                         )}
 
                         <span className="medicine-card-category">
