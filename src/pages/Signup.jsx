@@ -2,90 +2,212 @@ import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import api from "../api";
 
-function Logo() {
-  return (
-    <div className="signup-logo">
-      <div className="signup-logo-heart">♥</div>
-      <span>نبض الأمل</span>
-    </div>
-  );
-}
+const Logo = () => (
+  <svg viewBox="0 0 100 100" fill="none">
+    <circle cx="50" cy="50" r="46" fill="url(#signupLogoGradient)" />
 
-function UserIcon() {
-  return (
-    <svg viewBox="0 0 24 24" aria-hidden="true">
-      <circle cx="12" cy="8" r="4" />
-      <path d="M4 21c0-4 3.5-7 8-7s8 3 8 7" />
-    </svg>
-  );
-}
+    <path
+      d="M50 73C47 70 27 56 23 43C19 31 27 22 38 22C44 22 49 25 52 30C55 25 60 22 66 22C77 22 85 31 81 43C77 56 55 70 50 73Z"
+      fill="white"
+    />
 
-function HeartIcon() {
-  return (
-    <svg viewBox="0 0 24 24" aria-hidden="true">
-      <path d="M20.8 8.8c0 5.5-8.8 10.2-8.8 10.2S3.2 14.3 3.2 8.8A4.8 4.8 0 0 1 12 6.2a4.8 4.8 0 0 1 8.8 2.6Z" />
-    </svg>
-  );
-}
+    <path
+      d="M20 49H34L39 41L45 57L52 34L58 49H80"
+      stroke="#0AA88F"
+      strokeWidth="4"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    />
 
-function MailIcon() {
-  return (
-    <svg viewBox="0 0 24 24" aria-hidden="true">
-      <rect x="3" y="5" width="18" height="14" rx="2" />
-      <path d="m4 7 8 6 8-6" />
-    </svg>
-  );
-}
+    <defs>
+      <linearGradient
+        id="signupLogoGradient"
+        x1="15"
+        y1="15"
+        x2="85"
+        y2="85"
+      >
+        <stop stopColor="#0AA88F" />
+        <stop offset="1" stopColor="#078876" />
+      </linearGradient>
+    </defs>
+  </svg>
+);
 
-function PhoneIcon() {
-  return (
-    <svg viewBox="0 0 24 24" aria-hidden="true">
-      <path d="M6.5 3.5h3l1.5 4-2 1.5c1 2.2 2.8 4 5 5l1.5-2 4 1.5v3c0 1.1-.9 2-2 2C10.6 18.5 5.5 13.4 5.5 7.5c0-1.1.9-2 2-2Z" />
-    </svg>
-  );
-}
+const UserIcon = () => (
+  <svg viewBox="0 0 24 24" fill="none">
+    <circle
+      cx="12"
+      cy="8"
+      r="3.5"
+      stroke="currentColor"
+      strokeWidth="1.8"
+    />
+    <path
+      d="M5 20C5.8 16.7 8.2 15 12 15C15.8 15 18.2 16.7 19 20"
+      stroke="currentColor"
+      strokeWidth="1.8"
+      strokeLinecap="round"
+    />
+  </svg>
+);
 
-function IdCardIcon() {
-  return (
-    <svg viewBox="0 0 24 24" aria-hidden="true">
-      <rect x="3" y="5" width="18" height="14" rx="2" />
-      <circle cx="8" cy="10" r="2" />
-      <path d="M5.5 15c.7-1.4 1.6-2 2.5-2s1.8.6 2.5 2M13 10h5M13 14h5" />
-    </svg>
-  );
-}
+const HeartIcon = () => (
+  <svg viewBox="0 0 24 24" fill="none">
+    <path
+      d="M20.8 8.8C20.8 14 12 20 12 20S3.2 14 3.2 8.8C3.2 5.9 5.3 4 8 4C9.8 4 11.2 4.9 12 6.2C12.8 4.9 14.2 4 16 4C18.7 4 20.8 5.9 20.8 8.8Z"
+      stroke="currentColor"
+      strokeWidth="1.8"
+      strokeLinejoin="round"
+    />
+  </svg>
+);
 
-function LockIcon() {
-  return (
-    <svg viewBox="0 0 24 24" aria-hidden="true">
-      <rect x="4" y="10" width="16" height="10" rx="2" />
-      <path d="M8 10V7a4 4 0 0 1 8 0v3" />
-    </svg>
-  );
-}
+const MailIcon = () => (
+  <svg viewBox="0 0 24 24" fill="none">
+    <rect
+      x="3"
+      y="5"
+      width="18"
+      height="14"
+      rx="3"
+      stroke="currentColor"
+      strokeWidth="1.8"
+    />
+    <path
+      d="M4 7L12 13L20 7"
+      stroke="currentColor"
+      strokeWidth="1.8"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    />
+  </svg>
+);
 
-function EyeIcon({ hidden = false }) {
-  return hidden ? (
-    <svg viewBox="0 0 24 24" aria-hidden="true">
-      <path d="m3 3 18 18" />
-      <path d="M10.6 10.6a2 2 0 0 0 2.8 2.8M9.9 5.2A10.7 10.7 0 0 1 12 5c5 0 8.5 4.5 9.5 7-.4 1-1.4 2.6-3 4M6.1 6.1C3.8 7.7 2.3 10 1.5 12c1 2.5 4.5 7 10.5 7 1 0 1.9-.1 2.8-.4" />
-    </svg>
-  ) : (
-    <svg viewBox="0 0 24 24" aria-hidden="true">
-      <path d="M2 12s3.5-6 10-6 10 6 10 6-3.5 6-10 6S2 12 2 12Z" />
-      <circle cx="12" cy="12" r="2.5" />
-    </svg>
-  );
-}
+const PhoneIcon = () => (
+  <svg viewBox="0 0 24 24" fill="none">
+    <path
+      d="M7 3H17C18.1 3 19 3.9 19 5V19C19 20.1 18.1 21 17 21H7C5.9 21 5 20.1 5 19V5C5 3.9 5.9 3 7 3Z"
+      stroke="currentColor"
+      strokeWidth="1.8"
+    />
+    <path
+      d="M9 18H15"
+      stroke="currentColor"
+      strokeWidth="1.8"
+      strokeLinecap="round"
+    />
+  </svg>
+);
 
-function BackIcon() {
-  return (
-    <svg viewBox="0 0 24 24" aria-hidden="true">
-      <path d="M9 5 2 12l7 7" />
-      <path d="M2 12h20" />
-    </svg>
-  );
-}
+const IdCardIcon = () => (
+  <svg viewBox="0 0 24 24" fill="none">
+    <rect
+      x="3"
+      y="5"
+      width="18"
+      height="14"
+      rx="2.5"
+      stroke="currentColor"
+      strokeWidth="1.8"
+    />
+
+    <circle
+      cx="8"
+      cy="10"
+      r="1.8"
+      stroke="currentColor"
+      strokeWidth="1.5"
+    />
+
+    <path
+      d="M5.5 15C6 13.7 6.8 13 8 13C9.2 13 10 13.7 10.5 15"
+      stroke="currentColor"
+      strokeWidth="1.5"
+      strokeLinecap="round"
+    />
+
+    <path
+      d="M13 9H18"
+      stroke="currentColor"
+      strokeWidth="1.6"
+      strokeLinecap="round"
+    />
+
+    <path
+      d="M13 13H18"
+      stroke="currentColor"
+      strokeWidth="1.6"
+      strokeLinecap="round"
+    />
+
+    <path
+      d="M13 16H16"
+      stroke="currentColor"
+      strokeWidth="1.6"
+      strokeLinecap="round"
+    />
+  </svg>
+);
+
+const LockIcon = () => (
+  <svg viewBox="0 0 24 24" fill="none">
+    <rect
+      x="4"
+      y="10"
+      width="16"
+      height="11"
+      rx="3"
+      stroke="currentColor"
+      strokeWidth="1.8"
+    />
+    <path
+      d="M8 10V7.5C8 5 9.8 3 12 3C14.2 3 16 5 16 7.5V10"
+      stroke="currentColor"
+      strokeWidth="1.8"
+      strokeLinecap="round"
+    />
+  </svg>
+);
+
+const EyeIcon = ({ off = false }) => (
+  <svg viewBox="0 0 24 24" fill="none">
+    <path
+      d="M2.5 12S6 5.5 12 5.5S21.5 12 21.5 12S18 18.5 12 18.5S2.5 12 2.5 12Z"
+      stroke="currentColor"
+      strokeWidth="1.7"
+    />
+
+    <circle
+      cx="12"
+      cy="12"
+      r="2.7"
+      stroke="currentColor"
+      strokeWidth="1.7"
+    />
+
+    {off && (
+      <path
+        d="M4 4L20 20"
+        stroke="currentColor"
+        strokeWidth="1.8"
+        strokeLinecap="round"
+      />
+    )}
+  </svg>
+);
+
+const BackIcon = () => (
+  <svg viewBox="0 0 24 24" fill="none">
+    <path
+      d="M15 18L9 12L15 6"
+      stroke="currentColor"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    />
+  </svg>
+);
 
 export default function Signup() {
   const navigate = useNavigate();
@@ -99,40 +221,38 @@ export default function Signup() {
     nationalId: "",
     password: "",
     confirm: "",
+
+    // بيانات المتبرع
     bloodType: "",
     lastDonation: "",
     chronicDisease: "",
   });
 
   const [showPassword, setShowPassword] = useState(false);
+
   const [showConfirm, setShowConfirm] = useState(false);
 
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
 
   const update = (field) => (e) => {
-    setForm((prev) => ({
-      ...prev,
+    setForm({
+      ...form,
       [field]: e.target.value,
-    }));
-
-    setError("");
+    });
   };
 
   const handleNationalIdChange = (e) => {
     const value = e.target.value.replace(/\D/g, "").slice(0, 14);
 
-    setForm((prev) => ({
-      ...prev,
+    setForm({
+      ...form,
       nationalId: value,
-    }));
-
-    setError("");
+    });
   };
 
   const handleAccountTypeChange = (type) => {
     setAccountType(type);
-    setError("");
 
     if (type === "user") {
       setForm((prev) => ({
@@ -146,35 +266,27 @@ export default function Signup() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
-    if (loading) return;
-
     setError("");
 
-    const name = form.name.trim();
-    const email = form.email.trim();
-    const phone = form.phone.trim();
-    const nationalId = form.nationalId.trim();
-
     if (
-      !name ||
-      !email ||
-      !phone ||
-      !nationalId ||
+      !form.name ||
+      !form.email ||
+      !form.phone ||
+      !form.nationalId ||
       !form.password ||
       !form.confirm
     ) {
-      setError("من فضلك أكمل جميع البيانات المطلوبة");
+      setError("من فضلك أكمل جميع البيانات");
       return;
     }
 
-    if (nationalId.length !== 14) {
-      setError("الرقم القومي يجب أن يكون 14 رقمًا");
+    if (!/^\d{14}$/.test(form.nationalId)) {
+      setError("الرقم القومي يجب أن يتكون من 14 رقم");
       return;
     }
 
     if (form.password.length < 6) {
-      setError("كلمة المرور يجب أن تكون 6 أحرف أو أرقام على الأقل");
+      setError("كلمة المرور يجب أن تكون 6 أحرف على الأقل");
       return;
     }
 
@@ -183,6 +295,7 @@ export default function Signup() {
       return;
     }
 
+    // التحقق من بيانات المتبرع
     if (accountType === "donor") {
       if (!form.bloodType) {
         setError("من فضلك اختر فصيلة الدم");
@@ -195,7 +308,7 @@ export default function Signup() {
       }
 
       if (!form.chronicDisease) {
-        setError("من فضلك اختر هل لديك أمراض مزمنة أم لا");
+        setError("من فضلك حدد هل لديك أمراض مزمنة أم لا");
         return;
       }
     }
@@ -204,12 +317,11 @@ export default function Signup() {
       setLoading(true);
 
       const registerData = {
-        name,
-        email,
-        phone,
-        nationalId,
+        name: form.name.trim(),
+        email: form.email.trim(),
+        phone: form.phone.trim(),
+        nationalId: form.nationalId,
         password: form.password,
-
         accountType,
 
         bloodType:
@@ -233,12 +345,10 @@ export default function Signup() {
       const savedUser = {
         ...user,
 
-        name,
-        email,
-        phone,
-        nationalId,
-
-        accountType,
+        name: form.name.trim(),
+        email: form.email.trim(),
+        phone: form.phone.trim(),
+        nationalId: form.nationalId,
 
         bloodType:
           accountType === "donor"
@@ -255,8 +365,11 @@ export default function Signup() {
             ? form.chronicDisease === "نعم"
             : false,
 
+        accountType,
+
         phoneVerified: false,
-        verificationCode: user?.verificationCode || "",
+        identityVerified: false,
+        verificationStatus: "pending",
       };
 
       localStorage.setItem(
@@ -264,18 +377,16 @@ export default function Signup() {
         JSON.stringify(savedUser)
       );
 
-      navigate("/verify-phone", {
-        state: {
-          phone,
-          user: savedUser,
-        },
-      });
+      /*
+       * بعد إنشاء الحساب لأول مرة:
+       * 1- تأكيد رقم الهاتف
+       * 2- بعدها توثيق الهوية
+       */
+      navigate("/verify-phone");
     } catch (err) {
-      console.error("Registration error:", err);
-
       setError(
         err?.message ||
-          "حدث خطأ أثناء إنشاء الحساب، حاول مرة أخرى"
+          "حدث خطأ أثناء إنشاء الحساب"
       );
     } finally {
       setLoading(false);
@@ -283,319 +394,377 @@ export default function Signup() {
   };
 
   return (
-    <div className="signup-page" dir="rtl">
-      <div className="signup-container">
+    <div className="signup-page">
+      <div className="signup-orb signup-orb-1" />
+      <div className="signup-orb signup-orb-2" />
 
-        <div className="signup-header">
+      <div className="signup-plus signup-plus-1">
+        +
+      </div>
+
+      <div className="signup-plus signup-plus-2">
+        +
+      </div>
+
+      <button
+        type="button"
+        className="signup-back"
+        onClick={() => navigate(-1)}
+      >
+        <BackIcon />
+      </button>
+
+      <main className="signup-content">
+        <div className="signup-logo">
           <Logo />
+        </div>
+
+        <h1>إنشاء حساب جديد</h1>
+
+        <p className="signup-subtitle">
+          انضم إلى منصة نبض الأمل
+        </p>
+
+        <div className="signup-heartbeat">
+          <span />
+
+          <svg
+            viewBox="0 0 180 30"
+            preserveAspectRatio="none"
+          >
+            <path
+              d="M0 16H52L59 16L65 10L71 22L79 4L88 16H180"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            />
+          </svg>
+
+          <span />
+        </div>
+
+        <div className="signup-account-types">
+          <button
+            type="button"
+            className={
+              accountType === "donor"
+                ? "account-type active"
+                : "account-type"
+            }
+            onClick={() =>
+              handleAccountTypeChange("donor")
+            }
+          >
+            <span className="account-icon">
+              <HeartIcon />
+            </span>
+
+            <span>متبرع</span>
+          </button>
 
           <button
             type="button"
-            className="signup-back"
-            onClick={() => navigate(-1)}
-            aria-label="رجوع"
+            className={
+              accountType === "user"
+                ? "account-type active"
+                : "account-type"
+            }
+            onClick={() =>
+              handleAccountTypeChange("user")
+            }
           >
-            <BackIcon />
+            <span className="account-icon">
+              <UserIcon />
+            </span>
+
+            <span>مستخدم</span>
           </button>
         </div>
 
-        <div className="signup-content">
+        <form
+          className="signup-form"
+          onSubmit={handleSubmit}
+        >
+          <div className="signup-field">
+            <div className="signup-field-icon">
+              <UserIcon />
+            </div>
 
-          <div className="signup-title-section">
-            <h1>إنشاء حساب</h1>
-
-            <p>
-              انضم إلى نبض الأمل وساعد في إنقاذ حياة
-            </p>
+            <input
+              type="text"
+              value={form.name}
+              onChange={update("name")}
+              placeholder="الاسم الكامل"
+              autoComplete="name"
+            />
           </div>
 
-          <div className="signup-account-types">
+          <div className="signup-field">
+            <div className="signup-field-icon">
+              <MailIcon />
+            </div>
 
-            <button
-              type="button"
-              className={
-                accountType === "user"
-                  ? "signup-account-type active"
-                  : "signup-account-type"
-              }
-              onClick={() =>
-                handleAccountTypeChange("user")
-              }
-            >
-              <div className="signup-account-icon">
-                <UserIcon />
-              </div>
-
-              <div>
-                <strong>مستخدم</strong>
-                <span>للاستفادة من خدمات التطبيق</span>
-              </div>
-            </button>
-
-            <button
-              type="button"
-              className={
-                accountType === "donor"
-                  ? "signup-account-type active"
-                  : "signup-account-type"
-              }
-              onClick={() =>
-                handleAccountTypeChange("donor")
-              }
-            >
-              <div className="signup-account-icon">
-                <HeartIcon />
-              </div>
-
-              <div>
-                <strong>متبرع</strong>
-                <span>للمساعدة في إنقاذ حياة الآخرين</span>
-              </div>
-            </button>
-
+            <input
+              type="email"
+              value={form.email}
+              onChange={update("email")}
+              placeholder="البريد الإلكتروني"
+              autoComplete="email"
+            />
           </div>
 
-          <form
-            className="signup-form"
-            onSubmit={handleSubmit}
-          >
-
-            <div className="signup-field">
-              <div className="signup-field-icon">
-                <UserIcon />
-              </div>
-
-              <input
-                type="text"
-                placeholder="الاسم بالكامل"
-                value={form.name}
-                onChange={update("name")}
-                autoComplete="name"
-              />
+          <div className="signup-field">
+            <div className="signup-field-icon">
+              <PhoneIcon />
             </div>
 
-            <div className="signup-field">
-              <div className="signup-field-icon">
-                <MailIcon />
-              </div>
+            <input
+              type="tel"
+              value={form.phone}
+              onChange={update("phone")}
+              placeholder="رقم الهاتف"
+              autoComplete="tel"
+              dir="ltr"
+            />
+          </div>
 
-              <input
-                type="email"
-                placeholder="البريد الإلكتروني"
-                value={form.email}
-                onChange={update("email")}
-                autoComplete="email"
-              />
+          {/* الرقم القومي */}
+          <div className="signup-field">
+            <div className="signup-field-icon">
+              <IdCardIcon />
             </div>
 
-            <div className="signup-field">
-              <div className="signup-field-icon">
-                <PhoneIcon />
-              </div>
+            <input
+              type="text"
+              inputMode="numeric"
+              value={form.nationalId}
+              onChange={handleNationalIdChange}
+              placeholder="الرقم القومي - 14 رقم"
+              autoComplete="off"
+              dir="ltr"
+              maxLength={14}
+            />
+          </div>
 
-              <input
-                type="tel"
-                placeholder="رقم الهاتف"
-                value={form.phone}
-                onChange={update("phone")}
-                autoComplete="tel"
-              />
-            </div>
-
-            <div className="signup-field">
-              <div className="signup-field-icon">
-                <IdCardIcon />
-              </div>
-
-              <input
-                type="text"
-                inputMode="numeric"
-                placeholder="الرقم القومي"
-                value={form.nationalId}
-                onChange={handleNationalIdChange}
-                maxLength={14}
-                autoComplete="off"
-              />
-            </div>
-
-            <div className="signup-field">
-              <div className="signup-field-icon">
-                <LockIcon />
-              </div>
-
-              <input
-                type={
-                  showPassword
-                    ? "text"
-                    : "password"
-                }
-                placeholder="كلمة المرور"
-                value={form.password}
-                onChange={update("password")}
-                autoComplete="new-password"
-              />
-
-              <button
-                type="button"
-                className="signup-password-toggle"
-                onClick={() =>
-                  setShowPassword((prev) => !prev)
-                }
-                aria-label={
-                  showPassword
-                    ? "إخفاء كلمة المرور"
-                    : "إظهار كلمة المرور"
-                }
-              >
-                <EyeIcon hidden={showPassword} />
-              </button>
-            </div>
-
-            <div className="signup-field">
-              <div className="signup-field-icon">
-                <LockIcon />
-              </div>
-
-              <input
-                type={
-                  showConfirm
-                    ? "text"
-                    : "password"
-                }
-                placeholder="تأكيد كلمة المرور"
-                value={form.confirm}
-                onChange={update("confirm")}
-                autoComplete="new-password"
-              />
-
-              <button
-                type="button"
-                className="signup-password-toggle"
-                onClick={() =>
-                  setShowConfirm((prev) => !prev)
-                }
-                aria-label={
-                  showConfirm
-                    ? "إخفاء كلمة المرور"
-                    : "إظهار كلمة المرور"
-                }
-              >
-                <EyeIcon hidden={showConfirm} />
-              </button>
-            </div>
-
-            {accountType === "donor" && (
-              <>
-
-                <div className="signup-field">
-                  <div className="signup-field-icon">
-                    <HeartIcon />
-                  </div>
-
-                  <select
-                    value={form.bloodType}
-                    onChange={update("bloodType")}
-                    required
-                  >
-                    <option value="" disabled>
-                      فصيلة الدم
-                    </option>
-
-                    <option value="A+">A+</option>
-                    <option value="A-">A-</option>
-                    <option value="B+">B+</option>
-                    <option value="B-">B-</option>
-                    <option value="AB+">AB+</option>
-                    <option value="AB-">AB-</option>
-                    <option value="O+">O+</option>
-                    <option value="O-">O-</option>
-                  </select>
+          {/* =========================
+              بيانات المتبرع
+          ========================== */}
+          {accountType === "donor" && (
+            <>
+              {/* فصيلة الدم */}
+              <div className="signup-field">
+                <div className="signup-field-icon">
+                  <HeartIcon />
                 </div>
 
-                <div className="signup-field">
-                  <div className="signup-field-icon">
-                    <HeartIcon />
-                  </div>
-
-                  <select
-                    value={form.chronicDisease}
-                    onChange={update("chronicDisease")}
-                    required
-                  >
-                    <option value="" disabled>
-                      هل لديك أمراض مزمنة؟
-                    </option>
-
-                    <option value="نعم">
-                      نعم
-                    </option>
-
-                    <option value="لا">
-                      لا
-                    </option>
-                  </select>
-                </div>
-
-                <div
-                  className={
-                    form.lastDonation
-                      ? "signup-field signup-date-field has-value"
-                      : "signup-field signup-date-field"
-                  }
+                <select
+                  value={form.bloodType}
+                  onChange={update("bloodType")}
+                  aria-label="فصيلة الدم"
                 >
-                  <div className="signup-field-icon">
-                    <HeartIcon />
-                  </div>
+                  <option value="" disabled>
+                    اختر فصيلة الدم
+                  </option>
 
-                  {!form.lastDonation && (
-                    <span className="signup-date-placeholder">
-                      تاريخ آخر التبرع بالدم
-                    </span>
-                  )}
+                  <option value="A+">
+                    A+
+                  </option>
 
-                  <input
-                    type="date"
-                    value={form.lastDonation}
-                    onChange={update("lastDonation")}
-                    max={
-                      new Date()
-                        .toISOString()
-                        .split("T")[0]
-                    }
-                    aria-label="تاريخ آخر التبرع بالدم"
-                    required
-                  />
+                  <option value="A-">
+                    A-
+                  </option>
+
+                  <option value="B+">
+                    B+
+                  </option>
+
+                  <option value="B-">
+                    B-
+                  </option>
+
+                  <option value="AB+">
+                    AB+
+                  </option>
+
+                  <option value="AB-">
+                    AB-
+                  </option>
+
+                  <option value="O+">
+                    O+
+                  </option>
+
+                  <option value="O-">
+                    O-
+                  </option>
+                </select>
+              </div>
+
+              {/* تاريخ آخر تبرع */}
+              <div
+                className={`signup-field ${
+                  form.lastDonation
+                    ? "signup-date-has-value"
+                    : ""
+                }`}
+              >
+                <div className="signup-field-icon">
+                  <HeartIcon />
                 </div>
 
-              </>
-            )}
+                {!form.lastDonation && (
+                  <span className="signup-date-placeholder">
+                    أدخل تاريخ آخر تبرع بالدم
+                  </span>
+                )}
 
-            {error && (
-              <div className="signup-error">
-                {error}
+                <input
+                  type="date"
+                  value={form.lastDonation}
+                  onChange={update("lastDonation")}
+                  aria-label="تاريخ آخر تبرع بالدم"
+                  max={
+                    new Date()
+                      .toISOString()
+                      .split("T")[0]
+                  }
+                />
               </div>
-            )}
+
+              {/* الأمراض المزمنة */}
+              <div className="signup-field">
+                <div className="signup-field-icon">
+                  <HeartIcon />
+                </div>
+
+                <select
+                  value={form.chronicDisease}
+                  onChange={update("chronicDisease")}
+                  aria-label="هل لديك أمراض مزمنة"
+                >
+                  <option value="" disabled>
+                    هل لديك أمراض مزمنة؟
+                  </option>
+
+                  <option value="نعم">
+                    نعم
+                  </option>
+
+                  <option value="لا">
+                    لا
+                  </option>
+                </select>
+              </div>
+            </>
+          )}
+
+          <div className="signup-field">
+            <div className="signup-field-icon">
+              <LockIcon />
+            </div>
+
+            <input
+              type={
+                showPassword
+                  ? "text"
+                  : "password"
+              }
+              value={form.password}
+              onChange={update("password")}
+              placeholder="كلمة المرور"
+              autoComplete="new-password"
+            />
 
             <button
-              type="submit"
-              className="signup-submit"
-              disabled={loading}
+              type="button"
+              className="signup-eye"
+              onClick={() =>
+                setShowPassword(!showPassword)
+              }
             >
-              {loading
-                ? "جاري إنشاء الحساب..."
-                : "إنشاء الحساب"}
+              <EyeIcon off={!showPassword} />
             </button>
-
-          </form>
-
-          <div className="signup-login-link">
-            لديك حساب بالفعل؟{" "}
-            <Link to="/login">
-              تسجيل الدخول
-            </Link>
           </div>
 
+          <div className="signup-field">
+            <div className="signup-field-icon">
+              <LockIcon />
+            </div>
+
+            <input
+              type={
+                showConfirm
+                  ? "text"
+                  : "password"
+              }
+              value={form.confirm}
+              onChange={update("confirm")}
+              placeholder="تأكيد كلمة المرور"
+              autoComplete="new-password"
+            />
+
+            <button
+              type="button"
+              className="signup-eye"
+              onClick={() =>
+                setShowConfirm(!showConfirm)
+              }
+            >
+              <EyeIcon off={!showConfirm} />
+            </button>
+          </div>
+
+          {error && (
+            <div className="signup-error">
+              {error}
+            </div>
+          )}
+
+          <button
+            className="signup-submit"
+            type="submit"
+            disabled={loading}
+          >
+            {loading
+              ? "جاري إنشاء الحساب..."
+              : "إنشاء الحساب"}
+          </button>
+        </form>
+
+        <div className="signup-login">
+          <span>لديك حساب بالفعل؟</span>
+
+          <Link to="/login">
+            تسجيل الدخول
+          </Link>
         </div>
+      </main>
+
+      <div className="signup-bottom">
+        <svg
+          viewBox="0 0 500 120"
+          preserveAspectRatio="none"
+        >
+          <path
+            d="M0 65C80 30 120 85 190 57C250 33 280 76 340 55C405 32 450 70 500 42V120H0Z"
+            fill="rgba(10,168,143,.25)"
+          />
+
+          <path
+            d="M0 82C70 50 120 100 195 72C260 48 310 94 375 70C430 50 470 82 500 62V120H0Z"
+            fill="rgba(7,136,118,.42)"
+          />
+
+          <path
+            d="M0 93H140L153 93L163 78L174 106L187 58L201 93H320L333 93L343 82L353 105L365 68L378 93H500"
+            fill="none"
+            stroke="white"
+            strokeWidth="2.5"
+            opacity=".9"
+          />
+        </svg>
       </div>
     </div>
   );
