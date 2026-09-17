@@ -7,7 +7,19 @@ async function request(path, options = {}) {
   });
 
   if (!res.ok) {
-    throw new Error(`Request failed: ${res.status}`);
+    let message = `Request failed: ${res.status}`;
+
+    try {
+      const data = await res.json();
+
+      if (data?.error) {
+        message = data.error;
+      }
+    } catch {
+      // Ignore invalid JSON response
+    }
+
+    throw new Error(message);
   }
 
   return res.json();
@@ -33,17 +45,46 @@ const api = {
       body: JSON.stringify({ credential }),
     }),
 
-  getBloodRequests: () => request("/blood/requests"),
+  getBloodRequests: () =>
+    request("/blood/requests"),
 
   getBloodRequest: (id) =>
     request(`/blood/requests/${id}`),
 
-  getNearbyDonors: (bloodType) =>
-    request(
-      `/blood/donors/nearby${
-        bloodType ? `?bloodType=${bloodType}` : ""
-      }`
-    ),
+  // Nearby Donors
+  // bloodType = فصيلة الدم المطلوبة
+  // userId = المستخدم الحالي حتى لا يظهر لنفسه
+  // lat/lng = موقع المستخدم لحساب المسافة
+  getNearbyDonors: ({
+    bloodType = "",
+    userId = "",
+    lat = "",
+    lng = "",
+  } = {}) => {
+    const params = new URLSearchParams();
+
+    if (bloodType) {
+      params.set("bloodType", bloodType);
+    }
+
+    if (userId) {
+      params.set("userId", userId);
+    }
+
+    if (lat !== "" && lat !== null && lat !== undefined) {
+      params.set("lat", lat);
+    }
+
+    if (lng !== "" && lng !== null && lng !== undefined) {
+      params.set("lng", lng);
+    }
+
+    const query = params.toString();
+
+    return request(
+      `/blood/donors/nearby${query ? `?${query}` : ""}`
+    );
+  },
 
   getDonor: (id) =>
     request(`/blood/donors/${id}`),
@@ -57,7 +98,7 @@ const api = {
     request("/blood/hospitals"),
 
   getMedicines: (q) =>
-    request(`/medicines${q ? `?q=${q}` : ""}`),
+    request(`/medicines${q ? `?q=${encodeURIComponent(q)}` : ""}`),
 
   getMedicine: (id) =>
     request(`/medicines/${id}`),
@@ -73,8 +114,14 @@ const api = {
   getNotifications: () =>
     request("/notifications"),
 
-  getUser: () =>
-    request("/users/me"),
+  getUser: (email) =>
+    request(
+      `/users/me${
+        email
+          ? `?email=${encodeURIComponent(email)}`
+          : ""
+      }`
+    ),
 
   getMyRequests: () =>
     request("/users/me/requests"),
@@ -106,7 +153,6 @@ export function getCurrentLocation() {
           lat: pos.coords.latitude,
           lng: pos.coords.longitude,
         }),
-
       (err) => reject(err)
     );
   });
