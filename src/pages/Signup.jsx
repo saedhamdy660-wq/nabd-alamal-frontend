@@ -609,9 +609,13 @@ export default function Signup() {
                     هل لديك أمراض مزمنة؟
                   </option>
 
-                  <option value="نعم">نعم</option>
+                  <option value="نعم">
+                    نعم
+                  </option>
 
-                  <option value="لا">لا</option>
+                  <option value="لا">
+                    لا
+                  </option>
                 </select>
               </div>
             </>
@@ -726,3 +730,42 @@ export default function Signup() {
     </div>
   );
 }
+
+وفي "src/index.css" لازم يكون الجزء ده موجود في الآخر:
+
+.signup-field select {
+  color: inherit;
+  font: inherit;
+}
+
+.signup-field select option {
+  color: #333;
+  font-size: inherit;
+}
+
+.signup-date-placeholder {
+  position: absolute;
+  right: 58px;
+  top: 50%;
+  transform: translateY(-50%);
+  pointer-events: none;
+  z-index: 2;
+  white-space: nowrap;
+  color: inherit;
+  font: inherit;
+}
+
+.signup-date-has-value .signup-date-placeholder {
+  display: none;
+}
+
+.signup-field:has(input[type="date"]) {
+  position: relative;
+}
+
+.signup-field:has(input[type="date"]) input[type="date"] {
+  color: inherit;
+  font: inherit;
+}
+
+كده الثلاثة نفس اللون والحجم والخط بتوع باقي حقول الـ Signup، ومفيش تغيير في التصميم الأساسي.
