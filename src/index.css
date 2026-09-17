@@ -6389,3 +6389,101 @@ html.nabd-dark .verify-identity-retake {
   background: rgba(13, 42, 46, 0.94);
   color: #5ed9c5;
 }
+/* =========================================================
+   DONOR SIGNUP FIELDS FIX
+   نفس شكل حقول التسجيل الحالية بدون تغيير التصميم
+========================================================= */
+
+.signup-field select,
+.signup-field input[type="date"] {
+  width: 100%;
+  height: 100%;
+  margin: 0;
+
+  padding: 0 58px 0 20px;
+
+  border: none;
+  outline: none;
+
+  background: transparent;
+
+  color: #245f72;
+
+  font-family: inherit;
+  font-size: 16px;
+
+  direction: rtl;
+
+  appearance: none;
+  -webkit-appearance: none;
+}
+
+.signup-field select {
+  cursor: pointer;
+}
+
+.signup-field select:focus,
+.signup-field input[type="date"]:focus {
+  border: none;
+  outline: none;
+}
+
+/* لون النص الافتراضي */
+.signup-field select:invalid {
+  color: #78928e;
+}
+
+/* تاريخ آخر تبرع */
+.signup-field input[type="date"] {
+  color: #78928e;
+  cursor: pointer;
+}
+
+/* لو تم اختيار تاريخ، يظهر بنفس لون باقي النصوص */
+.signup-field input[type="date"]:valid {
+  color: #245f72;
+}
+
+/* إخفاء شكل التاريخ الافتراضي المزعج مع الحفاظ على زر التقويم */
+.signup-field input[type="date"]::-webkit-calendar-picker-indicator {
+  opacity: 0.65;
+  cursor: pointer;
+  margin-left: 4px;
+}
+
+/* منع الـ select من عمل مستطيل أبيض مختلف */
+.signup-field select option {
+  background: white;
+  color: #245f72;
+}
+
+/* =========================================================
+   DONATION DATE PLACEHOLDER
+========================================================= */
+
+.signup-date-field {
+  position: relative;
+}
+
+.signup-date-placeholder {
+  position: absolute;
+
+  top: 50%;
+  right: 58px;
+
+  transform: translateY(-50%);
+
+  color: #78928e;
+
+  font-family: inherit;
+  font-size: 16px;
+
+  pointer-events: none;
+
+  z-index: 1;
+}
+
+/* عندما يوجد تاريخ، لا تظهر العبارة */
+.signup-date-field.has-value .signup-date-placeholder {
+  display: none;
+}
