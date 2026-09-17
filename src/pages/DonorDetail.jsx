@@ -2,14 +2,147 @@ import React, { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { api } from "../api.js";
 
-const DEMO_DONOR = {
-  id: "demo-donor",
-  name: "أحمد محمد",
-  bloodType: "O+",
-  distanceKm: 2.3,
-  lastDonation: "منذ 3 أشهر",
-  avatar: "",
-};
+const DEMO_DONORS = [
+  {
+    id: "demo-donor-1",
+    name: "أحمد محمد",
+    bloodType: "O+",
+    distanceKm: 2.3,
+    lastDonation: "2026-06-15",
+    chronicDisease: false,
+    avatar: "",
+  },
+  {
+    id: "demo-donor-2",
+    name: "سعيد إبراهيم سعيد",
+    bloodType: "A+",
+    distanceKm: 3.1,
+    lastDonation: "2026-05-22",
+    chronicDisease: false,
+    avatar: "",
+  },
+  {
+    id: "demo-donor-3",
+    name: "زوزو رضا رفعت",
+    bloodType: "B+",
+    distanceKm: 3.8,
+    lastDonation: "2026-04-18",
+    chronicDisease: false,
+    avatar: "",
+  },
+  {
+    id: "demo-donor-4",
+    name: "ملك احمد جوده",
+    bloodType: "AB+",
+    distanceKm: 4.2,
+    lastDonation: "2026-07-03",
+    chronicDisease: false,
+    avatar: "",
+  },
+  {
+    id: "demo-donor-5",
+    name: "رضوه عصام",
+    bloodType: "O-",
+    distanceKm: 4.7,
+    lastDonation: "2026-03-27",
+    chronicDisease: false,
+    avatar: "",
+  },
+  {
+    id: "demo-donor-6",
+    name: "ذياد عمر سند",
+    bloodType: "A-",
+    distanceKm: 5.1,
+    lastDonation: "2026-06-28",
+    chronicDisease: false,
+    avatar: "",
+  },
+  {
+    id: "demo-donor-7",
+    name: "محمود علي حسن",
+    bloodType: "B-",
+    distanceKm: 5.6,
+    lastDonation: "2026-05-08",
+    chronicDisease: false,
+    avatar: "",
+  },
+  {
+    id: "demo-donor-8",
+    name: "يوسف أحمد إبراهيم",
+    bloodType: "O+",
+    distanceKm: 6.2,
+    lastDonation: "2026-04-30",
+    chronicDisease: false,
+    avatar: "",
+  },
+  {
+    id: "demo-donor-9",
+    name: "نورهان محمد السيد",
+    bloodType: "A+",
+    distanceKm: 6.8,
+    lastDonation: "2026-06-02",
+    chronicDisease: false,
+    avatar: "",
+  },
+  {
+    id: "demo-donor-10",
+    name: "عمر خالد محمود",
+    bloodType: "B+",
+    distanceKm: 7.4,
+    lastDonation: "2026-05-14",
+    chronicDisease: false,
+    avatar: "",
+  },
+];
+
+function getLastDonationText(date) {
+  if (!date) return "آخر تبرع غير مسجل";
+
+  const donationDate = new Date(date);
+  const today = new Date();
+
+  const diffMs = today - donationDate;
+
+  const diffDays = Math.max(
+    0,
+    Math.floor(diffMs / (1000 * 60 * 60 * 24))
+  );
+
+  if (diffDays === 0) {
+    return "اليوم";
+  }
+
+  if (diffDays === 1) {
+    return "منذ يوم واحد";
+  }
+
+  if (diffDays < 30) {
+    return `منذ ${diffDays} يوم`;
+  }
+
+  const months = Math.floor(diffDays / 30);
+
+  if (months === 1) {
+    return "منذ شهر واحد";
+  }
+
+  if (months < 12) {
+    return `منذ ${months} أشهر`;
+  }
+
+  const years = Math.floor(months / 12);
+
+  if (years === 1) {
+    return "منذ سنة واحدة";
+  }
+
+  return `منذ ${years} سنوات`;
+}
+
+function getDonorInitial(name) {
+  if (!name) return "م";
+  return name.trim().charAt(0);
+}
 
 function LocationIcon() {
   return (
@@ -97,9 +230,30 @@ function HeartIcon() {
 function ShareIcon() {
   return (
     <svg viewBox="0 0 24 24">
-      <circle cx="18" cy="5" r="2.2" fill="none" stroke="currentColor" strokeWidth="1.8" />
-      <circle cx="6" cy="12" r="2.2" fill="none" stroke="currentColor" strokeWidth="1.8" />
-      <circle cx="18" cy="19" r="2.2" fill="none" stroke="currentColor" strokeWidth="1.8" />
+      <circle
+        cx="18"
+        cy="5"
+        r="2.2"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="1.8"
+      />
+      <circle
+        cx="6"
+        cy="12"
+        r="2.2"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="1.8"
+      />
+      <circle
+        cx="18"
+        cy="19"
+        r="2.2"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="1.8"
+      />
       <path
         d="M8 11l8-5M8 13l8 5"
         fill="none"
@@ -139,12 +293,12 @@ export default function DonorDetail() {
   const [notified, setNotified] = useState(false);
 
   useEffect(() => {
-    /*
-      لو دخلنا على المتبرع التجريبي،
-      نعرضه مباشرة بدون الحاجة للـ Backend.
-    */
-    if (id === "demo-donor") {
-      setDonor(DEMO_DONOR);
+    const demoDonor = DEMO_DONORS.find(
+      (item) => String(item.id) === String(id)
+    );
+
+    if (demoDonor) {
+      setDonor(demoDonor);
       return;
     }
 
@@ -152,32 +306,21 @@ export default function DonorDetail() {
       .getDonor(id)
       .then(setDonor)
       .catch(() => {
-        /*
-          لو المتبرع مش موجود في الـ API،
-          نعرض المتبرع التجريبي بدل الصفحة الفاضية.
-        */
-        setDonor(DEMO_DONOR);
+        setDonor(DEMO_DONORS[0]);
       });
   }, [id]);
 
   if (!donor) {
     return (
       <div className="donor-page">
-        <div className="loading">جارِ التحميل...</div>
+        <div className="loading">
+          جارِ التحميل...
+        </div>
       </div>
     );
   }
 
   const handleDonate = async () => {
-    /*
-      المتبرع التجريبي:
-      مجرد تجربة للواجهة.
-    */
-    if (id === "demo-donor") {
-      setNotified(true);
-      return;
-    }
-
     setNotified(true);
   };
 
@@ -212,7 +355,7 @@ export default function DonorDetail() {
               : "none",
           }}
         >
-          {!donor.avatar && "أ"}
+          {!donor.avatar && getDonorInitial(donor.name)}
         </div>
 
         <h2>{donor.name}</h2>
@@ -223,7 +366,7 @@ export default function DonorDetail() {
           </span>
 
           <span className="registered">
-            متبرع مسجل منذ 6 أشهر
+            متبرع مسجل
           </span>
         </div>
 
@@ -258,7 +401,7 @@ export default function DonorDetail() {
 
         <div className="info-row">
           <div className="info-value">
-            آخر تبرع
+            {getLastDonationText(donor.lastDonation)}
           </div>
 
           <div className="info-icon">
@@ -266,11 +409,28 @@ export default function DonorDetail() {
           </div>
         </div>
 
+        <div className="info-divider" />
+
+        <div className="info-row">
+          <div className="info-value">
+            {donor.chronicDisease
+              ? "يوجد مرض مزمن مسجل"
+              : "لا توجد أمراض مزمنة مسجلة"}
+          </div>
+
+          <div className="info-icon">
+            <HeartIcon />
+          </div>
+        </div>
+
       </section>
 
       {/* Donate */}
       {!notified ? (
-        <button className="donate-button" onClick={handleDonate}>
+        <button
+          className="donate-button"
+          onClick={handleDonate}
+        >
           التبرع الآن
           <HeartIcon />
         </button>
@@ -280,7 +440,9 @@ export default function DonorDetail() {
             ✓
           </div>
 
-          <strong>تم إرسال التنبيه للمتبرع بنجاح</strong>
+          <strong>
+            تم إرسال التنبيه للمتبرع بنجاح
+          </strong>
 
           <p>
             سيتم إشعارك عند قبول الطلب من المتبرع.
@@ -313,6 +475,7 @@ export default function DonorDetail() {
       </h2>
 
       <style>{`
+
         * {
           box-sizing: border-box;
         }
@@ -561,6 +724,7 @@ export default function DonorDetail() {
           border-radius: 30px;
 
           color: white;
+
           background:
             linear-gradient(
               135deg,
@@ -571,72 +735,85 @@ export default function DonorDetail() {
           font-size: 18px;
           font-weight: 800;
 
-          box-shadow:
-            0 10px 25px rgba(21,155,138,.22);
-
           cursor: pointer;
+
+          box-shadow:
+            0 10px 22px rgba(21,155,138,.16);
         }
 
         .donate-button svg {
-          width: 25px;
-          height: 25px;
+          width: 23px;
+          height: 23px;
         }
 
         .success-card {
           max-width: 520px;
           margin: 0 auto 16px;
-          padding: 18px;
+          padding: 22px;
 
           text-align: center;
 
-          border-radius: 23px;
+          border-radius: 25px;
 
-          color: #28786e;
           background:
             linear-gradient(
               145deg,
-              rgba(218,251,242,.95),
-              rgba(201,243,232,.88)
+              rgba(255,255,255,.9),
+              rgba(232,249,246,.8)
             );
 
-          border: 1px solid rgba(255,255,255,.9);
+          border: 1px solid rgba(255,255,255,.95);
+
+          box-shadow:
+            0 12px 30px rgba(42,128,128,.08);
         }
 
         .success-icon {
-          width: 46px;
-          height: 46px;
+          width: 50px;
+          height: 50px;
 
-          margin: 0 auto 9px;
-
-          border-radius: 50%;
+          margin: 0 auto 10px;
 
           display: flex;
           align-items: center;
           justify-content: center;
 
+          border-radius: 50%;
+
           color: white;
-          background: #159b8a;
+          background: #19ad98;
 
           font-size: 24px;
           font-weight: 900;
         }
 
+        .success-card strong {
+          display: block;
+
+          color: #286d6d;
+
+          font-size: 14px;
+        }
+
         .success-card p {
           margin: 7px 0 0;
-          color: #709391;
-          font-size: 12px;
+
+          color: #88a3a2;
+
+          font-size: 11px;
         }
 
         .actions-card {
           max-width: 520px;
-          margin: 0 auto;
+          margin: 0 auto 20px;
 
-          padding: 16px 8px;
+          padding: 8px;
 
           display: grid;
           grid-template-columns: repeat(3, 1fr);
+          gap: 7px;
 
-          border-radius: 25px;
+          border-radius: 22px;
 
           background:
             rgba(255,255,255,.78);
@@ -644,55 +821,73 @@ export default function DonorDetail() {
           border: 1px solid rgba(255,255,255,.92);
 
           box-shadow:
-            0 10px 27px rgba(42,128,128,.08);
+            0 10px 26px rgba(42,128,128,.07);
         }
 
         .action-button {
-          min-height: 70px;
+          min-height: 62px;
 
           border: 0;
-          background: transparent;
+          border-radius: 17px;
 
           display: flex;
           flex-direction: column;
           align-items: center;
           justify-content: center;
-          gap: 7px;
+          gap: 5px;
 
-          color: #5d8988;
+          color: #6e9291;
+          background: transparent;
 
-          font-size: 12px;
-          font-weight: 700;
+          font-size: 10px;
+          font-weight: 800;
 
           cursor: pointer;
         }
 
-        .action-button + .action-button {
-          border-right: 1px solid rgba(124,184,177,.18);
-        }
-
         .action-button svg {
-          width: 27px;
-          height: 27px;
-          color: #159b8a;
+          width: 21px;
+          height: 21px;
         }
 
         .details-title {
           max-width: 520px;
-          margin: 25px auto 0;
+          margin: 0 auto;
 
-          text-align: center;
+          color: #286d6d;
 
-          color: #218d83;
-          font-size: 21px;
+          font-size: 17px;
           font-weight: 800;
         }
 
         .loading {
-          text-align: center;
-          margin-top: 100px;
-          color: #6d9191;
+          min-height: 100vh;
+
+          display: flex;
+          align-items: center;
+          justify-content: center;
+
+          color: #218d83;
+
+          font-size: 16px;
+          font-weight: 800;
         }
+
+        @media (max-width: 380px) {
+          .donor-page {
+            padding-left: 13px;
+            padding-right: 13px;
+          }
+
+          .donor-card h2 {
+            font-size: 20px;
+          }
+
+          .info-value {
+            font-size: 12px;
+          }
+        }
+
       `}</style>
     </div>
   );
