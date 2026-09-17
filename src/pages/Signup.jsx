@@ -63,6 +63,106 @@ const HeartIcon = () => (
   </svg>
 );
 
+/* =========================
+   Blood Drop Icon
+========================= */
+
+const BloodDropIcon = () => (
+  <svg viewBox="0 0 24 24" fill="none">
+    <path
+      d="M12 3C12 3 6 9.5 6 14.3C6 17.8 8.7 20.5 12 20.5C15.3 20.5 18 17.8 18 14.3C18 9.5 12 3 12 3Z"
+      stroke="currentColor"
+      strokeWidth="1.8"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    />
+  </svg>
+);
+
+/* =========================
+   Calendar Icon
+========================= */
+
+const CalendarIcon = () => (
+  <svg viewBox="0 0 24 24" fill="none">
+    <rect
+      x="3.5"
+      y="5"
+      width="17"
+      height="16"
+      rx="2.5"
+      stroke="currentColor"
+      strokeWidth="1.8"
+    />
+
+    <path
+      d="M7 3.5V7"
+      stroke="currentColor"
+      strokeWidth="1.8"
+      strokeLinecap="round"
+    />
+
+    <path
+      d="M17 3.5V7"
+      stroke="currentColor"
+      strokeWidth="1.8"
+      strokeLinecap="round"
+    />
+
+    <path
+      d="M3.5 9H20.5"
+      stroke="currentColor"
+      strokeWidth="1.8"
+    />
+  </svg>
+);
+
+/* =========================
+   Plus Circle Icon
+========================= */
+
+const PlusCircleIcon = () => (
+  <svg viewBox="0 0 24 24" fill="none">
+    <circle
+      cx="12"
+      cy="12"
+      r="8.5"
+      stroke="currentColor"
+      strokeWidth="1.8"
+    />
+
+    <path
+      d="M12 8V16"
+      stroke="currentColor"
+      strokeWidth="1.8"
+      strokeLinecap="round"
+    />
+
+    <path
+      d="M8 12H16"
+      stroke="currentColor"
+      strokeWidth="1.8"
+      strokeLinecap="round"
+    />
+  </svg>
+);
+
+/* =========================
+   Chevron Icon
+========================= */
+
+const ChevronDownIcon = () => (
+  <svg viewBox="0 0 24 24" fill="none">
+    <path
+      d="M7 9L12 14L17 9"
+      stroke="currentColor"
+      strokeWidth="1.8"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    />
+  </svg>
+);
+
 const MailIcon = () => (
   <svg viewBox="0 0 24 24" fill="none">
     <rect
@@ -74,6 +174,7 @@ const MailIcon = () => (
       stroke="currentColor"
       strokeWidth="1.8"
     />
+
     <path
       d="M4 7L12 13L20 7"
       stroke="currentColor"
@@ -91,6 +192,7 @@ const PhoneIcon = () => (
       stroke="currentColor"
       strokeWidth="1.8"
     />
+
     <path
       d="M9 18H15"
       stroke="currentColor"
@@ -161,6 +263,7 @@ const LockIcon = () => (
       stroke="currentColor"
       strokeWidth="1.8"
     />
+
     <path
       d="M8 10V7.5C8 5 9.8 3 12 3C14.2 3 16 5 16 7.5V10"
       stroke="currentColor"
@@ -268,7 +371,10 @@ export default function Signup() {
 
   const openDatePicker = () => {
     if (dateInputRef.current) {
-      if (typeof dateInputRef.current.showPicker === "function") {
+      if (
+        typeof dateInputRef.current.showPicker ===
+        "function"
+      ) {
         dateInputRef.current.showPicker();
       } else {
         dateInputRef.current.focus();
@@ -320,7 +426,9 @@ export default function Signup() {
       }
 
       if (!form.chronicDisease) {
-        setError("من فضلك حدد هل لديك أمراض مزمنة أم لا");
+        setError(
+          "من فضلك حدد هل لديك أمراض مزمنة أم لا"
+        );
         return;
       }
     }
@@ -491,6 +599,7 @@ export default function Signup() {
           className="signup-form"
           onSubmit={handleSubmit}
         >
+          {/* الاسم */}
           <div className="signup-field">
             <div className="signup-field-icon">
               <UserIcon />
@@ -505,6 +614,7 @@ export default function Signup() {
             />
           </div>
 
+          {/* البريد */}
           <div className="signup-field">
             <div className="signup-field-icon">
               <MailIcon />
@@ -519,6 +629,7 @@ export default function Signup() {
             />
           </div>
 
+          {/* الهاتف */}
           <div className="signup-field">
             <div className="signup-field-icon">
               <PhoneIcon />
@@ -552,16 +663,20 @@ export default function Signup() {
             />
           </div>
 
-          {/* بيانات المتبرع */}
+          {/* =================================================
+              DONOR FIELDS
+          ================================================= */}
+
           {accountType === "donor" && (
             <>
               {/* فصيلة الدم */}
-              <div className="signup-field signup-donor-select-field">
+              <div className="signup-field signup-donor-field">
                 <div className="signup-field-icon">
-                  <HeartIcon />
+                  <BloodDropIcon />
                 </div>
 
                 <select
+                  className="signup-donor-select"
                   value={form.bloodType}
                   onChange={update("bloodType")}
                   aria-label="فصيلة الدم"
@@ -574,20 +689,28 @@ export default function Signup() {
                   <option value="A-">A-</option>
                   <option value="B+">B+</option>
                   <option value="B-">B-</option>
-                  <option value="AB+">AB+</option>
-                  <option value="AB-">AB-</option>
+                  <option value="AB+">
+                    AB+
+                  </option>
+                  <option value="AB-">
+                    AB-
+                  </option>
                   <option value="O+">O+</option>
                   <option value="O-">O-</option>
                 </select>
+
+                <div className="signup-donor-chevron">
+                  <ChevronDownIcon />
+                </div>
               </div>
 
               {/* تاريخ آخر تبرع */}
               <div
-                className="signup-field signup-date-field"
+                className="signup-field signup-donor-field signup-date-field"
                 onClick={openDatePicker}
               >
                 <div className="signup-field-icon">
-                  <HeartIcon />
+                  <CalendarIcon />
                 </div>
 
                 <span
@@ -617,12 +740,13 @@ export default function Signup() {
               </div>
 
               {/* الأمراض المزمنة */}
-              <div className="signup-field signup-donor-select-field">
+              <div className="signup-field signup-donor-field">
                 <div className="signup-field-icon">
-                  <HeartIcon />
+                  <PlusCircleIcon />
                 </div>
 
                 <select
+                  className="signup-donor-select"
                   value={form.chronicDisease}
                   onChange={update("chronicDisease")}
                   aria-label="الأمراض المزمنة"
@@ -639,10 +763,15 @@ export default function Signup() {
                     لا
                   </option>
                 </select>
+
+                <div className="signup-donor-chevron">
+                  <ChevronDownIcon />
+                </div>
               </div>
             </>
           )}
 
+          {/* كلمة المرور */}
           <div className="signup-field">
             <div className="signup-field-icon">
               <LockIcon />
@@ -673,6 +802,7 @@ export default function Signup() {
             </button>
           </div>
 
+          {/* تأكيد كلمة المرور */}
           <div className="signup-field">
             <div className="signup-field-icon">
               <LockIcon />
