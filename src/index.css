@@ -6522,7 +6522,7 @@ html.nabd-dark .verify-identity-retake {
   font: inherit;
 }
 /* =========================
-   DONOR FIELDS
+   DONOR FIELDS - SAME AS NORMAL FIELDS
 ========================= */
 
 .signup-donor-select-field {
@@ -6535,14 +6535,13 @@ html.nabd-dark .verify-identity-retake {
   height: 64px;
 
   margin: 0;
-  padding: 0 58px 0 48px;
+  padding: 0 54px 0 48px;
 
   border: none;
   outline: none;
 
   background: transparent;
 
-  /* نفس لون تاريخ آخر تبرع */
   color: #7b9ea1;
 
   font-family: inherit;
@@ -6555,24 +6554,22 @@ html.nabd-dark .verify-identity-retake {
   -webkit-appearance: none;
 
   cursor: pointer;
+
+  box-sizing: border-box;
 }
 
 .signup-donor-select-field select option {
   background: white;
   color: #245f72;
+
   font-family: inherit;
   font-size: 16px;
   font-weight: 600;
 }
 
-/* لما يختار قيمة فعلية تتحول للون النص الأساسي */
-.signup-donor-select-field select:valid {
-  color: #245f72;
-}
-
 
 /* =========================
-   DONOR DATE FIELD
+   DATE
 ========================= */
 
 .signup-date-field {
@@ -6584,18 +6581,19 @@ html.nabd-dark .verify-identity-retake {
 .signup-donor-date-text {
   position: absolute;
 
-  right: 58px;
+  right: 54px;
   left: 48px;
 
   top: 50%;
   transform: translateY(-50%);
 
-  /* نفس اللون */
   color: #7b9ea1;
 
   font-family: inherit;
   font-size: 16px;
   font-weight: 600;
+
+  line-height: normal;
 
   text-align: right;
 
