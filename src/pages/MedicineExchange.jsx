@@ -4,16 +4,10 @@ import { api } from "../api.js";
 
 /*
   الأقسام الرئيسية
-  الاسم هنا ثابت للتصميم فقط،
-  أما الأدوية نفسها وأسماؤها فتأتي من الـ API.
+  لا يوجد قسم "الكل".
 */
 
 const categories = [
-  {
-    key: "all",
-    label: "الكل",
-    icon: "💊",
-  },
   {
     key: "الأورام",
     label: "الأورام",
@@ -62,8 +56,7 @@ const categories = [
 ];
 
 /*
-  لون واحد موحّد لكل الأقسام
-  (لا يوجد أي قسم مميز عن الباقي، بما في ذلك "الأورام")
+  لون واحد موحّد لكل الأقسام.
 */
 
 const defaultCategoryColor = {
@@ -72,8 +65,7 @@ const defaultCategoryColor = {
 };
 
 /*
-  توحيد اسم القسم القادم من الـ API
-  علشان لو فيه اختلاف بسيط في الكتابة.
+  توحيد اسم القسم القادم من الـ API.
 */
 
 function normalizeCategory(category) {
@@ -148,7 +140,13 @@ export default function MedicineExchange() {
 
   const [medicines, setMedicines] = useState([]);
   const [search, setSearch] = useState("");
-  const [selectedCategory, setSelectedCategory] = useState("all");
+
+  /*
+    أول قسم يظهر عند فتح الصفحة.
+  */
+  const [selectedCategory, setSelectedCategory] =
+    useState(categories[0].key);
+
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -182,7 +180,7 @@ export default function MedicineExchange() {
   }, []);
 
   /*
-    البحث
+    البحث.
   */
 
   const handleSearch = async (e) => {
@@ -202,7 +200,7 @@ export default function MedicineExchange() {
   };
 
   /*
-    البحث أثناء الكتابة
+    البحث أثناء الكتابة.
   */
 
   const searchFilteredMedicines = useMemo(() => {
@@ -232,17 +230,14 @@ export default function MedicineExchange() {
   }, [medicines, search]);
 
   /*
-    الأدوية الخاصة بالقسم المختار
+    الأدوية الخاصة بالقسم المختار فقط.
   */
 
   const visibleMedicines = useMemo(() => {
-    if (selectedCategory === "all") {
-      return searchFilteredMedicines;
-    }
-
     return searchFilteredMedicines.filter(
       (medicine) =>
-        getMedicineCategory(medicine) === selectedCategory
+        getMedicineCategory(medicine) ===
+        selectedCategory
     );
   }, [
     searchFilteredMedicines,
@@ -250,40 +245,36 @@ export default function MedicineExchange() {
   ]);
 
   /*
-    عدد الأدوية في كل قسم
+    عدد الأدوية في كل قسم.
   */
 
   const categoryCounts = useMemo(() => {
     const counts = {};
 
     categories.forEach((category) => {
-      if (category.key === "all") {
-        counts[category.key] =
-          searchFilteredMedicines.length;
-      } else {
-        counts[category.key] =
-          searchFilteredMedicines.filter(
-            (medicine) =>
-              getMedicineCategory(medicine) ===
-              category.key
-          ).length;
-      }
+      counts[category.key] =
+        searchFilteredMedicines.filter(
+          (medicine) =>
+            getMedicineCategory(medicine) ===
+            category.key
+        ).length;
     });
 
     return counts;
   }, [searchFilteredMedicines]);
 
   /*
-    عنوان القسم الحالي
+    عنوان القسم الحالي.
   */
 
   const currentCategory =
     categories.find(
-      (category) => category.key === selectedCategory
+      (category) =>
+        category.key === selectedCategory
     ) || categories[0];
 
   /*
-    الضغط على القسم
+    الضغط على القسم.
   */
 
   const selectCategory = (categoryKey) => {
@@ -296,10 +287,7 @@ export default function MedicineExchange() {
   };
 
   /*
-    الضغط على الدواء
-    مهم جدًا:
-    هنا بنستخدم ID الدواء الحقيقي
-    علشان MedicineDetail يجيب نفس الدواء.
+    فتح تفاصيل الدواء.
   */
 
   const openMedicine = (medicine) => {
@@ -442,68 +430,63 @@ export default function MedicineExchange() {
           </div>
 
           <div className="medicine-category-grid">
-            {categories
-              .filter(
-                (category) =>
-                  category.key !== "all"
-              )
-              .map((category) => {
-                const isActive =
-                  selectedCategory ===
-                  category.key;
+            {categories.map((category) => {
+              const isActive =
+                selectedCategory ===
+                category.key;
 
-                return (
-                  <button
-                    key={category.key}
-                    type="button"
-                    className={
-                      isActive
-                        ? "medicine-category-card active"
-                        : "medicine-category-card"
-                    }
-                    onClick={() =>
-                      selectCategory(
-                        category.key
-                      )
-                    }
+              return (
+                <button
+                  key={category.key}
+                  type="button"
+                  className={
+                    isActive
+                      ? "medicine-category-card active"
+                      : "medicine-category-card"
+                  }
+                  onClick={() =>
+                    selectCategory(
+                      category.key
+                    )
+                  }
+                  style={{
+                    background:
+                      defaultCategoryColor.background,
+                  }}
+                >
+                  <div
+                    className="medicine-category-card-icon"
                     style={{
                       background:
-                        defaultCategoryColor.background,
+                        defaultCategoryColor.iconBackground,
                     }}
                   >
-                    <div
-                      className="medicine-category-card-icon"
-                      style={{
-                        background:
-                          defaultCategoryColor.iconBackground,
-                      }}
-                    >
-                      {category.icon}
-                    </div>
+                    {category.icon}
+                  </div>
 
-                    <div className="medicine-category-card-text">
-                      <strong>
-                        {category.label}
-                      </strong>
+                  <div className="medicine-category-card-text">
+                    <strong>
+                      {category.label}
+                    </strong>
 
-                      <span>
-                        {categoryCounts[
-                          category.key
-                        ] || 0}{" "}
-                        {categoryCounts[
-                          category.key
-                        ] === 1
-                          ? "دواء"
-                          : "أدوية"}
-                      </span>
-                    </div>
-
-                    <span className="medicine-category-arrow">
-                      ‹
+                    <span>
+                      {categoryCounts[
+                        category.key
+                      ] || 0}{" "}
+                      {categoryCounts[
+                        category.key
+                      ] === 1
+                        ? "دواء"
+                        : "أدوية"}
                     </span>
-                  </button>
-                );
-              })}
+                  </div>
+
+                  <span className="medicine-category-arrow">
+                    ‹
+                  </span>
+                </button>
+              );
+            })}
           </div>
         </section>
 
@@ -515,15 +498,12 @@ export default function MedicineExchange() {
           <div className="medicine-list-heading">
             <div>
               <h2>
-                {selectedCategory === "all"
-                  ? "كل الأدوية"
-                  : currentCategory.label}
+                {currentCategory.label}
               </h2>
 
               <p>
-                {selectedCategory === "all"
-                  ? "الأدوية المتوفرة للتبادل"
-                  : `الأدوية الموجودة في قسم ${currentCategory.label}`}
+                الأدوية الموجودة في قسم{" "}
+                {currentCategory.label}
               </p>
             </div>
 
@@ -553,17 +533,6 @@ export default function MedicineExchange() {
               <p>
                 لم يتم العثور على أدوية في هذا القسم حاليًا.
               </p>
-
-              {selectedCategory !== "all" && (
-                <button
-                  type="button"
-                  onClick={() =>
-                    selectCategory("all")
-                  }
-                >
-                  عرض كل الأدوية
-                </button>
-              )}
             </div>
           ) : (
             <div className="medicine-list">
@@ -688,8 +657,6 @@ export default function MedicineExchange() {
           overflow-x: hidden;
         }
 
-        /* ================= HEADER ================= */
-
         .medicine-exchange-header {
           display: grid;
           grid-template-columns: 52px 1fr 52px;
@@ -772,8 +739,6 @@ export default function MedicineExchange() {
           font-weight: 600;
         }
 
-        /* ================= SEARCH ================= */
-
         .medicine-search {
           width: 100%;
           height: 58px;
@@ -854,8 +819,6 @@ export default function MedicineExchange() {
           stroke-linecap: round;
         }
 
-        /* ================= CATEGORY PILLS ================= */
-
         .medicine-category-pills {
           display: flex;
 
@@ -919,8 +882,6 @@ export default function MedicineExchange() {
               rgba(20, 155, 138, .18);
         }
 
-        /* ================= SECTION ================= */
-
         .medicine-section,
         .medicine-list-section {
           padding:
@@ -977,8 +938,6 @@ export default function MedicineExchange() {
           font-size: 12px;
           line-height: 1.6;
         }
-
-        /* ================= CATEGORY GRID ================= */
 
         .medicine-category-grid {
           display: grid;
@@ -1085,8 +1044,6 @@ export default function MedicineExchange() {
           line-height: 1;
         }
 
-        /* ================= LIST HEADER ================= */
-
         .medicine-list-section {
           margin-top: 15px;
         }
@@ -1119,8 +1076,6 @@ export default function MedicineExchange() {
           font-size: 11px;
           font-weight: 900;
         }
-
-        /* ================= MEDICINE LIST ================= */
 
         .medicine-list {
           display: flex;
@@ -1275,8 +1230,6 @@ export default function MedicineExchange() {
           line-height: 1;
         }
 
-        /* ================= EMPTY ================= */
-
         .medicine-empty-state {
           min-height: 180px;
 
@@ -1345,37 +1298,11 @@ export default function MedicineExchange() {
           font-size: 12px;
         }
 
-        .medicine-empty-state button {
-          padding:
-            10px
-            17px;
-
-          border: 0;
-          border-radius: 20px;
-
-          color: white;
-
-          background:
-            linear-gradient(
-              135deg,
-              #18ad9b,
-              #109887
-            );
-
-          font-family: inherit;
-          font-size: 12px;
-          font-weight: 800;
-
-          cursor: pointer;
-        }
-
         @keyframes medicineSpin {
           to {
             transform: rotate(360deg);
           }
         }
-
-        /* ================= SMALL PHONES ================= */
 
         @media (max-width: 380px) {
           .medicine-exchange-page {
