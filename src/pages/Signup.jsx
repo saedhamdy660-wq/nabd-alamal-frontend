@@ -63,10 +63,6 @@ const HeartIcon = () => (
   </svg>
 );
 
-/* =========================
-   Blood Drop Icon
-========================= */
-
 const BloodDropIcon = () => (
   <svg viewBox="0 0 24 24" fill="none">
     <path
@@ -78,10 +74,6 @@ const BloodDropIcon = () => (
     />
   </svg>
 );
-
-/* =========================
-   Calendar Icon
-========================= */
 
 const CalendarIcon = () => (
   <svg viewBox="0 0 24 24" fill="none">
@@ -117,10 +109,6 @@ const CalendarIcon = () => (
   </svg>
 );
 
-/* =========================
-   Plus Circle Icon
-========================= */
-
 const PlusCircleIcon = () => (
   <svg viewBox="0 0 24 24" fill="none">
     <circle
@@ -146,10 +134,6 @@ const PlusCircleIcon = () => (
     />
   </svg>
 );
-
-/* =========================
-   Chevron Icon
-========================= */
 
 const ChevronDownIcon = () => (
   <svg viewBox="0 0 24 24" fill="none">
@@ -507,6 +491,103 @@ export default function Signup() {
 
   return (
     <div className="signup-page">
+
+      {/* =================================================
+          INPUT TEXT STYLE
+          توحيد مكان ولون كل الكلام داخل الحقول
+      ================================================= */}
+
+      <style>{`
+        /* كل حقول التسجيل */
+        .signup-field input,
+        .signup-field select {
+          direction: rtl !important;
+          text-align: right !important;
+          color: #555 !important;
+        }
+
+        /* كل الـ placeholders بنفس اللون */
+        .signup-field input::placeholder {
+          color: #999 !important;
+          opacity: 1 !important;
+          text-align: right !important;
+        }
+
+        /* توحيد مكان النص من ناحية اليمين */
+        .signup-field input {
+          padding-right: 58px !important;
+          padding-left: 55px !important;
+        }
+
+        /* الهاتف والرقم القومي */
+        .signup-field input[dir="ltr"] {
+          direction: ltr !important;
+          text-align: right !important;
+        }
+
+        .signup-field input[dir="ltr"]::placeholder {
+          direction: rtl !important;
+          text-align: right !important;
+          color: #999 !important;
+          opacity: 1 !important;
+        }
+
+        /* فصيلة الدم والأمراض المزمنة */
+        .signup-donor-select {
+          direction: rtl !important;
+          text-align: right !important;
+          padding-right: 58px !important;
+          padding-left: 55px !important;
+          color: #999 !important;
+        }
+
+        .signup-donor-select option {
+          direction: rtl;
+          text-align: right;
+          color: #555;
+        }
+
+        /* لو تم اختيار قيمة في الـ select */
+        .signup-donor-select:valid {
+          color: #555 !important;
+        }
+
+        /* تاريخ آخر تبرع */
+        .signup-donor-date-text {
+          width: 100%;
+          direction: rtl !important;
+          text-align: right !important;
+          padding-right: 58px !important;
+          padding-left: 55px !important;
+          color: #999 !important;
+        }
+
+        .signup-donor-date-text.selected {
+          color: #555 !important;
+        }
+
+        /* تثبيت مكان الأيقونة */
+        .signup-field-icon {
+          position: absolute;
+          right: 20px;
+        }
+
+        /* عين كلمة المرور تفضل في مكانها */
+        .signup-eye {
+          position: absolute;
+          left: 18px;
+        }
+
+        /* إخفاء input التاريخ الحقيقي */
+        .signup-date-field input[type="date"] {
+          position: absolute;
+          opacity: 0;
+          pointer-events: none;
+          width: 1px;
+          height: 1px;
+        }
+      `}</style>
+
       <div className="signup-orb signup-orb-1" />
       <div className="signup-orb signup-orb-2" />
 
@@ -527,6 +608,7 @@ export default function Signup() {
       </button>
 
       <main className="signup-content">
+
         <div className="signup-logo">
           <Logo />
         </div>
@@ -557,7 +639,9 @@ export default function Signup() {
           <span />
         </div>
 
+        {/* نوع الحساب */}
         <div className="signup-account-types">
+
           <button
             type="button"
             className={
@@ -593,49 +677,59 @@ export default function Signup() {
 
             <span>مستخدم</span>
           </button>
+
         </div>
 
         <form
           className="signup-form"
           onSubmit={handleSubmit}
         >
+
           {/* الاسم */}
           <div className="signup-field">
+
             <div className="signup-field-icon">
               <UserIcon />
             </div>
 
             <input
+              className="signup-input"
               type="text"
               value={form.name}
               onChange={update("name")}
               placeholder="الاسم الكامل"
               autoComplete="name"
             />
+
           </div>
 
           {/* البريد */}
           <div className="signup-field">
+
             <div className="signup-field-icon">
               <MailIcon />
             </div>
 
             <input
+              className="signup-input"
               type="email"
               value={form.email}
               onChange={update("email")}
               placeholder="البريد الإلكتروني"
               autoComplete="email"
             />
+
           </div>
 
           {/* الهاتف */}
           <div className="signup-field">
+
             <div className="signup-field-icon">
               <PhoneIcon />
             </div>
 
             <input
+              className="signup-input"
               type="tel"
               value={form.phone}
               onChange={update("phone")}
@@ -643,15 +737,18 @@ export default function Signup() {
               autoComplete="tel"
               dir="ltr"
             />
+
           </div>
 
           {/* الرقم القومي */}
           <div className="signup-field">
+
             <div className="signup-field-icon">
               <IdCardIcon />
             </div>
 
             <input
+              className="signup-input"
               type="text"
               inputMode="numeric"
               value={form.nationalId}
@@ -661,6 +758,7 @@ export default function Signup() {
               dir="ltr"
               maxLength={14}
             />
+
           </div>
 
           {/* =================================================
@@ -669,8 +767,10 @@ export default function Signup() {
 
           {accountType === "donor" && (
             <>
+
               {/* فصيلة الدم */}
               <div className="signup-field signup-donor-field">
+
                 <div className="signup-field-icon">
                   <BloodDropIcon />
                 </div>
@@ -681,27 +781,52 @@ export default function Signup() {
                   onChange={update("bloodType")}
                   aria-label="فصيلة الدم"
                 >
-                  <option value="" disabled>
+
+                  <option
+                    value=""
+                    disabled
+                  >
                     اختر فصيلة الدم
                   </option>
 
-                  <option value="A+">A+</option>
-                  <option value="A-">A-</option>
-                  <option value="B+">B+</option>
-                  <option value="B-">B-</option>
+                  <option value="A+">
+                    A+
+                  </option>
+
+                  <option value="A-">
+                    A-
+                  </option>
+
+                  <option value="B+">
+                    B+
+                  </option>
+
+                  <option value="B-">
+                    B-
+                  </option>
+
                   <option value="AB+">
                     AB+
                   </option>
+
                   <option value="AB-">
                     AB-
                   </option>
-                  <option value="O+">O+</option>
-                  <option value="O-">O-</option>
+
+                  <option value="O+">
+                    O+
+                  </option>
+
+                  <option value="O-">
+                    O-
+                  </option>
+
                 </select>
 
                 <div className="signup-donor-chevron">
                   <ChevronDownIcon />
                 </div>
+
               </div>
 
               {/* تاريخ آخر تبرع */}
@@ -709,6 +834,7 @@ export default function Signup() {
                 className="signup-field signup-donor-field signup-date-field"
                 onClick={openDatePicker}
               >
+
                 <div className="signup-field-icon">
                   <CalendarIcon />
                 </div>
@@ -737,10 +863,12 @@ export default function Signup() {
                   }
                   aria-label="تاريخ آخر تبرع بالدم"
                 />
+
               </div>
 
               {/* الأمراض المزمنة */}
               <div className="signup-field signup-donor-field">
+
                 <div className="signup-field-icon">
                   <PlusCircleIcon />
                 </div>
@@ -751,7 +879,11 @@ export default function Signup() {
                   onChange={update("chronicDisease")}
                   aria-label="الأمراض المزمنة"
                 >
-                  <option value="" disabled>
+
+                  <option
+                    value=""
+                    disabled
+                  >
                     هل لديك أمراض مزمنة؟
                   </option>
 
@@ -762,22 +894,27 @@ export default function Signup() {
                   <option value="لا">
                     لا
                   </option>
+
                 </select>
 
                 <div className="signup-donor-chevron">
                   <ChevronDownIcon />
                 </div>
+
               </div>
+
             </>
           )}
 
           {/* كلمة المرور */}
           <div className="signup-field">
+
             <div className="signup-field-icon">
               <LockIcon />
             </div>
 
             <input
+              className="signup-input"
               type={
                 showPassword
                   ? "text"
@@ -800,15 +937,18 @@ export default function Signup() {
                 off={!showPassword}
               />
             </button>
+
           </div>
 
           {/* تأكيد كلمة المرور */}
           <div className="signup-field">
+
             <div className="signup-field-icon">
               <LockIcon />
             </div>
 
             <input
+              className="signup-input"
               type={
                 showConfirm
                   ? "text"
@@ -831,14 +971,17 @@ export default function Signup() {
                 off={!showConfirm}
               />
             </button>
+
           </div>
 
+          {/* رسالة الخطأ */}
           {error && (
             <div className="signup-error">
               {error}
             </div>
           )}
 
+          {/* زر إنشاء الحساب */}
           <button
             className="signup-submit"
             type="submit"
@@ -848,22 +991,32 @@ export default function Signup() {
               ? "جاري إنشاء الحساب..."
               : "إنشاء الحساب"}
           </button>
+
         </form>
 
+        {/* تسجيل الدخول */}
         <div className="signup-login">
-          <span>لديك حساب بالفعل؟</span>
+
+          <span>
+            لديك حساب بالفعل؟
+          </span>
 
           <Link to="/login">
             تسجيل الدخول
           </Link>
+
         </div>
+
       </main>
 
+      {/* الشكل السفلي */}
       <div className="signup-bottom">
+
         <svg
           viewBox="0 0 500 120"
           preserveAspectRatio="none"
         >
+
           <path
             d="M0 65C80 30 120 85 190 57C250 33 280 76 340 55C405 32 450 70 500 42V120H0Z"
             fill="rgba(10,168,143,.25)"
@@ -881,8 +1034,11 @@ export default function Signup() {
             strokeWidth="2.5"
             opacity=".9"
           />
+
         </svg>
+
       </div>
+
     </div>
   );
 }
