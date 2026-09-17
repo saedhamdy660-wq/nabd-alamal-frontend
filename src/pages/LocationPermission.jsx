@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { getCurrentLocation } from "../api.js";
+import { getCurrentLocation, api } from "../api.js";
 
 export default function LocationPermission() {
   const [status, setStatus] = useState("");
@@ -12,7 +12,67 @@ export default function LocationPermission() {
       setLoading(true);
       setStatus("");
 
-      await getCurrentLocation();
+      // الحصول على الموقع الحالي
+      const location = await getCurrentLocation();
+
+      const { lat, lng } = location;
+
+      // الحصول على المستخدم المحفوظ حاليًا
+      const savedUser = localStorage.getItem("nabd_user");
+
+      if (!savedUser) {
+        setStatus("تم تحديد موقعك بنجاح ✅");
+
+        setTimeout(() => {
+          navigate("/home");
+        }, 800);
+
+        return;
+      }
+
+      const currentUser = JSON.parse(savedUser);
+
+      // حفظ الموقع داخل بيانات المستخدم في المتصفح
+      const updatedUser = {
+        ...currentUser,
+        lat,
+        lng,
+        locationEnabled: true,
+      };
+
+      localStorage.setItem(
+        "nabd_user",
+        JSON.stringify(updatedUser)
+      );
+
+      // تحديث الموقع في الـ Backend
+      if (currentUser.id) {
+        try {
+          const backendUser = await api.updateUserLocation(
+            currentUser.id,
+            lat,
+            lng
+          );
+
+          // لو الـ Backend رجّع بيانات المستخدم
+          if (backendUser) {
+            const finalUser = {
+              ...updatedUser,
+              ...backendUser,
+              lat,
+              lng,
+              locationEnabled: true,
+            };
+
+            localStorage.setItem(
+              "nabd_user",
+              JSON.stringify(finalUser)
+            );
+          }
+        } catch {
+          // الموقع محفوظ محليًا حتى لو تعذر تحديث الـ Backend
+        }
+      }
 
       setStatus("تم تحديد موقعك بنجاح ✅");
 
@@ -20,7 +80,9 @@ export default function LocationPermission() {
         navigate("/home");
       }, 800);
     } catch {
-      setStatus("تعذّر الوصول للموقع، يمكنك تفعيله لاحقًا من الإعدادات");
+      setStatus(
+        "تعذّر الوصول للموقع، يمكنك تفعيله لاحقًا من الإعدادات"
+      );
     } finally {
       setLoading(false);
     }
@@ -112,7 +174,9 @@ export default function LocationPermission() {
             </span>
 
             <span>
-              {loading ? "جاري تحديد الموقع..." : "السماح بالموقع"}
+              {loading
+                ? "جاري تحديد الموقع..."
+                : "السماح بالموقع"}
             </span>
           </button>
 
