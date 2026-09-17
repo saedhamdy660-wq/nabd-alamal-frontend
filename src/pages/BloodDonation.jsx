@@ -2,14 +2,146 @@ import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { api } from "../api.js";
 
-const DEMO_DONOR = {
-  id: "demo-donor",
-  name: "أحمد محمد",
-  bloodType: "O+",
-  distanceKm: 2.3,
-  lastDonation: "منذ 3 أشهر",
-  avatar: "",
-};
+const DEMO_DONORS = [
+  {
+    id: "demo-donor-1",
+    name: "أحمد محمد",
+    bloodType: "O+",
+    distanceKm: 2.3,
+    lastDonation: "2026-06-15",
+    chronicDisease: false,
+    avatar: "",
+  },
+  {
+    id: "demo-donor-2",
+    name: "سعيد إبراهيم سعيد",
+    bloodType: "A+",
+    distanceKm: 3.1,
+    lastDonation: "2026-05-22",
+    chronicDisease: false,
+    avatar: "",
+  },
+  {
+    id: "demo-donor-3",
+    name: "زوزو رضا رفعت",
+    bloodType: "B+",
+    distanceKm: 3.8,
+    lastDonation: "2026-04-18",
+    chronicDisease: false,
+    avatar: "",
+  },
+  {
+    id: "demo-donor-4",
+    name: "ملك احمد جوده",
+    bloodType: "AB+",
+    distanceKm: 4.2,
+    lastDonation: "2026-07-03",
+    chronicDisease: false,
+    avatar: "",
+  },
+  {
+    id: "demo-donor-5",
+    name: "رضوه عصام",
+    bloodType: "O-",
+    distanceKm: 4.7,
+    lastDonation: "2026-03-27",
+    chronicDisease: false,
+    avatar: "",
+  },
+  {
+    id: "demo-donor-6",
+    name: "ذياد عمر سند",
+    bloodType: "A-",
+    distanceKm: 5.1,
+    lastDonation: "2026-06-28",
+    chronicDisease: false,
+    avatar: "",
+  },
+  {
+    id: "demo-donor-7",
+    name: "محمود علي حسن",
+    bloodType: "B-",
+    distanceKm: 5.6,
+    lastDonation: "2026-05-08",
+    chronicDisease: false,
+    avatar: "",
+  },
+  {
+    id: "demo-donor-8",
+    name: "يوسف أحمد إبراهيم",
+    bloodType: "O+",
+    distanceKm: 6.2,
+    lastDonation: "2026-04-30",
+    chronicDisease: false,
+    avatar: "",
+  },
+  {
+    id: "demo-donor-9",
+    name: "نورهان محمد السيد",
+    bloodType: "A+",
+    distanceKm: 6.8,
+    lastDonation: "2026-06-02",
+    chronicDisease: false,
+    avatar: "",
+  },
+  {
+    id: "demo-donor-10",
+    name: "عمر خالد محمود",
+    bloodType: "B+",
+    distanceKm: 7.4,
+    lastDonation: "2026-05-14",
+    chronicDisease: false,
+    avatar: "",
+  },
+];
+
+function getLastDonationText(date) {
+  if (!date) return "آخر تبرع غير مسجل";
+
+  const donationDate = new Date(date);
+  const today = new Date();
+
+  const diffMs = today - donationDate;
+  const diffDays = Math.max(
+    0,
+    Math.floor(diffMs / (1000 * 60 * 60 * 24))
+  );
+
+  if (diffDays === 0) {
+    return "آخر تبرع اليوم";
+  }
+
+  if (diffDays === 1) {
+    return "آخر تبرع منذ يوم";
+  }
+
+  if (diffDays < 30) {
+    return `آخر تبرع منذ ${diffDays} يوم`;
+  }
+
+  const months = Math.floor(diffDays / 30);
+
+  if (months === 1) {
+    return "آخر تبرع منذ شهر";
+  }
+
+  if (months < 12) {
+    return `آخر تبرع منذ ${months} أشهر`;
+  }
+
+  const years = Math.floor(months / 12);
+
+  if (years === 1) {
+    return "آخر تبرع منذ سنة";
+  }
+
+  return `آخر تبرع منذ ${years} سنوات`;
+}
+
+function getDonorInitial(name) {
+  if (!name) return "م";
+  return name.trim().charAt(0);
+}
 
 function LocationIcon() {
   return (
@@ -132,7 +264,7 @@ function DonorRow({ donor, onClick }) {
         {donor.avatar ? (
           <img src={donor.avatar} alt={donor.name} />
         ) : (
-          "أ"
+          getDonorInitial(donor.name)
         )}
       </div>
 
@@ -142,6 +274,10 @@ function DonorRow({ donor, onClick }) {
         <span>
           على بعد {donor.distanceKm} كم
         </span>
+
+        <small>
+          {getLastDonationText(donor.lastDonation)}
+        </small>
       </div>
 
       <div className="blood-badge">
@@ -174,18 +310,14 @@ export default function BloodDonation() {
       api
         .getNearbyDonors()
         .then((data) => {
-          /*
-            لو مفيش متبرعين حقيقيين،
-            نعرض أحمد محمد كمتبرع تجريبي.
-          */
           if (Array.isArray(data) && data.length > 0) {
             setDonors(data);
           } else {
-            setDonors([DEMO_DONOR]);
+            setDonors(DEMO_DONORS);
           }
         })
         .catch(() => {
-          setDonors([DEMO_DONOR]);
+          setDonors(DEMO_DONORS);
         });
     };
 
@@ -466,11 +598,8 @@ export default function BloodDonation() {
 
         .blood-header h1 {
           margin: 0;
-
           text-align: center;
-
           color: #218d83;
-
           font-size: 21px;
           font-weight: 800;
         }
@@ -597,7 +726,7 @@ export default function BloodDonation() {
           background: #dff7f2;
 
           box-shadow:
-            inset 0 1px 0 rgba(255,255,255,.8);
+            inset 0 1px 0 rgba(255,255,255,.9);
         }
 
         .section-icon svg {
@@ -605,147 +734,32 @@ export default function BloodDonation() {
           height: 22px;
         }
 
-        .emergency-card {
-          max-width: 520px;
-          margin: 0 auto 18px;
-
-          padding: 16px;
-
-          border-radius: 24px;
-
-          background:
-            linear-gradient(
-              145deg,
-              rgba(255,232,238,.96),
-              rgba(249,215,224,.9)
-            );
-
-          border: 1px solid rgba(255,255,255,.9);
-
-          box-shadow:
-            0 11px 28px rgba(190,120,140,.10),
-            inset 0 1px 0 rgba(255,255,255,.7);
-        }
-
-        .emergency-top {
-          display: flex;
-          align-items: center;
-          gap: 13px;
-        }
-
-        .blood-large {
-          width: 58px;
-          height: 58px;
-
-          flex-shrink: 0;
-
-          display: flex;
-          align-items: center;
-          justify-content: center;
-
-          border-radius: 50%;
-
-          color: #c05267;
-
-          background: rgba(255,255,255,.62);
-
-          border: 2px solid rgba(255,255,255,.8);
-
-          font-size: 14px;
-          font-weight: 900;
-        }
-
-        .emergency-info {
-          flex: 1;
-        }
-
-        .emergency-label {
-          color: #c05267;
-          font-size: 11px;
-          font-weight: 800;
-        }
-
-        .emergency-info h3 {
-          margin: 3px 0;
-
-          color: #98505f;
-
-          font-size: 14px;
-        }
-
-        .emergency-info p {
-          margin: 3px 0;
-
-          color: #7f7478;
-
-          font-size: 11px;
-        }
-
-        .distance {
-          display: flex;
-          align-items: center;
-          gap: 4px;
-
-          color: #9a777e;
-
-          font-size: 10px;
-        }
-
-        .distance svg {
-          width: 14px;
-          height: 14px;
-        }
-
-        .follow-button {
-          width: 100%;
-
-          margin-top: 14px;
-
-          min-height: 43px;
-
-          border: 0;
-          border-radius: 15px;
-
-          color: white;
-
-          background:
-            linear-gradient(
-              135deg,
-              #d4677b,
-              #c05267
-            );
-
-          font-size: 13px;
-          font-weight: 800;
-
-          cursor: pointer;
-
-          box-shadow:
-            0 7px 18px rgba(192,82,103,.16);
-        }
-
         .empty-card {
           max-width: 520px;
-          margin: 0 auto 22px;
-
+          margin: 0 auto 18px;
           padding: 24px 18px;
 
           text-align: center;
 
-          border-radius: 23px;
+          border-radius: 25px;
 
           background:
-            rgba(255,255,255,.72);
+            linear-gradient(
+              145deg,
+              rgba(255,255,255,.88),
+              rgba(232,249,246,.78)
+            );
 
-          border: 1px solid rgba(255,255,255,.9);
+          border: 1px solid rgba(255,255,255,.92);
 
           box-shadow:
-            0 10px 26px rgba(42,128,128,.07);
+            0 12px 30px rgba(42,128,128,.08),
+            inset 0 1px 0 rgba(255,255,255,.9);
         }
 
         .empty-icon {
-          width: 48px;
-          height: 48px;
+          width: 50px;
+          height: 50px;
 
           margin: 0 auto 10px;
 
@@ -760,42 +774,159 @@ export default function BloodDonation() {
         }
 
         .empty-icon svg {
-          width: 23px;
-          height: 23px;
+          width: 25px;
+          height: 25px;
         }
 
         .empty-card strong {
           display: block;
 
-          color: #477878;
+          color: #286d6d;
 
-          font-size: 14px;
+          font-size: 15px;
         }
 
         .empty-card p {
-          margin: 6px 0 0;
+          margin: 7px 0 0;
 
-          color: #8da4a3;
+          color: #88a3a2;
 
           font-size: 11px;
         }
 
-        .nearby-section {
-          margin-top: 24px;
+        .emergency-card {
+          max-width: 520px;
+          margin: 0 auto 14px;
+          padding: 17px;
+
+          border-radius: 25px;
+
+          background:
+            linear-gradient(
+              145deg,
+              rgba(255,255,255,.9),
+              rgba(233,249,246,.78)
+            );
+
+          border: 1px solid rgba(255,255,255,.94);
+
+          box-shadow:
+            0 12px 30px rgba(42,128,128,.08),
+            inset 0 1px 0 rgba(255,255,255,.9);
+        }
+
+        .emergency-top {
+          display: flex;
+          align-items: center;
+          gap: 14px;
+        }
+
+        .blood-large {
+          width: 58px;
+          height: 58px;
+
+          flex-shrink: 0;
+
+          display: flex;
+          align-items: center;
+          justify-content: center;
+
+          border-radius: 18px;
+
+          color: #c05267;
+          background: #ffe7ed;
+
+          font-size: 17px;
+          font-weight: 900;
+        }
+
+        .emergency-info {
+          min-width: 0;
+        }
+
+        .emergency-label {
+          display: inline-block;
+
+          margin-bottom: 4px;
+
+          color: #d06b7d;
+
+          font-size: 10px;
+          font-weight: 800;
+        }
+
+        .emergency-info h3 {
+          margin: 0 0 5px;
+
+          color: #286d6d;
+
+          font-size: 14px;
+          font-weight: 800;
+        }
+
+        .emergency-info p {
+          margin: 0 0 5px;
+
+          color: #7c9b9a;
+
+          font-size: 11px;
+        }
+
+        .distance {
+          display: flex;
+          align-items: center;
+          gap: 4px;
+
+          color: #159b8a;
+
+          font-size: 10px;
+          font-weight: 700;
+        }
+
+        .distance svg {
+          width: 14px;
+          height: 14px;
+        }
+
+        .follow-button {
+          width: 100%;
+          min-height: 46px;
+
+          margin-top: 15px;
+
+          border: 0;
+          border-radius: 17px;
+
+          color: white;
+
+          background:
+            linear-gradient(
+              135deg,
+              #19ad98,
+              #159b8a
+            );
+
+          font-size: 14px;
+          font-weight: 800;
+
+          cursor: pointer;
+
+          box-shadow:
+            0 8px 18px rgba(21,155,138,.14);
         }
 
         .donors-card {
           max-width: 520px;
           margin: 0 auto;
 
-          padding: 5px 14px;
+          padding: 7px 12px;
 
-          border-radius: 24px;
+          border-radius: 25px;
 
           background:
             linear-gradient(
               145deg,
-              rgba(255,255,255,.86),
+              rgba(255,255,255,.88),
               rgba(232,249,246,.78)
             );
 
@@ -805,24 +936,23 @@ export default function BloodDonation() {
             0 12px 30px rgba(42,128,128,.08),
             inset 0 1px 0 rgba(255,255,255,.9);
 
-          backdrop-filter: blur(14px);
-          -webkit-backdrop-filter: blur(14px);
+          overflow: hidden;
         }
 
         .donor-row {
           width: 100%;
+          min-height: 76px;
 
-          min-height: 72px;
+          padding: 10px 3px;
 
           display: flex;
           align-items: center;
-
           gap: 10px;
 
           border: 0;
+          border-bottom: 1px solid rgba(124,184,177,.15);
 
-          border-bottom: 1px solid rgba(124,184,177,.16);
-
+          color: inherit;
           background: transparent;
 
           text-align: right;
@@ -835,14 +965,16 @@ export default function BloodDonation() {
         }
 
         .donor-avatar-small {
-          width: 43px;
-          height: 43px;
+          width: 47px;
+          height: 47px;
 
           flex-shrink: 0;
 
           display: flex;
           align-items: center;
           justify-content: center;
+
+          overflow: hidden;
 
           border-radius: 50%;
 
@@ -852,15 +984,11 @@ export default function BloodDonation() {
             linear-gradient(
               145deg,
               #dff8f3,
-              #c4eee6
+              #bcece3
             );
-
-          border: 2px solid rgba(255,255,255,.9);
 
           font-size: 18px;
           font-weight: 800;
-
-          overflow: hidden;
         }
 
         .donor-avatar-small img {
@@ -870,127 +998,160 @@ export default function BloodDonation() {
         }
 
         .donor-info {
+          min-width: 0;
           flex: 1;
 
           display: flex;
           flex-direction: column;
-
-          gap: 3px;
+          align-items: flex-start;
+          gap: 2px;
         }
 
         .donor-info strong {
+          max-width: 100%;
+
+          overflow: hidden;
+
           color: #286d6d;
 
-          font-size: 14px;
+          font-size: 13px;
+          font-weight: 800;
+
+          white-space: nowrap;
+          text-overflow: ellipsis;
         }
 
         .donor-info span {
-          color: #8aa3a2;
+          color: #88a3a2;
 
           font-size: 10px;
+          font-weight: 700;
+        }
+
+        .donor-info small {
+          color: #159b8a;
+
+          font-size: 9px;
+          font-weight: 800;
         }
 
         .blood-badge {
-          padding: 7px 10px;
+          flex-shrink: 0;
+
+          padding: 7px 9px;
 
           border-radius: 14px;
 
           color: #c05267;
-          background: #ffe8ed;
+          background: #ffe7ed;
 
           font-size: 11px;
           font-weight: 900;
         }
 
         .donor-arrow {
-          color: #159b8a;
+          flex-shrink: 0;
+
+          color: #8aa5a4;
 
           font-size: 19px;
-          font-weight: 700;
+        }
+
+        .nearby-section {
+          max-width: 520px;
+
+          margin: 24px auto 0;
         }
 
         .blood-bottom-nav {
           position: fixed;
 
           left: 50%;
-          bottom: 14px;
+          bottom: 12px;
 
           transform: translateX(-50%);
-
-          z-index: 100;
 
           width: calc(100% - 28px);
           max-width: 520px;
 
-          height: 68px;
+          min-height: 68px;
 
-          padding: 6px;
+          padding: 7px 8px;
 
           display: grid;
           grid-template-columns: repeat(4, 1fr);
-          gap: 4px;
+          gap: 3px;
 
-          border-radius: 24px;
+          border-radius: 23px;
 
-          background: rgba(255,255,255,.78);
+          background:
+            rgba(255,255,255,.86);
 
-          border: 1px solid rgba(255,255,255,.92);
+          border: 1px solid rgba(255,255,255,.95);
 
           box-shadow:
-            0 12px 32px rgba(37,111,111,.13),
+            0 12px 32px rgba(42,128,128,.13),
             inset 0 1px 0 rgba(255,255,255,.95);
 
-          backdrop-filter: blur(18px);
-          -webkit-backdrop-filter: blur(18px);
+          backdrop-filter: blur(15px);
+          -webkit-backdrop-filter: blur(15px);
+
+          z-index: 20;
         }
 
         .nav-item {
-          position: relative;
-
           border: 0;
+          border-radius: 17px;
 
           display: flex;
           flex-direction: column;
-
           align-items: center;
           justify-content: center;
-
           gap: 3px;
 
-          border-radius: 18px;
-
-          color: #8aa5a4;
+          color: #91a9a8;
           background: transparent;
 
           font-size: 9px;
-          font-weight: 700;
+          font-weight: 800;
 
           cursor: pointer;
         }
 
         .nav-item svg {
-          width: 21px;
-          height: 21px;
+          width: 20px;
+          height: 20px;
         }
 
         .nav-item.active {
           color: #159b8a;
-          background: rgba(219,248,242,.72);
+
+          background: #e5f8f4;
         }
 
-        .nav-item.active::after {
-          content: "";
+        @media (max-width: 380px) {
+          .blood-page {
+            padding-left: 13px;
+            padding-right: 13px;
+          }
 
-          position: absolute;
+          .donor-row {
+            gap: 7px;
+          }
 
-          bottom: 3px;
+          .donor-avatar-small {
+            width: 43px;
+            height: 43px;
+          }
 
-          width: 22px;
-          height: 3px;
+          .donor-info strong {
+            font-size: 11px;
+          }
 
-          border-radius: 10px;
-
-          background: #159b8a;
+          .blood-badge {
+            padding: 6px 7px;
+            font-size: 10px;
+          }
         }
 
       `}</style>
