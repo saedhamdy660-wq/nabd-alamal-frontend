@@ -2,6 +2,10 @@ import React, { useRef, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import api from "../api";
 
+/* =========================
+   Logo
+========================= */
+
 const Logo = () => (
   <svg viewBox="0 0 100 100" fill="none">
     <circle cx="50" cy="50" r="46" fill="url(#signupLogoGradient)" />
@@ -34,6 +38,10 @@ const Logo = () => (
   </svg>
 );
 
+/* =========================
+   User Icon
+========================= */
+
 const UserIcon = () => (
   <svg viewBox="0 0 24 24" fill="none">
     <circle
@@ -43,6 +51,7 @@ const UserIcon = () => (
       stroke="currentColor"
       strokeWidth="1.8"
     />
+
     <path
       d="M5 20C5.8 16.7 8.2 15 12 15C15.8 15 18.2 16.7 19 20"
       stroke="currentColor"
@@ -51,6 +60,10 @@ const UserIcon = () => (
     />
   </svg>
 );
+
+/* =========================
+   Heart Icon
+========================= */
 
 const HeartIcon = () => (
   <svg viewBox="0 0 24 24" fill="none">
@@ -63,6 +76,10 @@ const HeartIcon = () => (
   </svg>
 );
 
+/* =========================
+   Blood Drop Icon
+========================= */
+
 const BloodDropIcon = () => (
   <svg viewBox="0 0 24 24" fill="none">
     <path
@@ -74,6 +91,10 @@ const BloodDropIcon = () => (
     />
   </svg>
 );
+
+/* =========================
+   Calendar Icon
+========================= */
 
 const CalendarIcon = () => (
   <svg viewBox="0 0 24 24" fill="none">
@@ -109,6 +130,10 @@ const CalendarIcon = () => (
   </svg>
 );
 
+/* =========================
+   Plus Circle Icon
+========================= */
+
 const PlusCircleIcon = () => (
   <svg viewBox="0 0 24 24" fill="none">
     <circle
@@ -135,6 +160,10 @@ const PlusCircleIcon = () => (
   </svg>
 );
 
+/* =========================
+   Chevron Icon
+========================= */
+
 const ChevronDownIcon = () => (
   <svg viewBox="0 0 24 24" fill="none">
     <path
@@ -146,6 +175,10 @@ const ChevronDownIcon = () => (
     />
   </svg>
 );
+
+/* =========================
+   Mail Icon
+========================= */
 
 const MailIcon = () => (
   <svg viewBox="0 0 24 24" fill="none">
@@ -169,6 +202,10 @@ const MailIcon = () => (
   </svg>
 );
 
+/* =========================
+   Phone Icon
+========================= */
+
 const PhoneIcon = () => (
   <svg viewBox="0 0 24 24" fill="none">
     <path
@@ -185,6 +222,10 @@ const PhoneIcon = () => (
     />
   </svg>
 );
+
+/* =========================
+   ID Card Icon
+========================= */
 
 const IdCardIcon = () => (
   <svg viewBox="0 0 24 24" fill="none">
@@ -236,6 +277,10 @@ const IdCardIcon = () => (
   </svg>
 );
 
+/* =========================
+   Lock Icon
+========================= */
+
 const LockIcon = () => (
   <svg viewBox="0 0 24 24" fill="none">
     <rect
@@ -256,6 +301,10 @@ const LockIcon = () => (
     />
   </svg>
 );
+
+/* =========================
+   Eye Icon
+========================= */
 
 const EyeIcon = ({ off = false }) => (
   <svg viewBox="0 0 24 24" fill="none">
@@ -284,6 +333,10 @@ const EyeIcon = ({ off = false }) => (
   </svg>
 );
 
+/* =========================
+   Back Icon
+========================= */
+
 const BackIcon = () => (
   <svg viewBox="0 0 24 24" fill="none">
     <path
@@ -295,6 +348,10 @@ const BackIcon = () => (
     />
   </svg>
 );
+
+/* =========================
+   Signup
+========================= */
 
 export default function Signup() {
   const navigate = useNavigate();
@@ -321,12 +378,20 @@ export default function Signup() {
 
   const dateInputRef = useRef(null);
 
+  /* =========================
+     Update Form
+  ========================= */
+
   const update = (field) => (e) => {
     setForm({
       ...form,
       [field]: e.target.value,
     });
   };
+
+  /* =========================
+     National ID
+  ========================= */
 
   const handleNationalIdChange = (e) => {
     const value = e.target.value
@@ -338,6 +403,10 @@ export default function Signup() {
       nationalId: value,
     });
   };
+
+  /* =========================
+     Account Type
+  ========================= */
 
   const handleAccountTypeChange = (type) => {
     setAccountType(type);
@@ -353,6 +422,10 @@ export default function Signup() {
     }
   };
 
+  /* =========================
+     Date Picker
+  ========================= */
+
   const openDatePicker = () => {
     if (dateInputRef.current) {
       if (
@@ -367,8 +440,13 @@ export default function Signup() {
     }
   };
 
+  /* =========================
+     Submit
+  ========================= */
+
   const handleSubmit = async (e) => {
     e.preventDefault();
+
     setError("");
 
     if (
@@ -384,17 +462,23 @@ export default function Signup() {
     }
 
     if (!/^\d{14}$/.test(form.nationalId)) {
-      setError("الرقم القومي يجب أن يتكون من 14 رقم");
+      setError(
+        "الرقم القومي يجب أن يتكون من 14 رقم"
+      );
       return;
     }
 
     if (form.password.length < 6) {
-      setError("كلمة المرور يجب أن تكون 6 أحرف على الأقل");
+      setError(
+        "كلمة المرور يجب أن تكون 6 أحرف على الأقل"
+      );
       return;
     }
 
     if (form.password !== form.confirm) {
-      setError("كلمة المرور وتأكيد كلمة المرور غير متطابقين");
+      setError(
+        "كلمة المرور وتأكيد كلمة المرور غير متطابقين"
+      );
       return;
     }
 
@@ -405,7 +489,9 @@ export default function Signup() {
       }
 
       if (!form.lastDonation) {
-        setError("من فضلك أدخل تاريخ آخر تبرع بالدم");
+        setError(
+          "من فضلك أدخل تاريخ آخر تبرع بالدم"
+        );
         return;
       }
 
@@ -446,6 +532,7 @@ export default function Signup() {
 
       const savedUser = {
         ...user,
+
         name: form.name.trim(),
         email: form.email.trim(),
         phone: form.phone.trim(),
@@ -492,7 +579,281 @@ export default function Signup() {
   return (
     <div className="signup-page">
 
+      {/* =================================================
+          توحيد شكل ومكان النصوص داخل الحقول
+      ================================================= */}
+
+      <style>{`
+
+        /* =========================================
+           الحقل الأساسي
+        ========================================= */
+
+        .signup-field {
+          position: relative !important;
+          direction: rtl !important;
+          box-sizing: border-box !important;
+        }
+
+
+        /* =========================================
+           جميع الـ Inputs
+        ========================================= */
+
+        .signup-field input {
+          width: 100% !important;
+          box-sizing: border-box !important;
+
+          direction: rtl !important;
+          text-align: right !important;
+
+          padding-right: 68px !important;
+          padding-left: 58px !important;
+
+          color: #999 !important;
+
+          font-family: inherit !important;
+          font-size: inherit !important;
+          line-height: 1.5 !important;
+        }
+
+
+        /* =========================================
+           جميع الـ Placeholders
+        ========================================= */
+
+        .signup-field input::placeholder {
+          color: #999 !important;
+          opacity: 1 !important;
+
+          direction: rtl !important;
+          text-align: right !important;
+        }
+
+
+        /* =========================================
+           الهاتف والرقم القومي
+        ========================================= */
+
+        .signup-field input[dir="ltr"] {
+          direction: ltr !important;
+          text-align: right !important;
+
+          padding-right: 68px !important;
+          padding-left: 58px !important;
+        }
+
+        .signup-field input[dir="ltr"]::placeholder {
+          direction: rtl !important;
+          text-align: right !important;
+
+          color: #999 !important;
+          opacity: 1 !important;
+        }
+
+
+        /* =========================================
+           الأيقونات
+        ========================================= */
+
+        .signup-field-icon {
+          position: absolute !important;
+
+          right: 20px !important;
+          left: auto !important;
+
+          top: 50% !important;
+          transform: translateY(-50%) !important;
+
+          width: 28px !important;
+          height: 28px !important;
+
+          display: flex !important;
+          align-items: center !important;
+          justify-content: center !important;
+
+          z-index: 3 !important;
+
+          color: #0a9685 !important;
+        }
+
+        .signup-field-icon svg {
+          width: 28px !important;
+          height: 28px !important;
+        }
+
+
+        /* =========================================
+           Select
+        ========================================= */
+
+        .signup-donor-select {
+          width: 100% !important;
+
+          box-sizing: border-box !important;
+
+          direction: rtl !important;
+          text-align: right !important;
+
+          padding-right: 68px !important;
+          padding-left: 58px !important;
+
+          color: #999 !important;
+
+          font-family: inherit !important;
+          font-size: inherit !important;
+          line-height: 1.5 !important;
+
+          appearance: none !important;
+          -webkit-appearance: none !important;
+        }
+
+        .signup-donor-select option {
+          direction: rtl !important;
+          text-align: right !important;
+          color: #555 !important;
+        }
+
+        .signup-donor-select:valid {
+          color: #555 !important;
+        }
+
+
+        /* =========================================
+           سهم الـ Select
+        ========================================= */
+
+        .signup-donor-chevron {
+          position: absolute !important;
+
+          left: 20px !important;
+          right: auto !important;
+
+          top: 50% !important;
+          transform: translateY(-50%) !important;
+
+          width: 24px !important;
+          height: 24px !important;
+
+          display: flex !important;
+          align-items: center !important;
+          justify-content: center !important;
+
+          pointer-events: none !important;
+
+          color: #0a9685 !important;
+
+          z-index: 3 !important;
+        }
+
+        .signup-donor-chevron svg {
+          width: 24px !important;
+          height: 24px !important;
+        }
+
+
+        /* =========================================
+           تاريخ آخر تبرع
+        ========================================= */
+
+        .signup-date-field {
+          position: relative !important;
+        }
+
+        .signup-donor-date-text {
+          display: block !important;
+
+          width: 100% !important;
+
+          box-sizing: border-box !important;
+
+          direction: rtl !important;
+          text-align: right !important;
+
+          padding-right: 68px !important;
+          padding-left: 58px !important;
+
+          color: #999 !important;
+
+          font-family: inherit !important;
+          font-size: inherit !important;
+          line-height: 1.5 !important;
+        }
+
+        .signup-donor-date-text.selected {
+          color: #555 !important;
+        }
+
+
+        /* =========================================
+           Input التاريخ الحقيقي
+        ========================================= */
+
+        .signup-date-field input[type="date"] {
+          position: absolute !important;
+
+          width: 1px !important;
+          height: 1px !important;
+
+          opacity: 0 !important;
+
+          pointer-events: none !important;
+        }
+
+
+        /* =========================================
+           زر إظهار كلمة المرور
+        ========================================= */
+
+        .signup-eye {
+          position: absolute !important;
+
+          left: 18px !important;
+          right: auto !important;
+
+          top: 50% !important;
+          transform: translateY(-50%) !important;
+
+          width: 32px !important;
+          height: 32px !important;
+
+          padding: 0 !important;
+          margin: 0 !important;
+
+          display: flex !important;
+          align-items: center !important;
+          justify-content: center !important;
+
+          color: #78938f !important;
+
+          z-index: 4 !important;
+        }
+
+        .signup-eye svg {
+          width: 25px !important;
+          height: 25px !important;
+        }
+
+
+        /* =========================================
+           منع اختلاف الـ Box Sizing
+        ========================================= */
+
+        .signup-field *,
+        .signup-field *::before,
+        .signup-field *::after {
+          box-sizing: border-box !important;
+        }
+
+      `}</style>
+
+
+      {/* =========================
+          Background
+      ========================= */}
+
       <div className="signup-orb signup-orb-1" />
+
       <div className="signup-orb signup-orb-2" />
 
       <div className="signup-plus signup-plus-1">
@@ -503,6 +864,11 @@ export default function Signup() {
         +
       </div>
 
+
+      {/* =========================
+          Back
+      ========================= */}
+
       <button
         type="button"
         className="signup-back"
@@ -511,11 +877,17 @@ export default function Signup() {
         <BackIcon />
       </button>
 
+
       <main className="signup-content">
+
+        {/* Logo */}
 
         <div className="signup-logo">
           <Logo />
         </div>
+
+
+        {/* Title */}
 
         <h1>
           إنشاء حساب جديد
@@ -525,7 +897,11 @@ export default function Signup() {
           انضم إلى منصة نبض الأمل
         </p>
 
+
+        {/* Heartbeat */}
+
         <div className="signup-heartbeat">
+
           <span />
 
           <svg
@@ -543,9 +919,17 @@ export default function Signup() {
           </svg>
 
           <span />
+
         </div>
 
+
+        {/* =========================
+            Account Types
+        ========================= */}
+
         <div className="signup-account-types">
+
+          {/* Donor */}
 
           <button
             type="button"
@@ -558,6 +942,7 @@ export default function Signup() {
               handleAccountTypeChange("donor")
             }
           >
+
             <span className="account-icon">
               <HeartIcon />
             </span>
@@ -565,7 +950,11 @@ export default function Signup() {
             <span>
               متبرع
             </span>
+
           </button>
+
+
+          {/* User */}
 
           <button
             type="button"
@@ -578,6 +967,7 @@ export default function Signup() {
               handleAccountTypeChange("user")
             }
           >
+
             <span className="account-icon">
               <UserIcon />
             </span>
@@ -585,16 +975,24 @@ export default function Signup() {
             <span>
               مستخدم
             </span>
+
           </button>
 
         </div>
+
+
+        {/* =========================
+            Form
+        ========================= */}
 
         <form
           className="signup-form"
           onSubmit={handleSubmit}
         >
 
-          {/* الاسم */}
+          {/* =========================
+              الاسم
+          ========================= */}
 
           <div className="signup-field">
 
@@ -603,6 +1001,7 @@ export default function Signup() {
             </div>
 
             <input
+              className="signup-input"
               type="text"
               value={form.name}
               onChange={update("name")}
@@ -612,7 +1011,10 @@ export default function Signup() {
 
           </div>
 
-          {/* البريد */}
+
+          {/* =========================
+              البريد الإلكتروني
+          ========================= */}
 
           <div className="signup-field">
 
@@ -621,6 +1023,7 @@ export default function Signup() {
             </div>
 
             <input
+              className="signup-input"
               type="email"
               value={form.email}
               onChange={update("email")}
@@ -630,7 +1033,10 @@ export default function Signup() {
 
           </div>
 
-          {/* الهاتف */}
+
+          {/* =========================
+              رقم الهاتف
+          ========================= */}
 
           <div className="signup-field">
 
@@ -639,6 +1045,7 @@ export default function Signup() {
             </div>
 
             <input
+              className="signup-input"
               type="tel"
               value={form.phone}
               onChange={update("phone")}
@@ -649,7 +1056,10 @@ export default function Signup() {
 
           </div>
 
-          {/* الرقم القومي */}
+
+          {/* =========================
+              الرقم القومي
+          ========================= */}
 
           <div className="signup-field">
 
@@ -658,6 +1068,7 @@ export default function Signup() {
             </div>
 
             <input
+              className="signup-input"
               type="text"
               inputMode="numeric"
               value={form.nationalId}
@@ -670,12 +1081,17 @@ export default function Signup() {
 
           </div>
 
-          {/* DONOR FIELDS */}
+
+          {/* =================================================
+              DONOR FIELDS
+          ================================================= */}
 
           {accountType === "donor" && (
             <>
 
-              {/* فصيلة الدم */}
+              {/* =========================
+                  فصيلة الدم
+              ========================= */}
 
               <div className="signup-field signup-donor-field">
 
@@ -688,6 +1104,7 @@ export default function Signup() {
                   value={form.bloodType}
                   onChange={update("bloodType")}
                   aria-label="فصيلة الدم"
+                  required
                 >
 
                   <option
@@ -737,7 +1154,10 @@ export default function Signup() {
 
               </div>
 
-              {/* تاريخ آخر تبرع بالدم */}
+
+              {/* =========================
+                  تاريخ آخر تبرع
+              ========================= */}
 
               <div
                 className="signup-field signup-donor-field signup-date-field"
@@ -755,9 +1175,11 @@ export default function Signup() {
                       : "signup-donor-date-text"
                   }
                 >
+
                   {form.lastDonation
                     ? form.lastDonation
                     : "تاريخ آخر تبرع بالدم"}
+
                 </span>
 
                 <input
@@ -775,7 +1197,10 @@ export default function Signup() {
 
               </div>
 
-              {/* الأمراض المزمنة */}
+
+              {/* =========================
+                  الأمراض المزمنة
+              ========================= */}
 
               <div className="signup-field signup-donor-field">
 
@@ -788,6 +1213,7 @@ export default function Signup() {
                   value={form.chronicDisease}
                   onChange={update("chronicDisease")}
                   aria-label="الأمراض المزمنة"
+                  required
                 >
 
                   <option
@@ -816,7 +1242,10 @@ export default function Signup() {
             </>
           )}
 
-          {/* كلمة المرور */}
+
+          {/* =========================
+              كلمة المرور
+          ========================= */}
 
           <div className="signup-field">
 
@@ -825,6 +1254,7 @@ export default function Signup() {
             </div>
 
             <input
+              className="signup-input"
               type={
                 showPassword
                   ? "text"
@@ -842,15 +1272,25 @@ export default function Signup() {
               onClick={() =>
                 setShowPassword(!showPassword)
               }
+              aria-label={
+                showPassword
+                  ? "إخفاء كلمة المرور"
+                  : "إظهار كلمة المرور"
+              }
             >
+
               <EyeIcon
                 off={!showPassword}
               />
+
             </button>
 
           </div>
 
-          {/* تأكيد كلمة المرور */}
+
+          {/* =========================
+              تأكيد كلمة المرور
+          ========================= */}
 
           <div className="signup-field">
 
@@ -859,6 +1299,7 @@ export default function Signup() {
             </div>
 
             <input
+              className="signup-input"
               type={
                 showConfirm
                   ? "text"
@@ -876,13 +1317,25 @@ export default function Signup() {
               onClick={() =>
                 setShowConfirm(!showConfirm)
               }
+              aria-label={
+                showConfirm
+                  ? "إخفاء تأكيد كلمة المرور"
+                  : "إظهار تأكيد كلمة المرور"
+              }
             >
+
               <EyeIcon
                 off={!showConfirm}
               />
+
             </button>
 
           </div>
+
+
+          {/* =========================
+              Error
+          ========================= */}
 
           {error && (
             <div className="signup-error">
@@ -890,17 +1343,29 @@ export default function Signup() {
             </div>
           )}
 
+
+          {/* =========================
+              Submit
+          ========================= */}
+
           <button
             className="signup-submit"
             type="submit"
             disabled={loading}
           >
+
             {loading
               ? "جاري إنشاء الحساب..."
               : "إنشاء الحساب"}
+
           </button>
 
         </form>
+
+
+        {/* =========================
+            Login
+        ========================= */}
 
         <div className="signup-login">
 
@@ -915,6 +1380,11 @@ export default function Signup() {
         </div>
 
       </main>
+
+
+      {/* =========================
+          Bottom Wave
+      ========================= */}
 
       <div className="signup-bottom">
 
