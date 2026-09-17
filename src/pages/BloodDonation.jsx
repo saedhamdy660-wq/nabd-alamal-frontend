@@ -1,99 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { api } from "../api.js";
-
-const DEMO_DONORS = [
-  {
-    id: "demo-donor-1",
-    name: "أحمد محمد",
-    bloodType: "O+",
-    distanceKm: 2.3,
-    lastDonation: "2026-06-15",
-    chronicDisease: false,
-    avatar: "",
-  },
-  {
-    id: "demo-donor-2",
-    name: "سعيد إبراهيم سعيد",
-    bloodType: "A+",
-    distanceKm: 3.1,
-    lastDonation: "2026-05-22",
-    chronicDisease: false,
-    avatar: "",
-  },
-  {
-    id: "demo-donor-3",
-    name: "زوزو رضا رفعت",
-    bloodType: "B+",
-    distanceKm: 3.8,
-    lastDonation: "2026-04-18",
-    chronicDisease: false,
-    avatar: "",
-  },
-  {
-    id: "demo-donor-4",
-    name: "ملك احمد جوده",
-    bloodType: "AB+",
-    distanceKm: 4.2,
-    lastDonation: "2026-07-03",
-    chronicDisease: false,
-    avatar: "",
-  },
-  {
-    id: "demo-donor-5",
-    name: "رضوه عصام",
-    bloodType: "O-",
-    distanceKm: 4.7,
-    lastDonation: "2026-03-27",
-    chronicDisease: false,
-    avatar: "",
-  },
-  {
-    id: "demo-donor-6",
-    name: "ذياد عمر سند",
-    bloodType: "A-",
-    distanceKm: 5.1,
-    lastDonation: "2026-06-28",
-    chronicDisease: false,
-    avatar: "",
-  },
-  {
-    id: "demo-donor-7",
-    name: "محمود علي حسن",
-    bloodType: "B-",
-    distanceKm: 5.6,
-    lastDonation: "2026-05-08",
-    chronicDisease: false,
-    avatar: "",
-  },
-  {
-    id: "demo-donor-8",
-    name: "يوسف أحمد إبراهيم",
-    bloodType: "O+",
-    distanceKm: 6.2,
-    lastDonation: "2026-04-30",
-    chronicDisease: false,
-    avatar: "",
-  },
-  {
-    id: "demo-donor-9",
-    name: "نورهان محمد السيد",
-    bloodType: "A+",
-    distanceKm: 6.8,
-    lastDonation: "2026-06-02",
-    chronicDisease: false,
-    avatar: "",
-  },
-  {
-    id: "demo-donor-10",
-    name: "عمر خالد محمود",
-    bloodType: "B+",
-    distanceKm: 7.4,
-    lastDonation: "2026-05-14",
-    chronicDisease: false,
-    avatar: "",
-  },
-];
+import { api, getCurrentLocation } from "../api.js";
 
 function getLastDonationText(date) {
   if (!date) return "آخر تبرع غير مسجل";
@@ -306,26 +213,106 @@ export default function BloodDonation() {
   }, []);
 
   useEffect(() => {
-    const loadDonors = () => {
-      api
-        .getNearbyDonors()
-        .then((data) => {
-          if (Array.isArray(data) && data.length > 0) {
-            setDonors(data);
-          } else {
-            setDonors(DEMO_DONORS);
+    let cancelled = false;
+
+    const loadDonors = async () => {
+      try {
+        const savedUser = localStorage.getItem("nabd_user");
+
+        let currentUser = null;
+
+        if (savedUser) {
+          try {
+            currentUser = JSON.parse(savedUser);
+          } catch {
+            currentUser = null;
           }
-        })
-        .catch(() => {
-          setDonors(DEMO_DONORS);
+        }
+
+        let lat = currentUser?.lat;
+        let lng = currentUser?.lng;
+
+        /*
+          لو الموقع موجود بالفعل في بيانات المستخدم،
+          نستخدمه مباشرة.
+
+          لو مش موجود، نحاول الحصول عليه من الجهاز.
+        */
+        if (
+          !Number.isFinite(Number(lat)) ||
+          !Number.isFinite(Number(lng))
+        ) {
+          try {
+            const location = await getCurrentLocation();
+
+            lat = location.lat;
+            lng = location.lng;
+
+            /*
+              حفظ الموقع محليًا حتى لا نحتاج
+              لطلبه مرة أخرى في كل تحديث.
+            */
+            if (currentUser) {
+              const updatedUser = {
+                ...currentUser,
+                lat,
+                lng,
+                locationEnabled: true,
+              };
+
+              localStorage.setItem(
+                "nabd_user",
+                JSON.stringify(updatedUser)
+              );
+
+              currentUser = updatedUser;
+            }
+          } catch {
+            /*
+              المستخدم قد يكون رفض الموقع.
+              في هذه الحالة نطلب المتبرعين بدون
+              إحداثيات جديدة.
+            */
+          }
+        }
+
+        const data = await api.getNearbyDonors({
+          userId: currentUser?.id || "",
+          lat:
+            Number.isFinite(Number(lat))
+              ? Number(lat)
+              : "",
+          lng:
+            Number.isFinite(Number(lng))
+              ? Number(lng)
+              : "",
         });
+
+        if (cancelled) return;
+
+        if (Array.isArray(data)) {
+          setDonors(data);
+        } else {
+          setDonors([]);
+        }
+      } catch {
+        if (!cancelled) {
+          setDonors([]);
+        }
+      }
     };
 
     loadDonors();
 
-    const interval = setInterval(loadDonors, 5000);
+    const interval = setInterval(
+      loadDonors,
+      5000
+    );
 
-    return () => clearInterval(interval);
+    return () => {
+      cancelled = true;
+      clearInterval(interval);
+    };
   }, []);
 
   const joinDonation = async (id) => {
@@ -448,7 +435,9 @@ export default function BloodDonation() {
 
               <button
                 className="follow-button"
-                onClick={() => joinDonation(request.id)}
+                onClick={() =>
+                  joinDonation(request.id)
+                }
               >
                 متابعة الطلب
               </button>
