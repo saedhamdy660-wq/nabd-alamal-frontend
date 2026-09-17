@@ -6521,90 +6521,348 @@ html.nabd-dark .verify-identity-retake {
   color: inherit;
   font: inherit;
 }
-/* =====================================================
-   FINAL DONOR FIELDS FIX
-   نفس شكل باقي حقول التسجيل بالضبط
-   ===================================================== */
+/* =========================================================
+   DONOR FIELDS
+========================================================= */
 
-/* كل حقول المتبرع نفس ارتفاع وشكل الحقول العادية */
 .signup-donor-select-field,
 .signup-date-field {
-  height: 52px !important;
-  min-height: 52px !important;
-  border-radius: 27px !important;
-  box-sizing: border-box;
   position: relative;
+  width: 100%;
+  height: 52px;
+  margin-bottom: 10px;
+
+  display: flex;
+  align-items: center;
+
+  box-sizing: border-box;
+
+  border: 1px solid rgba(10, 168, 143, 0.13);
+  border-radius: 27px;
+
+  background: rgba(255, 255, 255, 0.72);
+
+  box-shadow:
+    0 7px 19px rgba(8, 112, 97, 0.06),
+    inset 0 1px 0 rgba(255, 255, 255, 0.9);
+
+  backdrop-filter: blur(10px);
+
   overflow: hidden;
 }
 
-/* فصيلة الدم + الأمراض المزمنة */
+
+/* =========================================================
+   BLOOD TYPE
+========================================================= */
+
 .signup-donor-select-field select {
-  width: 100% !important;
-  height: 52px !important;
-  min-height: 52px !important;
+  width: 100%;
+  height: 100%;
 
-  margin: 0 !important;
-  padding: 0 54px 0 48px !important;
+  margin: 0;
+  padding: 0 52px 0 45px;
 
-  border: none !important;
-  outline: none !important;
-  background: transparent !important;
+  border: none;
+  outline: none;
 
-  /* نفس لون وحجم الـ placeholder */
-  color: #999999 !important;
-  font-family: inherit !important;
-  font-size: 16px !important;
-  font-weight: 400 !important;
-  line-height: 52px !important;
+  background: transparent;
 
-  direction: rtl !important;
-  text-align: right !important;
+  color: #999999;
 
-  /* إزالة حرف V / السهم */
-  appearance: none !important;
-  -webkit-appearance: none !important;
-  -moz-appearance: none !important;
+  font-family: inherit;
+  font-size: 16px;
+  font-weight: 400;
+  line-height: normal;
 
-  background-image: none !important;
+  direction: rtl;
+
+  appearance: none;
+  -webkit-appearance: none;
+
   cursor: pointer;
+
+  box-sizing: border-box;
 }
 
-/* إزالة سهم select في Edge */
-.signup-donor-select-field select::-ms-expand {
-  display: none !important;
+
+/* لما يختار فصيلة */
+.signup-donor-select-field select:valid {
+  color: #216d72;
 }
 
-/* الاختيارات نفسها */
+
+/* الاختيارات داخل القائمة */
 .signup-donor-select-field select option {
-  color: #999999 !important;
-  background: #ffffff !important;
-  font-family: inherit !important;
-  font-size: 16px !important;
-  font-weight: 400 !important;
+  background: white;
+
+  color: #216d72;
+
+  font-family: inherit;
+  font-size: 16px;
+  font-weight: 400;
 }
 
-/* =====================================================
-   تاريخ آخر تبرع
-   ===================================================== */
+
+/* =========================================================
+   DONOR FIELD ICON
+========================================================= */
+
+.signup-donor-select-field .signup-field-icon,
+.signup-date-field .signup-field-icon {
+  position: absolute;
+
+  right: 17px;
+
+  width: 22px;
+  height: 22px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  color: #0a9883;
+
+  z-index: 4;
+
+  pointer-events: none;
+}
+
+.signup-donor-select-field .signup-field-icon svg,
+.signup-date-field .signup-field-icon svg {
+  width: 22px;
+  height: 22px;
+
+  color: #0a9883;
+  stroke: currentColor;
+}
+
+
+/* سهم الـ Select */
+.signup-donor-select-field::after {
+  content: "⌄";
+
+  position: absolute;
+
+  left: 18px;
+  top: 50%;
+
+  transform: translateY(-55%);
+
+  color: #0a9883;
+
+  font-size: 22px;
+  font-weight: 400;
+
+  pointer-events: none;
+
+  z-index: 4;
+}
+
+
+/* =========================================================
+   LAST BLOOD DONATION DATE
+========================================================= */
 
 .signup-date-field {
   cursor: pointer;
 }
 
-/* النص الظاهر */
 .signup-donor-date-text {
-  position: absolute !important;
+  position: absolute;
 
-  right: 54px !important;
-  left: 48px !important;
+  right: 52px;
+  left: 45px;
 
-  top: 50% !important;
-  transform: translateY(-50%) !important;
+  top: 50%;
 
-  color: #999999 !important;
-  font-family: inherit !important;
-  font-size: 16px !important;
-  font-weight: 400 !important;
+  transform: translateY(-50%);
 
-  line-height: normal !important;
-  text
+  color: #999999;
+
+  font-family: inherit;
+  font-size: 16px;
+  font-weight: 400;
+  line-height: normal;
+
+  text-align: right;
+
+  pointer-events: none;
+
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+
+  z-index: 2;
+}
+
+
+/* لما التاريخ يتحدد */
+.signup-donor-date-text.selected {
+  color: #216d72;
+}
+
+
+/* سهم التاريخ */
+.signup-date-field::after {
+  content: "⌄";
+
+  position: absolute;
+
+  left: 18px;
+  top: 50%;
+
+  transform: translateY(-55%);
+
+  color: #0a9883;
+
+  font-size: 22px;
+  font-weight: 400;
+
+  pointer-events: none;
+
+  z-index: 4;
+}
+
+
+/* التاريخ الحقيقي مخفي لكن قابل للضغط */
+.signup-date-field input[type="date"] {
+  position: absolute;
+
+  inset: 0;
+
+  width: 100%;
+  height: 100%;
+
+  margin: 0;
+
+  opacity: 0;
+
+  cursor: pointer;
+
+  z-index: 5;
+}
+
+
+/* =========================================================
+   CHRONIC DISEASE
+========================================================= */
+
+.signup-donor-select-field.chronic-field {
+  cursor: pointer;
+}
+
+
+/* =========================================================
+   DONOR FIELDS FOCUS
+========================================================= */
+
+.signup-donor-select-field:focus-within,
+.signup-date-field:focus-within {
+  border-color: rgba(10, 168, 143, 0.38);
+
+  box-shadow:
+    0 0 0 4px rgba(10, 168, 143, 0.07),
+    0 9px 22px rgba(8, 112, 97, 0.09);
+}
+
+
+/* =========================================================
+   DONOR HEART - ACCOUNT TYPE
+========================================================= */
+
+.account-type.active .account-icon {
+  width: 32px;
+  height: 32px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  border-radius: 50%;
+
+  background: rgba(255, 255, 255, 0.20);
+
+  color: white;
+}
+
+.account-type.active .account-icon svg {
+  width: 21px;
+  height: 21px;
+
+  color: white;
+  stroke: white;
+}
+
+
+/* =========================================================
+   ACCOUNT TYPE HEART
+========================================================= */
+
+.account-type.active {
+  color: white;
+}
+
+.account-type.active svg {
+  color: white;
+}
+
+
+/* =========================================================
+   PLACEHOLDER
+========================================================= */
+
+.signup-field input::placeholder,
+.signup-donor-date-text {
+  color: #999999;
+
+  font-size: 16px;
+  font-weight: 400;
+}
+
+
+/* =========================================================
+   MOBILE
+========================================================= */
+
+@media (max-width: 480px) {
+
+  .signup-donor-select-field,
+  .signup-date-field {
+    height: 52px;
+    border-radius: 27px;
+  }
+
+  .signup-donor-select-field select {
+    font-size: 16px;
+    padding-right: 50px;
+    padding-left: 42px;
+  }
+
+  .signup-donor-date-text {
+    right: 50px;
+    left: 42px;
+
+    font-size: 16px;
+  }
+
+  .signup-donor-select-field .signup-field-icon,
+  .signup-date-field .signup-field-icon {
+    right: 16px;
+
+    width: 22px;
+    height: 22px;
+  }
+
+  .signup-donor-select-field .signup-field-icon svg,
+  .signup-date-field .signup-field-icon svg {
+    width: 22px;
+    height: 22px;
+  }
+
+  .signup-donor-select-field::after,
+  .signup-date-field::after {
+    left: 16px;
+  }
+
+}
