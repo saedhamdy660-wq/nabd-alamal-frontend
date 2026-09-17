@@ -204,10 +204,6 @@ export default function MedicineExchange() {
 
       setMedicines(Array.isArray(results) ? results : []);
 
-      /*
-        بعد البحث نرجع إلى "الكل"
-        بحيث تظهر الأقسام فقط.
-      */
       setSelectedCategory("all");
     } catch (error) {
       console.error("Medicine search error:", error);
@@ -251,10 +247,6 @@ export default function MedicineExchange() {
   */
 
   const visibleMedicines = useMemo(() => {
-    /*
-      "الكل" لا يعرض الأدوية.
-    */
-
     if (selectedCategory === "all") {
       return [];
     }
@@ -328,9 +320,7 @@ export default function MedicineExchange() {
       className="medicine-exchange-page"
       dir="rtl"
     >
-      {/* =====================================================
-          HEADER
-      ===================================================== */}
+      {/* HEADER */}
 
       <header className="medicine-exchange-header">
         <button
@@ -379,9 +369,7 @@ export default function MedicineExchange() {
         </div>
       </header>
 
-      {/* =====================================================
-          SEARCH
-      ===================================================== */}
+      {/* SEARCH */}
 
       <form
         className="medicine-search"
@@ -413,12 +401,9 @@ export default function MedicineExchange() {
         </button>
       </form>
 
-      {/* =====================================================
-          CATEGORY PILLS
-      ===================================================== */}
+      {/* CATEGORY PILLS */}
 
       <div className="medicine-category-pills">
-        {/* الكل */}
         <button
           type="button"
           className={
@@ -433,7 +418,6 @@ export default function MedicineExchange() {
           الكل
         </button>
 
-        {/* الأقسام */}
         {categories.map((category) => (
           <button
             key={category.key}
@@ -452,14 +436,10 @@ export default function MedicineExchange() {
         ))}
       </div>
 
-      {/* =====================================================
-          MAIN
-      ===================================================== */}
+      {/* MAIN */}
 
       <main>
-        {/* ===================================================
-            MAIN CATEGORIES
-        =================================================== */}
+        {/* MAIN CATEGORIES */}
 
         <section className="medicine-section">
           <div className="medicine-section-heading">
@@ -475,11 +455,6 @@ export default function MedicineExchange() {
                 : `الأدوية الموجودة في قسم ${currentCategory?.label}`}
             </p>
           </div>
-
-          {/* =================================================
-              عندما يكون "الكل" مختار:
-              نعرض الأقسام فقط
-          ================================================= */}
 
           {selectedCategory === "all" && (
             <div className="medicine-category-grid">
@@ -534,17 +509,9 @@ export default function MedicineExchange() {
               })}
             </div>
           )}
-
-          {/* =================================================
-              عندما يتم اختيار قسم:
-              لا نعرض الأقسام هنا
-              وننتقل لقائمة الأدوية أسفل الصفحة
-          ================================================= */}
         </section>
 
-        {/* ===================================================
-            MEDICINES
-        =================================================== */}
+        {/* MEDICINES */}
 
         {selectedCategory !== "all" && (
           <section className="medicine-list-section">
@@ -673,9 +640,7 @@ export default function MedicineExchange() {
         )}
       </main>
 
-      {/* =====================================================
-          CSS
-      ===================================================== */}
+      {/* CSS */}
 
       <style>{`
         * {
@@ -1064,9 +1029,17 @@ export default function MedicineExchange() {
           font-size: 21px;
         }
 
+        /*
+          تعديل تنسيق اسم القسم:
+          منع كسر الكلمات الطويلة مثل
+          "البرد والحساسية"
+        */
+
         .medicine-category-card-text {
           min-width: 0;
           flex: 1;
+
+          overflow: hidden;
         }
 
         .medicine-category-card-text strong {
@@ -1074,11 +1047,17 @@ export default function MedicineExchange() {
 
           color: #17545a;
 
-          font-size: 13px;
+          /*
+            حجم مناسب حتى يظهر
+            "البرد والحساسية" في سطر واحد
+          */
+          font-size: 12px;
           line-height: 1.4;
           font-weight: 900;
 
-          word-break: break-word;
+          white-space: nowrap;
+          overflow: hidden;
+          text-overflow: ellipsis;
         }
 
         .medicine-category-card-text span {
@@ -1096,6 +1075,8 @@ export default function MedicineExchange() {
 
           font-size: 29px;
           line-height: 1;
+
+          flex-shrink: 0;
         }
 
         .medicine-list-section {
@@ -1392,8 +1373,14 @@ export default function MedicineExchange() {
             font-size: 18px;
           }
 
+          /*
+            حجم أصغر قليلًا للشاشات الصغيرة
+            حتى تظل كلمة "البرد والحساسية"
+            في سطر واحد.
+          */
           .medicine-category-card-text strong {
-            font-size: 11px;
+            font-size: 10px;
+            white-space: nowrap;
           }
 
           .medicine-category-card-text span {
@@ -1485,6 +1472,7 @@ export default function MedicineExchange() {
         html.nabd-dark .medicine-category-pill.active,
         body.nabd-dark .medicine-category-pill.active {
           color: white;
+
           background:
             linear-gradient(
               135deg,
