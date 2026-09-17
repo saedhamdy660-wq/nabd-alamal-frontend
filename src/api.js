@@ -2,7 +2,9 @@ const BASE_URL = import.meta.env.VITE_API_URL || "/api";
 
 async function request(path, options = {}) {
   const res = await fetch(`${BASE_URL}${path}`, {
-    headers: { "Content-Type": "application/json" },
+    headers: {
+      "Content-Type": "application/json",
+    },
     ...options,
   });
 
@@ -52,9 +54,6 @@ const api = {
     request(`/blood/requests/${id}`),
 
   // Nearby Donors
-  // bloodType = فصيلة الدم المطلوبة
-  // userId = المستخدم الحالي حتى لا يظهر لنفسه
-  // lat/lng = موقع المستخدم لحساب المسافة
   getNearbyDonors: ({
     bloodType = "",
     userId = "",
@@ -71,18 +70,28 @@ const api = {
       params.set("userId", userId);
     }
 
-    if (lat !== "" && lat !== null && lat !== undefined) {
+    if (
+      lat !== "" &&
+      lat !== null &&
+      lat !== undefined
+    ) {
       params.set("lat", lat);
     }
 
-    if (lng !== "" && lng !== null && lng !== undefined) {
+    if (
+      lng !== "" &&
+      lng !== null &&
+      lng !== undefined
+    ) {
       params.set("lng", lng);
     }
 
     const query = params.toString();
 
     return request(
-      `/blood/donors/nearby${query ? `?${query}` : ""}`
+      `/blood/donors/nearby${
+        query ? `?${query}` : ""
+      }`
     );
   },
 
@@ -98,7 +107,13 @@ const api = {
     request("/blood/hospitals"),
 
   getMedicines: (q) =>
-    request(`/medicines${q ? `?q=${encodeURIComponent(q)}` : ""}`),
+    request(
+      `/medicines${
+        q
+          ? `?q=${encodeURIComponent(q)}`
+          : ""
+      }`
+    ),
 
   getMedicine: (id) =>
     request(`/medicines/${id}`),
@@ -126,6 +141,16 @@ const api = {
   getMyRequests: () =>
     request("/users/me/requests"),
 
+  // Update user location
+  updateUserLocation: (id, lat, lng) =>
+    request(`/users/${id}/location`, {
+      method: "PUT",
+      body: JSON.stringify({
+        lat,
+        lng,
+      }),
+    }),
+
   saveAvatar: (id, avatar) =>
     request(`/users/${id}/avatar`, {
       method: "POST",
@@ -133,17 +158,15 @@ const api = {
     }),
 };
 
-// Default export
 export default api;
-
-// Named export
 export { api };
 
-// Wraps the browser Geolocation API in a promise
 export function getCurrentLocation() {
   return new Promise((resolve, reject) => {
     if (!navigator.geolocation) {
-      reject(new Error("Geolocation not supported"));
+      reject(
+        new Error("Geolocation not supported")
+      );
       return;
     }
 
@@ -153,7 +176,12 @@ export function getCurrentLocation() {
           lat: pos.coords.latitude,
           lng: pos.coords.longitude,
         }),
-      (err) => reject(err)
+      (err) => reject(err),
+      {
+        enableHighAccuracy: true,
+        timeout: 15000,
+        maximumAge: 0,
+      }
     );
   });
 }
