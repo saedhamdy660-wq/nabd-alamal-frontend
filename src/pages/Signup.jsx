@@ -221,15 +221,12 @@ export default function Signup() {
     nationalId: "",
     password: "",
     confirm: "",
-
-    // بيانات المتبرع
     bloodType: "",
     lastDonation: "",
     chronicDisease: "",
   });
 
   const [showPassword, setShowPassword] = useState(false);
-
   const [showConfirm, setShowConfirm] = useState(false);
 
   const [error, setError] = useState("");
@@ -295,7 +292,6 @@ export default function Signup() {
       return;
     }
 
-    // التحقق من بيانات المتبرع
     if (accountType === "donor") {
       if (!form.bloodType) {
         setError("من فضلك اختر فصيلة الدم");
@@ -377,11 +373,6 @@ export default function Signup() {
         JSON.stringify(savedUser)
       );
 
-      /*
-       * بعد إنشاء الحساب لأول مرة:
-       * 1- تأكيد رقم الهاتف
-       * 2- بعدها توثيق الهوية
-       */
       navigate("/verify-phone");
     } catch (err) {
       setError(
@@ -530,7 +521,6 @@ export default function Signup() {
             />
           </div>
 
-          {/* الرقم القومي */}
           <div className="signup-field">
             <div className="signup-field-icon">
               <IdCardIcon />
@@ -548,12 +538,8 @@ export default function Signup() {
             />
           </div>
 
-          {/* =========================
-              بيانات المتبرع
-          ========================== */}
           {accountType === "donor" && (
             <>
-              {/* فصيلة الدم */}
               <div className="signup-field">
                 <div className="signup-field-icon">
                   <HeartIcon />
@@ -568,41 +554,17 @@ export default function Signup() {
                     اختر فصيلة الدم
                   </option>
 
-                  <option value="A+">
-                    A+
-                  </option>
-
-                  <option value="A-">
-                    A-
-                  </option>
-
-                  <option value="B+">
-                    B+
-                  </option>
-
-                  <option value="B-">
-                    B-
-                  </option>
-
-                  <option value="AB+">
-                    AB+
-                  </option>
-
-                  <option value="AB-">
-                    AB-
-                  </option>
-
-                  <option value="O+">
-                    O+
-                  </option>
-
-                  <option value="O-">
-                    O-
-                  </option>
+                  <option value="A+">A+</option>
+                  <option value="A-">A-</option>
+                  <option value="B+">B+</option>
+                  <option value="B-">B-</option>
+                  <option value="AB+">AB+</option>
+                  <option value="AB-">AB-</option>
+                  <option value="O+">O+</option>
+                  <option value="O-">O-</option>
                 </select>
               </div>
 
-              {/* تاريخ آخر تبرع */}
               <div
                 className={`signup-field ${
                   form.lastDonation
@@ -633,7 +595,6 @@ export default function Signup() {
                 />
               </div>
 
-              {/* الأمراض المزمنة */}
               <div className="signup-field">
                 <div className="signup-field-icon">
                   <HeartIcon />
@@ -648,13 +609,9 @@ export default function Signup() {
                     هل لديك أمراض مزمنة؟
                   </option>
 
-                  <option value="نعم">
-                    نعم
-                  </option>
+                  <option value="نعم">نعم</option>
 
-                  <option value="لا">
-                    لا
-                  </option>
+                  <option value="لا">لا</option>
                 </select>
               </div>
             </>
