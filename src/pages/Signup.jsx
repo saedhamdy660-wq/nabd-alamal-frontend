@@ -767,5 +767,3 @@ export default function Signup() {
   color: inherit;
   font: inherit;
 }
-
-كده الثلاثة نفس اللون والحجم والخط بتوع باقي حقول الـ Signup، ومفيش تغيير في التصميم الأساسي.
