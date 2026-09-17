@@ -540,26 +540,16 @@ export default function Signup() {
 
           {accountType === "donor" && (
             <>
-              <div className="signup-field donor-field">
+              <div className="signup-field">
                 <div className="signup-field-icon">
                   <HeartIcon />
                 </div>
-
-                {!form.bloodType && (
-                  <span className="donor-placeholder">
-                    اختر فصيلة الدم
-                  </span>
-                )}
 
                 <select
                   value={form.bloodType}
                   onChange={update("bloodType")}
                   aria-label="فصيلة الدم"
-                  className={
-                    form.bloodType
-                      ? "donor-select has-value"
-                      : "donor-select"
-                  }
+                  required
                 >
                   <option value="" disabled>
                     اختر فصيلة الدم
@@ -576,22 +566,10 @@ export default function Signup() {
                 </select>
               </div>
 
-              <div
-                className={`signup-field ${
-                  form.lastDonation
-                    ? "signup-date-has-value"
-                    : ""
-                }`}
-              >
+              <div className="signup-field">
                 <div className="signup-field-icon">
                   <HeartIcon />
                 </div>
-
-                {!form.lastDonation && (
-                  <span className="signup-date-placeholder">
-                    أدخل تاريخ آخر تبرع بالدم
-                  </span>
-                )}
 
                 <input
                   type="date"
@@ -603,29 +581,20 @@ export default function Signup() {
                       .toISOString()
                       .split("T")[0]
                   }
+                  required
                 />
               </div>
 
-              <div className="signup-field donor-field">
+              <div className="signup-field">
                 <div className="signup-field-icon">
                   <HeartIcon />
                 </div>
-
-                {!form.chronicDisease && (
-                  <span className="donor-placeholder">
-                    هل لديك أمراض مزمنة؟
-                  </span>
-                )}
 
                 <select
                   value={form.chronicDisease}
                   onChange={update("chronicDisease")}
                   aria-label="هل لديك أمراض مزمنة"
-                  className={
-                    form.chronicDisease
-                      ? "donor-select has-value"
-                      : "donor-select"
-                  }
+                  required
                 >
                   <option value="" disabled>
                     هل لديك أمراض مزمنة؟
