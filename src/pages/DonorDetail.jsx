@@ -51,10 +51,6 @@ function getDonorInitial(name) {
   return name.trim().charAt(0);
 }
 
-/*
-  تحويل الإحداثيات إلى اسم المكان الحقيقي
-  باستخدام OpenStreetMap / Nominatim
-*/
 async function getCityFromCoordinates(lat, lng) {
   const latitude = Number(lat);
   const longitude = Number(lng);
@@ -85,16 +81,6 @@ async function getCityFromCoordinates(lat, lng) {
 
     const address = data?.address || {};
 
-    /*
-      في مصر أحيانًا المكان يكون مسجل كـ:
-      village
-      town
-      municipality
-      city
-      city_district
-
-      لذلك لا نعتمد على city فقط.
-    */
     const place =
       address.village ||
       address.town ||
@@ -109,10 +95,6 @@ async function getCityFromCoordinates(lat, lng) {
       return place;
     }
 
-    /*
-      احتياطي لو لم يرجع Nominatim
-      اسمًا واضحًا داخل address.
-    */
     if (data?.display_name) {
       const parts = data.display_name
         .split(",")
@@ -131,10 +113,6 @@ async function getCityFromCoordinates(lat, lng) {
       error
     );
 
-    /*
-      محاولة احتياطية باستخدام BigDataCloud
-      إذا فشل OpenStreetMap.
-    */
     try {
       const fallbackResponse = await fetch(
         `https://api.bigdatacloud.net/data/reverse-geocode-client?latitude=${encodeURIComponent(
@@ -316,10 +294,21 @@ export default function DonorDetail() {
   const navigate = useNavigate();
 
   const [donor, setDonor] = useState(null);
+
   const [city, setCity] = useState(
     "جارِ تحديد الموقع..."
   );
+
   const [notified, setNotified] = useState(false);
+
+  const [requestLoading, setRequestLoading] =
+    useState(false);
+
+  const [requestError, setRequestError] =
+    useState("");
+
+  const [currentUser, setCurrentUser] =
+    useState(null);
 
   useEffect(() => {
     let cancelled = false;
@@ -362,6 +351,26 @@ export default function DonorDetail() {
     };
   }, [id]);
 
+  /*
+    قراءة المستخدم الحالي من localStorage
+  */
+  useEffect(() => {
+    const savedUser =
+      localStorage.getItem("nabd_user");
+
+    if (!savedUser) {
+      setCurrentUser(null);
+      return;
+    }
+
+    try {
+      const user = JSON.parse(savedUser);
+      setCurrentUser(user);
+    } catch {
+      setCurrentUser(null);
+    }
+  }, []);
+
   if (!donor) {
     return (
       <div className="donor-page">
@@ -372,7 +381,87 @@ export default function DonorDetail() {
     );
   }
 
+  /*
+    هل المتبرع الموجود في الصفحة
+    هو نفس المستخدم الذي سجل الدخول؟
+  */
+  const isOwnProfile =
+    currentUser?.id &&
+    donor?.userId &&
+    currentUser.id === donor.userId;
+
+  /*
+    لو الحساب مستخدم عادي:
+    يظهر "طلب التبرع"
+
+    لو الحساب متبرع:
+    يظهر "التبرع الآن"
+
+    لو الصفحة هي صفحة المتبرع نفسه:
+    لا يظهر الزر.
+  */
+  const buttonText =
+    currentUser?.accountType === "donor"
+      ? "التبرع الآن"
+      : "طلب التبرع";
+
   const handleDonate = async () => {
+    setRequestError("");
+
+    /*
+      لازم يكون فيه مستخدم مسجل دخول
+    */
+    if (!currentUser?.id) {
+      setRequestError(
+        "من فضلك سجل الدخول أولاً"
+      );
+      return;
+    }
+
+    /*
+      منع إرسال طلب للنفس
+    */
+    if (isOwnProfile) {
+      return;
+    }
+
+    /*
+      لو الحساب مستخدم عادي:
+      نرسل طلب تبرع حقيقي للـBackend.
+    */
+    if (
+      currentUser.accountType !== "donor"
+    ) {
+      try {
+        setRequestLoading(true);
+
+        await api.createDonationRequest(
+          currentUser.id,
+          donor.id
+        );
+
+        setNotified(true);
+      } catch (error) {
+        console.error(
+          "خطأ أثناء إرسال طلب التبرع:",
+          error
+        );
+
+        setRequestError(
+          error?.message ||
+            "حدث خطأ أثناء إرسال طلب التبرع"
+        );
+      } finally {
+        setRequestLoading(false);
+      }
+
+      return;
+    }
+
+    /*
+      لو الحساب متبرع، نحافظ على
+      السلوك القديم للزر.
+    */
     setNotified(true);
   };
 
@@ -483,30 +572,49 @@ export default function DonorDetail() {
 
       </section>
 
-      {/* Donate */}
-      {!notified ? (
-        <button
-          className="donate-button"
-          onClick={handleDonate}
-        >
-          التبرع الآن
-          <HeartIcon />
-        </button>
-      ) : (
-        <div className="success-card">
-          <div className="success-icon">
-            ✓
+      {/* Donate / Request */}
+      {!isOwnProfile &&
+        (!notified ? (
+          <>
+            <button
+              className="donate-button"
+              onClick={handleDonate}
+              disabled={requestLoading}
+            >
+              {requestLoading
+                ? "جاري إرسال الطلب..."
+                : buttonText}
+
+              <HeartIcon />
+            </button>
+
+            {requestError && (
+              <div
+                className="request-error"
+              >
+                {requestError}
+              </div>
+            )}
+          </>
+        ) : (
+          <div className="success-card">
+            <div className="success-icon">
+              ✓
+            </div>
+
+            <strong>
+              {currentUser?.accountType ===
+              "donor"
+                ? "تم إرسال التنبيه للمتبرع بنجاح"
+                : "تم إرسال طلب التبرع بنجاح"}
+            </strong>
+
+            <p>
+              سيتم إشعارك عند قبول الطلب من
+              المتبرع.
+            </p>
           </div>
-
-          <strong>
-            تم إرسال التنبيه للمتبرع بنجاح
-          </strong>
-
-          <p>
-            سيتم إشعارك عند قبول الطلب من المتبرع.
-          </p>
-        </div>
-      )}
+        ))}
 
       {/* Actions */}
       <section className="actions-card">
@@ -795,9 +903,32 @@ export default function DonorDetail() {
             0 10px 22px rgba(21,155,138,.16);
         }
 
+        .donate-button:disabled {
+          opacity: .65;
+          cursor: not-allowed;
+        }
+
         .donate-button svg {
           width: 23px;
           height: 23px;
+        }
+
+        .request-error {
+          max-width: 520px;
+          margin: -7px auto 16px;
+
+          padding: 10px 14px;
+
+          text-align: center;
+
+          color: #98505f;
+
+          background: #ffe7ed;
+
+          border-radius: 14px;
+
+          font-size: 12px;
+          font-weight: 700;
         }
 
         .success-card {
