@@ -52,7 +52,8 @@ function getDonorInitial(name) {
 }
 
 /*
-  تحويل الإحداثيات إلى اسم المدينة
+  تحويل الإحداثيات إلى اسم المكان الحقيقي
+  باستخدام OpenStreetMap / Nominatim
 */
 async function getCityFromCoordinates(lat, lng) {
   const latitude = Number(lat);
@@ -67,28 +68,105 @@ async function getCityFromCoordinates(lat, lng) {
 
   try {
     const response = await fetch(
-      `https://api.bigdatacloud.net/data/reverse-geocode-client?latitude=${latitude}&longitude=${longitude}&localityLanguage=ar`
+      `https://nominatim.openstreetmap.org/reverse?format=jsonv2&lat=${encodeURIComponent(
+        latitude
+      )}&lon=${encodeURIComponent(
+        longitude
+      )}&zoom=18&addressdetails=1&accept-language=ar`
     );
 
     if (!response.ok) {
-      throw new Error("Reverse geocoding failed");
+      throw new Error(
+        "Reverse geocoding failed"
+      );
     }
 
     const data = await response.json();
 
-    return (
-      data.city ||
-      data.locality ||
-      data.principalSubdivision ||
-      "الموقع غير متاح"
-    );
+    const address = data?.address || {};
+
+    /*
+      في مصر أحيانًا المكان يكون مسجل كـ:
+      village
+      town
+      municipality
+      city
+      city_district
+
+      لذلك لا نعتمد على city فقط.
+    */
+    const place =
+      address.village ||
+      address.town ||
+      address.municipality ||
+      address.city ||
+      address.city_district ||
+      address.county ||
+      address.state_district ||
+      address.state;
+
+    if (place) {
+      return place;
+    }
+
+    /*
+      احتياطي لو لم يرجع Nominatim
+      اسمًا واضحًا داخل address.
+    */
+    if (data?.display_name) {
+      const parts = data.display_name
+        .split(",")
+        .map((item) => item.trim())
+        .filter(Boolean);
+
+      if (parts.length > 0) {
+        return parts[0];
+      }
+    }
+
+    return "الموقع غير متاح";
   } catch (error) {
     console.error(
-      "خطأ أثناء تحديد مدينة المتبرع:",
+      "خطأ أثناء تحديد مكان المتبرع:",
       error
     );
 
-    return "الموقع غير متاح";
+    /*
+      محاولة احتياطية باستخدام BigDataCloud
+      إذا فشل OpenStreetMap.
+    */
+    try {
+      const fallbackResponse = await fetch(
+        `https://api.bigdatacloud.net/data/reverse-geocode-client?latitude=${encodeURIComponent(
+          latitude
+        )}&longitude=${encodeURIComponent(
+          longitude
+        )}&localityLanguage=ar`
+      );
+
+      if (!fallbackResponse.ok) {
+        throw new Error(
+          "Fallback reverse geocoding failed"
+        );
+      }
+
+      const fallbackData =
+        await fallbackResponse.json();
+
+      return (
+        fallbackData?.locality ||
+        fallbackData?.city ||
+        fallbackData?.principalSubdivision ||
+        "الموقع غير متاح"
+      );
+    } catch (fallbackError) {
+      console.error(
+        "فشل تحديد المكان بالطريقة الاحتياطية:",
+        fallbackError
+      );
+
+      return "الموقع غير متاح";
+    }
   }
 }
 
@@ -238,7 +316,9 @@ export default function DonorDetail() {
   const navigate = useNavigate();
 
   const [donor, setDonor] = useState(null);
-  const [city, setCity] = useState("جارِ تحديد الموقع...");
+  const [city, setCity] = useState(
+    "جارِ تحديد الموقع..."
+  );
   const [notified, setNotified] = useState(false);
 
   useEffect(() => {
@@ -246,16 +326,18 @@ export default function DonorDetail() {
 
     async function loadDonor() {
       try {
-        const donorData = await api.getDonor(id);
+        const donorData =
+          await api.getDonor(id);
 
         if (cancelled) return;
 
         setDonor(donorData);
 
-        const donorCity = await getCityFromCoordinates(
-          donorData?.lat,
-          donorData?.lng
-        );
+        const donorCity =
+          await getCityFromCoordinates(
+            donorData?.lat,
+            donorData?.lng
+          );
 
         if (!cancelled) {
           setCity(donorCity);
