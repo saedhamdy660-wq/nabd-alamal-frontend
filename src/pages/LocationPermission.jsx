@@ -30,7 +30,23 @@ export default function LocationPermission() {
         return;
       }
 
-      const currentUser = JSON.parse(savedUser);
+      let currentUser;
+
+      try {
+        currentUser = JSON.parse(savedUser);
+      } catch {
+        currentUser = null;
+      }
+
+      if (!currentUser) {
+        setStatus("تم تحديد موقعك بنجاح ✅");
+
+        setTimeout(() => {
+          navigate("/home");
+        }, 800);
+
+        return;
+      }
 
       // حفظ الموقع داخل بيانات المستخدم في المتصفح
       const updatedUser = {
@@ -45,16 +61,20 @@ export default function LocationPermission() {
         JSON.stringify(updatedUser)
       );
 
-      // تحديث الموقع في الـ Backend
+      /*
+        تحديث الموقع في الـ Backend.
+        لو فشل التحديث في الـ Backend،
+        الموقع يظل محفوظًا محليًا.
+      */
       if (currentUser.id) {
         try {
-          const backendUser = await api.updateUserLocation(
-            currentUser.id,
-            lat,
-            lng
-          );
+          const backendUser =
+            await api.updateUserLocation(
+              currentUser.id,
+              lat,
+              lng
+            );
 
-          // لو الـ Backend رجّع بيانات المستخدم
           if (backendUser) {
             const finalUser = {
               ...updatedUser,
