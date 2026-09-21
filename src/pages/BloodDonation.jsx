@@ -217,7 +217,8 @@ export default function BloodDonation() {
 
     const loadDonors = async () => {
       try {
-        const savedUser = localStorage.getItem("nabd_user");
+        const savedUser =
+          localStorage.getItem("nabd_user");
 
         let currentUser = null;
 
@@ -233,27 +234,24 @@ export default function BloodDonation() {
         let lng = currentUser?.lng;
 
         /*
-          لو الموقع موجود بالفعل في بيانات المستخدم،
-          نستخدمه مباشرة.
-
-          لو مش موجود، نحاول الحصول عليه من الجهاز.
+          استخدام الموقع المحفوظ أولًا.
         */
         if (
           !Number.isFinite(Number(lat)) ||
           !Number.isFinite(Number(lng))
         ) {
           try {
-            const location = await getCurrentLocation();
+            const location =
+              await getCurrentLocation();
 
             lat = location.lat;
             lng = location.lng;
 
             /*
-              حفظ الموقع محليًا حتى لا نحتاج
-              لطلبه مرة أخرى في كل تحديث.
+              حفظ الموقع محليًا.
             */
             if (currentUser) {
-              const updatedUser = {
+              currentUser = {
                 ...currentUser,
                 lat,
                 lng,
@@ -262,31 +260,49 @@ export default function BloodDonation() {
 
               localStorage.setItem(
                 "nabd_user",
-                JSON.stringify(updatedUser)
+                JSON.stringify(currentUser)
               );
 
-              currentUser = updatedUser;
+              /*
+                تحديث الموقع في الـ Backend
+                حتى لو المستخدم دخل الصفحة
+                بدون المرور على LocationPermission.
+              */
+              if (currentUser.id) {
+                try {
+                  await api.updateUserLocation(
+                    currentUser.id,
+                    lat,
+                    lng
+                  );
+                } catch {
+                  // الموقع المحلي يكفي لاستكمال البحث
+                }
+              }
             }
           } catch {
             /*
-              المستخدم قد يكون رفض الموقع.
-              في هذه الحالة نطلب المتبرعين بدون
-              إحداثيات جديدة.
+              المستخدم لم يسمح بالموقع.
+              سنستمر بالموقع المحفوظ إن وجد.
             */
           }
         }
 
-        const data = await api.getNearbyDonors({
-          userId: currentUser?.id || "",
-          lat:
-            Number.isFinite(Number(lat))
+        const hasLocation =
+          Number.isFinite(Number(lat)) &&
+          Number.isFinite(Number(lng));
+
+        const data =
+          await api.getNearbyDonors({
+            userId:
+              currentUser?.id || "",
+            lat: hasLocation
               ? Number(lat)
               : "",
-          lng:
-            Number.isFinite(Number(lng))
+            lng: hasLocation
               ? Number(lng)
               : "",
-        });
+          });
 
         if (cancelled) return;
 
