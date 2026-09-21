@@ -1,5 +1,10 @@
-import React, { useEffect, useState } from "react";
+import React, {
+  useEffect,
+  useState,
+} from "react";
+
 import { Link } from "react-router-dom";
+
 import { api } from "../api.js";
 
 function BellIcon() {
@@ -12,6 +17,7 @@ function BellIcon() {
         strokeWidth="1.8"
         strokeLinejoin="round"
       />
+
       <path
         d="M10 20h4"
         fill="none"
@@ -34,6 +40,7 @@ function SettingsIcon() {
         stroke="currentColor"
         strokeWidth="1.8"
       />
+
       <path
         d="M19 13.2v-2.4l-1.8-.5a5.9 5.9 0 0 0-.6-1.5l1-1.5-1.7-1.7-1.5 1a5.9 5.9 0 0 0-1.5-.6L12.4 4H10l-.5 1.8a5.9 5.9 0 0 0-1.5.6l-1.5-1L4.8 7.1l1.7 1.7 1.5-1a5.9 5.9 0 0 0-.6 1.5l-1.8.5v2.4l1.8.5a5.9 5.9 0 0 0 .6 1.5l-1 1.5 1.7 1.7 1.5-1a5.9 5.9 0 0 0 1.5.6L10 20h2.4l.5-1.8a5.9 5.9 0 0 0 1.5-.6l1.5 1 1.7-1.7-1-1.5a5.9 5.9 0 0 0 .6-1.5l1.8-.7Z"
         fill="none"
@@ -55,6 +62,7 @@ function AlertIcon() {
         strokeWidth="1.8"
         strokeLinejoin="round"
       />
+
       <path
         d="M12 9v4M12 16h.01"
         fill="none"
@@ -92,6 +100,7 @@ function InfoIcon() {
         stroke="currentColor"
         strokeWidth="1.8"
       />
+
       <path
         d="M12 11v5M12 8h.01"
         fill="none"
@@ -116,14 +125,110 @@ function getNotificationIcon(type) {
 }
 
 export default function Notifications() {
-  const [items, setItems] = useState([]);
+  const [items, setItems] =
+    useState([]);
+
+  const [respondingId, setRespondingId] =
+    useState(null);
+
+  const [actionError, setActionError] =
+    useState("");
 
   useEffect(() => {
+    const savedUser =
+      localStorage.getItem(
+        "nabd_user"
+      );
+
+    let userId = "";
+
+    if (savedUser) {
+      try {
+        const user =
+          JSON.parse(savedUser);
+
+        userId =
+          user?.id || "";
+      } catch {
+        userId = "";
+      }
+    }
+
     api
-      .getNotifications()
+      .getNotifications(userId)
       .then(setItems)
       .catch(() => {});
   }, []);
+
+  const handleDonationResponse = async (
+    notification,
+    action
+  ) => {
+    const savedUser =
+      localStorage.getItem(
+        "nabd_user"
+      );
+
+    if (!savedUser) {
+      return;
+    }
+
+    let user = null;
+
+    try {
+      user =
+        JSON.parse(savedUser);
+    } catch {
+      return;
+    }
+
+    if (
+      !notification?.requestId ||
+      !user?.id
+    ) {
+      return;
+    }
+
+    try {
+      setRespondingId(
+        notification.id
+      );
+
+      setActionError("");
+
+      await api.respondToDonationRequest(
+        notification.requestId,
+        user.id,
+        action
+      );
+
+      setItems(
+        (prev) =>
+          prev.map(
+            (item) =>
+              item.id ===
+              notification.id
+                ? {
+                    ...item,
+
+                    status:
+                      action ===
+                      "accept"
+                        ? "accepted"
+                        : "rejected",
+                  }
+                : item
+          )
+      );
+    } catch (error) {
+      setActionError(
+        error?.message ||
+          "حدث خطأ أثناء الرد على الطلب"
+      );
+    } finally {
+      setRespondingId(null);
+    }
+  };
 
   return (
     <div className="notifications-page">
@@ -132,14 +237,19 @@ export default function Notifications() {
       <header className="notifications-header">
 
         <div className="header-title">
+
           <div className="header-bell">
             <BellIcon />
           </div>
 
           <div>
             <h1>الإشعارات</h1>
-            <p>آخر التحديثات والتنبيهات</p>
+
+            <p>
+              آخر التحديثات والتنبيهات
+            </p>
           </div>
+
         </div>
 
         <Link
@@ -161,7 +271,9 @@ export default function Notifications() {
               <BellIcon />
             </div>
 
-            <h3>لا توجد إشعارات</h3>
+            <h3>
+              لا توجد إشعارات
+            </h3>
 
             <p>
               ستظهر هنا الإشعارات والتحديثات المهمة.
@@ -170,40 +282,124 @@ export default function Notifications() {
           </div>
         )}
 
-        {items.map((notification) => {
+        {items.map(
+          (notification) => {
+            const type =
+              notification.type ||
+              "info";
 
-          const type =
-            notification.type || "info";
+            const isDonationRequest =
+              notification.kind ===
+              "donation_request";
 
-          return (
-            <div
-              key={notification.id}
-              className={`notification-card ${type}`}
-            >
+            const isPending =
+              notification.status ===
+              "pending";
 
-              <div className="notification-icon">
-                {getNotificationIcon(type)}
+            const isResponding =
+              respondingId ===
+              notification.id;
+
+            return (
+              <div
+                key={notification.id}
+                className={`notification-card ${type}`}
+              >
+
+                <div className="notification-icon">
+                  {getNotificationIcon(
+                    type
+                  )}
+                </div>
+
+                <div className="notification-content">
+
+                  <h3>
+                    {notification.title}
+                  </h3>
+
+                  <p>
+                    {notification.body}
+                  </p>
+
+                  <span>
+                    {notification.time}
+                  </span>
+
+                  {/* Donation Request Actions */}
+                  {isDonationRequest &&
+                    isPending && (
+                      <div className="donation-actions">
+
+                        <button
+                          type="button"
+                          className="accept-button"
+                          disabled={
+                            isResponding
+                          }
+                          onClick={() =>
+                            handleDonationResponse(
+                              notification,
+                              "accept"
+                            )
+                          }
+                        >
+                          {isResponding
+                            ? "جاري..."
+                            : "قبول"}
+                        </button>
+
+                        <button
+                          type="button"
+                          className="reject-button"
+                          disabled={
+                            isResponding
+                          }
+                          onClick={() =>
+                            handleDonationResponse(
+                              notification,
+                              "reject"
+                            )
+                          }
+                        >
+                          رفض
+                        </button>
+
+                      </div>
+                    )}
+
+                  {/* Request Already Accepted */}
+                  {isDonationRequest &&
+                    notification.status ===
+                      "accepted" && (
+                      <div className="request-status accepted-status">
+                        ✓ تم قبول طلب التبرع
+                      </div>
+                    )}
+
+                  {/* Request Already Rejected */}
+                  {isDonationRequest &&
+                    notification.status ===
+                      "rejected" && (
+                      <div className="request-status rejected-status">
+                        تم رفض طلب التبرع
+                      </div>
+                    )}
+
+                  {actionError &&
+                    isDonationRequest &&
+                    isPending && (
+                      <div className="action-error">
+                        {actionError}
+                      </div>
+                    )}
+
+                </div>
+
               </div>
-
-              <div className="notification-content">
-
-                <h3>
-                  {notification.title}
-                </h3>
-
-                <p>
-                  {notification.body}
-                </p>
-
-                <span>
-                  {notification.time}
-                </span>
-
-              </div>
-
-            </div>
-          );
-        })}
+            );
+          }
+        )}
 
       </section>
 
@@ -381,7 +577,7 @@ export default function Notifications() {
 
           display: flex;
 
-          align-items: center;
+          align-items: flex-start;
 
           gap: 12px;
 
@@ -523,6 +719,107 @@ export default function Notifications() {
           color: #9aafae;
 
           font-size: 10px;
+        }
+
+        /* Donation Actions */
+
+        .donation-actions {
+          display: flex;
+
+          gap: 8px;
+
+          margin-top: 11px;
+        }
+
+        .donation-actions button {
+          flex: 1;
+
+          min-height: 38px;
+
+          border: 0;
+
+          border-radius: 13px;
+
+          font-size: 12px;
+
+          font-weight: 800;
+
+          cursor: pointer;
+
+          transition:
+            opacity .2s ease,
+            transform .2s ease;
+        }
+
+        .donation-actions button:active {
+          transform: scale(.98);
+        }
+
+        .donation-actions button:disabled {
+          opacity: .55;
+
+          cursor: not-allowed;
+        }
+
+        .accept-button {
+          color: white;
+
+          background:
+            linear-gradient(
+              135deg,
+              #19ad98,
+              #159b8a
+            );
+
+          box-shadow:
+            0 7px 15px
+              rgba(21,155,138,.13);
+        }
+
+        .reject-button {
+          color: #98505f;
+
+          background: #ffe7ed;
+        }
+
+        /* Request Status */
+
+        .request-status {
+          margin-top: 10px;
+
+          padding: 8px 10px;
+
+          border-radius: 12px;
+
+          font-size: 11px;
+
+          font-weight: 800;
+
+          text-align: center;
+        }
+
+        .accepted-status {
+          color: #28786e;
+
+          background:
+            rgba(213,248,239,.9);
+        }
+
+        .rejected-status {
+          color: #98505f;
+
+          background:
+            rgba(255,231,237,.9);
+        }
+
+        .action-error {
+          margin-top: 8px;
+
+          color: #98505f;
+
+          font-size: 10px;
+
+          font-weight: 700;
         }
 
         /* Empty */
