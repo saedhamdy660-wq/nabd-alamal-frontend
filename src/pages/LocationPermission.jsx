@@ -12,13 +12,24 @@ export default function LocationPermission() {
       setLoading(true);
       setStatus("");
 
-      // الحصول على الموقع الحالي
+      // الحصول على الموقع الحالي بدقة عالية
       const location = await getCurrentLocation();
 
-      const { lat, lng } = location;
+      const lat = Number(location?.lat);
+      const lng = Number(location?.lng);
+      const accuracy = Number(location?.accuracy);
+
+      // التأكد من أن الإحداثيات صحيحة
+      if (
+        !Number.isFinite(lat) ||
+        !Number.isFinite(lng)
+      ) {
+        throw new Error("Invalid location coordinates");
+      }
 
       // الحصول على المستخدم المحفوظ حاليًا
-      const savedUser = localStorage.getItem("nabd_user");
+      const savedUser =
+        localStorage.getItem("nabd_user");
 
       if (!savedUser) {
         setStatus("تم تحديد موقعك بنجاح ✅");
@@ -48,11 +59,17 @@ export default function LocationPermission() {
         return;
       }
 
-      // حفظ الموقع داخل بيانات المستخدم في المتصفح
+      /*
+        حفظ الموقع الحقيقي داخل بيانات المستخدم
+        في المتصفح.
+      */
       const updatedUser = {
         ...currentUser,
         lat,
         lng,
+        accuracy: Number.isFinite(accuracy)
+          ? accuracy
+          : null,
         locationEnabled: true,
       };
 
@@ -63,8 +80,10 @@ export default function LocationPermission() {
 
       /*
         تحديث الموقع في الـ Backend.
-        لو فشل التحديث في الـ Backend،
-        الموقع يظل محفوظًا محليًا.
+
+        مهم:
+        الموقع الجديد يتم إرساله للـ Backend حتى يتم
+        تحديث موقع المستخدم والمتبرع المرتبط به.
       */
       if (currentUser.id) {
         try {
@@ -81,6 +100,9 @@ export default function LocationPermission() {
               ...backendUser,
               lat,
               lng,
+              accuracy: Number.isFinite(accuracy)
+                ? accuracy
+                : null,
               locationEnabled: true,
             };
 
@@ -89,8 +111,17 @@ export default function LocationPermission() {
               JSON.stringify(finalUser)
             );
           }
-        } catch {
-          // الموقع محفوظ محليًا حتى لو تعذر تحديث الـ Backend
+        } catch (error) {
+          console.error(
+            "تعذر تحديث موقع المستخدم في Backend:",
+            error
+          );
+
+          /*
+            الموقع ما زال محفوظًا محليًا،
+            لكن لو فشل الـBackend فلن يتم تحديث
+            موقع المتبرع هناك.
+          */
         }
       }
 
@@ -99,7 +130,12 @@ export default function LocationPermission() {
       setTimeout(() => {
         navigate("/home");
       }, 800);
-    } catch {
+    } catch (error) {
+      console.error(
+        "خطأ أثناء تحديد الموقع:",
+        error
+      );
+
       setStatus(
         "تعذّر الوصول للموقع، يمكنك تفعيله لاحقًا من الإعدادات"
       );
