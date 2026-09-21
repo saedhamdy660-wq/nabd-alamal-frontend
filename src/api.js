@@ -188,6 +188,24 @@ const api = {
       }
     ),
 
+  // تحديث مرحلة التبرع
+  updateDonationProgress: (
+    id,
+    donorId,
+    stage
+  ) =>
+    request(
+      `/blood/donation-requests/${id}/progress`,
+      {
+        method: "POST",
+
+        body: JSON.stringify({
+          donorId,
+          stage,
+        }),
+      }
+    ),
+
   respondToRequest: (id) =>
     request(
       `/blood/requests/${id}/respond`,
