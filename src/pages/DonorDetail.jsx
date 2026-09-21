@@ -2,99 +2,6 @@ import React, { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { api } from "../api.js";
 
-const DEMO_DONORS = [
-  {
-    id: "demo-donor-1",
-    name: "أحمد محمد",
-    bloodType: "O+",
-    distanceKm: 2.3,
-    lastDonation: "2026-06-15",
-    chronicDisease: false,
-    avatar: "",
-  },
-  {
-    id: "demo-donor-2",
-    name: "سعيد إبراهيم سعيد",
-    bloodType: "A+",
-    distanceKm: 3.1,
-    lastDonation: "2026-05-22",
-    chronicDisease: false,
-    avatar: "",
-  },
-  {
-    id: "demo-donor-3",
-    name: "زوزو رضا رفعت",
-    bloodType: "B+",
-    distanceKm: 3.8,
-    lastDonation: "2026-04-18",
-    chronicDisease: false,
-    avatar: "",
-  },
-  {
-    id: "demo-donor-4",
-    name: "ملك احمد جوده",
-    bloodType: "AB+",
-    distanceKm: 4.2,
-    lastDonation: "2026-07-03",
-    chronicDisease: false,
-    avatar: "",
-  },
-  {
-    id: "demo-donor-5",
-    name: "رضوه عصام",
-    bloodType: "O-",
-    distanceKm: 4.7,
-    lastDonation: "2026-03-27",
-    chronicDisease: false,
-    avatar: "",
-  },
-  {
-    id: "demo-donor-6",
-    name: "ذياد عمر سند",
-    bloodType: "A-",
-    distanceKm: 5.1,
-    lastDonation: "2026-06-28",
-    chronicDisease: false,
-    avatar: "",
-  },
-  {
-    id: "demo-donor-7",
-    name: "محمود علي حسن",
-    bloodType: "B-",
-    distanceKm: 5.6,
-    lastDonation: "2026-05-08",
-    chronicDisease: false,
-    avatar: "",
-  },
-  {
-    id: "demo-donor-8",
-    name: "يوسف أحمد إبراهيم",
-    bloodType: "O+",
-    distanceKm: 6.2,
-    lastDonation: "2026-04-30",
-    chronicDisease: false,
-    avatar: "",
-  },
-  {
-    id: "demo-donor-9",
-    name: "نورهان محمد السيد",
-    bloodType: "A+",
-    distanceKm: 6.8,
-    lastDonation: "2026-06-02",
-    chronicDisease: false,
-    avatar: "",
-  },
-  {
-    id: "demo-donor-10",
-    name: "عمر خالد محمود",
-    bloodType: "B+",
-    distanceKm: 7.4,
-    lastDonation: "2026-05-14",
-    chronicDisease: false,
-    avatar: "",
-  },
-];
-
 function getLastDonationText(date) {
   if (!date) return "آخر تبرع غير مسجل";
 
@@ -142,6 +49,47 @@ function getLastDonationText(date) {
 function getDonorInitial(name) {
   if (!name) return "م";
   return name.trim().charAt(0);
+}
+
+/*
+  تحويل الإحداثيات إلى اسم المدينة
+*/
+async function getCityFromCoordinates(lat, lng) {
+  const latitude = Number(lat);
+  const longitude = Number(lng);
+
+  if (
+    !Number.isFinite(latitude) ||
+    !Number.isFinite(longitude)
+  ) {
+    return "الموقع غير متاح";
+  }
+
+  try {
+    const response = await fetch(
+      `https://api.bigdatacloud.net/data/reverse-geocode-client?latitude=${latitude}&longitude=${longitude}&localityLanguage=ar`
+    );
+
+    if (!response.ok) {
+      throw new Error("Reverse geocoding failed");
+    }
+
+    const data = await response.json();
+
+    return (
+      data.city ||
+      data.locality ||
+      data.principalSubdivision ||
+      "الموقع غير متاح"
+    );
+  } catch (error) {
+    console.error(
+      "خطأ أثناء تحديد مدينة المتبرع:",
+      error
+    );
+
+    return "الموقع غير متاح";
+  }
 }
 
 function LocationIcon() {
@@ -290,24 +238,46 @@ export default function DonorDetail() {
   const navigate = useNavigate();
 
   const [donor, setDonor] = useState(null);
+  const [city, setCity] = useState("جارِ تحديد الموقع...");
   const [notified, setNotified] = useState(false);
 
   useEffect(() => {
-    const demoDonor = DEMO_DONORS.find(
-      (item) => String(item.id) === String(id)
-    );
+    let cancelled = false;
 
-    if (demoDonor) {
-      setDonor(demoDonor);
-      return;
+    async function loadDonor() {
+      try {
+        const donorData = await api.getDonor(id);
+
+        if (cancelled) return;
+
+        setDonor(donorData);
+
+        const donorCity = await getCityFromCoordinates(
+          donorData?.lat,
+          donorData?.lng
+        );
+
+        if (!cancelled) {
+          setCity(donorCity);
+        }
+      } catch (error) {
+        console.error(
+          "خطأ أثناء تحميل بيانات المتبرع:",
+          error
+        );
+
+        if (!cancelled) {
+          setDonor(null);
+          setCity("الموقع غير متاح");
+        }
+      }
     }
 
-    api
-      .getDonor(id)
-      .then(setDonor)
-      .catch(() => {
-        setDonor(DEMO_DONORS[0]);
-      });
+    loadDonor();
+
+    return () => {
+      cancelled = true;
+    };
   }, [id]);
 
   if (!donor) {
@@ -355,7 +325,8 @@ export default function DonorDetail() {
               : "none",
           }}
         >
-          {!donor.avatar && getDonorInitial(donor.name)}
+          {!donor.avatar &&
+            getDonorInitial(donor.name)}
         </div>
 
         <h2>{donor.name}</h2>
@@ -377,7 +348,7 @@ export default function DonorDetail() {
 
         <div className="info-row">
           <div className="info-value">
-            المدينة - القاهرة
+            المدينة - {city}
           </div>
 
           <div className="info-icon">
@@ -389,7 +360,10 @@ export default function DonorDetail() {
 
         <div className="info-row">
           <div className="info-value">
-            {donor.distanceKm} كم
+            {donor.distanceKm !== null &&
+            donor.distanceKm !== undefined
+              ? `${donor.distanceKm} كم`
+              : "المسافة غير متاحة"}
           </div>
 
           <div className="info-icon">
@@ -401,7 +375,9 @@ export default function DonorDetail() {
 
         <div className="info-row">
           <div className="info-value">
-            {getLastDonationText(donor.lastDonation)}
+            {getLastDonationText(
+              donor.lastDonation
+            )}
           </div>
 
           <div className="info-icon">
