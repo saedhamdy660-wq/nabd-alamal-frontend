@@ -1,13 +1,43 @@
-import React, { useEffect, useState } from "react";
-import { useParams, Link } from "react-router-dom";
+import React, {
+  useEffect,
+  useState,
+} from "react";
+import {
+  useParams,
+  Link,
+} from "react-router-dom";
 import { api } from "../api.js";
 
 const STAGES = [
-  "تم إرسال التنبيه للمتبرعين",
-  "تم قبول الطلب من المتبرع",
-  "المتبرع في طريقه إلى المستشفى",
-  "تم الوصول إلى المستشفى",
-  "تم التبرع بنجاح",
+  {
+    key: "notification",
+    label:
+      "تم إرسال التنبيه للمتبرعين",
+  },
+
+  {
+    key: "accepted",
+    label:
+      "تم قبول الطلب من المتبرع",
+  },
+
+  {
+    key: "on_way",
+    label:
+      "المتبرع في طريقه إلى المستشفى",
+  },
+
+  {
+    key: "arrived",
+    label:
+      "تم الوصول إلى المستشفى",
+  },
+
+  {
+    key: "completed",
+    label:
+      "تم التبرع بنجاح",
+  },
 ];
 
 function BackIcon() {
@@ -145,19 +175,315 @@ function ProfileIcon() {
 
 export default function RequestTracking() {
   const { id } = useParams();
-  const [request, setRequest] = useState(null);
+
+  const [request, setRequest] =
+    useState(null);
+
+  const [currentUser, setCurrentUser] =
+    useState(null);
+
+  const [updating, setUpdating] =
+    useState(false);
+
+  const [error, setError] =
+    useState("");
+
+  // =========================
+  // المستخدم الحالي
+  // =========================
 
   useEffect(() => {
-    api
-      .getBloodRequest(id)
-      .then(setRequest)
-      .catch(() => {});
+    try {
+      const savedUser =
+        localStorage.getItem(
+          "nabd_user"
+        );
+
+      if (savedUser) {
+        setCurrentUser(
+          JSON.parse(savedUser)
+        );
+      }
+    } catch {
+      setCurrentUser(null);
+    }
+  }, []);
+
+  // =========================
+  // تحميل الطلب
+  // =========================
+
+  useEffect(() => {
+    let mounted = true;
+
+    const loadRequest =
+      async () => {
+        try {
+          const data =
+            await api.getBloodRequest(
+              id
+            );
+
+          if (mounted) {
+            setRequest(data);
+            setError("");
+          }
+        } catch {
+          if (mounted) {
+            setError(
+              "تعذر تحميل بيانات الطلب"
+            );
+          }
+        }
+      };
+
+    loadRequest();
+
+    // تحديث تلقائي للطلب
+    const interval =
+      setInterval(
+        loadRequest,
+        3000
+      );
+
+    return () => {
+      mounted = false;
+      clearInterval(interval);
+    };
   }, [id]);
+
+  // =========================
+  // تحديث مرحلة التبرع
+  // =========================
+
+  const updateProgress =
+    async (stage) => {
+      if (
+        !request ||
+        !currentUser ||
+        updating
+      ) {
+        return;
+      }
+
+      try {
+        setUpdating(true);
+        setError("");
+
+        const result =
+          await api.updateDonationProgress(
+            request.id,
+            currentUser.id,
+            stage
+          );
+
+        if (result?.request) {
+          setRequest(
+            result.request
+          );
+        }
+      } catch (err) {
+        setError(
+          err?.message ||
+            "حدث خطأ أثناء تحديث حالة التبرع"
+        );
+      } finally {
+        setUpdating(false);
+      }
+    };
+
+  // =========================
+  // تحديد المرحلة الحالية
+  // =========================
+
+  const currentStatus =
+    request?.status || "";
+
+  const statusToStageIndex = () => {
+    if (
+      currentStatus ===
+      "تم التبرع بنجاح"
+    ) {
+      return 4;
+    }
+
+    if (
+      currentStatus ===
+      "تم الوصول إلى المستشفى"
+    ) {
+      return 3;
+    }
+
+    if (
+      currentStatus ===
+      "المتبرع في طريقه إلى المستشفى"
+    ) {
+      return 2;
+    }
+
+    if (
+      currentStatus ===
+      "تم القبول"
+    ) {
+      return 1;
+    }
+
+    if (
+      currentStatus ===
+      "قيد الانتظار"
+    ) {
+      return 0;
+    }
+
+    return 0;
+  };
+
+  const currentStageIndex =
+    statusToStageIndex();
+
+  // =========================
+  // Timeline
+  // =========================
+
+  const apiTimeline =
+    Array.isArray(
+      request?.timeline
+    )
+      ? request.timeline
+      : [];
+
+  const timeline =
+    STAGES.map(
+      (stage, index) => {
+        const matches =
+          apiTimeline.filter(
+            (item) => {
+              const label =
+                String(
+                  item?.label ||
+                    ""
+                ).trim();
+
+              if (
+                stage.key ===
+                "notification"
+              ) {
+                return (
+                  label ===
+                    "تم إرسال التنبيه للمتبرعين" ||
+                  label ===
+                    "تم إرسال طلب التبرع للمتبرع"
+                );
+              }
+
+              return (
+                label ===
+                stage.label
+              );
+            }
+          );
+
+        const last =
+          matches[
+            matches.length - 1
+          ];
+
+        const statusDone =
+          index <=
+          currentStageIndex;
+
+        return {
+          label:
+            stage.label,
+
+          time:
+            last?.time ||
+            (statusDone
+              ? ""
+              : ""),
+
+          done:
+            matches.length > 0
+              ? matches.some(
+                  (item) =>
+                    Boolean(
+                      item?.done
+                    )
+                )
+              : statusDone,
+        };
+      }
+    );
+
+  const allDone =
+    currentStatus ===
+    "تم التبرع بنجاح";
+
+  // =========================
+  // هل المستخدم هو المتبرع؟
+  // =========================
+
+  const isDonor =
+    Boolean(
+      currentUser &&
+        request &&
+        request.donorUserId ===
+          currentUser.id
+    );
+
+  // =========================
+  // المرحلة التالية
+  // =========================
+
+  let nextStage = null;
+
+  if (
+    isDonor &&
+    currentStatus ===
+      "تم القبول"
+  ) {
+    nextStage = {
+      key: "on_way",
+      text:
+        "بدأت التوجه إلى المستشفى",
+    };
+  }
+
+  if (
+    isDonor &&
+    currentStatus ===
+      "المتبرع في طريقه إلى المستشفى"
+  ) {
+    nextStage = {
+      key: "arrived",
+      text:
+        "تم الوصول إلى المستشفى",
+    };
+  }
+
+  if (
+    isDonor &&
+    currentStatus ===
+      "تم الوصول إلى المستشفى"
+  ) {
+    nextStage = {
+      key: "completed",
+      text:
+        "تم التبرع بنجاح",
+    };
+  }
+
+  // =========================
+  // Loading
+  // =========================
 
   if (!request) {
     return (
       <div className="tracking-page">
-        <div className="loading">جارِ التحميل...</div>
+        <div className="loading">
+          {error ||
+            "جارِ التحميل..."}
+        </div>
 
         <style>{`
           .tracking-page {
@@ -181,46 +507,14 @@ export default function RequestTracking() {
     );
   }
 
-  /*
-    نعرض المراحل الخمسة فقط.
-    أي مراحل إضافية أو تكرار من الـ API يتم تجاهله.
-  */
-  const apiTimeline = Array.isArray(request.timeline)
-    ? request.timeline
-    : [];
-
-  const timeline = STAGES.map((stage, index) => {
-    const matches = apiTimeline.filter(
-      (item) =>
-        String(item?.label || "").trim() === stage
-    );
-
-    if (matches.length > 0) {
-      const last = matches[matches.length - 1];
-
-      return {
-        label: stage,
-        time: last?.time || "",
-        done: matches.some((item) => Boolean(item?.done)),
-      };
-    }
-
-    const fallback = apiTimeline[index];
-
-    return {
-      label: stage,
-      time: fallback?.time || "",
-      done: Boolean(fallback?.done),
-    };
-  });
-
-  const allDone = timeline.every((step) => step.done);
-
   return (
     <div className="tracking-page">
 
       <header className="tracking-header">
-        <Link to="/blood" className="back-button">
+        <Link
+          to="/blood"
+          className="back-button"
+        >
           <BackIcon />
         </Link>
 
@@ -235,67 +529,112 @@ export default function RequestTracking() {
         </div>
 
         <div>
-          <h2>حالة طلب التبرع</h2>
-          <p>تابع حالة طلبك خطوة بخطوة</p>
+          <h2>
+            حالة طلب التبرع
+          </h2>
+
+          <p>
+            تابع حالة طلبك خطوة بخطوة
+          </p>
         </div>
       </section>
 
+      {error && (
+        <div className="tracking-error">
+          {error}
+        </div>
+      )}
+
       <section className="timeline-card">
-        {timeline.map((step, index) => {
-          const isLast = index === timeline.length - 1;
+        {timeline.map(
+          (step, index) => {
+            const isLast =
+              index ===
+              timeline.length - 1;
 
-          return (
-            <div className="timeline-row" key={step.label}>
+            return (
+              <div
+                className="timeline-row"
+                key={step.label}
+              >
 
-              <div className="timeline-content">
-                <div
-                  className={
-                    step.done
-                      ? "timeline-title completed"
-                      : "timeline-title"
-                  }
-                >
-                  {step.label}
-                </div>
-
-                {step.time ? (
-                  <div className="timeline-time">
-                    <ClockIcon />
-                    <span>{step.time}</span>
-                  </div>
-                ) : (
-                  <div className="timeline-pending">
-                    في انتظار هذه المرحلة
-                  </div>
-                )}
-              </div>
-
-              <div className="timeline-side">
-                <div
-                  className={
-                    step.done
-                      ? "timeline-check done"
-                      : "timeline-check pending"
-                  }
-                >
-                  {step.done && <CheckIcon />}
-                </div>
-
-                {!isLast && (
+                <div className="timeline-content">
                   <div
                     className={
                       step.done
-                        ? "timeline-line done"
-                        : "timeline-line"
+                        ? "timeline-title completed"
+                        : "timeline-title"
                     }
-                  />
-                )}
-              </div>
+                  >
+                    {step.label}
+                  </div>
 
-            </div>
-          );
-        })}
+                  {step.time ? (
+                    <div className="timeline-time">
+                      <ClockIcon />
+                      <span>
+                        {step.time}
+                      </span>
+                    </div>
+                  ) : (
+                    <div className="timeline-pending">
+                      في انتظار هذه المرحلة
+                    </div>
+                  )}
+                </div>
+
+                <div className="timeline-side">
+                  <div
+                    className={
+                      step.done
+                        ? "timeline-check done"
+                        : "timeline-check pending"
+                    }
+                  >
+                    {step.done && (
+                      <CheckIcon />
+                    )}
+                  </div>
+
+                  {!isLast && (
+                    <div
+                      className={
+                        step.done
+                          ? "timeline-line done"
+                          : "timeline-line"
+                      }
+                    />
+                  )}
+                </div>
+
+              </div>
+            );
+          }
+        )}
       </section>
+
+      {nextStage && (
+        <section className="donor-action-card">
+          <p>
+            أنت المتبرع لهذا الطلب
+          </p>
+
+          <button
+            type="button"
+            className="donor-action-button"
+            disabled={updating}
+            onClick={() =>
+              updateProgress(
+                nextStage.key
+              )
+            }
+          >
+            {updating
+              ? "جاري التحديث..."
+              : nextStage.text}
+          </button>
+        </section>
+      )}
 
       {allDone && (
         <section className="completed-card">
@@ -303,11 +642,18 @@ export default function RequestTracking() {
             <CheckIcon />
           </div>
 
-          <h3>تم التبرع بنجاح</h3>
+          <h3>
+            تم التبرع بنجاح
+          </h3>
 
-          <p>شكرًا لكل من ساهم في إنقاذ حياة ❤️</p>
+          <p>
+            شكرًا لكل من ساهم في إنقاذ حياة ❤️
+          </p>
 
-          <Link to="/requests" className="details-button">
+          <Link
+            to="/requests"
+            className="details-button"
+          >
             تفاصيل الطلب
           </Link>
         </section>
@@ -315,24 +661,44 @@ export default function RequestTracking() {
 
       <nav className="tracking-bottom-nav">
 
-        <Link to="/profile" className="nav-item">
+        <Link
+          to="/profile"
+          className="nav-item"
+        >
           <ProfileIcon />
-          <span>الملف الشخصي</span>
+          <span>
+            الملف الشخصي
+          </span>
         </Link>
 
-        <Link to="/notifications" className="nav-item">
+        <Link
+          to="/notifications"
+          className="nav-item"
+        >
           <BellIcon />
-          <span>الإشعارات</span>
+          <span>
+            الإشعارات
+          </span>
         </Link>
 
-        <Link to="/requests" className="nav-item active">
+        <Link
+          to="/requests"
+          className="nav-item active"
+        >
           <RequestsIcon />
-          <span>الطلبات</span>
+          <span>
+            الطلبات
+          </span>
         </Link>
 
-        <Link to="/home" className="nav-item">
+        <Link
+          to="/home"
+          className="nav-item"
+        >
           <HomeIcon />
-          <span>الرئيسية</span>
+          <span>
+            الرئيسية
+          </span>
         </Link>
 
       </nav>
@@ -465,6 +831,18 @@ export default function RequestTracking() {
           font-size: 13px;
         }
 
+        .tracking-error {
+          width: 100%;
+          max-width: 520px;
+          margin: 0 auto 12px;
+          padding: 11px 14px;
+          text-align: center;
+          border-radius: 14px;
+          color: #a74d4d;
+          background: rgba(255,235,235,.82);
+          font-size: 12px;
+        }
+
         .timeline-card {
           width: 100%;
           max-width: 520px;
@@ -573,6 +951,48 @@ export default function RequestTracking() {
 
         .timeline-line.done {
           background: #8ed6cc;
+        }
+
+        .donor-action-card {
+          width: 100%;
+          max-width: 520px;
+          margin: 16px auto 0;
+          padding: 16px;
+          text-align: center;
+          border-radius: 22px;
+          background:
+            linear-gradient(
+              145deg,
+              rgba(255,255,255,.86),
+              rgba(225,247,243,.78)
+            );
+          border: 1px solid rgba(255,255,255,.92);
+          box-shadow:
+            0 10px 26px rgba(42,128,128,.08);
+        }
+
+        .donor-action-card p {
+          margin: 0 0 10px;
+          color: #6f9290;
+          font-size: 12px;
+        }
+
+        .donor-action-button {
+          width: 100%;
+          border: 0;
+          padding: 13px 18px;
+          border-radius: 15px;
+          color: white;
+          background: #159b8a;
+          font-size: 14px;
+          font-weight: 800;
+          cursor: pointer;
+          box-shadow: 0 7px 18px rgba(21,155,138,.18);
+        }
+
+        .donor-action-button:disabled {
+          opacity: .65;
+          cursor: wait;
         }
 
         .completed-card {
