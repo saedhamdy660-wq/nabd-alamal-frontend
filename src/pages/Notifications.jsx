@@ -3,7 +3,10 @@ import React, {
   useState,
 } from "react";
 
-import { Link } from "react-router-dom";
+import {
+  Link,
+  useNavigate,
+} from "react-router-dom";
 
 import { api } from "../api.js";
 
@@ -125,6 +128,8 @@ function getNotificationIcon(type) {
 }
 
 export default function Notifications() {
+  const navigate = useNavigate();
+
   const [items, setItems] =
     useState([]);
 
@@ -230,6 +235,18 @@ export default function Notifications() {
     }
   };
 
+  const handleViewDonor = (
+    notification
+  ) => {
+    if (!notification?.donorId) {
+      return;
+    }
+
+    navigate(
+      `/donor/${notification.donorId}`
+    );
+  };
+
   return (
     <div className="notifications-page">
 
@@ -291,6 +308,10 @@ export default function Notifications() {
             const isDonationRequest =
               notification.kind ===
               "donation_request";
+
+            const isDonationResponse =
+              notification.kind ===
+              "donation_response";
 
             const isPending =
               notification.status ===
@@ -384,6 +405,22 @@ export default function Notifications() {
                       <div className="request-status rejected-status">
                         تم رفض طلب التبرع
                       </div>
+                    )}
+
+                  {/* View Donor */}
+                  {isDonationResponse &&
+                    notification.donorId && (
+                      <button
+                        type="button"
+                        className="view-donor-button"
+                        onClick={() =>
+                          handleViewDonor(
+                            notification
+                          )
+                        }
+                      >
+                        عرض المتبرع
+                      </button>
                     )}
 
                   {actionError &&
@@ -810,6 +847,43 @@ export default function Notifications() {
 
           background:
             rgba(255,231,237,.9);
+        }
+
+        /* View Donor */
+
+        .view-donor-button {
+          width: 100%;
+
+          min-height: 38px;
+
+          margin-top: 10px;
+
+          border: 0;
+
+          border-radius: 13px;
+
+          color: #159b8a;
+
+          background:
+            rgba(255,255,255,.72);
+
+          font-size: 12px;
+
+          font-weight: 800;
+
+          cursor: pointer;
+
+          box-shadow:
+            0 6px 14px
+              rgba(21,155,138,.08);
+
+          transition:
+            opacity .2s ease,
+            transform .2s ease;
+        }
+
+        .view-donor-button:active {
+          transform: scale(.98);
         }
 
         .action-error {
