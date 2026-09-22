@@ -342,9 +342,14 @@ export default function RequestTracking() {
     request?.status || "";
 
   const statusToStageIndex = () => {
+    // الحالة النهائية في الـ backend
+    // هي "مكتمل"، لكن آخر مرحلة
+    // في الـ Timeline هي "تم التبرع بنجاح"
     if (
       currentStatus ===
-      "تم التبرع بنجاح"
+        "مكتمل" ||
+      currentStatus ===
+        "تم التبرع بنجاح"
     ) {
       return 4;
     }
@@ -418,6 +423,21 @@ export default function RequestTracking() {
                 );
               }
 
+              // دعم البيانات القديمة
+              // التي كان فيها:
+              // "تم إكمال طلب التبرع بنجاح"
+              if (
+                stage.key ===
+                "completed"
+              ) {
+                return (
+                  label ===
+                    "تم التبرع بنجاح" ||
+                  label ===
+                    "تم إكمال طلب التبرع بنجاح"
+                );
+              }
+
               return (
                 label ===
                 stage.label
@@ -455,9 +475,15 @@ export default function RequestTracking() {
       }
     );
 
+  // =========================
+  // الطلب اكتمل
+  // =========================
+
   const allDone =
     currentStatus ===
-    "تم التبرع بنجاح";
+      "مكتمل" ||
+    currentStatus ===
+      "تم التبرع بنجاح";
 
   // =========================
   // هل المستخدم هو المتبرع؟
