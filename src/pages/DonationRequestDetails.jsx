@@ -127,6 +127,40 @@ function CloseIcon() {
   );
 }
 
+function ClockIcon() {
+  return (
+    <svg viewBox="0 0 24 24">
+      <circle
+        cx="12"
+        cy="12"
+        r="8.5"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="1.8"
+      />
+
+      <path
+        d="M12 7v5l3 2"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="1.8"
+        strokeLinecap="round"
+      />
+    </svg>
+  );
+}
+
+function HeartIcon() {
+  return (
+    <svg viewBox="0 0 24 24">
+      <path
+        d="M20.8 8.8c0 5-8.8 10-8.8 10s-8.8-5-8.8-10A4.8 4.8 0 0 1 12 6.1a4.8 4.8 0 0 1 8.8 2.7Z"
+        fill="currentColor"
+      />
+    </svg>
+  );
+}
+
 export default function DonationRequestDetails() {
   const navigate = useNavigate();
 
@@ -235,10 +269,10 @@ export default function DonationRequestDetails() {
 
   const getHospitalName = () => {
     return (
+      request?.hospital?.name ||
       request?.hospital ||
       request?.hospitalName ||
       request?.locationName ||
-      request?.hospital?.name ||
       "المستشفى المحددة"
     );
   };
@@ -326,16 +360,30 @@ export default function DonationRequestDetails() {
 
       setError("");
 
-      const updated =
+      /*
+        الـ API بيرجع:
+        {
+          request,
+          notification
+        }
+
+        لذلك نأخذ request من داخل
+        الاستجابة.
+      */
+      const response =
         await api.respondToDonationRequest(
           request.id,
           currentUser.id,
           action
         );
 
-      if (updated) {
+      const updatedRequest =
+        response?.request ||
+        response;
+
+      if (updatedRequest?.id) {
         setRequest(
-          updated
+          updatedRequest
         );
       } else {
         const refreshed =
@@ -372,11 +420,13 @@ export default function DonationRequestDetails() {
   const isAccepted =
     status === "accepted" ||
     status === "accepted_donation" ||
-    status === "مقبول";
+    status === "مقبول" ||
+    status === "تم القبول";
 
   const isRejected =
     status === "rejected" ||
-    status === "مرفوض";
+    status === "مرفوض" ||
+    status === "تم الرفض";
 
   const directionsUrl =
     getDirectionsUrl();
@@ -396,7 +446,7 @@ export default function DonationRequestDetails() {
   return (
     <div className="donation-request-page">
 
-      {/* Header */}
+      {/* ================= HEADER ================= */}
 
       <header className="request-header">
 
@@ -410,32 +460,52 @@ export default function DonationRequestDetails() {
         </button>
 
         <div className="header-title">
-          <h1>
-            طلب تبرع بالدم
-          </h1>
 
-          <p>
-            تفاصيل طلب التبرع
-          </p>
+          <div className="header-title-row">
+
+            <div className="header-heart">
+              <HeartIcon />
+            </div>
+
+            <div>
+              <h1>
+                طلب تبرع بالدم
+              </h1>
+
+              <p>
+                تفاصيل طلب التبرع
+              </p>
+            </div>
+
+          </div>
+
         </div>
 
       </header>
 
-      {/* Loading */}
+      {/* ================= LOADING ================= */}
 
       {loading && (
         <div className="state-card">
 
-          <div className="loading-spinner" />
+          <div className="loading-circle">
+
+            <div className="loading-spinner" />
+
+          </div>
+
+          <h3>
+            جاري تحميل الطلب
+          </h3>
 
           <p>
-            جاري تحميل تفاصيل الطلب...
+            لحظات ونجهز لك تفاصيل طلب التبرع...
           </p>
 
         </div>
       )}
 
-      {/* Error */}
+      {/* ================= ERROR ================= */}
 
       {!loading && error && !request && (
         <div className="state-card error-card">
@@ -463,22 +533,25 @@ export default function DonationRequestDetails() {
         </div>
       )}
 
-      {/* Request */}
+      {/* ================= REQUEST ================= */}
 
       {!loading && request && (
         <main className="request-content">
 
-          {/* Main Card */}
+          {/* ================= REQUEST HERO ================= */}
 
-          <section className="main-card">
+          <section className="request-hero">
 
-            <div className="blood-header">
+            <div className="hero-glow" />
 
-              <div className="blood-icon">
+            <div className="hero-content">
+
+              <div className="blood-icon-large">
                 <BloodIcon />
               </div>
 
-              <div>
+              <div className="hero-info">
+
                 <span>
                   فصيلة الدم المطلوبة
                 </span>
@@ -486,6 +559,45 @@ export default function DonationRequestDetails() {
                 <strong>
                   {bloodType}
                 </strong>
+
+                <small>
+                  طلب تبرع بالدم
+                </small>
+
+              </div>
+
+            </div>
+
+            <div className="urgency-badge">
+              {isPending
+                ? "طلب قيد الانتظار"
+                : isAccepted
+                ? "تم قبول الطلب"
+                : isRejected
+                ? "تم رفض الطلب"
+                : "طلب تبرع"}
+            </div>
+
+          </section>
+
+          {/* ================= DETAILS ================= */}
+
+          <section className="main-card">
+
+            <div className="section-title">
+
+              <div className="section-title-icon">
+                <UserIcon />
+              </div>
+
+              <div>
+                <h2>
+                  تفاصيل الطلب
+                </h2>
+
+                <p>
+                  معلومات صاحب الطلب ومكان التبرع
+                </p>
               </div>
 
             </div>
@@ -516,14 +628,14 @@ export default function DonationRequestDetails() {
 
             <div className="detail-card">
 
-              <div className="detail-icon">
+              <div className="detail-icon blood-detail-icon">
                 <BloodIcon />
               </div>
 
               <div className="detail-content">
 
                 <span>
-                  فصيلة الدم
+                  فصيلة الدم المطلوبة
                 </span>
 
                 <strong>
@@ -532,11 +644,15 @@ export default function DonationRequestDetails() {
 
               </div>
 
+              <div className="blood-mini-badge">
+                {bloodType}
+              </div>
+
             </div>
 
             {/* Hospital */}
 
-            <div className="detail-card">
+            <div className="detail-card hospital-detail">
 
               <div className="detail-icon">
                 <HospitalIcon />
@@ -573,29 +689,47 @@ export default function DonationRequestDetails() {
               >
                 <LocationIcon />
 
-                فتح الاتجاهات
+                <span>
+                  فتح موقع المستشفى والاتجاهات
+                </span>
+
+                <span className="direction-arrow">
+                  ←
+                </span>
               </a>
             )}
 
           </section>
 
-          {/* Status */}
+          {/* ================= STATUS ================= */}
 
           {isAccepted && (
             <section className="status-card accepted">
 
               <div className="status-icon">
+
                 <CheckIcon />
+
               </div>
 
-              <div>
-                <h3>
-                  تم قبول طلب التبرع
-                </h3>
+              <div className="status-content">
+
+                <div className="status-title-row">
+
+                  <h3>
+                    تم قبول طلب التبرع
+                  </h3>
+
+                  <span className="status-label">
+                    مقبول
+                  </span>
+
+                </div>
 
                 <p>
-                  يمكنك الآن متابعة خطوات التبرع والوصول إلى المستشفى المحددة.
+                  شكرًا لك على استجابتك. يمكنك الآن متابعة خطوات التبرع والوصول إلى المستشفى المحددة.
                 </p>
+
               </div>
 
             </section>
@@ -605,42 +739,72 @@ export default function DonationRequestDetails() {
             <section className="status-card rejected">
 
               <div className="status-icon">
+
                 <CloseIcon />
+
               </div>
 
-              <div>
-                <h3>
-                  تم رفض طلب التبرع
-                </h3>
+              <div className="status-content">
+
+                <div className="status-title-row">
+
+                  <h3>
+                    تم رفض طلب التبرع
+                  </h3>
+
+                  <span className="status-label">
+                    مرفوض
+                  </span>
+
+                </div>
 
                 <p>
-                  تم تسجيل رفض طلب التبرع.
+                  تم تسجيل رفض طلب التبرع بنجاح.
                 </p>
+
               </div>
 
             </section>
           )}
 
-          {/* Error while responding */}
+          {/* ================= RESPONSE ERROR ================= */}
 
-          {error && (
+          {error && request && (
             <div className="response-error">
-              {error}
+
+              <span className="error-dot">
+                !
+              </span>
+
+              <span>
+                {error}
+              </span>
+
             </div>
           )}
 
-          {/* Actions */}
+          {/* ================= ACTIONS ================= */}
 
           {isPending && (
             <section className="actions-card">
 
-              <h3>
-                هل تريد التبرع؟
-              </h3>
+              <div className="actions-header">
 
-              <p>
-                راجع بيانات الطلب والمستشفى المحددة قبل اتخاذ القرار.
-              </p>
+                <div className="actions-icon">
+                  <HeartIcon />
+                </div>
+
+                <div>
+                  <h3>
+                    هل تريد التبرع؟
+                  </h3>
+
+                  <p>
+                    راجع بيانات الطلب قبل اتخاذ القرار.
+                  </p>
+                </div>
+
+              </div>
 
               <div className="actions">
 
@@ -654,9 +818,19 @@ export default function DonationRequestDetails() {
                     )
                   }
                 >
-                  {responding
-                    ? "جاري..."
-                    : "قبول طلب التبرع"}
+
+                  {responding ? (
+                    <span className="button-loading">
+                      <span />
+                      جاري تنفيذ الطلب...
+                    </span>
+                  ) : (
+                    <>
+                      <CheckIcon />
+                      قبول طلب التبرع
+                    </>
+                  )}
+
                 </button>
 
                 <button
@@ -669,7 +843,11 @@ export default function DonationRequestDetails() {
                     )
                   }
                 >
+
+                  <CloseIcon />
+
                   رفض الطلب
+
                 </button>
 
               </div>
@@ -677,20 +855,40 @@ export default function DonationRequestDetails() {
             </section>
           )}
 
-          {/* Tracking */}
+          {/* ================= TRACKING ================= */}
 
           {isAccepted && (
-            <button
-              type="button"
-              className="tracking-button"
-              onClick={() =>
-                navigate(
-                  `/track/${request.id}`
-                )
-              }
-            >
-              متابعة التبرع
-            </button>
+            <section className="tracking-card">
+
+              <div className="tracking-icon">
+                <ClockIcon />
+              </div>
+
+              <div className="tracking-content">
+
+                <h3>
+                  متابعة حالة التبرع
+                </h3>
+
+                <p>
+                  تابع مراحل التبرع من قبول الطلب حتى إتمام التبرع.
+                </p>
+
+              </div>
+
+              <button
+                type="button"
+                className="tracking-button"
+                onClick={() =>
+                  navigate(
+                    `/track/${request.id}`
+                  )
+                }
+              >
+                متابعة
+              </button>
+
+            </section>
           )}
 
         </main>
@@ -705,51 +903,62 @@ export default function DonationRequestDetails() {
         .donation-request-page {
           min-height: 100vh;
 
-          padding: 22px 18px 35px;
+          padding:
+            18px
+            16px
+            38px;
 
           direction: rtl;
 
-          color: #24575a;
+          color: #17332e;
 
           background:
             radial-gradient(
-              circle at 10% 5%,
-              rgba(70,193,177,.17),
-              transparent 28%
+              circle at 8% 2%,
+              rgba(10,168,143,.14),
+              transparent 27%
             ),
             radial-gradient(
-              circle at 95% 28%,
-              rgba(154,231,216,.18),
-              transparent 30%
+              circle at 96% 18%,
+              rgba(117,219,201,.18),
+              transparent 29%
+            ),
+            radial-gradient(
+              circle at 50% 100%,
+              rgba(10,168,143,.08),
+              transparent 35%
             ),
             linear-gradient(
-              160deg,
-              #fbffff 0%,
-              #f1fbfa 45%,
-              #e8f7f4 100%
+              155deg,
+              #ffffff 0%,
+              #f6fcfb 38%,
+              #eaf8f5 100%
             );
 
           font-family:
+            Tajawal,
             Arial,
             Tahoma,
             sans-serif;
         }
 
         .request-header {
-          max-width: 520px;
+          max-width: 430px;
 
-          margin: 0 auto 22px;
+          margin:
+            0 auto
+            18px;
 
           display: flex;
 
           align-items: center;
 
-          gap: 12px;
+          gap: 11px;
         }
 
         .back-button {
-          width: 44px;
-          height: 44px;
+          width: 43px;
+          height: 43px;
 
           flex-shrink: 0;
 
@@ -758,103 +967,188 @@ export default function DonationRequestDetails() {
           align-items: center;
           justify-content: center;
 
-          border: 0;
+          border: 1px solid
+            rgba(255,255,255,.95);
 
           border-radius: 15px;
 
-          color: #218d83;
+          color: #078876;
 
           background:
-            rgba(255,255,255,.72);
+            rgba(255,255,255,.78);
 
           box-shadow:
-            0 7px 18px
-              rgba(35,139,128,.08),
+            0 8px 20px
+              rgba(7,136,118,.08),
             inset 0 1px 0
-              rgba(255,255,255,.9);
+              rgba(255,255,255,1);
+
+          backdrop-filter:
+            blur(12px);
+
+          -webkit-backdrop-filter:
+            blur(12px);
 
           cursor: pointer;
+
+          transition:
+            transform .2s ease,
+            box-shadow .2s ease;
+        }
+
+        .back-button:active {
+          transform:
+            scale(.95);
         }
 
         .back-button svg {
-          width: 23px;
-          height: 23px;
+          width: 22px;
+          height: 22px;
         }
 
         .header-title {
           flex: 1;
         }
 
+        .header-title-row {
+          display: flex;
+
+          align-items: center;
+
+          gap: 9px;
+        }
+
+        .header-heart {
+          width: 38px;
+          height: 38px;
+
+          display: flex;
+
+          align-items: center;
+          justify-content: center;
+
+          border-radius: 13px;
+
+          color: white;
+
+          background:
+            linear-gradient(
+              135deg,
+              #0ac4a8,
+              #078876
+            );
+
+          box-shadow:
+            0 7px 15px
+              rgba(7,136,118,.17);
+        }
+
+        .header-heart svg {
+          width: 18px;
+          height: 18px;
+        }
+
         .header-title h1 {
-          margin: 0 0 4px;
+          margin: 0 0 2px;
 
-          color: #218d83;
+          color: #17332e;
 
-          font-size: 21px;
+          font-size: 19px;
 
-          font-weight: 800;
+          line-height: 1.2;
+
+          font-weight: 900;
         }
 
         .header-title p {
           margin: 0;
 
-          color: #88a3a2;
+          color: #78908c;
 
-          font-size: 11px;
+          font-size: 10px;
+
+          font-weight: 500;
         }
 
         .request-content {
-          max-width: 520px;
+          max-width: 430px;
 
           margin: 0 auto;
         }
 
-        .main-card {
-          padding: 15px;
+        /* ================= HERO ================= */
 
-          border-radius: 23px;
+        .request-hero {
+          position: relative;
+
+          overflow: hidden;
+
+          min-height: 116px;
+
+          margin-bottom: 13px;
+
+          padding: 18px;
+
+          display: flex;
+
+          align-items: center;
+
+          justify-content: space-between;
+
+          gap: 12px;
+
+          border-radius: 24px;
 
           background:
             linear-gradient(
-              145deg,
-              rgba(255,255,255,.92),
-              rgba(232,249,246,.82)
+              135deg,
+              #e6faf6 0%,
+              #d5f3ed 48%,
+              #c7eee7 100%
             );
 
-          border: 1px solid
-            rgba(255,255,255,.92);
+          border:
+            1px solid
+            rgba(255,255,255,.9);
 
           box-shadow:
-            0 10px 27px
-              rgba(42,128,128,.07),
+            0 12px 28px
+              rgba(7,136,118,.09),
             inset 0 1px 0
               rgba(255,255,255,.85);
         }
 
-        .blood-header {
+        .hero-glow {
+          position: absolute;
+
+          width: 150px;
+          height: 150px;
+
+          left: -55px;
+          bottom: -75px;
+
+          border-radius: 50%;
+
+          background:
+            rgba(255,255,255,.28);
+
+          pointer-events: none;
+        }
+
+        .hero-content {
+          position: relative;
+          z-index: 1;
+
           display: flex;
 
           align-items: center;
 
           gap: 12px;
-
-          margin-bottom: 14px;
-
-          padding: 13px;
-
-          border-radius: 17px;
-
-          background:
-            linear-gradient(
-              145deg,
-              #e4faf6,
-              #d5f2ed
-            );
         }
 
-        .blood-icon {
-          width: 48px;
-          height: 48px;
+        .blood-icon-large {
+          width: 58px;
+          height: 58px;
 
           flex-shrink: 0;
 
@@ -863,58 +1157,201 @@ export default function DonationRequestDetails() {
           align-items: center;
           justify-content: center;
 
-          border-radius: 15px;
+          border-radius: 19px;
 
-          color: #159b8a;
+          color: #078876;
 
           background:
-            rgba(255,255,255,.7);
+            rgba(255,255,255,.72);
+
+          box-shadow:
+            0 6px 15px
+              rgba(7,136,118,.07);
         }
 
-        .blood-icon svg {
-          width: 26px;
-          height: 26px;
+        .blood-icon-large svg {
+          width: 32px;
+          height: 32px;
         }
 
-        .blood-header span {
+        .hero-info span {
           display: block;
 
-          margin-bottom: 3px;
+          margin-bottom: 1px;
 
-          color: #7c9a99;
+          color: #6e928d;
 
           font-size: 10px;
+
+          font-weight: 600;
         }
 
-        .blood-header strong {
+        .hero-info strong {
           display: block;
 
-          color: #218d83;
+          color: #078876;
 
-          font-size: 22px;
+          font-size: 29px;
+
+          line-height: 1.05;
 
           font-weight: 900;
         }
 
+        .hero-info small {
+          display: block;
+
+          margin-top: 3px;
+
+          color: #6e928d;
+
+          font-size: 9px;
+        }
+
+        .urgency-badge {
+          position: relative;
+          z-index: 1;
+
+          flex-shrink: 0;
+
+          padding:
+            7px
+            9px;
+
+          border-radius: 10px;
+
+          color: #078876;
+
+          background:
+            rgba(255,255,255,.72);
+
+          font-size: 8px;
+
+          font-weight: 800;
+
+          white-space: nowrap;
+        }
+
+        /* ================= MAIN CARD ================= */
+
+        .main-card {
+          padding: 14px;
+
+          border-radius: 23px;
+
+          background:
+            rgba(255,255,255,.84);
+
+          border:
+            1px solid
+            rgba(255,255,255,.95);
+
+          box-shadow:
+            0 11px 28px
+              rgba(23,87,82,.06),
+            inset 0 1px 0
+              rgba(255,255,255,.95);
+
+          backdrop-filter:
+            blur(14px);
+
+          -webkit-backdrop-filter:
+            blur(14px);
+        }
+
+        .section-title {
+          display: flex;
+
+          align-items: center;
+
+          gap: 9px;
+
+          margin-bottom: 13px;
+
+          padding-bottom: 11px;
+
+          border-bottom:
+            1px solid
+            rgba(10,168,143,.08);
+        }
+
+        .section-title-icon {
+          width: 35px;
+          height: 35px;
+
+          flex-shrink: 0;
+
+          display: flex;
+
+          align-items: center;
+          justify-content: center;
+
+          border-radius: 11px;
+
+          color: #078876;
+
+          background:
+            #e5f8f4;
+        }
+
+        .section-title-icon svg {
+          width: 19px;
+          height: 19px;
+        }
+
+        .section-title h2 {
+          margin: 0 0 2px;
+
+          color: #17332e;
+
+          font-size: 13px;
+
+          font-weight: 900;
+        }
+
+        .section-title p {
+          margin: 0;
+
+          color: #8aa29e;
+
+          font-size: 8px;
+        }
+
         .detail-card {
+          min-height: 59px;
+
           display: flex;
 
           align-items: center;
 
           gap: 10px;
 
-          margin-bottom: 9px;
+          margin-bottom: 8px;
 
-          padding: 10px;
+          padding:
+            9px
+            10px;
 
-          border-radius: 14px;
+          border-radius: 15px;
 
           background:
-            rgba(255,255,255,.68);
+            linear-gradient(
+              135deg,
+              #fbfefd,
+              #f3faf8
+            );
+
+          border:
+            1px solid
+            rgba(10,168,143,.045);
+
+          transition:
+            transform .2s ease;
         }
 
-        .detail-card:last-of-type {
-          margin-bottom: 0;
+        .detail-card:hover {
+          transform:
+            translateY(-1px);
         }
 
         .detail-icon {
@@ -928,12 +1365,12 @@ export default function DonationRequestDetails() {
           align-items: center;
           justify-content: center;
 
-          border-radius: 11px;
+          border-radius: 12px;
 
-          color: #159b8a;
+          color: #078876;
 
           background:
-            #e5f8f4;
+            #e4f7f3;
         }
 
         .detail-icon svg {
@@ -944,6 +1381,8 @@ export default function DonationRequestDetails() {
         .detail-content {
           min-width: 0;
 
+          flex: 1;
+
           display: flex;
 
           flex-direction: column;
@@ -952,102 +1391,389 @@ export default function DonationRequestDetails() {
         }
 
         .detail-content span {
-          color: #8aa3a2;
+          color: #8ba39f;
 
-          font-size: 9px;
+          font-size: 8px;
+
+          font-weight: 600;
         }
 
         .detail-content strong {
-          color: #286d6d;
+          color: #245b55;
 
-          font-size: 12px;
+          font-size: 11px;
 
           font-weight: 800;
 
           line-height: 1.5;
+
+          overflow-wrap: anywhere;
         }
 
         .detail-content small {
-          color: #7b9796;
+          color: #809894;
+
+          font-size: 8px;
+
+          line-height: 1.6;
+
+          overflow-wrap: anywhere;
+        }
+
+        .blood-mini-badge {
+          flex-shrink: 0;
+
+          min-width: 38px;
+
+          padding:
+            6px
+            7px;
+
+          border-radius: 9px;
+
+          color: #078876;
+
+          background:
+            #dff6f1;
+
+          text-align: center;
 
           font-size: 9px;
 
-          line-height: 1.6;
+          font-weight: 900;
         }
 
         .directions-button {
-          width: 100%;
+          min-height: 43px;
 
-          min-height: 42px;
+          margin-top: 10px;
 
-          margin-top: 11px;
+          padding:
+            0
+            11px;
 
           display: flex;
 
           align-items: center;
-          justify-content: center;
 
           gap: 7px;
 
           border-radius: 14px;
 
-          color: #159b8a;
+          color: #078876;
 
           background:
-            rgba(229,248,244,.95);
+            linear-gradient(
+              135deg,
+              #e8faf6,
+              #def5f1
+            );
 
-          font-size: 11px;
+          border:
+            1px solid
+            rgba(10,168,143,.08);
+
+          font-size: 9px;
 
           font-weight: 800;
 
           text-decoration: none;
 
           box-shadow:
-            0 5px 12px
-              rgba(21,155,138,.06);
+            0 5px 14px
+              rgba(7,136,118,.05);
         }
 
         .directions-button svg {
           width: 18px;
           height: 18px;
+
+          flex-shrink: 0;
         }
+
+        .direction-arrow {
+          margin-right: auto;
+
+          font-size: 15px;
+        }
+
+        /* ================= STATUS ================= */
+
+        .status-card {
+          margin-top: 13px;
+
+          padding: 13px;
+
+          display: flex;
+
+          align-items: center;
+
+          gap: 10px;
+
+          border-radius: 19px;
+
+          border:
+            1px solid
+            rgba(255,255,255,.95);
+
+          box-shadow:
+            0 8px 22px
+              rgba(23,87,82,.045);
+        }
+
+        .status-card.accepted {
+          background:
+            linear-gradient(
+              135deg,
+              #e4faf4,
+              #d6f4ed
+            );
+        }
+
+        .status-card.rejected {
+          background:
+            linear-gradient(
+              135deg,
+              #fff0f3,
+              #ffe6eb
+            );
+        }
+
+        .status-icon {
+          width: 43px;
+          height: 43px;
+
+          flex-shrink: 0;
+
+          display: flex;
+
+          align-items: center;
+          justify-content: center;
+
+          border-radius: 14px;
+
+          background:
+            rgba(255,255,255,.7);
+        }
+
+        .accepted .status-icon {
+          color: #078876;
+        }
+
+        .rejected .status-icon {
+          color: #a04e60;
+        }
+
+        .status-icon svg {
+          width: 22px;
+          height: 22px;
+        }
+
+        .status-content {
+          min-width: 0;
+
+          flex: 1;
+        }
+
+        .status-title-row {
+          display: flex;
+
+          align-items: center;
+
+          gap: 6px;
+
+          margin-bottom: 3px;
+        }
+
+        .status-card h3 {
+          margin: 0;
+
+          font-size: 11px;
+
+          font-weight: 900;
+        }
+
+        .accepted h3 {
+          color: #28786e;
+        }
+
+        .rejected h3 {
+          color: #98505f;
+        }
+
+        .status-label {
+          padding:
+            3px
+            6px;
+
+          border-radius: 6px;
+
+          font-size: 7px;
+
+          font-weight: 800;
+        }
+
+        .accepted .status-label {
+          color: #078876;
+
+          background:
+            rgba(255,255,255,.65);
+        }
+
+        .rejected .status-label {
+          color: #98505f;
+
+          background:
+            rgba(255,255,255,.7);
+        }
+
+        .status-card p {
+          margin: 0;
+
+          color: #7b9692;
+
+          font-size: 8px;
+
+          line-height: 1.75;
+        }
+
+        /* ================= RESPONSE ERROR ================= */
+
+        .response-error {
+          margin-top: 10px;
+
+          min-height: 39px;
+
+          padding:
+            8px
+            10px;
+
+          display: flex;
+
+          align-items: center;
+
+          justify-content: center;
+
+          gap: 7px;
+
+          border-radius: 13px;
+
+          color: #984f61;
+
+          background:
+            #ffebef;
+
+          border:
+            1px solid
+            rgba(207,90,116,.08);
+
+          font-size: 9px;
+
+          font-weight: 700;
+
+          text-align: center;
+        }
+
+        .error-dot {
+          width: 19px;
+          height: 19px;
+
+          flex-shrink: 0;
+
+          display: flex;
+
+          align-items: center;
+          justify-content: center;
+
+          border-radius: 50%;
+
+          color: white;
+
+          background:
+            #c8667c;
+
+          font-size: 10px;
+
+          font-weight: 900;
+        }
+
+        /* ================= ACTIONS ================= */
 
         .actions-card {
           margin-top: 13px;
 
           padding: 15px;
 
-          border-radius: 20px;
+          border-radius: 21px;
 
           background:
-            rgba(255,255,255,.78);
+            linear-gradient(
+              145deg,
+              rgba(255,255,255,.95),
+              rgba(239,250,247,.92)
+            );
 
-          border: 1px solid
-            rgba(255,255,255,.9);
+          border:
+            1px solid
+            rgba(255,255,255,.95);
 
           box-shadow:
-            0 9px 23px
-              rgba(42,128,128,.06);
+            0 11px 27px
+              rgba(23,87,82,.065);
         }
 
-        .actions-card h3 {
-          margin: 0 0 5px;
+        .actions-header {
+          display: flex;
 
-          color: #286d6d;
+          align-items: center;
 
-          font-size: 14px;
+          gap: 10px;
 
-          font-weight: 800;
+          margin-bottom: 13px;
         }
 
-        .actions-card p {
-          margin: 0 0 12px;
+        .actions-icon {
+          width: 40px;
+          height: 40px;
 
-          color: #7b9796;
+          flex-shrink: 0;
 
-          font-size: 10px;
+          display: flex;
 
-          line-height: 1.7;
+          align-items: center;
+          justify-content: center;
+
+          border-radius: 13px;
+
+          color: #078876;
+
+          background:
+            #e0f7f2;
+        }
+
+        .actions-icon svg {
+          width: 20px;
+          height: 20px;
+        }
+
+        .actions-header h3 {
+          margin: 0 0 2px;
+
+          color: #173f39;
+
+          font-size: 13px;
+
+          font-weight: 900;
+        }
+
+        .actions-header p {
+          margin: 0;
+
+          color: #819b97;
+
+          font-size: 8px;
+
+          line-height: 1.6;
         }
 
         .actions {
@@ -1059,25 +1785,42 @@ export default function DonationRequestDetails() {
         .actions button {
           flex: 1;
 
-          min-height: 42px;
+          min-height: 45px;
+
+          display: flex;
+
+          align-items: center;
+
+          justify-content: center;
+
+          gap: 6px;
 
           border: 0;
 
-          border-radius: 13px;
+          border-radius: 14px;
 
-          font-size: 11px;
+          font-family: inherit;
 
-          font-weight: 800;
+          font-size: 10px;
+
+          font-weight: 900;
 
           cursor: pointer;
 
           transition:
+            transform .2s ease,
             opacity .2s ease,
-            transform .2s ease;
+            box-shadow .2s ease;
+        }
+
+        .actions button svg {
+          width: 17px;
+          height: 17px;
         }
 
         .actions button:active {
-          transform: scale(.98);
+          transform:
+            scale(.97);
         }
 
         .actions button:disabled {
@@ -1092,50 +1835,85 @@ export default function DonationRequestDetails() {
           background:
             linear-gradient(
               135deg,
-              #19ad98,
-              #159b8a
+              #0ac4a8 0%,
+              #078876 100%
             );
 
           box-shadow:
-            0 7px 15px
-              rgba(21,155,138,.13);
+            0 8px 18px
+              rgba(7,136,118,.18);
         }
 
         .reject-button {
           color: #98505f;
 
           background:
-            #ffe7ed;
+            #ffebef;
+
+          border:
+            1px solid
+            rgba(207,90,116,.06) !important;
         }
 
-        .status-card {
+        .button-loading {
+          display: flex;
+
+          align-items: center;
+
+          justify-content: center;
+
+          gap: 6px;
+        }
+
+        .button-loading span {
+          width: 13px;
+          height: 13px;
+
+          border:
+            2px solid
+            rgba(255,255,255,.4);
+
+          border-top-color:
+            white;
+
+          border-radius: 50%;
+
+          animation:
+            spin .7s linear infinite;
+        }
+
+        /* ================= TRACKING ================= */
+
+        .tracking-card {
           margin-top: 13px;
 
-          padding: 14px;
+          padding: 12px;
 
           display: flex;
 
           align-items: center;
 
-          gap: 10px;
+          gap: 9px;
 
           border-radius: 18px;
 
-          border: 1px solid
-            rgba(255,255,255,.9);
-        }
-
-        .status-card.accepted {
           background:
-            rgba(213,248,239,.9);
+            linear-gradient(
+              135deg,
+              #e5faf6,
+              #d7f3ee
+            );
+
+          border:
+            1px solid
+            rgba(255,255,255,.95);
+
+          box-shadow:
+            0 8px 21px
+              rgba(7,136,118,.06);
         }
 
-        .status-card.rejected {
-          background:
-            rgba(255,231,237,.9);
-        }
-
-        .status-icon {
+        .tracking-icon {
           width: 40px;
           height: 40px;
 
@@ -1147,109 +1925,91 @@ export default function DonationRequestDetails() {
           justify-content: center;
 
           border-radius: 12px;
-        }
 
-        .accepted .status-icon {
-          color: #159b8a;
+          color: #078876;
 
           background:
-            rgba(255,255,255,.65);
+            rgba(255,255,255,.72);
         }
 
-        .rejected .status-icon {
-          color: #98505f;
-
-          background:
-            rgba(255,255,255,.65);
+        .tracking-icon svg {
+          width: 20px;
+          height: 20px;
         }
 
-        .status-icon svg {
-          width: 21px;
-          height: 21px;
+        .tracking-content {
+          min-width: 0;
+
+          flex: 1;
         }
 
-        .status-card h3 {
-          margin: 0 0 3px;
+        .tracking-content h3 {
+          margin: 0 0 2px;
 
-          font-size: 12px;
+          color: #245b55;
 
-          font-weight: 800;
+          font-size: 10px;
+
+          font-weight: 900;
         }
 
-        .accepted h3 {
-          color: #28786e;
-        }
-
-        .rejected h3 {
-          color: #98505f;
-        }
-
-        .status-card p {
+        .tracking-content p {
           margin: 0;
 
-          color: #7b9796;
+          color: #7d9995;
 
-          font-size: 9px;
+          font-size: 7px;
 
-          line-height: 1.7;
+          line-height: 1.65;
         }
 
         .tracking-button {
-          width: 100%;
+          min-width: 63px;
 
-          min-height: 42px;
+          min-height: 34px;
 
-          margin-top: 13px;
+          padding:
+            0
+            9px;
 
           border: 0;
 
-          border-radius: 14px;
+          border-radius: 11px;
 
           color: white;
 
           background:
             linear-gradient(
               135deg,
-              #19ad98,
-              #159b8a
+              #0ac4a8,
+              #078876
             );
 
-          font-size: 12px;
+          font-family: inherit;
 
-          font-weight: 800;
+          font-size: 9px;
+
+          font-weight: 900;
 
           cursor: pointer;
 
           box-shadow:
-            0 8px 17px
-              rgba(21,155,138,.13);
+            0 6px 13px
+              rgba(7,136,118,.14);
         }
 
-        .response-error {
-          margin-top: 10px;
-
-          padding: 9px 11px;
-
-          border-radius: 12px;
-
-          color: #98505f;
-
-          background:
-            rgba(255,231,237,.9);
-
-          font-size: 10px;
-
-          font-weight: 700;
-
-          text-align: center;
-        }
+        /* ================= STATES ================= */
 
         .state-card {
-          max-width: 520px;
+          max-width: 430px;
 
-          margin: 45px auto 0;
+          margin:
+            45px auto
+            0;
 
-          padding: 35px 20px;
+          padding:
+            34px
+            20px;
 
           text-align: center;
 
@@ -1258,47 +2018,53 @@ export default function DonationRequestDetails() {
           background:
             linear-gradient(
               145deg,
-              rgba(255,255,255,.88),
-              rgba(232,249,246,.78)
+              rgba(255,255,255,.92),
+              rgba(233,249,246,.82)
             );
 
-          border: 1px solid
-            rgba(255,255,255,.92);
+          border:
+            1px solid
+            rgba(255,255,255,.95);
 
           box-shadow:
-            0 12px 30px
-              rgba(42,128,128,.08);
+            0 13px 32px
+              rgba(7,136,118,.08);
+
+          backdrop-filter:
+            blur(12px);
+
+          -webkit-backdrop-filter:
+            blur(12px);
         }
 
-        .state-card p {
-          margin: 12px 0 0;
+        .loading-circle {
+          width: 58px;
+          height: 58px;
 
-          color: #8aa3a2;
+          margin:
+            0 auto;
 
-          font-size: 11px;
+          display: flex;
 
-          line-height: 1.7;
-        }
+          align-items: center;
+          justify-content: center;
 
-        .state-card h3 {
-          margin: 12px 0 0;
+          border-radius: 19px;
 
-          color: #286d6d;
-
-          font-size: 15px;
+          background:
+            #e1f7f3;
         }
 
         .loading-spinner {
-          width: 34px;
-          height: 34px;
+          width: 28px;
+          height: 28px;
 
-          margin: 0 auto;
-
-          border: 3px solid
-            #d7efeb;
+          border:
+            3px solid
+            #cbeee8;
 
           border-top-color:
-            #159b8a;
+            #078876;
 
           border-radius: 50%;
 
@@ -1306,18 +2072,47 @@ export default function DonationRequestDetails() {
             spin .8s linear infinite;
         }
 
-        @keyframes spin {
-          to {
-            transform:
-              rotate(360deg);
-          }
+        .state-card h3 {
+          margin:
+            13px
+            0
+            0;
+
+          color: #245b55;
+
+          font-size: 14px;
+
+          font-weight: 900;
+        }
+
+        .state-card p {
+          margin:
+            7px
+            0
+            0;
+
+          color: #8aa39f;
+
+          font-size: 9px;
+
+          line-height: 1.8;
+        }
+
+        .error-card {
+          background:
+            linear-gradient(
+              145deg,
+              #fffafb,
+              #fff0f3
+            );
         }
 
         .state-icon {
-          width: 52px;
-          height: 52px;
+          width: 55px;
+          height: 55px;
 
-          margin: 0 auto;
+          margin:
+            0 auto;
 
           display: flex;
 
@@ -1326,10 +2121,10 @@ export default function DonationRequestDetails() {
 
           border-radius: 18px;
 
-          color: #98505f;
+          color: #a34f63;
 
           background:
-            #ffe7ed;
+            #ffe3e9;
 
           font-size: 22px;
 
@@ -1337,11 +2132,13 @@ export default function DonationRequestDetails() {
         }
 
         .back-main-button {
-          min-height: 40px;
+          min-height: 41px;
 
-          margin-top: 16px;
+          margin-top: 17px;
 
-          padding: 0 25px;
+          padding:
+            0
+            27px;
 
           border: 0;
 
@@ -1352,18 +2149,85 @@ export default function DonationRequestDetails() {
           background:
             linear-gradient(
               135deg,
-              #19ad98,
-              #159b8a
+              #0ac4a8,
+              #078876
             );
 
-          font-size: 11px;
+          font-family: inherit;
 
-          font-weight: 800;
+          font-size: 10px;
+
+          font-weight: 900;
 
           cursor: pointer;
+
+          box-shadow:
+            0 7px 16px
+              rgba(7,136,118,.15);
         }
 
-        
+        /* ================= RESPONSIVE ================= */
+
+        @media (max-width: 360px) {
+
+          .donation-request-page {
+            padding:
+              15px
+              12px
+              30px;
+          }
+
+          .request-hero {
+            padding: 14px;
+
+            min-height: 108px;
+          }
+
+          .blood-icon-large {
+            width: 51px;
+            height: 51px;
+          }
+
+          .blood-icon-large svg {
+            width: 28px;
+            height: 28px;
+          }
+
+          .hero-info strong {
+            font-size: 25px;
+          }
+
+          .urgency-badge {
+            font-size: 7px;
+
+            padding:
+              6px
+              7px;
+          }
+
+          .actions {
+            flex-direction: column;
+          }
+
+          .actions button {
+            width: 100%;
+          }
+
+          .tracking-card {
+            align-items: flex-start;
+          }
+
+          .tracking-button {
+            align-self: center;
+          }
+        }
+
+        @keyframes spin {
+          to {
+            transform:
+              rotate(360deg);
+          }
+        }
 
       `}</style>
     </div>
