@@ -95,7 +95,32 @@ export default function Requests() {
   const [tab, setTab] = useState("all");
 
   useEffect(() => {
-    api.getMyRequests().then(setRequests).catch(() => {});
+    const loadMyRequests = async () => {
+      try {
+        const storedUser = localStorage.getItem("nabd_user");
+
+        if (!storedUser) {
+          setRequests([]);
+          return;
+        }
+
+        const currentUser = JSON.parse(storedUser);
+
+        if (!currentUser?.id) {
+          setRequests([]);
+          return;
+        }
+
+        const data = await api.getMyRequests(currentUser.id);
+
+        setRequests(Array.isArray(data) ? data : []);
+      } catch (error) {
+        console.error("Failed to load user requests:", error);
+        setRequests([]);
+      }
+    };
+
+    loadMyRequests();
   }, []);
 
   const visible = requests.filter((r) => {
