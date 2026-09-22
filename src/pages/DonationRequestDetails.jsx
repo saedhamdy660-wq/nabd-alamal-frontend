@@ -1363,6 +1363,8 @@ export default function DonationRequestDetails() {
           cursor: pointer;
         }
 
+        
+
       `}</style>
     </div>
   );
