@@ -310,6 +310,12 @@ export default function DonorDetail() {
   const [currentUser, setCurrentUser] =
     useState(null);
 
+  const [hospitals, setHospitals] =
+    useState([]);
+
+  const [hospitalsLoading, setHospitalsLoading] =
+    useState(false);
+
   useEffect(() => {
     let cancelled = false;
 
@@ -371,6 +377,52 @@ export default function DonorDetail() {
     }
   }, []);
 
+  /*
+    تحميل المستشفيات المتاحة
+    عشان صاحب الطلب هو اللي يختار
+    مكان التبرع.
+  */
+  const loadHospitals = async () => {
+    try {
+      setHospitalsLoading(true);
+      setRequestError("");
+
+      const data =
+        await api.getHospitals();
+
+      const hospitalsList =
+        Array.isArray(data)
+          ? data
+          : Array.isArray(data?.hospitals)
+          ? data.hospitals
+          : [];
+
+      if (hospitalsList.length === 0) {
+        throw new Error(
+          "لا توجد مستشفيات متاحة حاليًا"
+        );
+      }
+
+      setHospitals(hospitalsList);
+
+      return hospitalsList;
+    } catch (error) {
+      console.error(
+        "خطأ أثناء تحميل المستشفيات:",
+        error
+      );
+
+      setRequestError(
+        error?.message ||
+          "تعذر تحميل المستشفيات"
+      );
+
+      return [];
+    } finally {
+      setHospitalsLoading(false);
+    }
+  };
+
   if (!donor) {
     return (
       <div className="donor-page">
@@ -426,43 +478,116 @@ export default function DonorDetail() {
     }
 
     /*
-      لو الحساب مستخدم عادي:
-      نرسل طلب تبرع حقيقي للـBackend.
+      لو الحساب متبرع:
+      نحافظ على السلوك القديم للزر.
     */
     if (
-      currentUser.accountType !== "donor"
+      currentUser.accountType === "donor"
     ) {
-      try {
-        setRequestLoading(true);
-
-        await api.createDonationRequest(
-          currentUser.id,
-          donor.id
-        );
-
-        setNotified(true);
-      } catch (error) {
-        console.error(
-          "خطأ أثناء إرسال طلب التبرع:",
-          error
-        );
-
-        setRequestError(
-          error?.message ||
-            "حدث خطأ أثناء إرسال طلب التبرع"
-        );
-      } finally {
-        setRequestLoading(false);
-      }
-
+      setNotified(true);
       return;
     }
 
     /*
-      لو الحساب متبرع، نحافظ على
-      السلوك القديم للزر.
+      تحميل المستشفيات قبل إرسال الطلب
     */
-    setNotified(true);
+    const hospitalsList =
+      await loadHospitals();
+
+    if (hospitalsList.length === 0) {
+      return;
+    }
+
+    /*
+      تجهيز قائمة الاختيار
+      بدون تغيير تصميم الصفحة.
+    */
+    const hospitalsText =
+      hospitalsList
+        .map(
+          (hospital, index) =>
+            `${index + 1}. ${
+              hospital.name ||
+              "مستشفى بدون اسم"
+            }`
+        )
+        .join("\n");
+
+    const selectedHospital =
+      window.prompt(
+        `اختار المستشفى التي سيتم فيها التبرع:\n\n${hospitalsText}\n\nاكتب رقم المستشفى:`
+      );
+
+    /*
+      المستخدم ألغى الاختيار
+    */
+    if (
+      selectedHospital === null
+    ) {
+      return;
+    }
+
+    const selectedNumber =
+      Number(
+        selectedHospital.trim()
+      );
+
+    if (
+      !Number.isInteger(
+        selectedNumber
+      ) ||
+      selectedNumber < 1 ||
+      selectedNumber >
+        hospitalsList.length
+    ) {
+      setRequestError(
+        "من فضلك اختر رقم مستشفى صحيح"
+      );
+      return;
+    }
+
+    const selectedHospitalData =
+      hospitalsList[
+        selectedNumber - 1
+      ];
+
+    if (
+      !selectedHospitalData?.id
+    ) {
+      setRequestError(
+        "بيانات المستشفى غير صحيحة"
+      );
+      return;
+    }
+
+    /*
+      إرسال طلب التبرع مع المستشفى
+      التي اختارها صاحب الطلب.
+    */
+    try {
+      setRequestLoading(true);
+      setRequestError("");
+
+      await api.createDonationRequest(
+        currentUser.id,
+        donor.id,
+        selectedHospitalData.id
+      );
+
+      setNotified(true);
+    } catch (error) {
+      console.error(
+        "خطأ أثناء إرسال طلب التبرع:",
+        error
+      );
+
+      setRequestError(
+        error?.message ||
+          "حدث خطأ أثناء إرسال طلب التبرع"
+      );
+    } finally {
+      setRequestLoading(false);
+    }
   };
 
   return (
@@ -579,10 +704,15 @@ export default function DonorDetail() {
             <button
               className="donate-button"
               onClick={handleDonate}
-              disabled={requestLoading}
+              disabled={
+                requestLoading ||
+                hospitalsLoading
+              }
             >
               {requestLoading
                 ? "جاري إرسال الطلب..."
+                : hospitalsLoading
+                ? "جاري تحميل المستشفيات..."
                 : buttonText}
 
               <HeartIcon />
