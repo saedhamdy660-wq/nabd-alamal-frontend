@@ -279,6 +279,25 @@ export default function Notifications() {
     }
   };
 
+  /*
+    فتح صفحة تفاصيل طلب التبرع.
+
+    مهم:
+    السهم لا يقوم بالقبول أو الرفض.
+    هو فقط ينقل المتبرع إلى صفحة التفاصيل.
+  */
+  const handleViewRequestDetails = (
+    notification
+  ) => {
+    if (!notification?.requestId) {
+      return;
+    }
+
+    navigate(
+      `/donation-request/${notification.requestId}`
+    );
+  };
+
   const handleToggleDetails = async (
     notification
   ) => {
@@ -713,15 +732,11 @@ export default function Notifications() {
                             : ""
                         }`}
                         onClick={() =>
-                          handleToggleDetails(
+                          handleViewRequestDetails(
                             notification
                           )
                         }
-                        aria-label={
-                          isExpanded
-                            ? "إخفاء التفاصيل"
-                            : "عرض التفاصيل"
-                        }
+                        aria-label="عرض تفاصيل طلب التبرع"
                       >
                         <ArrowIcon />
                       </button>
