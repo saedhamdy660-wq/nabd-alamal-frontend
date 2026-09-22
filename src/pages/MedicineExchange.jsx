@@ -168,7 +168,7 @@ export default function MedicineExchange() {
     useState(new Set());
 
   /*
-  الدواء الذي يتم إرسال طلبه حاليًا.
+  الدواء الذي يتم إرسال أو إلغاء طلبه حاليًا.
   */
 
   const [requestingMedicineId, setRequestingMedicineId] =
@@ -268,7 +268,10 @@ export default function MedicineExchange() {
   }, []);
 
   /*
-  طلب الدواء.
+  طلب أو إلغاء طلب الدواء.
+
+  +  = طلب الدواء
+  ✓  = إلغاء الطلب
   */
 
   const requestMedicine = async (
@@ -283,18 +286,6 @@ export default function MedicineExchange() {
 
     const medicineId =
       String(medicine.id);
-
-    /*
-    منع إرسال نفس الطلب مرة أخرى.
-    */
-
-    if (
-      requestedMedicineIds.has(
-        medicineId
-      )
-    ) {
-      return;
-    }
 
     try {
       const storedUser =
@@ -321,6 +312,50 @@ export default function MedicineExchange() {
         medicine.id
       );
 
+      const isRequested =
+        requestedMedicineIds.has(
+          medicineId
+        );
+
+      /*
+      ==========================================
+      إلغاء الطلب الحالي
+      ==========================================
+      */
+
+      if (isRequested) {
+        await api.cancelMedicineRequest(
+          medicine.id,
+          currentUser.id
+        );
+
+        /*
+        بعد نجاح الإلغاء
+        نحول ✓ إلى +.
+        */
+
+        setRequestedMedicineIds(
+          (prev) => {
+            const next =
+              new Set(prev);
+
+            next.delete(
+              medicineId
+            );
+
+            return next;
+          }
+        );
+
+        return;
+      }
+
+      /*
+      ==========================================
+      إرسال طلب جديد
+      ==========================================
+      */
+
       await api.requestMedicine(
         medicine.id,
         currentUser.id
@@ -336,7 +371,9 @@ export default function MedicineExchange() {
           const next =
             new Set(prev);
 
-          next.add(medicineId);
+          next.add(
+            medicineId
+          );
 
           return next;
         }
@@ -362,7 +399,9 @@ export default function MedicineExchange() {
             const next =
               new Set(prev);
 
-            next.add(medicineId);
+            next.add(
+              medicineId
+            );
 
             return next;
           }
@@ -370,7 +409,7 @@ export default function MedicineExchange() {
       } else {
         alert(
           error?.message ||
-            "حدث خطأ أثناء طلب الدواء"
+            "حدث خطأ أثناء تنفيذ طلب الدواء"
         );
       }
     } finally {
@@ -924,7 +963,7 @@ export default function MedicineExchange() {
                         </div>
 
                         <div className="medicine-list-left">
-                          {/* زر طلب الدواء */}
+                          {/* زر طلب / إلغاء طلب الدواء */}
 
                           <button
                             type="button"
@@ -935,8 +974,13 @@ export default function MedicineExchange() {
                             }
                             aria-label={
                               isRequested
-                                ? "تم طلب الدواء"
+                                ? "إلغاء طلب الدواء"
                                 : "طلب الدواء"
+                            }
+                            title={
+                              isRequested
+                                ? "اضغط لإلغاء الطلب"
+                                : "اضغط لطلب الدواء"
                             }
                             disabled={
                               requestingMedicineId ===
