@@ -270,6 +270,22 @@ const api = {
       }
     ),
 
+  // إلغاء طلب دواء مرتبط بالمستخدم الحالي
+  cancelMedicineRequest: (
+    id,
+    userId
+  ) =>
+    request(
+      `/medicines/${id}/request`,
+      {
+        method: "DELETE",
+
+        body: JSON.stringify({
+          userId,
+        }),
+      }
+    ),
+
   getPharmacies: () =>
     request(
       "/medicines/partners/pharmacies"
