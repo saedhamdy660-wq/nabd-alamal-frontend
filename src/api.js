@@ -161,10 +161,15 @@ const api = {
       `/blood/donors/${id}`
     ),
 
+  // ============================================================
   // إرسال طلب تبرع مباشر لمتبرع
+  // مع تحديد المستشفى من صاحب الطلب
+  // ============================================================
+
   createDonationRequest: (
     requesterId,
-    donorId
+    donorId,
+    hospitalId
   ) =>
     request(
       "/blood/donation-requests",
@@ -174,6 +179,7 @@ const api = {
         body: JSON.stringify({
           requesterId,
           donorId,
+          hospitalId,
         }),
       }
     ),
@@ -222,6 +228,7 @@ const api = {
       }
     ),
 
+  // جلب المستشفيات المتاحة
   getHospitals: () =>
     request(
       "/blood/hospitals"
