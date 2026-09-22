@@ -43,6 +43,10 @@ async function request(
 }
 
 const api = {
+  // ============================================================
+  // Authentication
+  // ============================================================
+
   register: (data) =>
     request(
       "/auth/register",
@@ -80,6 +84,10 @@ const api = {
         }),
       }
     ),
+
+  // ============================================================
+  // Blood Requests
+  // ============================================================
 
   getBloodRequests: () =>
     request(
@@ -219,6 +227,10 @@ const api = {
       "/blood/hospitals"
     ),
 
+  // ============================================================
+  // Medicines
+  // ============================================================
+
   getMedicines: (q) =>
     request(
       `/medicines${
@@ -235,11 +247,18 @@ const api = {
       `/medicines/${id}`
     ),
 
-  requestMedicine: (id) =>
+  requestMedicine: (
+    id,
+    requesterId
+  ) =>
     request(
       `/medicines/${id}/request`,
       {
         method: "POST",
+
+        body: JSON.stringify({
+          requesterId,
+        }),
       }
     ),
 
@@ -247,6 +266,10 @@ const api = {
     request(
       "/medicines/partners/pharmacies"
     ),
+
+  // ============================================================
+  // Notifications
+  // ============================================================
 
   getNotifications: (
     userId = ""
@@ -262,6 +285,10 @@ const api = {
     );
   },
 
+  // ============================================================
+  // User
+  // ============================================================
+
   getUser: (email) =>
     request(
       `/users/me${
@@ -273,10 +300,27 @@ const api = {
       }`
     ),
 
-  getMyRequests: () =>
-    request(
-      "/users/me/requests"
-    ),
+  // ============================================================
+  // My Requests
+  // ============================================================
+
+  getMyRequests: (
+    userId = ""
+  ) => {
+    const query = userId
+      ? `?userId=${encodeURIComponent(
+          userId
+        )}`
+      : "";
+
+    return request(
+      `/users/me/requests${query}`
+    );
+  },
+
+  // ============================================================
+  // User Location
+  // ============================================================
 
   updateUserLocation: (
     id,
@@ -294,6 +338,10 @@ const api = {
         }),
       }
     ),
+
+  // ============================================================
+  // Avatar
+  // ============================================================
 
   saveAvatar: (
     id,
@@ -314,6 +362,10 @@ const api = {
 export default api;
 
 export { api };
+
+// ============================================================
+// Current Location
+// ============================================================
 
 export function getCurrentLocation() {
   return new Promise(
