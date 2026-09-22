@@ -360,16 +360,6 @@ export default function DonationRequestDetails() {
 
       setError("");
 
-      /*
-        الـ API بيرجع:
-        {
-          request,
-          notification
-        }
-
-        لذلك نأخذ request من داخل
-        الاستجابة.
-      */
       const response =
         await api.respondToDonationRequest(
           request.id,
@@ -446,8 +436,6 @@ export default function DonationRequestDetails() {
   return (
     <div className="donation-request-page">
 
-      {/* ================= HEADER ================= */}
-
       <header className="request-header">
 
         <button
@@ -483,8 +471,6 @@ export default function DonationRequestDetails() {
 
       </header>
 
-      {/* ================= LOADING ================= */}
-
       {loading && (
         <div className="state-card">
 
@@ -504,8 +490,6 @@ export default function DonationRequestDetails() {
 
         </div>
       )}
-
-      {/* ================= ERROR ================= */}
 
       {!loading && error && !request && (
         <div className="state-card error-card">
@@ -533,12 +517,8 @@ export default function DonationRequestDetails() {
         </div>
       )}
 
-      {/* ================= REQUEST ================= */}
-
       {!loading && request && (
         <main className="request-content">
-
-          {/* ================= REQUEST HERO ================= */}
 
           <section className="request-hero">
 
@@ -580,8 +560,6 @@ export default function DonationRequestDetails() {
 
           </section>
 
-          {/* ================= DETAILS ================= */}
-
           <section className="main-card">
 
             <div className="section-title">
@@ -602,8 +580,6 @@ export default function DonationRequestDetails() {
 
             </div>
 
-            {/* Requester */}
-
             <div className="detail-card">
 
               <div className="detail-icon">
@@ -623,8 +599,6 @@ export default function DonationRequestDetails() {
               </div>
 
             </div>
-
-            {/* Blood Type */}
 
             <div className="detail-card">
 
@@ -649,8 +623,6 @@ export default function DonationRequestDetails() {
               </div>
 
             </div>
-
-            {/* Hospital */}
 
             <div className="detail-card hospital-detail">
 
@@ -678,8 +650,6 @@ export default function DonationRequestDetails() {
 
             </div>
 
-            {/* Directions */}
-
             {directionsUrl && (
               <a
                 href={directionsUrl}
@@ -701,15 +671,11 @@ export default function DonationRequestDetails() {
 
           </section>
 
-          {/* ================= STATUS ================= */}
-
           {isAccepted && (
             <section className="status-card accepted">
 
               <div className="status-icon">
-
                 <CheckIcon />
-
               </div>
 
               <div className="status-content">
@@ -739,9 +705,7 @@ export default function DonationRequestDetails() {
             <section className="status-card rejected">
 
               <div className="status-icon">
-
                 <CloseIcon />
-
               </div>
 
               <div className="status-content">
@@ -767,8 +731,6 @@ export default function DonationRequestDetails() {
             </section>
           )}
 
-          {/* ================= RESPONSE ERROR ================= */}
-
           {error && request && (
             <div className="response-error">
 
@@ -782,8 +744,6 @@ export default function DonationRequestDetails() {
 
             </div>
           )}
-
-          {/* ================= ACTIONS ================= */}
 
           {isPending && (
             <section className="actions-card">
@@ -813,9 +773,7 @@ export default function DonationRequestDetails() {
                   className="accept-button"
                   disabled={responding}
                   onClick={() =>
-                    handleResponse(
-                      "accept"
-                    )
+                    handleResponse("accept")
                   }
                 >
 
@@ -838,9 +796,7 @@ export default function DonationRequestDetails() {
                   className="reject-button"
                   disabled={responding}
                   onClick={() =>
-                    handleResponse(
-                      "reject"
-                    )
+                    handleResponse("reject")
                   }
                 >
 
@@ -854,8 +810,6 @@ export default function DonationRequestDetails() {
 
             </section>
           )}
-
-          {/* ================= TRACKING ================= */}
 
           {isAccepted && (
             <section className="tracking-card">
@@ -900,13 +854,25 @@ export default function DonationRequestDetails() {
           box-sizing: border-box;
         }
 
+        html,
+        body {
+          margin: 0;
+          padding: 0;
+        }
+
+        button,
+        a {
+          -webkit-tap-highlight-color: transparent;
+        }
+
         .donation-request-page {
+          width: 100%;
           min-height: 100vh;
 
           padding:
-            18px
             16px
-            38px;
+            14px
+            40px;
 
           direction: rtl;
 
@@ -943,7 +909,8 @@ export default function DonationRequestDetails() {
         }
 
         .request-header {
-          max-width: 430px;
+          width: 100%;
+          max-width: 500px;
 
           margin:
             0 auto
@@ -953,12 +920,12 @@ export default function DonationRequestDetails() {
 
           align-items: center;
 
-          gap: 11px;
+          gap: 12px;
         }
 
         .back-button {
-          width: 43px;
-          height: 43px;
+          width: 48px;
+          height: 48px;
 
           flex-shrink: 0;
 
@@ -970,12 +937,12 @@ export default function DonationRequestDetails() {
           border: 1px solid
             rgba(255,255,255,.95);
 
-          border-radius: 15px;
+          border-radius: 16px;
 
           color: #078876;
 
           background:
-            rgba(255,255,255,.78);
+            rgba(255,255,255,.84);
 
           box-shadow:
             0 8px 20px
@@ -990,24 +957,16 @@ export default function DonationRequestDetails() {
             blur(12px);
 
           cursor: pointer;
-
-          transition:
-            transform .2s ease,
-            box-shadow .2s ease;
-        }
-
-        .back-button:active {
-          transform:
-            scale(.95);
         }
 
         .back-button svg {
-          width: 22px;
-          height: 22px;
+          width: 25px;
+          height: 25px;
         }
 
         .header-title {
           flex: 1;
+          min-width: 0;
         }
 
         .header-title-row {
@@ -1015,19 +974,21 @@ export default function DonationRequestDetails() {
 
           align-items: center;
 
-          gap: 9px;
+          gap: 11px;
         }
 
         .header-heart {
-          width: 38px;
-          height: 38px;
+          width: 44px;
+          height: 44px;
+
+          flex-shrink: 0;
 
           display: flex;
 
           align-items: center;
           justify-content: center;
 
-          border-radius: 13px;
+          border-radius: 14px;
 
           color: white;
 
@@ -1044,18 +1005,18 @@ export default function DonationRequestDetails() {
         }
 
         .header-heart svg {
-          width: 18px;
-          height: 18px;
+          width: 22px;
+          height: 22px;
         }
 
         .header-title h1 {
-          margin: 0 0 2px;
+          margin: 0 0 3px;
 
           color: #17332e;
 
-          font-size: 19px;
+          font-size: 22px;
 
-          line-height: 1.2;
+          line-height: 1.25;
 
           font-weight: 900;
         }
@@ -1065,13 +1026,16 @@ export default function DonationRequestDetails() {
 
           color: #78908c;
 
-          font-size: 10px;
+          font-size: 13px;
 
-          font-weight: 500;
+          line-height: 1.4;
+
+          font-weight: 600;
         }
 
         .request-content {
-          max-width: 430px;
+          width: 100%;
+          max-width: 500px;
 
           margin: 0 auto;
         }
@@ -1083,11 +1047,12 @@ export default function DonationRequestDetails() {
 
           overflow: hidden;
 
-          min-height: 116px;
+          width: 100%;
+          min-height: 138px;
 
-          margin-bottom: 13px;
+          margin-bottom: 15px;
 
-          padding: 18px;
+          padding: 20px;
 
           display: flex;
 
@@ -1095,9 +1060,9 @@ export default function DonationRequestDetails() {
 
           justify-content: space-between;
 
-          gap: 12px;
+          gap: 14px;
 
-          border-radius: 24px;
+          border-radius: 25px;
 
           background:
             linear-gradient(
@@ -1121,11 +1086,11 @@ export default function DonationRequestDetails() {
         .hero-glow {
           position: absolute;
 
-          width: 150px;
-          height: 150px;
+          width: 180px;
+          height: 180px;
 
-          left: -55px;
-          bottom: -75px;
+          left: -65px;
+          bottom: -90px;
 
           border-radius: 50%;
 
@@ -1139,16 +1104,18 @@ export default function DonationRequestDetails() {
           position: relative;
           z-index: 1;
 
+          min-width: 0;
+
           display: flex;
 
           align-items: center;
 
-          gap: 12px;
+          gap: 14px;
         }
 
         .blood-icon-large {
-          width: 58px;
-          height: 58px;
+          width: 68px;
+          height: 68px;
 
           flex-shrink: 0;
 
@@ -1157,12 +1124,12 @@ export default function DonationRequestDetails() {
           align-items: center;
           justify-content: center;
 
-          border-radius: 19px;
+          border-radius: 20px;
 
           color: #078876;
 
           background:
-            rgba(255,255,255,.72);
+            rgba(255,255,255,.75);
 
           box-shadow:
             0 6px 15px
@@ -1170,20 +1137,26 @@ export default function DonationRequestDetails() {
         }
 
         .blood-icon-large svg {
-          width: 32px;
-          height: 32px;
+          width: 38px;
+          height: 38px;
+        }
+
+        .hero-info {
+          min-width: 0;
         }
 
         .hero-info span {
           display: block;
 
-          margin-bottom: 1px;
+          margin-bottom: 3px;
 
           color: #6e928d;
 
-          font-size: 10px;
+          font-size: 14px;
 
-          font-weight: 600;
+          line-height: 1.4;
+
+          font-weight: 700;
         }
 
         .hero-info strong {
@@ -1191,7 +1164,7 @@ export default function DonationRequestDetails() {
 
           color: #078876;
 
-          font-size: 29px;
+          font-size: 36px;
 
           line-height: 1.05;
 
@@ -1201,11 +1174,13 @@ export default function DonationRequestDetails() {
         .hero-info small {
           display: block;
 
-          margin-top: 3px;
+          margin-top: 5px;
 
           color: #6e928d;
 
-          font-size: 9px;
+          font-size: 12px;
+
+          line-height: 1.4;
         }
 
         .urgency-badge {
@@ -1214,33 +1189,39 @@ export default function DonationRequestDetails() {
 
           flex-shrink: 0;
 
-          padding:
-            7px
-            9px;
+          max-width: 145px;
 
-          border-radius: 10px;
+          padding:
+            9px
+            11px;
+
+          border-radius: 12px;
 
           color: #078876;
 
           background:
-            rgba(255,255,255,.72);
+            rgba(255,255,255,.78);
 
-          font-size: 8px;
+          font-size: 12px;
 
-          font-weight: 800;
+          line-height: 1.4;
 
-          white-space: nowrap;
+          font-weight: 900;
+
+          text-align: center;
         }
 
         /* ================= MAIN CARD ================= */
 
         .main-card {
-          padding: 14px;
+          width: 100%;
 
-          border-radius: 23px;
+          padding: 17px;
+
+          border-radius: 24px;
 
           background:
-            rgba(255,255,255,.84);
+            rgba(255,255,255,.88);
 
           border:
             1px solid
@@ -1264,20 +1245,20 @@ export default function DonationRequestDetails() {
 
           align-items: center;
 
-          gap: 9px;
+          gap: 11px;
 
-          margin-bottom: 13px;
+          margin-bottom: 15px;
 
-          padding-bottom: 11px;
+          padding-bottom: 13px;
 
           border-bottom:
             1px solid
-            rgba(10,168,143,.08);
+            rgba(10,168,143,.10);
         }
 
         .section-title-icon {
-          width: 35px;
-          height: 35px;
+          width: 42px;
+          height: 42px;
 
           flex-shrink: 0;
 
@@ -1286,7 +1267,7 @@ export default function DonationRequestDetails() {
           align-items: center;
           justify-content: center;
 
-          border-radius: 11px;
+          border-radius: 13px;
 
           color: #078876;
 
@@ -1295,16 +1276,18 @@ export default function DonationRequestDetails() {
         }
 
         .section-title-icon svg {
-          width: 19px;
-          height: 19px;
+          width: 23px;
+          height: 23px;
         }
 
         .section-title h2 {
-          margin: 0 0 2px;
+          margin: 0 0 3px;
 
           color: #17332e;
 
-          font-size: 13px;
+          font-size: 18px;
+
+          line-height: 1.3;
 
           font-weight: 900;
         }
@@ -1314,25 +1297,28 @@ export default function DonationRequestDetails() {
 
           color: #8aa29e;
 
-          font-size: 8px;
+          font-size: 12px;
+
+          line-height: 1.5;
         }
 
         .detail-card {
-          min-height: 59px;
+          width: 100%;
+          min-height: 76px;
 
           display: flex;
 
           align-items: center;
 
-          gap: 10px;
+          gap: 12px;
 
-          margin-bottom: 8px;
+          margin-bottom: 10px;
 
           padding:
-            9px
-            10px;
+            11px
+            12px;
 
-          border-radius: 15px;
+          border-radius: 17px;
 
           background:
             linear-gradient(
@@ -1343,7 +1329,7 @@ export default function DonationRequestDetails() {
 
           border:
             1px solid
-            rgba(10,168,143,.045);
+            rgba(10,168,143,.06);
 
           transition:
             transform .2s ease;
@@ -1355,8 +1341,8 @@ export default function DonationRequestDetails() {
         }
 
         .detail-icon {
-          width: 38px;
-          height: 38px;
+          width: 46px;
+          height: 46px;
 
           flex-shrink: 0;
 
@@ -1365,7 +1351,7 @@ export default function DonationRequestDetails() {
           align-items: center;
           justify-content: center;
 
-          border-radius: 12px;
+          border-radius: 14px;
 
           color: #078876;
 
@@ -1374,8 +1360,8 @@ export default function DonationRequestDetails() {
         }
 
         .detail-icon svg {
-          width: 20px;
-          height: 20px;
+          width: 24px;
+          height: 24px;
         }
 
         .detail-content {
@@ -1387,25 +1373,27 @@ export default function DonationRequestDetails() {
 
           flex-direction: column;
 
-          gap: 2px;
+          gap: 3px;
         }
 
         .detail-content span {
           color: #8ba39f;
 
-          font-size: 8px;
+          font-size: 12px;
 
-          font-weight: 600;
+          line-height: 1.4;
+
+          font-weight: 700;
         }
 
         .detail-content strong {
           color: #245b55;
 
-          font-size: 11px;
-
-          font-weight: 800;
+          font-size: 16px;
 
           line-height: 1.5;
+
+          font-weight: 900;
 
           overflow-wrap: anywhere;
         }
@@ -1413,9 +1401,9 @@ export default function DonationRequestDetails() {
         .detail-content small {
           color: #809894;
 
-          font-size: 8px;
+          font-size: 12px;
 
-          line-height: 1.6;
+          line-height: 1.7;
 
           overflow-wrap: anywhere;
         }
@@ -1423,13 +1411,13 @@ export default function DonationRequestDetails() {
         .blood-mini-badge {
           flex-shrink: 0;
 
-          min-width: 38px;
+          min-width: 52px;
 
           padding:
-            6px
-            7px;
+            9px
+            8px;
 
-          border-radius: 9px;
+          border-radius: 11px;
 
           color: #078876;
 
@@ -1438,27 +1426,27 @@ export default function DonationRequestDetails() {
 
           text-align: center;
 
-          font-size: 9px;
+          font-size: 14px;
 
           font-weight: 900;
         }
 
         .directions-button {
-          min-height: 43px;
+          min-height: 52px;
 
-          margin-top: 10px;
+          margin-top: 12px;
 
           padding:
             0
-            11px;
+            14px;
 
           display: flex;
 
           align-items: center;
 
-          gap: 7px;
+          gap: 9px;
 
-          border-radius: 14px;
+          border-radius: 15px;
 
           color: #078876;
 
@@ -1473,9 +1461,11 @@ export default function DonationRequestDetails() {
             1px solid
             rgba(10,168,143,.08);
 
-          font-size: 9px;
+          font-size: 14px;
 
-          font-weight: 800;
+          line-height: 1.4;
+
+          font-weight: 900;
 
           text-decoration: none;
 
@@ -1485,8 +1475,8 @@ export default function DonationRequestDetails() {
         }
 
         .directions-button svg {
-          width: 18px;
-          height: 18px;
+          width: 22px;
+          height: 22px;
 
           flex-shrink: 0;
         }
@@ -1494,23 +1484,23 @@ export default function DonationRequestDetails() {
         .direction-arrow {
           margin-right: auto;
 
-          font-size: 15px;
+          font-size: 20px;
         }
 
         /* ================= STATUS ================= */
 
         .status-card {
-          margin-top: 13px;
+          margin-top: 15px;
 
-          padding: 13px;
+          padding: 16px;
 
           display: flex;
 
-          align-items: center;
+          align-items: flex-start;
 
-          gap: 10px;
+          gap: 12px;
 
-          border-radius: 19px;
+          border-radius: 20px;
 
           border:
             1px solid
@@ -1540,8 +1530,8 @@ export default function DonationRequestDetails() {
         }
 
         .status-icon {
-          width: 43px;
-          height: 43px;
+          width: 48px;
+          height: 48px;
 
           flex-shrink: 0;
 
@@ -1550,7 +1540,7 @@ export default function DonationRequestDetails() {
           align-items: center;
           justify-content: center;
 
-          border-radius: 14px;
+          border-radius: 15px;
 
           background:
             rgba(255,255,255,.7);
@@ -1565,8 +1555,8 @@ export default function DonationRequestDetails() {
         }
 
         .status-icon svg {
-          width: 22px;
-          height: 22px;
+          width: 25px;
+          height: 25px;
         }
 
         .status-content {
@@ -1580,15 +1570,19 @@ export default function DonationRequestDetails() {
 
           align-items: center;
 
-          gap: 6px;
+          flex-wrap: wrap;
 
-          margin-bottom: 3px;
+          gap: 7px;
+
+          margin-bottom: 5px;
         }
 
         .status-card h3 {
           margin: 0;
 
-          font-size: 11px;
+          font-size: 16px;
+
+          line-height: 1.4;
 
           font-weight: 900;
         }
@@ -1603,14 +1597,16 @@ export default function DonationRequestDetails() {
 
         .status-label {
           padding:
-            3px
-            6px;
+            4px
+            8px;
 
-          border-radius: 6px;
+          border-radius: 7px;
 
-          font-size: 7px;
+          font-size: 11px;
 
-          font-weight: 800;
+          line-height: 1.3;
+
+          font-weight: 900;
         }
 
         .accepted .status-label {
@@ -1632,21 +1628,21 @@ export default function DonationRequestDetails() {
 
           color: #7b9692;
 
-          font-size: 8px;
+          font-size: 13px;
 
-          line-height: 1.75;
+          line-height: 1.8;
         }
 
         /* ================= RESPONSE ERROR ================= */
 
         .response-error {
-          margin-top: 10px;
+          margin-top: 12px;
 
-          min-height: 39px;
+          min-height: 48px;
 
           padding:
-            8px
-            10px;
+            10px
+            12px;
 
           display: flex;
 
@@ -1654,9 +1650,9 @@ export default function DonationRequestDetails() {
 
           justify-content: center;
 
-          gap: 7px;
+          gap: 9px;
 
-          border-radius: 13px;
+          border-radius: 14px;
 
           color: #984f61;
 
@@ -1667,16 +1663,18 @@ export default function DonationRequestDetails() {
             1px solid
             rgba(207,90,116,.08);
 
-          font-size: 9px;
+          font-size: 13px;
 
-          font-weight: 700;
+          line-height: 1.6;
+
+          font-weight: 800;
 
           text-align: center;
         }
 
         .error-dot {
-          width: 19px;
-          height: 19px;
+          width: 23px;
+          height: 23px;
 
           flex-shrink: 0;
 
@@ -1692,7 +1690,7 @@ export default function DonationRequestDetails() {
           background:
             #c8667c;
 
-          font-size: 10px;
+          font-size: 13px;
 
           font-weight: 900;
         }
@@ -1700,11 +1698,11 @@ export default function DonationRequestDetails() {
         /* ================= ACTIONS ================= */
 
         .actions-card {
-          margin-top: 13px;
+          margin-top: 15px;
 
-          padding: 15px;
+          padding: 18px;
 
-          border-radius: 21px;
+          border-radius: 22px;
 
           background:
             linear-gradient(
@@ -1727,14 +1725,14 @@ export default function DonationRequestDetails() {
 
           align-items: center;
 
-          gap: 10px;
+          gap: 12px;
 
-          margin-bottom: 13px;
+          margin-bottom: 15px;
         }
 
         .actions-icon {
-          width: 40px;
-          height: 40px;
+          width: 46px;
+          height: 46px;
 
           flex-shrink: 0;
 
@@ -1743,7 +1741,7 @@ export default function DonationRequestDetails() {
           align-items: center;
           justify-content: center;
 
-          border-radius: 13px;
+          border-radius: 14px;
 
           color: #078876;
 
@@ -1752,16 +1750,18 @@ export default function DonationRequestDetails() {
         }
 
         .actions-icon svg {
-          width: 20px;
-          height: 20px;
+          width: 24px;
+          height: 24px;
         }
 
         .actions-header h3 {
-          margin: 0 0 2px;
+          margin: 0 0 3px;
 
           color: #173f39;
 
-          font-size: 13px;
+          font-size: 18px;
+
+          line-height: 1.4;
 
           font-weight: 900;
         }
@@ -1771,21 +1771,21 @@ export default function DonationRequestDetails() {
 
           color: #819b97;
 
-          font-size: 8px;
+          font-size: 12px;
 
-          line-height: 1.6;
+          line-height: 1.7;
         }
 
         .actions {
           display: flex;
 
-          gap: 8px;
+          gap: 10px;
         }
 
         .actions button {
           flex: 1;
 
-          min-height: 45px;
+          min-height: 55px;
 
           display: flex;
 
@@ -1793,15 +1793,17 @@ export default function DonationRequestDetails() {
 
           justify-content: center;
 
-          gap: 6px;
+          gap: 8px;
 
           border: 0;
 
-          border-radius: 14px;
+          border-radius: 15px;
 
           font-family: inherit;
 
-          font-size: 10px;
+          font-size: 14px;
+
+          line-height: 1.4;
 
           font-weight: 900;
 
@@ -1814,8 +1816,8 @@ export default function DonationRequestDetails() {
         }
 
         .actions button svg {
-          width: 17px;
-          height: 17px;
+          width: 21px;
+          height: 21px;
         }
 
         .actions button:active {
@@ -1862,12 +1864,12 @@ export default function DonationRequestDetails() {
 
           justify-content: center;
 
-          gap: 6px;
+          gap: 8px;
         }
 
         .button-loading span {
-          width: 13px;
-          height: 13px;
+          width: 16px;
+          height: 16px;
 
           border:
             2px solid
@@ -1885,17 +1887,17 @@ export default function DonationRequestDetails() {
         /* ================= TRACKING ================= */
 
         .tracking-card {
-          margin-top: 13px;
+          margin-top: 15px;
 
-          padding: 12px;
+          padding: 15px;
 
           display: flex;
 
           align-items: center;
 
-          gap: 9px;
+          gap: 11px;
 
-          border-radius: 18px;
+          border-radius: 20px;
 
           background:
             linear-gradient(
@@ -1914,8 +1916,8 @@ export default function DonationRequestDetails() {
         }
 
         .tracking-icon {
-          width: 40px;
-          height: 40px;
+          width: 46px;
+          height: 46px;
 
           flex-shrink: 0;
 
@@ -1924,7 +1926,7 @@ export default function DonationRequestDetails() {
           align-items: center;
           justify-content: center;
 
-          border-radius: 12px;
+          border-radius: 14px;
 
           color: #078876;
 
@@ -1933,8 +1935,8 @@ export default function DonationRequestDetails() {
         }
 
         .tracking-icon svg {
-          width: 20px;
-          height: 20px;
+          width: 24px;
+          height: 24px;
         }
 
         .tracking-content {
@@ -1944,11 +1946,13 @@ export default function DonationRequestDetails() {
         }
 
         .tracking-content h3 {
-          margin: 0 0 2px;
+          margin: 0 0 3px;
 
           color: #245b55;
 
-          font-size: 10px;
+          font-size: 15px;
+
+          line-height: 1.4;
 
           font-weight: 900;
         }
@@ -1958,23 +1962,23 @@ export default function DonationRequestDetails() {
 
           color: #7d9995;
 
-          font-size: 7px;
+          font-size: 12px;
 
-          line-height: 1.65;
+          line-height: 1.7;
         }
 
         .tracking-button {
-          min-width: 63px;
+          min-width: 76px;
 
-          min-height: 34px;
+          min-height: 43px;
 
           padding:
             0
-            9px;
+            11px;
 
           border: 0;
 
-          border-radius: 11px;
+          border-radius: 12px;
 
           color: white;
 
@@ -1987,7 +1991,7 @@ export default function DonationRequestDetails() {
 
           font-family: inherit;
 
-          font-size: 9px;
+          font-size: 13px;
 
           font-weight: 900;
 
@@ -2001,15 +2005,16 @@ export default function DonationRequestDetails() {
         /* ================= STATES ================= */
 
         .state-card {
-          max-width: 430px;
+          width: 100%;
+          max-width: 500px;
 
           margin:
             45px auto
             0;
 
           padding:
-            34px
-            20px;
+            38px
+            22px;
 
           text-align: center;
 
@@ -2038,8 +2043,8 @@ export default function DonationRequestDetails() {
         }
 
         .loading-circle {
-          width: 58px;
-          height: 58px;
+          width: 68px;
+          height: 68px;
 
           margin:
             0 auto;
@@ -2049,15 +2054,15 @@ export default function DonationRequestDetails() {
           align-items: center;
           justify-content: center;
 
-          border-radius: 19px;
+          border-radius: 20px;
 
           background:
             #e1f7f3;
         }
 
         .loading-spinner {
-          width: 28px;
-          height: 28px;
+          width: 32px;
+          height: 32px;
 
           border:
             3px solid
@@ -2074,28 +2079,30 @@ export default function DonationRequestDetails() {
 
         .state-card h3 {
           margin:
-            13px
+            16px
             0
             0;
 
           color: #245b55;
 
-          font-size: 14px;
+          font-size: 19px;
+
+          line-height: 1.4;
 
           font-weight: 900;
         }
 
         .state-card p {
           margin:
-            7px
+            8px
             0
             0;
 
           color: #8aa39f;
 
-          font-size: 9px;
+          font-size: 14px;
 
-          line-height: 1.8;
+          line-height: 1.9;
         }
 
         .error-card {
@@ -2108,8 +2115,8 @@ export default function DonationRequestDetails() {
         }
 
         .state-icon {
-          width: 55px;
-          height: 55px;
+          width: 64px;
+          height: 64px;
 
           margin:
             0 auto;
@@ -2119,30 +2126,30 @@ export default function DonationRequestDetails() {
           align-items: center;
           justify-content: center;
 
-          border-radius: 18px;
+          border-radius: 20px;
 
           color: #a34f63;
 
           background:
             #ffe3e9;
 
-          font-size: 22px;
+          font-size: 27px;
 
           font-weight: 900;
         }
 
         .back-main-button {
-          min-height: 41px;
+          min-height: 48px;
 
-          margin-top: 17px;
+          margin-top: 20px;
 
           padding:
             0
-            27px;
+            32px;
 
           border: 0;
 
-          border-radius: 13px;
+          border-radius: 14px;
 
           color: white;
 
@@ -2155,7 +2162,7 @@ export default function DonationRequestDetails() {
 
           font-family: inherit;
 
-          font-size: 10px;
+          font-size: 14px;
 
           font-weight: 900;
 
@@ -2166,59 +2173,318 @@ export default function DonationRequestDetails() {
               rgba(7,136,118,.15);
         }
 
-        /* ================= RESPONSIVE ================= */
+        /* ================= MOBILE ================= */
+
+        @media (max-width: 430px) {
+
+          .donation-request-page {
+            padding:
+              14px
+              12px
+              36px;
+          }
+
+          .request-header {
+            margin-bottom: 16px;
+          }
+
+          .header-title h1 {
+            font-size: 21px;
+          }
+
+          .header-title p {
+            font-size: 12px;
+          }
+
+          .request-hero {
+            min-height: 135px;
+
+            padding: 17px;
+
+            gap: 9px;
+          }
+
+          .blood-icon-large {
+            width: 62px;
+            height: 62px;
+          }
+
+          .blood-icon-large svg {
+            width: 35px;
+            height: 35px;
+          }
+
+          .hero-content {
+            gap: 11px;
+          }
+
+          .hero-info span {
+            font-size: 12px;
+          }
+
+          .hero-info strong {
+            font-size: 33px;
+          }
+
+          .hero-info small {
+            font-size: 11px;
+          }
+
+          .urgency-badge {
+            max-width: 120px;
+
+            padding:
+              8px
+              9px;
+
+            font-size: 11px;
+          }
+
+          .main-card {
+            padding: 15px;
+          }
+
+          .section-title h2 {
+            font-size: 17px;
+          }
+
+          .section-title p {
+            font-size: 11px;
+          }
+
+          .detail-card {
+            min-height: 73px;
+
+            padding:
+              10px;
+          }
+
+          .detail-content span {
+            font-size: 11px;
+          }
+
+          .detail-content strong {
+            font-size: 15px;
+          }
+
+          .detail-content small {
+            font-size: 11px;
+          }
+
+          .directions-button {
+            min-height: 53px;
+
+            font-size: 13px;
+          }
+
+          .actions-header h3 {
+            font-size: 17px;
+          }
+
+          .actions-header p {
+            font-size: 11px;
+          }
+
+          .actions button {
+            min-height: 54px;
+
+            font-size: 13px;
+          }
+
+          .tracking-content h3 {
+            font-size: 14px;
+          }
+
+          .tracking-content p {
+            font-size: 11px;
+          }
+        }
+
+        /* ================= SMALL PHONES ================= */
 
         @media (max-width: 360px) {
 
           .donation-request-page {
             padding:
-              15px
               12px
-              30px;
+              10px
+              32px;
+          }
+
+          .request-header {
+            gap: 9px;
+          }
+
+          .back-button {
+            width: 44px;
+            height: 44px;
+          }
+
+          .header-heart {
+            width: 40px;
+            height: 40px;
+          }
+
+          .header-title h1 {
+            font-size: 19px;
+          }
+
+          .header-title p {
+            font-size: 11px;
           }
 
           .request-hero {
             padding: 14px;
 
-            min-height: 108px;
+            min-height: 125px;
+
+            border-radius: 21px;
           }
 
           .blood-icon-large {
-            width: 51px;
-            height: 51px;
+            width: 55px;
+            height: 55px;
+
+            border-radius: 17px;
           }
 
           .blood-icon-large svg {
-            width: 28px;
-            height: 28px;
+            width: 31px;
+            height: 31px;
+          }
+
+          .hero-content {
+            gap: 9px;
+          }
+
+          .hero-info span {
+            font-size: 11px;
           }
 
           .hero-info strong {
-            font-size: 25px;
+            font-size: 29px;
+          }
+
+          .hero-info small {
+            font-size: 10px;
           }
 
           .urgency-badge {
-            font-size: 7px;
+            max-width: 105px;
 
             padding:
-              6px
-              7px;
+              7px
+              8px;
+
+            font-size: 10px;
+          }
+
+          .main-card {
+            padding: 13px;
+          }
+
+          .section-title {
+            gap: 9px;
+          }
+
+          .section-title-icon {
+            width: 39px;
+            height: 39px;
+          }
+
+          .section-title h2 {
+            font-size: 16px;
+          }
+
+          .section-title p {
+            font-size: 10px;
+          }
+
+          .detail-card {
+            gap: 9px;
+
+            min-height: 69px;
+          }
+
+          .detail-icon {
+            width: 42px;
+            height: 42px;
+          }
+
+          .detail-icon svg {
+            width: 22px;
+            height: 22px;
+          }
+
+          .detail-content span {
+            font-size: 10px;
+          }
+
+          .detail-content strong {
+            font-size: 14px;
+          }
+
+          .detail-content small {
+            font-size: 10px;
+          }
+
+          .blood-mini-badge {
+            min-width: 46px;
+
+            font-size: 13px;
+          }
+
+          .directions-button {
+            min-height: 51px;
+
+            font-size: 12px;
+          }
+
+          .status-card {
+            padding: 13px;
+
+            gap: 9px;
+          }
+
+          .status-icon {
+            width: 43px;
+            height: 43px;
+          }
+
+          .status-card h3 {
+            font-size: 14px;
+          }
+
+          .status-card p {
+            font-size: 11px;
+          }
+
+          .actions-card {
+            padding: 15px;
           }
 
           .actions {
             flex-direction: column;
+
+            gap: 9px;
           }
 
           .actions button {
             width: 100%;
+
+            min-height: 54px;
+
+            font-size: 14px;
           }
 
           .tracking-card {
-            align-items: flex-start;
+            align-items: center;
           }
 
           .tracking-button {
-            align-self: center;
+            min-width: 68px;
+
+            font-size: 12px;
           }
         }
 
