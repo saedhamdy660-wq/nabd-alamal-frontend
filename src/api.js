@@ -247,9 +247,10 @@ const api = {
       `/medicines/${id}`
     ),
 
+  // طلب دواء مرتبط بالمستخدم الحالي
   requestMedicine: (
     id,
-    requesterId
+    userId
   ) =>
     request(
       `/medicines/${id}/request`,
@@ -257,7 +258,7 @@ const api = {
         method: "POST",
 
         body: JSON.stringify({
-          requesterId,
+          userId,
         }),
       }
     ),
