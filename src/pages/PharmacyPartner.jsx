@@ -158,8 +158,31 @@ export default function PharmacyPartner() {
 
   const confirmRequest = async () => {
     try {
+      const storedUser =
+        localStorage.getItem("nabd_user");
+
+      if (!storedUser) {
+        setMessage(
+          "يجب تسجيل الدخول أولًا لإرسال طلب الدواء"
+        );
+        return;
+      }
+
+      const currentUser =
+        JSON.parse(storedUser);
+
+      if (!currentUser?.id) {
+        setMessage(
+          "بيانات المستخدم غير مكتملة، يرجى تسجيل الدخول مرة أخرى"
+        );
+        return;
+      }
+
       const res =
-        await api.requestMedicine(medicineId);
+        await api.requestMedicine(
+          medicineId,
+          currentUser.id
+        );
 
       setMessage(
         res?.message ||
@@ -169,7 +192,8 @@ export default function PharmacyPartner() {
       console.error(error);
 
       setMessage(
-        "حدث خطأ أثناء إرسال الطلب"
+        error?.message ||
+          "حدث خطأ أثناء إرسال الطلب"
       );
     }
   };
