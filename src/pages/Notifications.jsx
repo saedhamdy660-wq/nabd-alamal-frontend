@@ -115,6 +115,94 @@ function InfoIcon() {
   );
 }
 
+function ArrowIcon() {
+  return (
+    <svg viewBox="0 0 24 24">
+      <path
+        d="M9 5l7 7-7 7"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="2"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+    </svg>
+  );
+}
+
+function UserIcon() {
+  return (
+    <svg viewBox="0 0 24 24">
+      <circle
+        cx="12"
+        cy="8"
+        r="3.2"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="1.8"
+      />
+
+      <path
+        d="M5.5 19c.8-3.2 3-4.8 6.5-4.8s5.7 1.6 6.5 4.8"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="1.8"
+        strokeLinecap="round"
+      />
+    </svg>
+  );
+}
+
+function BloodIcon() {
+  return (
+    <svg viewBox="0 0 24 24">
+      <path
+        d="M12 3s6 6.2 6 11a6 6 0 0 1-12 0c0-4.8 6-11 6-11Z"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="1.8"
+      />
+    </svg>
+  );
+}
+
+function HospitalIcon() {
+  return (
+    <svg viewBox="0 0 24 24">
+      <path
+        d="M5 21V6h14v15M3 21h18M9 21v-5h6v5M10 9h4M12 7v4"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="1.7"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+    </svg>
+  );
+}
+
+function LocationIcon() {
+  return (
+    <svg viewBox="0 0 24 24">
+      <path
+        d="M12 21s7-6.2 7-12A7 7 0 0 0 5 9c0 5.8 7 12 7 12Z"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="1.8"
+      />
+
+      <circle
+        cx="12"
+        cy="9"
+        r="2.2"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="1.8"
+      />
+    </svg>
+  );
+}
+
 function getNotificationIcon(type) {
   if (type === "urgent") {
     return <AlertIcon />;
@@ -138,6 +226,15 @@ export default function Notifications() {
 
   const [actionError, setActionError] =
     useState("");
+
+  const [expandedId, setExpandedId] =
+    useState(null);
+
+  const [requestDetails, setRequestDetails] =
+    useState({});
+
+  const [loadingDetailsId, setLoadingDetailsId] =
+    useState(null);
 
   useEffect(() => {
     const savedUser =
@@ -165,31 +262,96 @@ export default function Notifications() {
       .catch(() => {});
   }, []);
 
-  const handleDonationResponse = async (
-    notification,
-    action
-  ) => {
+  const getCurrentUser = () => {
     const savedUser =
       localStorage.getItem(
         "nabd_user"
       );
 
     if (!savedUser) {
-      return;
+      return null;
     }
 
-    let user = null;
-
     try {
-      user =
-        JSON.parse(savedUser);
+      return JSON.parse(savedUser);
     } catch {
+      return null;
+    }
+  };
+
+  const handleToggleDetails = async (
+    notification
+  ) => {
+    if (!notification?.requestId) {
       return;
     }
 
     if (
-      !notification?.requestId ||
-      !user?.id
+      expandedId ===
+      notification.id
+    ) {
+      setExpandedId(null);
+      return;
+    }
+
+    setExpandedId(
+      notification.id
+    );
+
+    setActionError("");
+
+    /*
+      لو التفاصيل متحملة قبل كده
+      نستخدمها مباشرة.
+    */
+    if (
+      requestDetails[
+        notification.requestId
+      ]
+    ) {
+      return;
+    }
+
+    try {
+      setLoadingDetailsId(
+        notification.id
+      );
+
+      const request =
+        await api.getBloodRequest(
+          notification.requestId
+        );
+
+      setRequestDetails(
+        (prev) => ({
+          ...prev,
+          [notification.requestId]:
+            request,
+        })
+      );
+    } catch (error) {
+      setActionError(
+        error?.message ||
+          "تعذر تحميل تفاصيل طلب التبرع"
+      );
+    } finally {
+      setLoadingDetailsId(null);
+    }
+  };
+
+  const handleDonationResponse = async (
+    notification,
+    action
+  ) => {
+    const user =
+      getCurrentUser();
+
+    if (!user?.id) {
+      return;
+    }
+
+    if (
+      !notification?.requestId
     ) {
       return;
     }
@@ -201,11 +363,12 @@ export default function Notifications() {
 
       setActionError("");
 
-      await api.respondToDonationRequest(
-        notification.requestId,
-        user.id,
-        action
-      );
+      const updatedRequest =
+        await api.respondToDonationRequest(
+          notification.requestId,
+          user.id,
+          action
+        );
 
       setItems(
         (prev) =>
@@ -225,6 +388,37 @@ export default function Notifications() {
                 : item
           )
       );
+
+      /*
+        نحدث التفاصيل أيضًا حتى تفضل
+        الشاشة مفتوحة والحالة الجديدة ظاهرة.
+      */
+      if (updatedRequest) {
+        setRequestDetails(
+          (prev) => ({
+            ...prev,
+            [notification.requestId]:
+              updatedRequest,
+          })
+        );
+      } else {
+        try {
+          const refreshed =
+            await api.getBloodRequest(
+              notification.requestId
+            );
+
+          setRequestDetails(
+            (prev) => ({
+              ...prev,
+              [notification.requestId]:
+                refreshed,
+            })
+          );
+        } catch {
+          // لا نوقف العملية لو فشل تحديث التفاصيل فقط
+        }
+      }
     } catch (error) {
       setActionError(
         error?.message ||
@@ -245,6 +439,124 @@ export default function Notifications() {
     navigate(
       `/donor/${notification.donorId}`
     );
+  };
+
+  const getRequesterName = (
+    notification,
+    request
+  ) => {
+    return (
+      request?.requesterName ||
+      request?.requester?.name ||
+      request?.userName ||
+      request?.name ||
+      notification?.requesterName ||
+      notification?.userName ||
+      "طالب التبرع"
+    );
+  };
+
+  const getBloodType = (
+    notification,
+    request
+  ) => {
+    return (
+      request?.bloodType ||
+      request?.blood_group ||
+      request?.bloodGroup ||
+      notification?.bloodType ||
+      "غير محددة"
+    );
+  };
+
+  const getHospitalName = (
+    notification,
+    request
+  ) => {
+    return (
+      request?.hospital ||
+      request?.hospitalName ||
+      request?.locationName ||
+      request?.hospital?.name ||
+      notification?.hospital ||
+      notification?.hospitalName ||
+      "المستشفى المحددة"
+    );
+  };
+
+  const getHospitalAddress = (
+    notification,
+    request
+  ) => {
+    return (
+      request?.address ||
+      request?.hospitalAddress ||
+      request?.hospital?.address ||
+      notification?.address ||
+      notification?.hospitalAddress ||
+      ""
+    );
+  };
+
+  const getHospitalCoordinates = (
+    notification,
+    request
+  ) => {
+    const lat =
+      request?.lat ??
+      request?.hospital?.lat ??
+      notification?.lat;
+
+    const lng =
+      request?.lng ??
+      request?.hospital?.lng ??
+      notification?.lng;
+
+    return {
+      lat,
+      lng,
+    };
+  };
+
+  const getDirectionsUrl = (
+    notification,
+    request
+  ) => {
+    const {
+      lat,
+      lng,
+    } =
+      getHospitalCoordinates(
+        notification,
+        request
+      );
+
+    if (
+      lat !== undefined &&
+      lat !== null &&
+      lng !== undefined &&
+      lng !== null &&
+      lat !== "" &&
+      lng !== ""
+    ) {
+      return `https://www.google.com/maps/dir/?api=1&destination=${encodeURIComponent(
+        `${lat},${lng}`
+      )}`;
+    }
+
+    const address =
+      getHospitalAddress(
+        notification,
+        request
+      );
+
+    if (address) {
+      return `https://www.google.com/maps/dir/?api=1&destination=${encodeURIComponent(
+        address
+      )}`;
+    }
+
+    return "";
   };
 
   return (
@@ -321,6 +633,49 @@ export default function Notifications() {
               respondingId ===
               notification.id;
 
+            const isExpanded =
+              expandedId ===
+              notification.id;
+
+            const request =
+              requestDetails[
+                notification.requestId
+              ];
+
+            const isLoadingDetails =
+              loadingDetailsId ===
+              notification.id;
+
+            const requesterName =
+              getRequesterName(
+                notification,
+                request
+              );
+
+            const bloodType =
+              getBloodType(
+                notification,
+                request
+              );
+
+            const hospitalName =
+              getHospitalName(
+                notification,
+                request
+              );
+
+            const hospitalAddress =
+              getHospitalAddress(
+                notification,
+                request
+              );
+
+            const directionsUrl =
+              getDirectionsUrl(
+                notification,
+                request
+              );
+
             return (
               <div
                 key={notification.id}
@@ -347,63 +702,182 @@ export default function Notifications() {
                     {notification.time}
                   </span>
 
-                  {/* Donation Request Actions */}
+                  {/* Donation Request Details Arrow */}
                   {isDonationRequest &&
-                    isPending && (
-                      <div className="donation-actions">
-
-                        <button
-                          type="button"
-                          className="accept-button"
-                          disabled={
-                            isResponding
-                          }
-                          onClick={() =>
-                            handleDonationResponse(
-                              notification,
-                              "accept"
-                            )
-                          }
-                        >
-                          {isResponding
-                            ? "جاري..."
-                            : "قبول"}
-                        </button>
-
-                        <button
-                          type="button"
-                          className="reject-button"
-                          disabled={
-                            isResponding
-                          }
-                          onClick={() =>
-                            handleDonationResponse(
-                              notification,
-                              "reject"
-                            )
-                          }
-                        >
-                          رفض
-                        </button>
-
-                      </div>
+                    notification.requestId && (
+                      <button
+                        type="button"
+                        className={`details-arrow ${
+                          isExpanded
+                            ? "details-arrow-open"
+                            : ""
+                        }`}
+                        onClick={() =>
+                          handleToggleDetails(
+                            notification
+                          )
+                        }
+                        aria-label={
+                          isExpanded
+                            ? "إخفاء التفاصيل"
+                            : "عرض التفاصيل"
+                        }
+                      >
+                        <ArrowIcon />
+                      </button>
                     )}
 
-                  {/* Request Already Accepted */}
+                  {/* Donation Request Details */}
                   {isDonationRequest &&
-                    notification.status ===
-                      "accepted" && (
-                      <div className="request-status accepted-status">
-                        ✓ تم قبول طلب التبرع
-                      </div>
-                    )}
+                    isExpanded && (
+                      <div className="donation-details">
 
-                  {/* Request Already Rejected */}
-                  {isDonationRequest &&
-                    notification.status ===
-                      "rejected" && (
-                      <div className="request-status rejected-status">
-                        تم رفض طلب التبرع
+                        <div className="details-title">
+                          تفاصيل طلب التبرع
+                        </div>
+
+                        {isLoadingDetails && (
+                          <div className="details-loading">
+                            جاري تحميل تفاصيل الطلب...
+                          </div>
+                        )}
+
+                        {!isLoadingDetails && (
+                          <>
+                            <div className="detail-row">
+                              <div className="detail-row-icon">
+                                <UserIcon />
+                              </div>
+
+                              <div className="detail-row-content">
+                                <span>
+                                  طالب التبرع
+                                </span>
+
+                                <strong>
+                                  {requesterName}
+                                </strong>
+                              </div>
+                            </div>
+
+                            <div className="detail-row">
+                              <div className="detail-row-icon">
+                                <BloodIcon />
+                              </div>
+
+                              <div className="detail-row-content">
+                                <span>
+                                  فصيلة الدم المطلوبة
+                                </span>
+
+                                <strong>
+                                  {bloodType}
+                                </strong>
+                              </div>
+                            </div>
+
+                            <div className="detail-row">
+                              <div className="detail-row-icon">
+                                <HospitalIcon />
+                              </div>
+
+                              <div className="detail-row-content">
+                                <span>
+                                  مكان التبرع
+                                </span>
+
+                                <strong>
+                                  {hospitalName}
+                                </strong>
+
+                                {hospitalAddress && (
+                                  <small>
+                                    {hospitalAddress}
+                                  </small>
+                                )}
+                              </div>
+                            </div>
+
+                            {directionsUrl && (
+                              <a
+                                href={
+                                  directionsUrl
+                                }
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="directions-button"
+                              >
+                                <LocationIcon />
+
+                                فتح الاتجاهات
+                              </a>
+                            )}
+
+                            {/* Donation Request Actions */}
+                            {isPending && (
+                              <div className="donation-actions">
+
+                                <button
+                                  type="button"
+                                  className="accept-button"
+                                  disabled={
+                                    isResponding
+                                  }
+                                  onClick={() =>
+                                    handleDonationResponse(
+                                      notification,
+                                      "accept"
+                                    )
+                                  }
+                                >
+                                  {isResponding
+                                    ? "جاري..."
+                                    : "قبول"}
+                                </button>
+
+                                <button
+                                  type="button"
+                                  className="reject-button"
+                                  disabled={
+                                    isResponding
+                                  }
+                                  onClick={() =>
+                                    handleDonationResponse(
+                                      notification,
+                                      "reject"
+                                    )
+                                  }
+                                >
+                                  رفض
+                                </button>
+
+                              </div>
+                            )}
+
+                            {/* Request Already Accepted */}
+                            {notification.status ===
+                              "accepted" && (
+                              <div className="request-status accepted-status">
+                                ✓ تم قبول طلب التبرع
+                              </div>
+                            )}
+
+                            {/* Request Already Rejected */}
+                            {notification.status ===
+                              "rejected" && (
+                              <div className="request-status rejected-status">
+                                تم رفض طلب التبرع
+                              </div>
+                            )}
+
+                            {actionError &&
+                              isPending && (
+                                <div className="action-error">
+                                  {actionError}
+                                </div>
+                              )}
+                          </>
+                        )}
                       </div>
                     )}
 
@@ -421,14 +895,6 @@ export default function Notifications() {
                       >
                         عرض المتبرع
                       </button>
-                    )}
-
-                  {actionError &&
-                    isDonationRequest &&
-                    isPending && (
-                      <div className="action-error">
-                        {actionError}
-                      </div>
                     )}
 
                 </div>
@@ -715,6 +1181,8 @@ export default function Notifications() {
           flex: 1;
 
           min-width: 0;
+
+          position: relative;
         }
 
         .notification-content h3 {
@@ -725,6 +1193,8 @@ export default function Notifications() {
           line-height: 1.6;
 
           font-weight: 800;
+
+          padding-left: 34px;
         }
 
         .notification-card.urgent
@@ -750,12 +1220,226 @@ export default function Notifications() {
           font-size: 11px;
 
           line-height: 1.7;
+
+          padding-left: 34px;
         }
 
         .notification-content span {
           color: #9aafae;
 
           font-size: 10px;
+        }
+
+        /* Details Arrow */
+
+        .details-arrow {
+          position: absolute;
+
+          left: 0;
+
+          top: 0;
+
+          width: 31px;
+          height: 31px;
+
+          display: flex;
+
+          align-items: center;
+          justify-content: center;
+
+          padding: 0;
+
+          border: 0;
+
+          border-radius: 10px;
+
+          color: #159b8a;
+
+          background:
+            rgba(255,255,255,.72);
+
+          box-shadow:
+            0 5px 12px
+              rgba(21,155,138,.08);
+
+          cursor: pointer;
+
+          transition:
+            transform .2s ease,
+            background .2s ease;
+        }
+
+        .details-arrow svg {
+          width: 17px;
+          height: 17px;
+
+          transition:
+            transform .2s ease;
+        }
+
+        .details-arrow:active {
+          transform: scale(.94);
+        }
+
+        .details-arrow-open svg {
+          transform:
+            rotate(90deg);
+        }
+
+        /* Donation Details */
+
+        .donation-details {
+          margin-top: 13px;
+
+          padding: 13px;
+
+          border-radius: 17px;
+
+          background:
+            rgba(255,255,255,.65);
+
+          border: 1px solid
+            rgba(255,255,255,.88);
+
+          box-shadow:
+            inset 0 1px 0
+              rgba(255,255,255,.85);
+        }
+
+        .details-title {
+          margin-bottom: 11px;
+
+          color: #28786e;
+
+          font-size: 12px;
+
+          font-weight: 800;
+        }
+
+        .details-loading {
+          padding: 12px 5px;
+
+          color: #7f9b9a;
+
+          font-size: 11px;
+
+          text-align: center;
+        }
+
+        .detail-row {
+          display: flex;
+
+          align-items: center;
+
+          gap: 9px;
+
+          margin-bottom: 9px;
+
+          padding: 9px;
+
+          border-radius: 13px;
+
+          background:
+            rgba(255,255,255,.62);
+        }
+
+        .detail-row:last-of-type {
+          margin-bottom: 10px;
+        }
+
+        .detail-row-icon {
+          width: 34px;
+          height: 34px;
+
+          flex-shrink: 0;
+
+          display: flex;
+
+          align-items: center;
+          justify-content: center;
+
+          border-radius: 10px;
+
+          color: #159b8a;
+
+          background:
+            #e5f8f4;
+        }
+
+        .detail-row-icon svg {
+          width: 18px;
+          height: 18px;
+        }
+
+        .detail-row-content {
+          min-width: 0;
+
+          display: flex;
+
+          flex-direction: column;
+
+          gap: 2px;
+        }
+
+        .detail-row-content span {
+          color: #8aa3a2;
+
+          font-size: 9px;
+        }
+
+        .detail-row-content strong {
+          color: #286d6d;
+
+          font-size: 11px;
+
+          font-weight: 800;
+
+          line-height: 1.5;
+        }
+
+        .detail-row-content small {
+          color: #7b9796;
+
+          font-size: 9px;
+
+          line-height: 1.6;
+        }
+
+        .directions-button {
+          width: 100%;
+
+          min-height: 38px;
+
+          display: flex;
+
+          align-items: center;
+          justify-content: center;
+
+          gap: 7px;
+
+          margin-top: 8px;
+
+          border-radius: 13px;
+
+          color: #159b8a;
+
+          background:
+            rgba(229,248,244,.9);
+
+          font-size: 11px;
+
+          font-weight: 800;
+
+          text-decoration: none;
+
+          box-shadow:
+            0 5px 12px
+              rgba(21,155,138,.06);
+        }
+
+        .directions-button svg {
+          width: 17px;
+          height: 17px;
         }
 
         /* Donation Actions */
