@@ -18,6 +18,7 @@ import MedicineDetail from "./pages/MedicineDetail.jsx";
 import PharmacyPartner from "./pages/PharmacyPartner.jsx";
 import DonorDetail from "./pages/DonorDetail.jsx";
 import RequestTracking from "./pages/RequestTracking.jsx";
+import DonationRequestDetails from "./pages/DonationRequestDetails.jsx";
 
 import Requests from "./pages/Requests.jsx";
 import Notifications from "./pages/Notifications.jsx";
@@ -94,7 +95,8 @@ export default function App() {
     location.pathname.startsWith("/medicines/") ||
     location.pathname.startsWith("/pharmacy/") ||
     location.pathname.startsWith("/donor/") ||
-    location.pathname.startsWith("/track/");
+    location.pathname.startsWith("/track/") ||
+    location.pathname.startsWith("/donation-request/");
 
   return (
     <div
@@ -180,6 +182,13 @@ export default function App() {
         <Route
           path="/track/:id"
           element={<RequestTracking />}
+        />
+
+        {/* ================= DONATION REQUEST DETAILS ================= */}
+
+        <Route
+          path="/donation-request/:id"
+          element={<DonationRequestDetails />}
         />
 
         <Route
