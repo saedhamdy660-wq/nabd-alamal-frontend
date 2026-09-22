@@ -1,166 +1,55 @@
 import React, { useEffect, useState } from "react";
-import { useParams, useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { api } from "../api.js";
 
-function getLastDonationText(date) {
-  if (!date) return "آخر تبرع غير مسجل";
-
-  const donationDate = new Date(date);
-  const today = new Date();
-
-  const diffMs = today - donationDate;
-
-  const diffDays = Math.max(
-    0,
-    Math.floor(diffMs / (1000 * 60 * 60 * 24))
-  );
-
-  if (diffDays === 0) {
-    return "اليوم";
-  }
-
-  if (diffDays === 1) {
-    return "منذ يوم واحد";
-  }
-
-  if (diffDays < 30) {
-    return `منذ ${diffDays} يوم`;
-  }
-
-  const months = Math.floor(diffDays / 30);
-
-  if (months === 1) {
-    return "منذ شهر واحد";
-  }
-
-  if (months < 12) {
-    return `منذ ${months} أشهر`;
-  }
-
-  const years = Math.floor(months / 12);
-
-  if (years === 1) {
-    return "منذ سنة واحدة";
-  }
-
-  return `منذ ${years} سنوات`;
-}
-
-function getDonorInitial(name) {
+function getRequesterInitial(name) {
   if (!name) return "م";
   return name.trim().charAt(0);
 }
 
-async function getCityFromCoordinates(lat, lng) {
-  const latitude = Number(lat);
-  const longitude = Number(lng);
-
-  if (
-    !Number.isFinite(latitude) ||
-    !Number.isFinite(longitude)
-  ) {
-    return "الموقع غير متاح";
-  }
-
-  try {
-    const response = await fetch(
-      `https://nominatim.openstreetmap.org/reverse?format=jsonv2&lat=${encodeURIComponent(
-        latitude
-      )}&lon=${encodeURIComponent(
-        longitude
-      )}&zoom=18&addressdetails=1&accept-language=ar`
-    );
-
-    if (!response.ok) {
-      throw new Error(
-        "Reverse geocoding failed"
-      );
-    }
-
-    const data = await response.json();
-
-    const address = data?.address || {};
-
-    const place =
-      address.village ||
-      address.town ||
-      address.municipality ||
-      address.city ||
-      address.city_district ||
-      address.county ||
-      address.state_district ||
-      address.state;
-
-    if (place) {
-      return place;
-    }
-
-    if (data?.display_name) {
-      const parts = data.display_name
-        .split(",")
-        .map((item) => item.trim())
-        .filter(Boolean);
-
-      if (parts.length > 0) {
-        return parts[0];
-      }
-    }
-
-    return "الموقع غير متاح";
-  } catch (error) {
-    console.error(
-      "خطأ أثناء تحديد مكان المتبرع:",
-      error
-    );
-
-    try {
-      const fallbackResponse = await fetch(
-        `https://api.bigdatacloud.net/data/reverse-geocode-client?latitude=${encodeURIComponent(
-          latitude
-        )}&longitude=${encodeURIComponent(
-          longitude
-        )}&localityLanguage=ar`
-      );
-
-      if (!fallbackResponse.ok) {
-        throw new Error(
-          "Fallback reverse geocoding failed"
-        );
-      }
-
-      const fallbackData =
-        await fallbackResponse.json();
-
-      return (
-        fallbackData?.locality ||
-        fallbackData?.city ||
-        fallbackData?.principalSubdivision ||
-        "الموقع غير متاح"
-      );
-    } catch (fallbackError) {
-      console.error(
-        "فشل تحديد المكان بالطريقة الاحتياطية:",
-        fallbackError
-      );
-
-      return "الموقع غير متاح";
-    }
-  }
-}
-
-function LocationIcon() {
+function ArrowBackIcon() {
   return (
     <svg viewBox="0 0 24 24">
       <path
-        d="M12 21s7-6.1 7-12a7 7 0 1 0-14 0c0 5.9 7 12 7 12Z"
+        d="M15 5l-7 7 7 7"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="2"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+    </svg>
+  );
+}
+
+function UserIcon() {
+  return (
+    <svg viewBox="0 0 24 24">
+      <circle
+        cx="12"
+        cy="8"
+        r="3.2"
         fill="none"
         stroke="currentColor"
         strokeWidth="1.8"
       />
-      <circle
-        cx="12"
-        cy="9"
-        r="2.2"
+
+      <path
+        d="M5.5 19c.8-3.2 3-4.8 6.5-4.8s5.7 1.6 6.5 4.8"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="1.8"
+        strokeLinecap="round"
+      />
+    </svg>
+  );
+}
+
+function BloodIcon() {
+  return (
+    <svg viewBox="0 0 24 24">
+      <path
+        d="M12 3s6 6.2 6 11a6 6 0 0 1-12 0c0-4.8 6-11 6-11Z"
         fill="none"
         stroke="currentColor"
         strokeWidth="1.8"
@@ -182,12 +71,35 @@ function HospitalIcon() {
         stroke="currentColor"
         strokeWidth="1.8"
       />
+
       <path
         d="M12 8v6M9 11h6"
         fill="none"
         stroke="currentColor"
         strokeWidth="1.8"
         strokeLinecap="round"
+      />
+    </svg>
+  );
+}
+
+function LocationIcon() {
+  return (
+    <svg viewBox="0 0 24 24">
+      <path
+        d="M12 21s7-6.1 7-12a7 7 0 1 0-14 0c0 5.9 7 12 7 12Z"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="1.8"
+      />
+
+      <circle
+        cx="12"
+        cy="9"
+        r="2.2"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="1.8"
       />
     </svg>
   );
@@ -206,6 +118,7 @@ function CalendarIcon() {
         stroke="currentColor"
         strokeWidth="1.8"
       />
+
       <path
         d="M8 3v4M16 3v4M4 9h16"
         fill="none"
@@ -242,6 +155,7 @@ function ShareIcon() {
         stroke="currentColor"
         strokeWidth="1.8"
       />
+
       <circle
         cx="6"
         cy="12"
@@ -250,6 +164,7 @@ function ShareIcon() {
         stroke="currentColor"
         strokeWidth="1.8"
       />
+
       <circle
         cx="18"
         cy="19"
@@ -258,6 +173,7 @@ function ShareIcon() {
         stroke="currentColor"
         strokeWidth="1.8"
       />
+
       <path
         d="M8 11l8-5M8 13l8 5"
         fill="none"
@@ -278,6 +194,7 @@ function ReportIcon() {
         strokeWidth="1.8"
         strokeLinejoin="round"
       />
+
       <path
         d="M9 8h6M9 12h6M9 16h4"
         fill="none"
@@ -289,76 +206,55 @@ function ReportIcon() {
   );
 }
 
-export default function DonorDetail() {
+function CheckIcon() {
+  return (
+    <svg viewBox="0 0 24 24">
+      <path
+        d="M5 12.5l4.2 4.2L19 7"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="2.2"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+    </svg>
+  );
+}
+
+function CloseIcon() {
+  return (
+    <svg viewBox="0 0 24 24">
+      <path
+        d="M7 7l10 10M17 7L7 17"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="2"
+        strokeLinecap="round"
+      />
+    </svg>
+  );
+}
+
+export default function DonationRequestDetails() {
   const { id } = useParams();
   const navigate = useNavigate();
 
-  const [donor, setDonor] = useState(null);
+  const [request, setRequest] = useState(null);
 
-  const [city, setCity] = useState(
-    "جارِ تحديد الموقع..."
-  );
+  const [loading, setLoading] =
+    useState(true);
 
-  const [notified, setNotified] = useState(false);
-
-  const [requestLoading, setRequestLoading] =
+  const [responding, setResponding] =
     useState(false);
 
-  const [requestError, setRequestError] =
+  const [error, setError] =
     useState("");
 
   const [currentUser, setCurrentUser] =
     useState(null);
 
-  const [hospitals, setHospitals] =
-    useState([]);
-
-  const [hospitalsLoading, setHospitalsLoading] =
-    useState(false);
-
-  useEffect(() => {
-    let cancelled = false;
-
-    async function loadDonor() {
-      try {
-        const donorData =
-          await api.getDonor(id);
-
-        if (cancelled) return;
-
-        setDonor(donorData);
-
-        const donorCity =
-          await getCityFromCoordinates(
-            donorData?.lat,
-            donorData?.lng
-          );
-
-        if (!cancelled) {
-          setCity(donorCity);
-        }
-      } catch (error) {
-        console.error(
-          "خطأ أثناء تحميل بيانات المتبرع:",
-          error
-        );
-
-        if (!cancelled) {
-          setDonor(null);
-          setCity("الموقع غير متاح");
-        }
-      }
-    }
-
-    loadDonor();
-
-    return () => {
-      cancelled = true;
-    };
-  }, [id]);
-
   /*
-    قراءة المستخدم الحالي من localStorage
+    قراءة المستخدم الحالي
   */
   useEffect(() => {
     const savedUser =
@@ -378,390 +274,599 @@ export default function DonorDetail() {
   }, []);
 
   /*
-    تحميل المستشفيات المتاحة
-    عشان صاحب الطلب هو اللي يختار
-    مكان التبرع.
+    تحميل طلب التبرع
   */
-  const loadHospitals = async () => {
-    try {
-      setHospitalsLoading(true);
-      setRequestError("");
+  useEffect(() => {
+    let mounted = true;
 
-      const data =
-        await api.getHospitals();
-
-      const hospitalsList =
-        Array.isArray(data)
-          ? data
-          : Array.isArray(data?.hospitals)
-          ? data.hospitals
-          : [];
-
-      if (hospitalsList.length === 0) {
-        throw new Error(
-          "لا توجد مستشفيات متاحة حاليًا"
+    const loadRequest = async () => {
+      if (!id) {
+        setError(
+          "رقم طلب التبرع غير موجود"
         );
+
+        setLoading(false);
+
+        return;
       }
 
-      setHospitals(hospitalsList);
+      try {
+        setLoading(true);
+        setError("");
 
-      return hospitalsList;
-    } catch (error) {
-      console.error(
-        "خطأ أثناء تحميل المستشفيات:",
-        error
+        const data =
+          await api.getBloodRequest(id);
+
+        if (!mounted) {
+          return;
+        }
+
+        setRequest(data);
+      } catch (err) {
+        if (!mounted) {
+          return;
+        }
+
+        setError(
+          err?.message ||
+            "تعذر تحميل تفاصيل طلب التبرع"
+        );
+      } finally {
+        if (mounted) {
+          setLoading(false);
+        }
+      }
+    };
+
+    loadRequest();
+
+    return () => {
+      mounted = false;
+    };
+  }, [id]);
+
+  const getRequesterName = () => {
+    return (
+      request?.requesterName ||
+      request?.requester?.name ||
+      request?.userName ||
+      request?.name ||
+      "طالب التبرع"
+    );
+  };
+
+  const getBloodType = () => {
+    return (
+      request?.bloodType ||
+      request?.blood_group ||
+      request?.bloodGroup ||
+      "غير محددة"
+    );
+  };
+
+  const getHospitalName = () => {
+    return (
+      request?.hospital?.name ||
+      request?.hospital ||
+      request?.hospitalName ||
+      request?.locationName ||
+      "المستشفى المحددة"
+    );
+  };
+
+  const getHospitalAddress = () => {
+    return (
+      request?.address ||
+      request?.hospitalAddress ||
+      request?.hospital?.address ||
+      ""
+    );
+  };
+
+  const getHospitalCoordinates = () => {
+    const lat =
+      request?.lat ??
+      request?.hospital?.lat;
+
+    const lng =
+      request?.lng ??
+      request?.hospital?.lng;
+
+    return {
+      lat,
+      lng,
+    };
+  };
+
+  const getDirectionsUrl = () => {
+    const {
+      lat,
+      lng,
+    } = getHospitalCoordinates();
+
+    if (
+      lat !== undefined &&
+      lat !== null &&
+      lat !== "" &&
+      lng !== undefined &&
+      lng !== null &&
+      lng !== ""
+    ) {
+      return `https://www.google.com/maps/dir/?api=1&destination=${encodeURIComponent(
+        `${lat},${lng}`
+      )}`;
+    }
+
+    const address =
+      getHospitalAddress();
+
+    if (address) {
+      return `https://www.google.com/maps/dir/?api=1&destination=${encodeURIComponent(
+        address
+      )}`;
+    }
+
+    return "";
+  };
+
+  const getStatus = () => {
+    return (
+      request?.status ||
+      request?.donationStatus ||
+      "pending"
+    );
+  };
+
+  /*
+    قبول / رفض الطلب
+  */
+  const handleResponse = async (
+    action
+  ) => {
+    if (
+      !currentUser?.id ||
+      !request?.id
+    ) {
+      setError(
+        "لم يتم العثور على بيانات المتبرع"
       );
 
-      setRequestError(
-        error?.message ||
-          "تعذر تحميل المستشفيات"
-      );
+      return;
+    }
 
-      return [];
+    try {
+      setResponding(true);
+      setError("");
+
+      const updated =
+        await api.respondToDonationRequest(
+          request.id,
+          currentUser.id,
+          action
+        );
+
+      if (updated) {
+        setRequest(updated);
+      } else {
+        const refreshed =
+          await api.getBloodRequest(
+            request.id
+          );
+
+        setRequest(refreshed);
+      }
+    } catch (err) {
+      setError(
+        err?.message ||
+          "حدث خطأ أثناء الرد على طلب التبرع"
+      );
     } finally {
-      setHospitalsLoading(false);
+      setResponding(false);
     }
   };
 
-  if (!donor) {
+  /*
+    حالات الطلب
+  */
+  const status = getStatus();
+
+  const isPending =
+    status === "pending" ||
+    status === "قيد الانتظار" ||
+    status === "قيد المراجعة";
+
+  const isAccepted =
+    status === "accepted" ||
+    status === "accepted_donation" ||
+    status === "مقبول";
+
+  const isRejected =
+    status === "rejected" ||
+    status === "مرفوض";
+
+  const requesterName =
+    getRequesterName();
+
+  const bloodType =
+    getBloodType();
+
+  const hospitalName =
+    getHospitalName();
+
+  const hospitalAddress =
+    getHospitalAddress();
+
+  const directionsUrl =
+    getDirectionsUrl();
+
+  /*
+    Loading
+  */
+  if (loading) {
     return (
-      <div className="donor-page">
+      <div className="donation-request-page">
         <div className="loading">
-          جارِ التحميل...
+          جارِ تحميل تفاصيل الطلب...
         </div>
       </div>
     );
   }
 
   /*
-    هل المتبرع الموجود في الصفحة
-    هو نفس المستخدم الذي سجل الدخول؟
+    Error
   */
-  const isOwnProfile =
-    currentUser?.id &&
-    donor?.userId &&
-    currentUser.id === donor.userId;
+  if (!request) {
+    return (
+      <div className="donation-request-page">
 
-  /*
-    لو الحساب مستخدم عادي:
-    يظهر "طلب التبرع"
+        <header className="donor-header">
 
-    لو الحساب متبرع:
-    يظهر "التبرع الآن"
+          <button
+            className="back-button"
+            onClick={() => navigate(-1)}
+            aria-label="رجوع"
+          >
+            <ArrowBackIcon />
+          </button>
 
-    لو الصفحة هي صفحة المتبرع نفسه:
-    لا يظهر الزر.
-  */
-  const buttonText =
-    currentUser?.accountType === "donor"
-      ? "التبرع الآن"
-      : "طلب التبرع";
+          <h1>
+            طلب التبرع
+          </h1>
 
-  const handleDonate = async () => {
-    setRequestError("");
+          <button
+            className="more-button"
+            type="button"
+          >
+            ⋮
+          </button>
 
-    /*
-      لازم يكون فيه مستخدم مسجل دخول
-    */
-    if (!currentUser?.id) {
-      setRequestError(
-        "من فضلك سجل الدخول أولاً"
-      );
-      return;
-    }
+        </header>
 
-    /*
-      منع إرسال طلب للنفس
-    */
-    if (isOwnProfile) {
-      return;
-    }
+        <div className="error-card">
 
-    /*
-      لو الحساب متبرع:
-      نحافظ على السلوك القديم للزر.
-    */
-    if (
-      currentUser.accountType === "donor"
-    ) {
-      setNotified(true);
-      return;
-    }
+          <div className="error-icon">
+            !
+          </div>
 
-    /*
-      تحميل المستشفيات قبل إرسال الطلب
-    */
-    const hospitalsList =
-      await loadHospitals();
+          <strong>
+            تعذر تحميل الطلب
+          </strong>
 
-    if (hospitalsList.length === 0) {
-      return;
-    }
+          <p>
+            {error ||
+              "حدث خطأ أثناء تحميل تفاصيل الطلب"}
+          </p>
 
-    /*
-      تجهيز قائمة الاختيار
-      بدون تغيير تصميم الصفحة.
-    */
-    const hospitalsText =
-      hospitalsList
-        .map(
-          (hospital, index) =>
-            `${index + 1}. ${
-              hospital.name ||
-              "مستشفى بدون اسم"
-            }`
-        )
-        .join("\n");
+          <button
+            className="donate-button error-back-button"
+            onClick={() => navigate(-1)}
+          >
+            رجوع
+          </button>
 
-    const selectedHospital =
-      window.prompt(
-        `اختار المستشفى التي سيتم فيها التبرع:\n\n${hospitalsText}\n\nاكتب رقم المستشفى:`
-      );
+        </div>
 
-    /*
-      المستخدم ألغى الاختيار
-    */
-    if (
-      selectedHospital === null
-    ) {
-      return;
-    }
-
-    const selectedNumber =
-      Number(
-        selectedHospital.trim()
-      );
-
-    if (
-      !Number.isInteger(
-        selectedNumber
-      ) ||
-      selectedNumber < 1 ||
-      selectedNumber >
-        hospitalsList.length
-    ) {
-      setRequestError(
-        "من فضلك اختر رقم مستشفى صحيح"
-      );
-      return;
-    }
-
-    const selectedHospitalData =
-      hospitalsList[
-        selectedNumber - 1
-      ];
-
-    if (
-      !selectedHospitalData?.id
-    ) {
-      setRequestError(
-        "بيانات المستشفى غير صحيحة"
-      );
-      return;
-    }
-
-    /*
-      إرسال طلب التبرع مع المستشفى
-      التي اختارها صاحب الطلب.
-    */
-    try {
-      setRequestLoading(true);
-      setRequestError("");
-
-      await api.createDonationRequest(
-        currentUser.id,
-        donor.id,
-        selectedHospitalData.id
-      );
-
-      setNotified(true);
-    } catch (error) {
-      console.error(
-        "خطأ أثناء إرسال طلب التبرع:",
-        error
-      );
-
-      setRequestError(
-        error?.message ||
-          "حدث خطأ أثناء إرسال طلب التبرع"
-      );
-    } finally {
-      setRequestLoading(false);
-    }
-  };
+      </div>
+    );
+  }
 
   return (
-    <div className="donor-page">
+    <div className="donation-request-page">
 
       {/* Header */}
+
       <header className="donor-header">
+
         <button
           className="back-button"
           onClick={() => navigate(-1)}
           aria-label="رجوع"
         >
-          ←
+          <ArrowBackIcon />
         </button>
 
-        <h1>ملف المتبرع</h1>
+        <h1>
+          طلب التبرع
+        </h1>
 
-        <button className="more-button">
+        <button
+          className="more-button"
+          type="button"
+        >
           ⋮
         </button>
+
       </header>
 
-      {/* Donor Card */}
+      {/* Requester Card */}
+
       <section className="donor-card">
 
-        <div
-          className="donor-avatar"
-          style={{
-            backgroundImage: donor.avatar
-              ? `url(${donor.avatar})`
-              : "none",
-          }}
-        >
-          {!donor.avatar &&
-            getDonorInitial(donor.name)}
+        <div className="donor-avatar">
+
+          {requesterName
+            ? getRequesterInitial(
+                requesterName
+              )
+            : "م"}
+
         </div>
 
-        <h2>{donor.name}</h2>
+        <h2>
+          {requesterName}
+        </h2>
 
         <div className="donor-meta">
+
           <span className="blood-badge">
-            🩸 {donor.bloodType}
+            🩸 {bloodType}
           </span>
 
           <span className="registered">
-            متبرع مسجل
+            طالب تبرع بالدم
           </span>
+
         </div>
 
       </section>
 
-      {/* Information */}
+      {/* Request Information */}
+
       <section className="info-card">
 
+        {/* Blood Type */}
+
         <div className="info-row">
+
           <div className="info-value">
-            المدينة - {city}
+            فصيلة الدم المطلوبة -{" "}
+            {bloodType}
           </div>
 
-          <div className="info-icon">
-            <LocationIcon />
+          <div className="info-icon blood-info-icon">
+            <BloodIcon />
           </div>
+
         </div>
 
         <div className="info-divider" />
 
+        {/* Requester */}
+
         <div className="info-row">
+
           <div className="info-value">
-            {donor.distanceKm !== null &&
-            donor.distanceKm !== undefined
-              ? `${donor.distanceKm} كم`
-              : "المسافة غير متاحة"}
+            طالب التبرع -{" "}
+            {requesterName}
+          </div>
+
+          <div className="info-icon">
+            <UserIcon />
+          </div>
+
+        </div>
+
+        <div className="info-divider" />
+
+        {/* Hospital */}
+
+        <div className="info-row">
+
+          <div className="info-value hospital-value">
+
+            <span>
+              مكان التبرع -{" "}
+              {hospitalName}
+            </span>
+
+            {hospitalAddress && (
+              <small>
+                {hospitalAddress}
+              </small>
+            )}
+
           </div>
 
           <div className="info-icon">
             <HospitalIcon />
           </div>
-        </div>
 
-        <div className="info-divider" />
-
-        <div className="info-row">
-          <div className="info-value">
-            {getLastDonationText(
-              donor.lastDonation
-            )}
-          </div>
-
-          <div className="info-icon">
-            <CalendarIcon />
-          </div>
-        </div>
-
-        <div className="info-divider" />
-
-        <div className="info-row">
-          <div className="info-value">
-            {donor.chronicDisease
-              ? "يوجد مرض مزمن مسجل"
-              : "لا توجد أمراض مزمنة مسجلة"}
-          </div>
-
-          <div className="info-icon">
-            <HeartIcon />
-          </div>
         </div>
 
       </section>
 
-      {/* Donate / Request */}
-      {!isOwnProfile &&
-        (!notified ? (
-          <>
-            <button
-              className="donate-button"
-              onClick={handleDonate}
-              disabled={
-                requestLoading ||
-                hospitalsLoading
-              }
-            >
-              {requestLoading
-                ? "جاري إرسال الطلب..."
-                : hospitalsLoading
-                ? "جاري تحميل المستشفيات..."
-                : buttonText}
+      {/* Directions */}
 
-              <HeartIcon />
-            </button>
+      {directionsUrl && (
+        <a
+          className="donate-button directions-button"
+          href={directionsUrl}
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          <LocationIcon />
 
-            {requestError && (
-              <div
-                className="request-error"
+          فتح الاتجاهات للمستشفى
+        </a>
+      )}
+
+      {/* Pending Actions */}
+
+      {isPending && (
+        <>
+
+          <section className="decision-card">
+
+            <h3>
+              هل تريد التبرع؟
+            </h3>
+
+            <p>
+              راجع بيانات طالب التبرع
+              ومكان التبرع قبل اتخاذ القرار.
+            </p>
+
+            <div className="decision-buttons">
+
+              <button
+                className="accept-button"
+                type="button"
+                disabled={responding}
+                onClick={() =>
+                  handleResponse(
+                    "accept"
+                  )
+                }
               >
-                {requestError}
-              </div>
-            )}
-          </>
-        ) : (
-          <div className="success-card">
+                <CheckIcon />
+
+                {responding
+                  ? "جاري..."
+                  : "قبول الطلب"}
+              </button>
+
+              <button
+                className="reject-button"
+                type="button"
+                disabled={responding}
+                onClick={() =>
+                  handleResponse(
+                    "reject"
+                  )
+                }
+              >
+                <CloseIcon />
+
+                رفض الطلب
+              </button>
+
+            </div>
+
+          </section>
+
+        </>
+      )}
+
+      {/* Accepted */}
+
+      {isAccepted && (
+        <>
+
+          <section className="success-card">
+
             <div className="success-icon">
-              ✓
+              <CheckIcon />
             </div>
 
             <strong>
-              {currentUser?.accountType ===
-              "donor"
-                ? "تم إرسال التنبيه للمتبرع بنجاح"
-                : "تم إرسال طلب التبرع بنجاح"}
+              تم قبول طلب التبرع
             </strong>
 
             <p>
-              سيتم إشعارك عند قبول الطلب من
-              المتبرع.
+              توجه إلى المستشفى المحددة
+              لإتمام عملية التبرع.
             </p>
+
+          </section>
+
+          <button
+            className="donate-button"
+            type="button"
+            onClick={() =>
+              navigate(
+                `/track/${request.id}`
+              )
+            }
+          >
+            متابعة التبرع
+          </button>
+
+        </>
+      )}
+
+      {/* Rejected */}
+
+      {isRejected && (
+        <section className="rejected-card">
+
+          <div className="rejected-icon">
+            <CloseIcon />
           </div>
-        ))}
+
+          <strong>
+            تم رفض طلب التبرع
+          </strong>
+
+          <p>
+            تم تسجيل رفض طلب التبرع.
+          </p>
+
+        </section>
+      )}
+
+      {/* Response Error */}
+
+      {error && (
+        <div className="request-error">
+          {error}
+        </div>
+      )}
 
       {/* Actions */}
+
       <section className="actions-card">
 
-        <button className="action-button">
+        <button
+          className="action-button"
+          type="button"
+        >
           <ShareIcon />
-          <span>مشاركة</span>
+
+          <span>
+            مشاركة
+          </span>
         </button>
 
-        <button className="action-button">
+        <button
+          className="action-button"
+          type="button"
+        >
           <HeartIcon />
-          <span>مفضلة</span>
+
+          <span>
+            مفضلة
+          </span>
         </button>
 
-        <button className="action-button">
+        <button
+          className="action-button"
+          type="button"
+        >
           <ReportIcon />
-          <span>إبلاغ</span>
+
+          <span>
+            إبلاغ
+          </span>
         </button>
 
       </section>
@@ -772,10 +877,13 @@ export default function DonorDetail() {
           box-sizing: border-box;
         }
 
-        .donor-page {
+        .donation-request-page {
           min-height: 100vh;
+
           padding: 22px 18px 35px;
+
           direction: rtl;
+
           color: #24575a;
 
           background:
@@ -796,23 +904,34 @@ export default function DonorDetail() {
               #e8f7f4 100%
             );
 
-          font-family: Arial, Tahoma, sans-serif;
+          font-family:
+            Arial,
+            Tahoma,
+            sans-serif;
         }
 
         .donor-header {
           max-width: 520px;
+
           margin: 0 auto 20px;
 
           display: grid;
-          grid-template-columns: 44px 1fr 44px;
+
+          grid-template-columns:
+            44px 1fr 44px;
+
           align-items: center;
         }
 
         .donor-header h1 {
           margin: 0;
+
           text-align: center;
+
           color: #218d83;
+
           font-size: 23px;
+
           font-weight: 800;
         }
 
@@ -820,25 +939,34 @@ export default function DonorDetail() {
         .more-button {
           width: 42px;
           height: 42px;
-          border: 1px solid rgba(255,255,255,.9);
+
+          border: 1px solid
+            rgba(255,255,255,.9);
+
           border-radius: 14px;
 
           display: flex;
+
           align-items: center;
           justify-content: center;
 
           color: #218d83;
-          background: rgba(255,255,255,.72);
+
+          background:
+            rgba(255,255,255,.72);
 
           box-shadow:
-            0 7px 18px rgba(35,139,128,.08),
-            inset 0 1px 0 rgba(255,255,255,.9);
+            0 7px 18px
+              rgba(35,139,128,.08),
+            inset 0 1px 0
+              rgba(255,255,255,.9);
 
           cursor: pointer;
         }
 
-        .back-button {
-          font-size: 25px;
+        .back-button svg {
+          width: 22px;
+          height: 22px;
         }
 
         .more-button {
@@ -847,7 +975,9 @@ export default function DonorDetail() {
 
         .donor-card {
           max-width: 520px;
+
           margin: 0 auto 16px;
+
           padding: 28px 18px 25px;
 
           text-align: center;
@@ -861,14 +991,19 @@ export default function DonorDetail() {
               rgba(226,249,245,.78)
             );
 
-          border: 1px solid rgba(255,255,255,.95);
+          border: 1px solid
+            rgba(255,255,255,.95);
 
           box-shadow:
-            0 12px 32px rgba(42,128,128,.09),
-            inset 0 1px 0 rgba(255,255,255,.95);
+            0 12px 32px
+              rgba(42,128,128,.09),
+            inset 0 1px 0
+              rgba(255,255,255,.95);
 
           backdrop-filter: blur(15px);
-          -webkit-backdrop-filter: blur(15px);
+
+          -webkit-backdrop-filter:
+            blur(15px);
         }
 
         .donor-avatar {
@@ -880,11 +1015,14 @@ export default function DonorDetail() {
           border-radius: 50%;
 
           display: flex;
+
           align-items: center;
           justify-content: center;
 
           color: #218d83;
+
           font-size: 42px;
+
           font-weight: 800;
 
           background:
@@ -894,50 +1032,63 @@ export default function DonorDetail() {
               #bcece3
             );
 
-          border: 6px solid rgba(255,255,255,.9);
+          border: 6px solid
+            rgba(255,255,255,.9);
 
           box-shadow:
-            0 8px 25px rgba(35,139,128,.13),
-            inset 0 1px 8px rgba(255,255,255,.8);
-
-          background-size: cover;
-          background-position: center;
+            0 8px 25px
+              rgba(35,139,128,.13),
+            inset 0 1px 8px
+              rgba(255,255,255,.8);
         }
 
         .donor-card h2 {
           margin: 0 0 13px;
+
           color: #286d6d;
+
           font-size: 23px;
         }
 
         .donor-meta {
           display: flex;
+
           align-items: center;
           justify-content: center;
+
           gap: 10px;
+
           flex-wrap: wrap;
         }
 
         .blood-badge {
           padding: 8px 16px;
+
           border-radius: 18px;
 
           color: #c05267;
-          background: #ffe7ed;
+
+          background:
+            #ffe7ed;
 
           font-size: 16px;
+
           font-weight: 800;
         }
 
         .registered {
           color: #6e9291;
+
           font-size: 13px;
+
           font-weight: 700;
         }
 
         .info-card {
           max-width: 520px;
+
           margin: 0 auto 16px;
+
           padding: 5px 16px;
 
           border-radius: 25px;
@@ -949,29 +1100,61 @@ export default function DonorDetail() {
               rgba(232,249,246,.78)
             );
 
-          border: 1px solid rgba(255,255,255,.92);
+          border: 1px solid
+            rgba(255,255,255,.92);
 
           box-shadow:
-            0 12px 30px rgba(42,128,128,.08),
-            inset 0 1px 0 rgba(255,255,255,.9);
+            0 12px 30px
+              rgba(42,128,128,.08),
+            inset 0 1px 0
+              rgba(255,255,255,.9);
 
           backdrop-filter: blur(14px);
-          -webkit-backdrop-filter: blur(14px);
+
+          -webkit-backdrop-filter:
+            blur(14px);
         }
 
         .info-row {
           min-height: 67px;
 
           display: flex;
+
           align-items: center;
+
           justify-content: space-between;
+
           gap: 15px;
         }
 
         .info-value {
           color: #4f7e7f;
+
           font-size: 14px;
+
           font-weight: 700;
+
+          line-height: 1.7;
+        }
+
+        .hospital-value {
+          display: flex;
+
+          flex-direction: column;
+
+          align-items: flex-start;
+
+          gap: 2px;
+        }
+
+        .hospital-value small {
+          color: #88a3a2;
+
+          font-size: 10px;
+
+          font-weight: 600;
+
+          line-height: 1.6;
         }
 
         .info-icon {
@@ -981,13 +1164,16 @@ export default function DonorDetail() {
           flex-shrink: 0;
 
           display: flex;
+
           align-items: center;
           justify-content: center;
 
           border-radius: 50%;
 
           color: #159b8a;
-          background: #dff7f2;
+
+          background:
+            #dff7f2;
         }
 
         .info-icon svg {
@@ -997,22 +1183,28 @@ export default function DonorDetail() {
 
         .info-divider {
           height: 1px;
-          background: rgba(124,184,177,.18);
+
+          background:
+            rgba(124,184,177,.18);
         }
 
         .donate-button {
           width: 100%;
           max-width: 520px;
+
           min-height: 58px;
 
           margin: 0 auto 16px;
 
           display: flex;
+
           align-items: center;
           justify-content: center;
+
           gap: 10px;
 
           border: 0;
+
           border-radius: 30px;
 
           color: white;
@@ -1025,17 +1217,16 @@ export default function DonorDetail() {
             );
 
           font-size: 18px;
+
           font-weight: 800;
 
           cursor: pointer;
 
           box-shadow:
-            0 10px 22px rgba(21,155,138,.16);
-        }
+            0 10px 22px
+              rgba(21,155,138,.16);
 
-        .donate-button:disabled {
-          opacity: .65;
-          cursor: not-allowed;
+          text-decoration: none;
         }
 
         .donate-button svg {
@@ -1043,27 +1234,129 @@ export default function DonorDetail() {
           height: 23px;
         }
 
-        .request-error {
+        .directions-button {
+          margin-bottom: 16px;
+        }
+
+        .decision-card {
           max-width: 520px;
-          margin: -7px auto 16px;
 
-          padding: 10px 14px;
+          margin: 0 auto 16px;
 
-          text-align: center;
+          padding: 20px;
 
+          border-radius: 25px;
+
+          background:
+            linear-gradient(
+              145deg,
+              rgba(255,255,255,.9),
+              rgba(232,249,246,.8)
+            );
+
+          border: 1px solid
+            rgba(255,255,255,.95);
+
+          box-shadow:
+            0 12px 30px
+              rgba(42,128,128,.08);
+        }
+
+        .decision-card h3 {
+          margin: 0 0 7px;
+
+          color: #286d6d;
+
+          font-size: 17px;
+
+          font-weight: 800;
+        }
+
+        .decision-card p {
+          margin: 0 0 16px;
+
+          color: #88a3a2;
+
+          font-size: 11px;
+
+          line-height: 1.8;
+        }
+
+        .decision-buttons {
+          display: flex;
+
+          gap: 9px;
+        }
+
+        .decision-buttons button {
+          flex: 1;
+
+          min-height: 50px;
+
+          border: 0;
+
+          border-radius: 25px;
+
+          display: flex;
+
+          align-items: center;
+          justify-content: center;
+
+          gap: 7px;
+
+          font-size: 13px;
+
+          font-weight: 800;
+
+          cursor: pointer;
+
+          transition:
+            opacity .2s ease,
+            transform .2s ease;
+        }
+
+        .decision-buttons button:active {
+          transform: scale(.98);
+        }
+
+        .decision-buttons button:disabled {
+          opacity: .6;
+
+          cursor: not-allowed;
+        }
+
+        .decision-buttons svg {
+          width: 19px;
+          height: 19px;
+        }
+
+        .accept-button {
+          color: white;
+
+          background:
+            linear-gradient(
+              135deg,
+              #19ad98,
+              #159b8a
+            );
+
+          box-shadow:
+            0 8px 18px
+              rgba(21,155,138,.13);
+        }
+
+        .reject-button {
           color: #98505f;
 
-          background: #ffe7ed;
-
-          border-radius: 14px;
-
-          font-size: 12px;
-          font-weight: 700;
+          background:
+            #ffe7ed;
         }
 
         .success-card {
           max-width: 520px;
+
           margin: 0 auto 16px;
+
           padding: 22px;
 
           text-align: center;
@@ -1077,10 +1370,12 @@ export default function DonorDetail() {
               rgba(232,249,246,.8)
             );
 
-          border: 1px solid rgba(255,255,255,.95);
+          border: 1px solid
+            rgba(255,255,255,.95);
 
           box-shadow:
-            0 12px 30px rgba(42,128,128,.08);
+            0 12px 30px
+              rgba(42,128,128,.08);
         }
 
         .success-icon {
@@ -1090,16 +1385,21 @@ export default function DonorDetail() {
           margin: 0 auto 10px;
 
           display: flex;
+
           align-items: center;
           justify-content: center;
 
           border-radius: 50%;
 
           color: white;
-          background: #19ad98;
 
-          font-size: 24px;
-          font-weight: 900;
+          background:
+            #19ad98;
+        }
+
+        .success-icon svg {
+          width: 25px;
+          height: 25px;
         }
 
         .success-card strong {
@@ -1107,7 +1407,7 @@ export default function DonorDetail() {
 
           color: #286d6d;
 
-          font-size: 14px;
+          font-size: 15px;
         }
 
         .success-card p {
@@ -1116,16 +1416,109 @@ export default function DonorDetail() {
           color: #88a3a2;
 
           font-size: 11px;
+
+          line-height: 1.7;
+        }
+
+        .rejected-card {
+          max-width: 520px;
+
+          margin: 0 auto 16px;
+
+          padding: 22px;
+
+          text-align: center;
+
+          border-radius: 25px;
+
+          background:
+            linear-gradient(
+              145deg,
+              rgba(255,255,255,.9),
+              rgba(255,231,237,.75)
+            );
+
+          border: 1px solid
+            rgba(255,255,255,.95);
+
+          box-shadow:
+            0 12px 30px
+              rgba(128,42,60,.06);
+        }
+
+        .rejected-icon {
+          width: 50px;
+          height: 50px;
+
+          margin: 0 auto 10px;
+
+          display: flex;
+
+          align-items: center;
+          justify-content: center;
+
+          border-radius: 50%;
+
+          color: #98505f;
+
+          background:
+            #ffe7ed;
+        }
+
+        .rejected-icon svg {
+          width: 25px;
+          height: 25px;
+        }
+
+        .rejected-card strong {
+          display: block;
+
+          color: #98505f;
+
+          font-size: 15px;
+        }
+
+        .rejected-card p {
+          margin: 7px 0 0;
+
+          color: #9d8188;
+
+          font-size: 11px;
+        }
+
+        .request-error {
+          max-width: 520px;
+
+          margin: -5px auto 16px;
+
+          padding: 10px 14px;
+
+          text-align: center;
+
+          color: #98505f;
+
+          background:
+            #ffe7ed;
+
+          border-radius: 14px;
+
+          font-size: 12px;
+
+          font-weight: 700;
         }
 
         .actions-card {
           max-width: 520px;
+
           margin: 0 auto 20px;
 
           padding: 8px;
 
           display: grid;
-          grid-template-columns: repeat(3, 1fr);
+
+          grid-template-columns:
+            repeat(3, 1fr);
+
           gap: 7px;
 
           border-radius: 22px;
@@ -1133,28 +1526,37 @@ export default function DonorDetail() {
           background:
             rgba(255,255,255,.78);
 
-          border: 1px solid rgba(255,255,255,.92);
+          border: 1px solid
+            rgba(255,255,255,.92);
 
           box-shadow:
-            0 10px 26px rgba(42,128,128,.07);
+            0 10px 26px
+              rgba(42,128,128,.07);
         }
 
         .action-button {
           min-height: 62px;
 
           border: 0;
+
           border-radius: 17px;
 
           display: flex;
+
           flex-direction: column;
+
           align-items: center;
           justify-content: center;
+
           gap: 5px;
 
           color: #6e9291;
-          background: transparent;
+
+          background:
+            transparent;
 
           font-size: 10px;
+
           font-weight: 800;
 
           cursor: pointer;
@@ -1169,17 +1571,95 @@ export default function DonorDetail() {
           min-height: 100vh;
 
           display: flex;
+
           align-items: center;
           justify-content: center;
 
           color: #218d83;
 
           font-size: 16px;
+
           font-weight: 800;
         }
 
+        .error-card {
+          max-width: 520px;
+
+          margin: 40px auto 0;
+
+          padding: 25px 20px;
+
+          text-align: center;
+
+          border-radius: 25px;
+
+          background:
+            linear-gradient(
+              145deg,
+              rgba(255,255,255,.9),
+              rgba(255,231,237,.75)
+            );
+
+          border: 1px solid
+            rgba(255,255,255,.95);
+
+          box-shadow:
+            0 12px 30px
+              rgba(42,128,128,.08);
+        }
+
+        .error-icon {
+          width: 50px;
+          height: 50px;
+
+          margin: 0 auto 12px;
+
+          display: flex;
+
+          align-items: center;
+          justify-content: center;
+
+          border-radius: 50%;
+
+          color: #98505f;
+
+          background:
+            #ffe7ed;
+
+          font-size: 22px;
+
+          font-weight: 900;
+        }
+
+        .error-card strong {
+          display: block;
+
+          color: #98505f;
+
+          font-size: 15px;
+        }
+
+        .error-card p {
+          margin: 8px 0 0;
+
+          color: #9d8188;
+
+          font-size: 11px;
+
+          line-height: 1.7;
+        }
+
+        .error-back-button {
+          margin-top: 16px;
+
+          min-height: 48px;
+
+          font-size: 14px;
+        }
+
         @media (max-width: 380px) {
-          .donor-page {
+
+          .donation-request-page {
             padding-left: 13px;
             padding-right: 13px;
           }
@@ -1191,6 +1671,15 @@ export default function DonorDetail() {
           .info-value {
             font-size: 12px;
           }
+
+          .decision-buttons {
+            gap: 7px;
+          }
+
+          .decision-buttons button {
+            font-size: 11px;
+          }
+
         }
 
       `}</style>
