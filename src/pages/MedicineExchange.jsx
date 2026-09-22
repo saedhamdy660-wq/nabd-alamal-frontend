@@ -174,6 +174,124 @@ export default function MedicineExchange() {
   const [requestingMedicineId, setRequestingMedicineId] =
     useState(null);
 
+  /*
+  المستخدم الحقيقي القادم من الـ Backend.
+  */
+
+  const [currentUserId, setCurrentUserId] =
+    useState(null);
+
+  /*
+  تحميل بيانات المستخدم الحقيقية من الـ Backend.
+  */
+
+  useEffect(() => {
+    let mounted = true;
+
+    const loadCurrentUser = async () => {
+      try {
+        const storedUser =
+          localStorage.getItem("nabd_user");
+
+        if (!storedUser) {
+          return;
+        }
+
+        const localUser =
+          JSON.parse(storedUser);
+
+        /*
+        لو عندنا email نجيب المستخدم
+        من الـ Backend ونأخذ الـ ID الحقيقي.
+        */
+
+        if (localUser?.email) {
+          const user =
+            await api.getUser(
+              localUser.email
+            );
+
+          if (!mounted) return;
+
+          if (user?.id) {
+            setCurrentUserId(
+              user.id
+            );
+
+            /*
+            تحديث المستخدم المخزن
+            بالبيانات الصحيحة من السيرفر.
+            */
+
+            localStorage.setItem(
+              "nabd_user",
+              JSON.stringify({
+                ...localUser,
+                ...user,
+              })
+            );
+
+            return;
+          }
+        }
+
+        /*
+        fallback:
+        لو الـ Backend لم يرجع المستخدم،
+        نستخدم الـ ID الموجود محليًا.
+        */
+
+        if (localUser?.id) {
+          setCurrentUserId(
+            localUser.id
+          );
+        }
+      } catch (error) {
+        console.error(
+          "Failed to load current user:",
+          error
+        );
+
+        /*
+        fallback للـ ID المحلي.
+        */
+
+        try {
+          const storedUser =
+            localStorage.getItem(
+              "nabd_user"
+            );
+
+          if (!storedUser) return;
+
+          const localUser =
+            JSON.parse(storedUser);
+
+          if (
+            mounted &&
+            localUser?.id
+          ) {
+            setCurrentUserId(
+              localUser.id
+            );
+          }
+        } catch {
+          // Ignore invalid local user
+        }
+      }
+    };
+
+    loadCurrentUser();
+
+    return () => {
+      mounted = false;
+    };
+  }, []);
+
+  /*
+  تحميل الأدوية.
+  */
+
   useEffect(() => {
     let mounted = true;
 
@@ -218,19 +336,13 @@ export default function MedicineExchange() {
 
     const loadRequestedMedicines = async () => {
       try {
-        const storedUser =
-          localStorage.getItem("nabd_user");
-
-        if (!storedUser) return;
-
-        const currentUser =
-          JSON.parse(storedUser);
-
-        if (!currentUser?.id) return;
+        if (!currentUserId) {
+          return;
+        }
 
         const data =
           await api.getMyRequests(
-            currentUser.id
+            currentUserId
           );
 
         if (!mounted) return;
@@ -251,7 +363,9 @@ export default function MedicineExchange() {
             )
         );
 
-        setRequestedMedicineIds(ids);
+        setRequestedMedicineIds(
+          ids
+        );
       } catch (error) {
         console.error(
           "Failed to load medicine requests:",
@@ -265,7 +379,7 @@ export default function MedicineExchange() {
     return () => {
       mounted = false;
     };
-  }, []);
+  }, [currentUserId]);
 
   /*
   طلب أو إلغاء طلب الدواء.
@@ -288,20 +402,12 @@ export default function MedicineExchange() {
       String(medicine.id);
 
     try {
-      const storedUser =
-        localStorage.getItem("nabd_user");
+      /*
+      استخدام ID المستخدم الحقيقي
+      القادم من الـ Backend.
+      */
 
-      if (!storedUser) {
-        alert(
-          "يجب تسجيل الدخول أولاً"
-        );
-        return;
-      }
-
-      const currentUser =
-        JSON.parse(storedUser);
-
-      if (!currentUser?.id) {
+      if (!currentUserId) {
         alert(
           "يجب تسجيل الدخول أولاً"
         );
@@ -326,7 +432,7 @@ export default function MedicineExchange() {
       if (isRequested) {
         await api.cancelMedicineRequest(
           medicine.id,
-          currentUser.id
+          currentUserId
         );
 
         /*
@@ -358,7 +464,7 @@ export default function MedicineExchange() {
 
       await api.requestMedicine(
         medicine.id,
-        currentUser.id
+        currentUserId
       );
 
       /*
