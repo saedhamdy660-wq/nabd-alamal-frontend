@@ -173,6 +173,49 @@ function ProfileIcon() {
   );
 }
 
+function HospitalIcon() {
+  return (
+    <svg viewBox="0 0 24 24">
+      <path
+        d="M5 20V6.5A1.5 1.5 0 0 1 6.5 5h11A1.5 1.5 0 0 1 19 6.5V20"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="1.8"
+        strokeLinejoin="round"
+      />
+      <path
+        d="M9 9h6M12 6v6M8 20v-4h8v4"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="1.8"
+        strokeLinecap="round"
+      />
+    </svg>
+  );
+}
+
+function UserIcon() {
+  return (
+    <svg viewBox="0 0 24 24">
+      <circle
+        cx="12"
+        cy="8"
+        r="3.2"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="1.8"
+      />
+      <path
+        d="M5.5 20c.8-3.3 3-5 6.5-5s5.7 1.7 6.5 5"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="1.8"
+        strokeLinecap="round"
+      />
+    </svg>
+  );
+}
+
 export default function RequestTracking() {
   const { id } = useParams();
 
@@ -239,7 +282,6 @@ export default function RequestTracking() {
 
     loadRequest();
 
-    // تحديث تلقائي للطلب
     const interval =
       setInterval(
         loadRequest,
@@ -398,9 +440,7 @@ export default function RequestTracking() {
 
           time:
             last?.time ||
-            (statusDone
-              ? ""
-              : ""),
+            "",
 
           done:
             matches.length > 0
@@ -430,6 +470,52 @@ export default function RequestTracking() {
         request.donorUserId ===
           currentUser.id
     );
+
+  // =========================
+  // بيانات صاحب الطلب
+  // =========================
+
+  const requesterName =
+    request?.requesterName ||
+    request?.requester?.name ||
+    "مستخدم نبض الأمل";
+
+  const bloodType =
+    request?.bloodType ||
+    "غير محددة";
+
+  // =========================
+  // بيانات المستشفى المختارة
+  // =========================
+
+  const hospitalName =
+    request?.hospital ||
+    request?.locationName ||
+    "لم يتم تحديد المستشفى";
+
+  const hospitalAddress =
+    request?.address ||
+    request?.hospitalAddress ||
+    "";
+
+  const hospitalLat =
+    Number(request?.lat);
+
+  const hospitalLng =
+    Number(request?.lng);
+
+  const hasHospitalCoordinates =
+    Number.isFinite(
+      hospitalLat
+    ) &&
+    Number.isFinite(
+      hospitalLng
+    );
+
+  const directionsUrl =
+    hasHospitalCoordinates
+      ? `https://www.google.com/maps/dir/?api=1&destination=${hospitalLat},${hospitalLng}`
+      : "";
 
   // =========================
   // المرحلة التالية
@@ -543,6 +629,90 @@ export default function RequestTracking() {
         <div className="tracking-error">
           {error}
         </div>
+      )}
+
+      {/* =========================
+          تفاصيل الطلب
+      ========================= */}
+
+      {(isDonor ||
+        currentStatus !==
+          "قيد الانتظار") && (
+        <section className="request-details-card">
+
+          <div className="request-detail-row">
+            <div className="request-detail-icon">
+              <UserIcon />
+            </div>
+
+            <div className="request-detail-content">
+              <div className="request-detail-label">
+                صاحب طلب التبرع
+              </div>
+
+              <div className="request-detail-value">
+                {requesterName}
+              </div>
+            </div>
+          </div>
+
+          <div className="request-detail-row">
+            <div className="request-detail-icon">
+              <span
+                style={{
+                  fontSize: "16px",
+                  fontWeight: "800",
+                }}
+              >
+                🩸
+              </span>
+            </div>
+
+            <div className="request-detail-content">
+              <div className="request-detail-label">
+                فصيلة الدم المطلوبة
+              </div>
+
+              <div className="request-detail-value">
+                {bloodType}
+              </div>
+            </div>
+          </div>
+
+          <div className="request-detail-row">
+            <div className="request-detail-icon">
+              <HospitalIcon />
+            </div>
+
+            <div className="request-detail-content">
+              <div className="request-detail-label">
+                مستشفى التبرع
+              </div>
+
+              <div className="request-detail-value">
+                {hospitalName}
+              </div>
+
+              {hospitalAddress && (
+                <div className="request-detail-address">
+                  {hospitalAddress}
+                </div>
+              )}
+
+              {directionsUrl && (
+                <a
+                  href={directionsUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="hospital-directions-button"
+                >
+                  فتح الاتجاهات
+                </a>
+              )}
+            </div>
+          </div>
+
+        </section>
       )}
 
       <section className="timeline-card">
@@ -1110,6 +1280,93 @@ export default function RequestTracking() {
           height: 3px;
           border-radius: 10px;
           background: #159b8a;
+        }
+
+        /* تفاصيل الطلب - إضافة وظيفية فقط */
+        .request-details-card {
+          width: 100%;
+          max-width: 520px;
+          margin: 0 auto 16px;
+          padding: 16px;
+          border-radius: 23px;
+          background:
+            linear-gradient(
+              145deg,
+              rgba(255,255,255,.86),
+              rgba(232,249,246,.78)
+            );
+          border: 1px solid rgba(255,255,255,.92);
+          box-shadow:
+            0 10px 28px rgba(42,128,128,.08),
+            inset 0 1px 0 rgba(255,255,255,.9);
+          backdrop-filter: blur(14px);
+          -webkit-backdrop-filter: blur(14px);
+        }
+
+        .request-detail-row {
+          display: flex;
+          align-items: flex-start;
+          gap: 12px;
+          padding: 10px 0;
+        }
+
+        .request-detail-row + .request-detail-row {
+          border-top: 1px solid rgba(159,201,196,.25);
+        }
+
+        .request-detail-icon {
+          width: 40px;
+          height: 40px;
+          flex-shrink: 0;
+          border-radius: 13px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          color: #159b8a;
+          background: rgba(208,246,238,.9);
+        }
+
+        .request-detail-icon svg {
+          width: 21px;
+          height: 21px;
+        }
+
+        .request-detail-content {
+          flex: 1;
+          min-width: 0;
+          text-align: right;
+        }
+
+        .request-detail-label {
+          color: #91aaaa;
+          font-size: 11px;
+          margin-bottom: 3px;
+        }
+
+        .request-detail-value {
+          color: #286d6d;
+          font-size: 14px;
+          font-weight: 800;
+          line-height: 1.6;
+        }
+
+        .request-detail-address {
+          margin-top: 3px;
+          color: #789393;
+          font-size: 11px;
+          line-height: 1.6;
+        }
+
+        .hospital-directions-button {
+          display: inline-block;
+          margin-top: 8px;
+          padding: 8px 12px;
+          border-radius: 11px;
+          color: white;
+          background: #159b8a;
+          text-decoration: none;
+          font-size: 11px;
+          font-weight: 700;
         }
       `}</style>
     </div>
