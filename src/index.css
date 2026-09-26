@@ -8802,3 +8802,73 @@ body.nabd-dark .support-nav-item.active {
   background: #123d40 !important;
 }
 body.nabd-dark .support-nav-item.active::after { background: #65ddd3 !important; }
+/* =========================================================
+   🌙 DONOR DETAIL - HOSPITAL MODAL DARK MODE
+   ========================================================= */
+
+body.nabd-dark .modal-overlay {
+  background: rgba(0, 0, 0, 0.7) !important;
+}
+
+body.nabd-dark .hospital-modal {
+  background: #0d2a2e !important;
+  color: #e9ffff !important;
+  box-shadow: 0 -10px 40px rgba(0, 0, 0, 0.5) !important;
+}
+
+body.nabd-dark .modal-header h2 {
+  color: #e9ffff !important;
+}
+
+body.nabd-dark .modal-header p {
+  color: #9bbdbc !important;
+}
+
+body.nabd-dark .close-button {
+  background: #123d40 !important;
+  color: #5ed9c5 !important;
+}
+
+body.nabd-dark .hospital-item {
+  background: #0a2428 !important;
+  border-color: rgba(170, 230, 225, 0.15) !important;
+  color: #e9ffff !important;
+}
+
+body.nabd-dark .hospital-item.selected {
+  background: #123d40 !important;
+  border-color: rgba(94, 217, 197, 0.4) !important;
+}
+
+body.nabd-dark .hospital-item .hospital-info strong {
+  color: #e9ffff !important;
+}
+
+body.nabd-dark .hospital-item .hospital-info span {
+  color: #9bbdbc !important;
+}
+
+body.nabd-dark .hospital-icon {
+  background: #123d40 !important;
+  color: #5ed9c5 !important;
+}
+
+body.nabd-dark .hospital-check {
+  background: #159b8a !important;
+  color: #ffffff !important;
+}
+
+body.nabd-dark .hospital-item:not(.selected) .hospital-check {
+  background: #123d40 !important;
+  border-color: rgba(170, 230, 225, 0.15) !important;
+  color: transparent !important;
+}
+
+body.nabd-dark .no-hospitals {
+  color: #9bbdbc !important;
+}
+
+body.nabd-dark .confirm-button {
+  background: linear-gradient(135deg, #159b8a, #087d70) !important;
+  color: #ffffff !important;
+}
