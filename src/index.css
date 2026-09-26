@@ -6867,23 +6867,25 @@ html.nabd-dark .verify-identity-retake {
 
 }
 /* =========================================================
-   GLOBAL DARK MODE - FINAL OVERRIDES
-   إضافات فقط بدون تعديل تصميم الـ Light Mode
+   NABD AL-AMAL - SAFE GLOBAL DARK MODE
+   لا يؤثر على Light Mode
 ========================================================= */
 
-/* ---------- GLOBAL ---------- */
+/* ---------------------------------------------------------
+   APP BACKGROUND
+--------------------------------------------------------- */
 
 html.nabd-dark,
 body.nabd-dark {
   background:
     radial-gradient(
       circle at 8% 8%,
-      rgba(21,155,138,.16),
+      rgba(21, 155, 138, 0.16),
       transparent 28%
     ),
     radial-gradient(
       circle at 95% 30%,
-      rgba(42,126,135,.14),
+      rgba(42, 126, 135, 0.14),
       transparent 30%
     ),
     linear-gradient(
@@ -6896,460 +6898,371 @@ body.nabd-dark {
   color: #dcefeb;
 }
 
-body.nabd-dark {
+html.nabd-dark {
   color-scheme: dark;
 }
 
-
-/* =========================================================
-   COMMON CARDS
-========================================================= */
-
-body.nabd-dark .card,
-body.nabd-dark .service-card,
-body.nabd-dark .urgent-card,
-body.nabd-dark .hospital-card,
-body.nabd-dark .medicine-card,
-body.nabd-dark .pharmacy-card,
-body.nabd-dark .request-card,
-body.nabd-dark .notification-card,
-body.nabd-dark .address-card,
-body.nabd-dark .info-card,
-body.nabd-dark .profile-card,
-body.nabd-dark .donor-card,
-body.nabd-dark .tracking-card,
-body.nabd-dark .field-card,
-body.nabd-dark .white-card,
-body.nabd-dark .section-card,
-body.nabd-dark .menu-card,
-body.nabd-dark .panel {
+body.nabd-dark {
   background:
+    radial-gradient(
+      circle at 8% 8%,
+      rgba(21, 155, 138, 0.16),
+      transparent 28%
+    ),
+    radial-gradient(
+      circle at 95% 30%,
+      rgba(42, 126, 135, 0.14),
+      transparent 30%
+    ),
     linear-gradient(
-      145deg,
-      rgba(25,47,48,.95),
-      rgba(18,42,43,.90)
-    ) !important;
+      160deg,
+      #0b191b 0%,
+      #102526 48%,
+      #0d2022 100%
+    );
 
   color: #dcefeb;
-
-  border-color: rgba(110,220,204,.08);
-
-  box-shadow:
-    0 11px 28px rgba(0,0,0,.20),
-    inset 0 1px 0 rgba(255,255,255,.035);
 }
 
 
-/* =========================================================
-   INPUTS / SELECTS / TEXTAREAS
-========================================================= */
+/* ---------------------------------------------------------
+   APP SHELL
+--------------------------------------------------------- */
+
+body.nabd-dark .app-shell {
+  background: transparent;
+  color: #dcefeb;
+}
+
+
+/* ---------------------------------------------------------
+   MAIN GENERIC CARDS
+   فقط العناصر الموجودة داخل Dark Mode
+--------------------------------------------------------- */
+
+body.nabd-dark .card {
+  background:
+    linear-gradient(
+      145deg,
+      rgba(25, 47, 48, 0.95),
+      rgba(18, 42, 43, 0.90)
+    );
+
+  color: #dcefeb;
+
+  border-color: rgba(110, 220, 204, 0.08);
+
+  box-shadow:
+    0 11px 28px rgba(0, 0, 0, 0.20),
+    inset 0 1px 0 rgba(255, 255, 255, 0.035);
+}
+
+
+/* ---------------------------------------------------------
+   LIST ITEMS
+--------------------------------------------------------- */
+
+body.nabd-dark .list-item {
+  background: rgba(25, 47, 48, 0.82);
+
+  color: #dcefeb;
+
+  border-color: rgba(130, 190, 183, 0.10);
+}
+
+
+/* ---------------------------------------------------------
+   NORMAL INPUTS
+--------------------------------------------------------- */
 
 body.nabd-dark input,
 body.nabd-dark select,
 body.nabd-dark textarea {
-  background:
-    rgba(18,42,43,.92) !important;
+  background: rgba(18, 42, 43, 0.92);
 
-  color: #dcefeb !important;
+  color: #dcefeb;
 
-  border-color:
-    rgba(110,220,204,.14) !important;
-
-  caret-color: #65d5c3;
+  border-color: rgba(110, 220, 204, 0.14);
 }
 
 body.nabd-dark input::placeholder,
 body.nabd-dark textarea::placeholder {
-  color: #789592 !important;
+  color: #789592;
 }
 
 body.nabd-dark select option {
-  background: #102526 !important;
-  color: #dcefeb !important;
-}
-
-
-/* =========================================================
-   COMMON FORM FIELDS
-========================================================= */
-
-body.nabd-dark .input-group,
-body.nabd-dark .login-field,
-body.nabd-dark .signup-field,
-body.nabd-dark .search-bar,
-body.nabd-dark .input {
-  background:
-    rgba(18,42,43,.92) !important;
-
-  color: #dcefeb !important;
-
-  border-color:
-    rgba(110,220,204,.14) !important;
-}
-
-body.nabd-dark .field-label,
-body.nabd-dark .login-field label,
-body.nabd-dark .signup-field label {
-  color: #9dbbb8 !important;
-}
-
-
-/* =========================================================
-   LOGIN / SIGNUP
-========================================================= */
-
-body.nabd-dark .login-form,
-body.nabd-dark .signup-form {
+  background: #102526;
   color: #dcefeb;
 }
 
-body.nabd-dark .login-options,
-body.nabd-dark .remember-option,
-body.nabd-dark .remember-box {
+body.nabd-dark input:focus,
+body.nabd-dark select:focus,
+body.nabd-dark textarea:focus {
+  border-color: #159b8a;
+}
+
+
+/* ---------------------------------------------------------
+   COMMON TEXT
+--------------------------------------------------------- */
+
+body.nabd-dark .muted {
+  color: #91aaa8;
+}
+
+body.nabd-dark label.field-label {
   color: #9dbbb8;
 }
 
-body.nabd-dark .social-card {
-  background:
-    rgba(25,47,48,.95) !important;
 
-  color: #dcefeb !important;
+/* ---------------------------------------------------------
+   BASIC BUTTON
+--------------------------------------------------------- */
 
-  border-color:
-    rgba(110,220,204,.10) !important;
+body.nabd-dark .btn.outline {
+  background: rgba(25, 47, 48, 0.92);
+  color: #65d5c3;
+  border-color: rgba(101, 213, 195, 0.30);
 }
 
 
-/* =========================================================
-   BUTTONS
-========================================================= */
+/* ---------------------------------------------------------
+   TABS
+--------------------------------------------------------- */
 
-body.nabd-dark .filter-btn,
-body.nabd-dark .tab,
-body.nabd-dark .tab-item {
-  background:
-    rgba(25,47,48,.92) !important;
-
-  color: #9dbbb8 !important;
-
-  border-color:
-    rgba(110,220,204,.10) !important;
+body.nabd-dark .tabs .tab {
+  background: rgba(25, 47, 48, 0.90);
+  color: #9dbbb8;
 }
 
-body.nabd-dark .filter-btn:hover,
-body.nabd-dark .tab:hover,
-body.nabd-dark .tab-item:hover {
-  background:
-    rgba(35,70,69,.95) !important;
-
-  color: #65d5c3 !important;
+body.nabd-dark .tabs .tab.active {
+  background: #159b8a;
+  color: #ffffff;
 }
 
 
-/* =========================================================
-   LIST ITEMS
-========================================================= */
+/* ---------------------------------------------------------
+   COMMON SEARCH BAR
+--------------------------------------------------------- */
 
-body.nabd-dark .list-item,
-body.nabd-dark .item {
-  background:
-    rgba(25,47,48,.72) !important;
-
+body.nabd-dark .search-bar {
+  background: rgba(18, 42, 43, 0.92);
   color: #dcefeb;
+  border-color: rgba(110, 220, 204, 0.14);
+}
 
-  border-color:
-    rgba(130,190,183,.10) !important;
+body.nabd-dark .search-bar input {
+  background: transparent;
+  border-color: transparent;
 }
 
 
-/* =========================================================
-   HEADERS
-========================================================= */
+/* ---------------------------------------------------------
+   ICONS
+--------------------------------------------------------- */
 
-body.nabd-dark .header,
-body.nabd-dark .login-header,
-body.nabd-dark .location-header {
-  color: #dcefeb;
-}
-
-body.nabd-dark .header h1,
-body.nabd-dark .header h2,
-body.nabd-dark .header h3,
-body.nabd-dark .login-header h1,
-body.nabd-dark .login-header h2 {
+body.nabd-dark .input-icon {
   color: #65d5c3;
 }
 
 
-/* =========================================================
-   NAVIGATION
-========================================================= */
+/* ---------------------------------------------------------
+   BOTTOM NAVIGATION
+--------------------------------------------------------- */
 
 body.nabd-dark .bottom-nav,
-body.nabd-dark .bottom-navigation,
-body.nabd-dark .navbar,
-body.nabd-dark .app-nav {
-  background:
-    rgba(19,39,40,.91) !important;
+body.nabd-dark .bottom-navigation {
+  background: rgba(19, 39, 40, 0.94);
 
-  color: #789795;
-
-  border-color:
-    rgba(255,255,255,.07) !important;
+  border-color: rgba(255, 255, 255, 0.07);
 
   box-shadow:
-    0 12px 32px rgba(0,0,0,.28),
-    inset 0 1px 0 rgba(255,255,255,.04);
-}
-
-
-/* =========================================================
-   NAV ITEMS
-========================================================= */
-
-body.nabd-dark .bottom-nav *,
-body.nabd-dark .bottom-navigation *,
-body.nabd-dark .navbar *,
-body.nabd-dark .app-nav * {
-  color: inherit;
+    0 12px 32px rgba(0, 0, 0, 0.28),
+    inset 0 1px 0 rgba(255, 255, 255, 0.04);
 }
 
 body.nabd-dark .bottom-nav .active,
-body.nabd-dark .bottom-navigation .active,
-body.nabd-dark .navbar .active,
-body.nabd-dark .app-nav .active {
-  color: #65d5c3 !important;
+body.nabd-dark .bottom-navigation .active {
+  color: #65d5c3;
 }
 
 
-/* =========================================================
-   DROPDOWNS / MENUS / POPUPS
-========================================================= */
+/* ---------------------------------------------------------
+   COMMON NAVBAR
+--------------------------------------------------------- */
+
+body.nabd-dark .navbar,
+body.nabd-dark .app-nav {
+  background: rgba(19, 39, 40, 0.94);
+
+  color: #9dbbb8;
+
+  border-color: rgba(255, 255, 255, 0.07);
+}
+
+body.nabd-dark .navbar .active,
+body.nabd-dark .app-nav .active {
+  color: #65d5c3;
+}
+
+
+/* ---------------------------------------------------------
+   DROPDOWNS / POPUPS
+--------------------------------------------------------- */
 
 body.nabd-dark .dropdown,
 body.nabd-dark .popup,
-body.nabd-dark .menu,
-body.nabd-dark .modal,
-body.nabd-dark .menu-card {
+body.nabd-dark .menu {
   background:
     linear-gradient(
       145deg,
-      rgba(25,47,48,.98),
-      rgba(18,42,43,.96)
-    ) !important;
+      rgba(25, 47, 48, 0.98),
+      rgba(18, 42, 43, 0.96)
+    );
 
-  color: #dcefeb !important;
-
-  border-color:
-    rgba(110,220,204,.10) !important;
-
-  box-shadow:
-    0 18px 45px rgba(0,0,0,.35) !important;
-}
-
-
-/* =========================================================
-   DROPDOWN / POPUP CONTENT
-========================================================= */
-
-body.nabd-dark .dropdown *,
-body.nabd-dark .popup *,
-body.nabd-dark .modal *,
-body.nabd-dark .menu-card * {
-  color: inherit;
-}
-
-body.nabd-dark .dropdown button,
-body.nabd-dark .popup button,
-body.nabd-dark .modal button {
   color: #dcefeb;
+
+  border-color: rgba(110, 220, 204, 0.10);
+
+  box-shadow: 0 18px 45px rgba(0, 0, 0, 0.35);
 }
 
 
-/* =========================================================
-   ICON BACKGROUNDS
-========================================================= */
+/* ---------------------------------------------------------
+   MODAL
+--------------------------------------------------------- */
 
-body.nabd-dark .input-icon,
-body.nabd-dark .field-icon,
-body.nabd-dark .field-svg,
-body.nabd-dark .menu-icon {
-  color: #65d5c3 !important;
-}
-
-
-/* =========================================================
-   CHECKBOX
-========================================================= */
-
-body.nabd-dark .custom-checkbox {
+body.nabd-dark .modal {
   background:
-    rgba(25,47,48,.95);
+    linear-gradient(
+      145deg,
+      rgba(25, 47, 48, 0.98),
+      rgba(18, 42, 43, 0.96)
+    );
 
-  border-color:
-    rgba(110,220,204,.16);
+  color: #dcefeb;
+
+  border-color: rgba(110, 220, 204, 0.10);
 }
 
 
-/* =========================================================
-   TEXT
-========================================================= */
-
-body.nabd-dark .text-muted,
-body.nabd-dark .muted,
-body.nabd-dark .subtitle,
-body.nabd-dark .description {
-  color: #91aaa8 !important;
-}
-
-
-/* =========================================================
-   TABLE / BOX / CONTENT BOX
-========================================================= */
+/* ---------------------------------------------------------
+   BOX / CONTENT BOX
+--------------------------------------------------------- */
 
 body.nabd-dark .box,
 body.nabd-dark .content-box {
-  background:
-    rgba(25,47,48,.90) !important;
+  background: rgba(25, 47, 48, 0.90);
 
-  color: #dcefeb !important;
+  color: #dcefeb;
 
-  border-color:
-    rgba(110,220,204,.08) !important;
+  border-color: rgba(110, 220, 204, 0.08);
 }
 
 
-/* =========================================================
-   VERIFY IDENTITY
-========================================================= */
+/* ---------------------------------------------------------
+   COMMON TITLES
+--------------------------------------------------------- */
 
-body.nabd-dark .verify-identity-cards,
-body.nabd-dark .verify-identity-card {
-  background:
-    linear-gradient(
-      145deg,
-      rgba(25,47,48,.95),
-      rgba(18,42,43,.90)
-    ) !important;
+body.nabd-dark .header h1,
+body.nabd-dark .header h2,
+body.nabd-dark .header h3 {
+  color: #65d5c3;
+}
 
+body.nabd-dark .header {
   color: #dcefeb;
 }
 
 
-/* =========================================================
-   DONOR SIGNUP FIELDS
-========================================================= */
-
-body.nabd-dark .signup-donor-select-field,
-body.nabd-dark .signup-date-field {
-  background:
-    rgba(18,42,43,.92) !important;
-
-  border-color:
-    rgba(110,220,204,.14) !important;
-
-  box-shadow:
-    0 7px 19px rgba(0,0,0,.14),
-    inset 0 1px 0 rgba(255,255,255,.03);
-}
-
-body.nabd-dark .signup-donor-select-field select,
-body.nabd-dark .signup-date-field input[type="date"] {
-  color: #dcefeb !important;
-}
-
-body.nabd-dark .signup-donor-select-field select option {
-  background: #102526 !important;
-  color: #dcefeb !important;
-}
-
-body.nabd-dark .signup-donor-date-text,
-body.nabd-dark .signup-date-placeholder {
-  color: #91aaa8 !important;
-}
-
-body.nabd-dark .signup-donor-date-text.selected {
-  color: #dcefeb !important;
-}
-
-body.nabd-dark .signup-donor-select-field .signup-field-icon,
-body.nabd-dark .signup-date-field .signup-field-icon,
-body.nabd-dark .signup-donor-select-field::after,
-body.nabd-dark .signup-date-field::after {
-  color: #65d5c3 !important;
-}
-
-
-/* =========================================================
-   LEAFLET POPUP
-========================================================= */
-
-body.nabd-dark .leaflet-popup-content-wrapper {
-  background:
-    #193031 !important;
-
-  color: #dcefeb !important;
-}
-
-body.nabd-dark .leaflet-popup-tip {
-  background:
-    #193031 !important;
-}
-
-body.nabd-dark .leaflet-popup-content {
-  color: #dcefeb !important;
-}
-
-
-/* =========================================================
+/* ---------------------------------------------------------
    LINKS
-========================================================= */
+--------------------------------------------------------- */
 
 body.nabd-dark a {
   color: #65d5c3;
 }
 
 
-/* =========================================================
-   BORDERS
-========================================================= */
+/* ---------------------------------------------------------
+   HORIZONTAL LINES
+--------------------------------------------------------- */
 
 body.nabd-dark hr {
-  border-color:
-    rgba(130,190,183,.10);
+  border-color: rgba(130, 190, 183, 0.10);
 }
 
 
-/* =========================================================
-   DARK MODE TRANSITION
-========================================================= */
+/* ---------------------------------------------------------
+   DONOR SELECT / DATE FIELDS
+   نحافظ على شكلهم الحالي ونغيّر اللون فقط
+--------------------------------------------------------- */
 
-body,
-body *,
-.settings-page,
-.card,
-.service-card,
-.urgent-card,
-.hospital-card,
-.medicine-card,
-.pharmacy-card,
-.request-card,
-.notification-card,
-.address-card,
-.info-card,
-.profile-card,
-.donor-card,
-.tracking-card,
-.field-card,
-.white-card,
-.panel,
-.input-group,
-.login-field,
-.signup-field,
-.search-bar {
-  transition:
-    background-color .20s ease,
-    border-color .20s ease,
-    color .20s ease,
-    box-shadow .20s ease;
+body.nabd-dark .signup-donor-select-field,
+body.nabd-dark .signup-date-field {
+  background: rgba(18, 42, 43, 0.92);
+
+  border-color: rgba(110, 220, 204, 0.14);
+
+  box-shadow:
+    0 7px 19px rgba(0, 0, 0, 0.14),
+    inset 0 1px 0 rgba(255, 255, 255, 0.03);
 }
+
+body.nabd-dark .signup-donor-select-field select {
+  background: transparent;
+  color: #dcefeb;
+}
+
+body.nabd-dark .signup-donor-select-field select option {
+  background: #102526;
+  color: #dcefeb;
+}
+
+body.nabd-dark .signup-donor-date-text {
+  color: #91aaa8;
+}
+
+body.nabd-dark .signup-donor-date-text.selected {
+  color: #dcefeb;
+}
+
+body.nabd-dark .signup-donor-select-field .signup-field-icon,
+body.nabd-dark .signup-date-field .signup-field-icon {
+  color: #65d5c3;
+}
+
+
+/* ---------------------------------------------------------
+   LEAFLET POPUP
+--------------------------------------------------------- */
+
+body.nabd-dark .leaflet-popup-content-wrapper {
+  background: #193031;
+  color: #dcefeb;
+}
+
+body.nabd-dark .leaflet-popup-tip {
+  background: #193031;
+}
+
+body.nabd-dark .leaflet-popup-content {
+  color: #dcefeb;
+}
+
+
+/* ---------------------------------------------------------
+   CHECKBOX
+--------------------------------------------------------- */
+
+body.nabd-dark .custom-checkbox {
+  background: rgba(25, 47, 48, 0.95);
+
+  border-color: rgba(110, 220, 204, 0.16);
+}
+
+
+/* ---------------------------------------------------------
+   IMPORTANT:
+   لا نلمس الـ Light Mode
+--------------------------------------------------------- */
