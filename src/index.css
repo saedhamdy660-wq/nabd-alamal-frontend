@@ -7703,4 +7703,136 @@ body.nabd-dark .nav-item.active {
   color: #65ddd3 !important;
   background: #123d40 !important;
 }
+/* =========================================================
+   🌙 MEDICINE EXCHANGE PAGE - DARK MODE FIX
+   ========================================================= */
 
+body.nabd-dark .medicine-exchange-page {
+  background:
+    radial-gradient(circle at 12% 4%, rgba(21,155,138,.12), transparent 28%),
+    linear-gradient(180deg, #071a1d 0%, #092326 100%) !important;
+  color: #e9ffff !important;
+}
+
+/* كل النصوص الأساسية */
+body.nabd-dark .medicine-exchange-page h1,
+body.nabd-dark .medicine-exchange-page h2,
+body.nabd-dark .medicine-exchange-page h3,
+body.nabd-dark .medicine-exchange-page strong {
+  color: #e9ffff !important;
+}
+
+body.nabd-dark .medicine-exchange-page p,
+body.nabd-dark .medicine-exchange-page span,
+body.nabd-dark .medicine-exchange-page small {
+  color: #9bbdbc !important;
+}
+
+/* الأيقونات في الهيدر */
+body.nabd-dark .medicine-header-icon,
+body.nabd-dark .medicine-header-logo {
+  background: rgba(18,61,64,.85) !important;
+  color: #65d7c7 !important;
+}
+
+/* صندوق البحث */
+body.nabd-dark .medicine-search {
+  background: rgba(13,42,46,.92) !important;
+  border-color: rgba(170,230,225,.12) !important;
+}
+body.nabd-dark .medicine-search input {
+  color: #e9ffff !important;
+}
+body.nabd-dark .medicine-search input::placeholder {
+  color: #7f9f9e !important;
+}
+
+/* الأزرار الصغيرة (التصنيفات) */
+body.nabd-dark .medicine-category-pill {
+  background: #123d40 !important;
+  color: #a9cfcb !important;
+}
+body.nabd-dark .medicine-category-pill.active {
+  color: white !important;
+  background: linear-gradient(135deg, #159b8a, #087d70) !important;
+}
+
+/* القسم الرئيسي (اللي فيه الكروت) */
+body.nabd-dark .medicine-section,
+body.nabd-dark .medicine-list-section {
+  background: rgba(13,42,46,.92) !important;
+  border-color: rgba(170,230,225,.12) !important;
+}
+
+/* الكروت (الأقسام) */
+body.nabd-dark .medicine-category-card {
+  background: #0d2a2e !important;
+  border-color: rgba(170,230,225,.15) !important;
+}
+body.nabd-dark .medicine-category-card-icon {
+  background: #123d40 !important;
+}
+body.nabd-dark .medicine-category-card-text strong {
+  color: #e9ffff !important;
+}
+body.nabd-dark .medicine-category-card-text span {
+  color: #9bbdbc !important;
+}
+body.nabd-dark .medicine-category-arrow {
+  color: #5ed9c5 !important;
+}
+
+/* كروت الأدوية نفسها */
+body.nabd-dark .medicine-list-item {
+  background: #0d2a2e !important;
+  border-color: rgba(170,230,225,.12) !important;
+}
+body.nabd-dark .medicine-list-info strong {
+  color: #e9ffff !important;
+}
+body.nabd-dark .medicine-list-info span {
+  color: #9bbdbc !important;
+}
+body.nabd-dark .medicine-list-info small {
+  color: #789b99 !important;
+}
+body.nabd-dark .medicine-list-arrow {
+  color: #5ed9c5 !important;
+}
+
+/* زر الطلب (+) */
+body.nabd-dark .medicine-request-button {
+  color: #67d7c4 !important;
+  background: #123d40 !important;
+}
+body.nabd-dark .medicine-request-button.requested {
+  color: white !important;
+  background: linear-gradient(135deg, #39b8a5, #159b8a) !important;
+}
+
+/* شارة الحالة (متاح/مطلوب) */
+body.nabd-dark .medicine-status-available {
+  color: #5ed9c5 !important;
+  background: rgba(94, 217, 197, 0.15) !important;
+}
+body.nabd-dark .medicine-status-requested {
+  color: #ff9fb1 !important;
+  background: rgba(192, 82, 103, 0.2) !important;
+}
+
+/* شارة العدد */
+body.nabd-dark .medicine-count-badge {
+  background: #123d40 !important;
+  color: #62d7c6 !important;
+}
+
+/* حالة التحميل / عدم وجود أدوية */
+body.nabd-dark .medicine-empty-state h3 {
+  color: #e9ffff !important;
+}
+body.nabd-dark .medicine-empty-state p {
+  color: #9bbdbc !important;
+}
+body.nabd-dark .medicine-empty-icon {
+  background: #123d40 !important;
+}
