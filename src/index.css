@@ -9340,3 +9340,60 @@ body.nabd-dark .donation-request-page .actions-card,
     width: 100% !important;
   }
 }
+/* =========================================================
+   🌙 DONATION REQUEST DETAILS - TITLE ALIGNMENT FIX
+   ========================================================= */
+
+/* عنوان الصفحة الرئيسي (طلب تبرع بالدم) */
+.donation-request-page .header-title,
+.donation-request-page .header-title > div,
+.donation-request-page .header-title-row > div:last-child {
+  text-align: right !important;
+  direction: rtl !important;
+  flex: 1 !important;
+  min-width: 0 !important;
+}
+
+.donation-request-page .header-title h1,
+.donation-request-page .header-title p {
+  text-align: right !important;
+  direction: rtl !important;
+  margin-right: 0 !important;
+  margin-left: 0 !important;
+}
+
+/* عنوان "تفاصيل الطلب" */
+.donation-request-page .section-title {
+  text-align: right !important;
+  direction: rtl !important;
+}
+
+.donation-request-page .section-title > div:last-child {
+  text-align: right !important;
+  flex: 1 !important;
+  min-width: 0 !important;
+}
+
+.donation-request-page .section-title h2,
+.donation-request-page .section-title p {
+  text-align: right !important;
+  direction: rtl !important;
+}
+
+/* عنوان "هل تريد التبرع؟" */
+.donation-request-page .actions-header {
+  text-align: right !important;
+  direction: rtl !important;
+}
+
+.donation-request-page .actions-header > div:last-child {
+  text-align: right !important;
+  flex: 1 !important;
+  min-width: 0 !important;
+}
+
+.donation-request-page .actions-header h3,
+.donation-request-page .actions-header p {
+  text-align: right !important;
+  direction: rtl !important;
+}
