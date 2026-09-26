@@ -7703,3 +7703,32 @@ body.nabd-dark .nav-item.active {
   color: #65ddd3 !important;
   background: #123d40 !important;
 }
+/* ===== إجباري: أي كارت فاتح يبقى غامق في الدارك مود ===== */
+
+body.nabd-dark .app-shell div[class*="card"],
+body.nabd-dark .app-shell div[class*="Card"],
+body.nabd-dark .app-shell div[class*="item"],
+body.nabd-dark .app-shell div[class*="Item"],
+body.nabd-dark .app-shell div[class*="box"],
+body.nabd-dark .app-shell div[class*="Box"],
+body.nabd-dark .app-shell div[class*="section"],
+body.nabd-dark .app-shell div[class*="Section"] {
+  background-color: #0d2a2e !important;
+  color: #e9ffff !important;
+  border-color: rgba(170, 230, 225, 0.14) !important;
+}
+
+body.nabd-dark .app-shell div[class*="card"] *,
+body.nabd-dark .app-shell div[class*="Card"] *,
+body.nabd-dark .app-shell div[class*="item"] *,
+body.nabd-dark .app-shell div[class*="Item"] *,
+body.nabd-dark .app-shell div[class*="box"] *,
+body.nabd-dark .app-shell div[class*="Box"] * {
+  color: #e9ffff !important;
+}
+
+body.nabd-dark .app-shell div[class*="muted"],
+body.nabd-dark .app-shell div[class*="subtitle"],
+body.nabd-dark .app-shell div[class*="desc"] {
+  color: #9bbdbc !important;
+}
