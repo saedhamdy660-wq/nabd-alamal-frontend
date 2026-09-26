@@ -6866,3 +6866,192 @@ html.nabd-dark .verify-identity-retake {
   }
 
 }
+/* =========================================================
+   🌙 NABD AL AMAL — DARK MODE FINAL FIX
+   Fix light cards / surfaces / AppSettings
+   Light mode is completely untouched
+========================================================= */
+
+html.nabd-dark body,
+body.nabd-dark {
+  --dark-bg: #071a1d;
+  --dark-card: #0d2a2e;
+  --dark-card-2: #0a2428;
+  --dark-text: #e9ffff;
+  --dark-muted: #9bbdbc;
+  --dark-border: rgba(170, 230, 225, 0.14);
+}
+
+/* ---------- Main backgrounds ---------- */
+
+body.nabd-dark .app-shell,
+body.nabd-dark .page,
+body.nabd-dark .settings-page {
+  background:
+    linear-gradient(180deg, #071a1d 0%, #092326 100%) !important;
+  color: #e9ffff !important;
+}
+
+/* ---------- ALL COMMON CARDS ---------- */
+
+body.nabd-dark .card,
+body.nabd-dark .settings-card,
+body.nabd-dark .setting-card,
+body.nabd-dark .settings-section,
+body.nabd-dark .setting-section,
+body.nabd-dark .profile-card,
+body.nabd-dark .info-card,
+body.nabd-dark .field-card,
+body.nabd-dark .list-item,
+body.nabd-dark .item,
+body.nabd-dark .box,
+body.nabd-dark .panel,
+body.nabd-dark .section,
+body.nabd-dark .section-card,
+body.nabd-dark .content-box,
+body.nabd-dark .white-card,
+body.nabd-dark .surface,
+body.nabd-dark .menu-card {
+  background: #0d2a2e !important;
+  color: #e9ffff !important;
+  border-color: rgba(170, 230, 225, 0.14) !important;
+  box-shadow: 0 10px 28px rgba(0, 0, 0, 0.20) !important;
+}
+
+/* ---------- AppSettings specific surfaces ---------- */
+
+body.nabd-dark .settings-page * {
+  border-color: rgba(170, 230, 225, 0.14);
+}
+
+body.nabd-dark .settings-page > *,
+body.nabd-dark .settings-page section,
+body.nabd-dark .settings-page .card,
+body.nabd-dark .settings-page .settings-card,
+body.nabd-dark .settings-page .settings-section {
+  color: #e9ffff !important;
+}
+
+/* Any light / white background inside Settings */
+body.nabd-dark .settings-page [style*="background"],
+body.nabd-dark .settings-page [style*="backgroundColor"] {
+  background-color: #0d2a2e !important;
+}
+
+/* ---------- Text ---------- */
+
+body.nabd-dark .settings-page h1,
+body.nabd-dark .settings-page h2,
+body.nabd-dark .settings-page h3,
+body.nabd-dark .settings-page h4,
+body.nabd-dark .settings-page h5,
+body.nabd-dark .settings-page h6 {
+  color: #e9ffff !important;
+}
+
+body.nabd-dark .settings-page p,
+body.nabd-dark .settings-page span,
+body.nabd-dark .settings-page label,
+body.nabd-dark .settings-page strong,
+body.nabd-dark .settings-page b {
+  color: #d8eeeb !important;
+}
+
+body.nabd-dark .settings-page small,
+body.nabd-dark .settings-page .muted,
+body.nabd-dark .settings-page .description,
+body.nabd-dark .settings-page .subtitle {
+  color: #9bbdbc !important;
+}
+
+/* ---------- Inputs ---------- */
+
+body.nabd-dark .settings-page input,
+body.nabd-dark .settings-page textarea,
+body.nabd-dark .settings-page select {
+  background: #0a2428 !important;
+  color: #e9ffff !important;
+  border: 1px solid rgba(170, 230, 225, 0.18) !important;
+}
+
+body.nabd-dark .settings-page input::placeholder,
+body.nabd-dark .settings-page textarea::placeholder {
+  color: #789b99 !important;
+}
+
+/* ---------- White buttons / controls ---------- */
+
+body.nabd-dark .settings-page button:not(.primary):not(.save-btn),
+body.nabd-dark .settings-page .outline,
+body.nabd-dark .settings-page .outline-btn,
+body.nabd-dark .settings-page .secondary-btn {
+  background: #0d2a2e !important;
+  color: #65ddd3 !important;
+  border-color: rgba(170, 230, 225, 0.18) !important;
+}
+
+/* ---------- Switch / toggle ---------- */
+
+body.nabd-dark .settings-page .toggle,
+body.nabd-dark .settings-page .switch,
+body.nabd-dark .settings-page .toggle-track {
+  background: #123d40 !important;
+  border-color: rgba(170, 230, 225, 0.18) !important;
+}
+
+/* ---------- Dividers ---------- */
+
+body.nabd-dark .settings-page hr,
+body.nabd-dark .settings-page .divider {
+  border-color: rgba(170, 230, 225, 0.12) !important;
+  background: rgba(170, 230, 225, 0.12) !important;
+}
+
+/* ---------- Icons ---------- */
+
+body.nabd-dark .settings-page .icon,
+body.nabd-dark .settings-page .setting-icon,
+body.nabd-dark .settings-page svg {
+  color: #65ddd3 !important;
+}
+
+/* ---------- Modal / popup / dropdown ---------- */
+
+body.nabd-dark .modal,
+body.nabd-dark .popup,
+body.nabd-dark .dropdown,
+body.nabd-dark .menu,
+body.nabd-dark .menu-card {
+  background: #0d2a2e !important;
+  color: #e9ffff !important;
+  border-color: rgba(170, 230, 225, 0.14) !important;
+}
+
+/* ---------- Prevent remaining pure white surfaces ---------- */
+
+body.nabd-dark [style*="#fff"],
+body.nabd-dark [style*="#FFF"],
+body.nabd-dark [style*="#ffffff"],
+body.nabd-dark [style*="#FFFFFF"],
+body.nabd-dark [style*="white"] {
+  background-color: #0d2a2e !important;
+  color: #e9ffff !important;
+}
+
+/* ---------- Images / avatar containers ---------- */
+
+body.nabd-dark .avatar,
+body.nabd-dark .profile-avatar,
+body.nabd-dark .image-wrapper {
+  border-color: rgba(170, 230, 225, 0.14) !important;
+}
+
+/* ---------- Smooth transition ---------- */
+
+body.nabd-dark * {
+  transition:
+    background-color 0.2s ease,
+    border-color 0.2s ease,
+    color 0.2s ease,
+    box-shadow 0.2s ease;
+}
