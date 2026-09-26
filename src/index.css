@@ -8617,3 +8617,87 @@ body.nabd-dark .empty-notifications { background: #0d2a2e !important; border-col
 body.nabd-dark .empty-icon { background: #123d40 !important; color: #5ed9c5 !important; }
 body.nabd-dark .empty-notifications h3 { color: #e9ffff !important; }
 body.nabd-dark .empty-notifications p { color: #9bbdbc !important; }
+/* =========================================================
+   🌙 SUPPORT PAGE - DARK MODE FIX
+   ========================================================= */
+
+body.nabd-dark .support-page,
+body.nabd-dark .help-page {
+  background:
+    radial-gradient(circle at 10% 5%, rgba(21,155,138,.12), transparent 28%),
+    linear-gradient(180deg, #071a1d 0%, #092326 100%) !important;
+  color: #e9ffff !important;
+}
+
+/* الكارت الترحيبي (اللي فوق) */
+body.nabd-dark .support-hero,
+body.nabd-dark .help-hero,
+body.nabd-dark .hero-card,
+body.nabd-dark .welcome-card {
+  background: linear-gradient(145deg, #0a2a28, #0d3a36) !important;
+  color: #e9ffff !important;
+  border-color: rgba(170,230,225,.15) !important;
+}
+
+body.nabd-dark .support-hero h1,
+body.nabd-dark .support-hero h2,
+body.nabd-dark .help-hero h1,
+body.nabd-dark .help-hero h2,
+body.nabd-dark .hero-card h1,
+body.nabd-dark .hero-card h2 {
+  color: #e9ffff !important;
+}
+
+body.nabd-dark .support-hero p,
+body.nabd-dark .help-hero p,
+body.nabd-dark .hero-card p,
+body.nabd-dark .welcome-card p {
+  color: #9bbdbc !important;
+}
+
+/* كروت الخدمات (الأسئلة الشائعة، راسلنا، إلخ) */
+body.nabd-dark .support-card,
+body.nabd-dark .help-card,
+body.nabd-dark .support-item,
+body.nabd-dark .help-item,
+body.nabd-dark .support-option,
+body.nabd-dark .help-option {
+  background: #0d2a2e !important;
+  color: #e9ffff !important;
+  border-color: rgba(170,230,225,.15) !important;
+}
+
+body.nabd-dark .support-card *,
+body.nabd-dark .help-card *,
+body.nabd-dark .support-item *,
+body.nabd-dark .help-item *,
+body.nabd-dark .support-option *,
+body.nabd-dark .help-option * {
+  color: #e9ffff !important;
+}
+
+body.nabd-dark .support-card svg,
+body.nabd-dark .help-card svg,
+body.nabd-dark .support-item svg,
+body.nabd-dark .help-item svg,
+body.nabd-dark .support-option svg,
+body.nabd-dark .help-option svg {
+  color: #5ed9c5 !important;
+  stroke: #5ed9c5 !important;
+}
+
+/* خلفيات الأيقونات الدائرية */
+body.nabd-dark .support-icon,
+body.nabd-dark .help-icon,
+body.nabd-dark .icon-circle {
+  background: #123d40 !important;
+  color: #5ed9c5 !important;
+}
+
+/* النصوص الثانوية */
+body.nabd-dark .support-card p,
+body.nabd-dark .help-card p,
+body.nabd-dark .support-item p,
+body.nabd-dark .help-item p {
+  color: #9bbdbc !important;
+}
