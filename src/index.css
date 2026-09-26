@@ -8950,3 +8950,68 @@ body.nabd-dark .timeline-line,
 body.nabd-dark .step-line {
   background: rgba(170,230,225,.2) !important;
 }
+/* =========================================================
+   🌙 REQUEST TRACKING - FINAL DARK MODE FIX
+   ========================================================= */
+
+/* الكارت العلوي (حالة طلب التبرع) */
+body.nabd-dark .tracking-summary-card,
+body.nabd-dark .tracking-status-card,
+body.nabd-dark .tracking-top,
+body.nabd-dark .tracking-header-card,
+body.nabd-dark .request-status-card,
+body.nabd-dark .status-card {
+  background: #0d2a2e !important;
+  border-color: rgba(170,230,225,.15) !important;
+  color: #e9ffff !important;
+}
+
+body.nabd-dark .tracking-summary-card *,
+body.nabd-dark .tracking-status-card *,
+body.nabd-dark .tracking-top *,
+body.nabd-dark .tracking-header-card *,
+body.nabd-dark .request-status-card *,
+body.nabd-dark .status-card * {
+  color: #e9ffff !important;
+}
+
+body.nabd-dark .tracking-summary-card p,
+body.nabd-dark .tracking-status-card p,
+body.nabd-dark .tracking-header-card p,
+body.nabd-dark .request-status-card p,
+body.nabd-dark .status-card p {
+  color: #9bbdbc !important;
+}
+
+body.nabd-dark .tracking-summary-card svg,
+body.nabd-dark .tracking-status-card svg,
+body.nabd-dark .tracking-header-card svg,
+body.nabd-dark .request-status-card svg,
+body.nabd-dark .status-card svg {
+  color: #5ed9c5 !important;
+  stroke: #5ed9c5 !important;
+}
+
+/* الدوائر (الخطوات) */
+body.nabd-dark .tracking-card .timeline-dot,
+body.nabd-dark .tracking-card .step-dot,
+body.nabd-dark .tracking-card .dot,
+body.nabd-dark .timeline .timeline-dot,
+body.nabd-dark .timeline .step-dot {
+  background: #123d40 !important;
+  border-color: rgba(170,230,225,.2) !important;
+}
+
+body.nabd-dark .tracking-card .timeline-dot.done,
+body.nabd-dark .tracking-card .step-dot.done,
+body.nabd-dark .timeline .timeline-dot.done {
+  background: #159b8a !important;
+  border-color: #159b8a !important;
+  color: white !important;
+}
+
+body.nabd-dark .tracking-card .timeline-line,
+body.nabd-dark .tracking-card .step-line,
+body.nabd-dark .timeline .timeline-line {
+  background: rgba(170,230,225,.2) !important;
+}
