@@ -1878,197 +1878,162 @@ export default function MedicineExchange() {
       }
     }
 
-    @media (max-width: 380px) {
-      .medicine-exchange-page {
-        padding:
-          14px
-          10px
-          100px;
-      }
+  @media (max-width: 380px) {
+  .medicine-exchange-page {
+    padding:
+      14px
+      10px
+      100px;
+  }
 
-      .medicine-header-title h1 {
-        font-size: 24px;
-      }
+  .medicine-header-title h1 {
+    font-size: 24px;
+  }
 
-      .medicine-header-icon,
-      .medicine-header-logo {
-        width: 46px;
-        height: 46px;
-      }
+  .medicine-header-icon,
+  .medicine-header-logo {
+    width: 46px;
+    height: 46px;
+  }
 
-      .medicine-category-grid {
-        gap: 8px;
-      }
+  .medicine-category-grid {
+    gap: 8px;
+  }
 
-      .medicine-category-card {
-        min-height: 82px;
-        padding: 9px 7px;
-        gap: 7px;
-      }
+  .medicine-category-card {
+    min-height: 82px;
+    padding: 9px 7px;
+    gap: 7px;
+  }
 
-      .medicine-category-card-icon {
-        width: 37px;
-        height: 37px;
-        font-size: 18px;
-      }
+  .medicine-category-card-icon {
+    width: 37px;
+    height: 37px;
+    font-size: 18px;
+  }
 
-      .medicine-category-card-text strong {
-        font-size: 11px;
-      }
+  .medicine-category-card-text strong {
+    font-size: 11px;
+  }
 
-      .medicine-category-card-text span {
-        font-size: 10px;
-      }
+  .medicine-category-card-text span {
+    font-size: 10px;
+  }
 
-      .medicine-list-info strong {
-        max-width: 145px;
-        font-size: 13px;
-      }
+  .medicine-list-info strong {
+    max-width: 145px;
+    font-size: 13px;
+  }
 
-      .medicine-status {
-        padding:
-          6px
-          8px;
-      }
-    }
+  .medicine-status {
+    padding:
+      6px
+      8px;
+  }
+}
 
-    /* ================= DARK MODE ================= */
+/* ================= DARK MODE ================= */
 
-    html.nabd-dark .medicine-exchange-page,
-    body.nabd-dark .medicine-exchange-page {
-      background:
-        radial-gradient(
-          circle at 12% 4%,
-          rgba(21,155,138,.12),
-          transparent 28%
-        ),
-        linear-gradient(
-          180deg,
-          #071a1d 0%,
-          #092326 100%
-        );
+body.nabd-dark .medicine-exchange-page {
+  background:
+    radial-gradient(
+      circle at 12% 4%,
+      rgba(21,155,138,.12),
+      transparent 28%
+    ),
+    linear-gradient(
+      180deg,
+      #071a1d 0%,
+      #092326 100%
+    );
 
-      color: #e9ffff;
-    }
+  color: #e9ffff;
+}
 
-    html.nabd-dark .medicine-header-title h1,
-    body.nabd-dark .medicine-header-title h1,
-    html.nabd-dark .medicine-section-heading h2,
-    body.nabd-dark .medicine-section-heading h2,
-    html.nabd-dark .medicine-list-heading h2,
-    body.nabd-dark .medicine-list-heading h2 {
-      color: #e9ffff;
-    }
+body.nabd-dark .medicine-header-title h1,
+body.nabd-dark .medicine-section-heading h2,
+body.nabd-dark .medicine-list-heading h2 {
+  color: #e9ffff;
+}
 
-    html.nabd-dark .medicine-header-title p,
-    body.nabd-dark .medicine-header-title p,
-    html.nabd-dark .medicine-section-heading p,
-    body.nabd-dark .medicine-section-heading p,
-    html.nabd-dark .medicine-list-heading p {
-      color: #9bbdbc;
-    }
+body.nabd-dark .medicine-header-title p,
+body.nabd-dark .medicine-section-heading p,
+body.nabd-dark .medicine-list-heading p {
+  color: #9bbdbc;
+}
 
-    html.nabd-dark .medicine-header-icon,
-    body.nabd-dark .medicine-header-icon,
-    html.nabd-dark .medicine-header-logo,
-    body.nabd-dark .medicine-header-logo {
-      background: rgba(18,61,64,.85);
-      color: #65d7c7;
-    }
+body.nabd-dark .medicine-header-icon,
+body.nabd-dark .medicine-header-logo {
+  background: rgba(18,61,64,.85);
+  color: #65d7c7;
+}
 
-    html.nabd-dark .medicine-search,
-    body.nabd-dark .medicine-search,
-    html.nabd-dark .medicine-section,
-    body.nabd-dark .medicine-section,
-    html.nabd-dark .medicine-list-section,
-    body.nabd-dark .medicine-list-section {
-      background: rgba(13,42,46,.92);
-      border-color: rgba(170,230,225,.12);
-    }
+body.nabd-dark .medicine-search,
+body.nabd-dark .medicine-section,
+body.nabd-dark .medicine-list-section {
+  background: rgba(13,42,46,.92);
+  border-color: rgba(170,230,225,.12);
+}
 
-    html.nabd-dark .medicine-search input,
-    body.nabd-dark .medicine-search input {
-      color: #e9ffff;
-    }
+body.nabd-dark .medicine-search input {
+  color: #e9ffff;
+}
 
-    html.nabd-dark .medicine-search input::placeholder,
-    body.nabd-dark .medicine-search input::placeholder {
-      color: #7f9f9e;
-    }
+body.nabd-dark .medicine-search input::placeholder {
+  color: #7f9f9e;
+}
 
-    html.nabd-dark .medicine-category-pill,
-    body.nabd-dark .medicine-category-pill {
-      background: #123d40;
-      color: #a9cfcb;
-    }
+body.nabd-dark .medicine-category-pill {
+  background: #123d40;
+  color: #a9cfcb;
+}
 
-    html.nabd-dark .medicine-category-pill.active,
-    body.nabd-dark .medicine-category-pill.active {
-      color: white;
+body.nabd-dark .medicine-category-pill.active {
+  color: white;
+  background:
+    linear-gradient(
+      135deg,
+      #159b8a,
+      #087d70
+    );
+}
 
-      background:
-        linear-gradient(
-          135deg,
-          #159b8a,
-          #087d70
-        );
-    }
+body.nabd-dark .medicine-category-card {
+  border-color: rgba(170,230,225,.12);
+}
 
-    html.nabd-dark .medicine-category-card,
-    body.nabd-dark .medicine-category-card {
-      border-color: rgba(170,230,225,.12);
-    }
+body.nabd-dark .medicine-category-card-text strong,
+body.nabd-dark .medicine-list-info strong {
+  color: #e5ffff;
+}
 
-    html.nabd-dark .medicine-category-card-text strong,
-    body.nabd-dark .medicine-category-card-text strong,
-    html.nabd-dark .medicine-list-info strong,
-    body.nabd-dark .medicine-list-info strong {
-      color: #e5ffff;
-    }
+body.nabd-dark .medicine-category-card-text span,
+body.nabd-dark .medicine-list-info span,
+body.nabd-dark .medicine-list-info small {
+  color: #91b5b3;
+}
 
-    html.nabd-dark .medicine-category-card-text span,
-    body.nabd-dark .medicine-category-card-text span,
-    html.nabd-dark .medicine-list-info span,
-    body.nabd-dark .medicine-list-info span,
-    html.nabd-dark .medicine-list-info small,
-    body.nabd-dark .medicine-list-info small {
-      color: #91b5b3;
-    }
+body.nabd-dark .medicine-list-item {
+  background: #0d2a2e;
+  border-color: rgba(170,230,225,.12);
+}
 
-    html.nabd-dark .medicine-list-item,
-    body.nabd-dark .medicine-list-item {
-      background: #0d2a2e;
-      border-color: rgba(170,230,225,.12);
-    }
+body.nabd-dark .medicine-request-button {
+  color: #67d7c4;
+  background: #123d40;
+}
 
-    /*
-    زر طلب الدواء في Dark Mode
-    */
+body.nabd-dark .medicine-request-button.requested {
+  color: white;
+  background:
+    linear-gradient(
+      135deg,
+      #39b8a5,
+      #159b8a
+    );
+}
 
-    html.nabd-dark .medicine-request-button,
-    body.nabd-dark .medicine-request-button {
-      color: #67d7c4;
-      background: #123d40;
-    }
-
-    html.nabd-dark .medicine-request-button.requested,
-    body.nabd-dark .medicine-request-button.requested {
-      color: white;
-
-      background:
-        linear-gradient(
-          135deg,
-          #39b8a5,
-          #159b8a
-        );
-    }
-
-    html.nabd-dark .medicine-count-badge,
-    body.nabd-dark .medicine-count-badge {
-      background: #123d40;
-      color: #62d7c6;
-    }
-  `}</style>
-    </div>
-  );
+body.nabd-dark .medicine-count-badge {
+  background: #123d40;
+  color: #62d7c6;
 }
