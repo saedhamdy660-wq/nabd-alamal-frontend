@@ -8061,48 +8061,5 @@ body.nabd-dark .success-message {
 body.nabd-dark .pharmacy-note {
   color: #9bbdbc !important;
 }
-/* =========================================================
-   🌙 DONOR DETAIL PAGE - BOTTOM ACTIONS BAR FIX
-   ========================================================= */
 
-body.nabd-dark .donor-detail-page .actions-bar,
-body.nabd-dark .donor-page .actions-bar,
-body.nabd-dark .donor-detail-page .bottom-actions,
-body.nabd-dark .donor-page .bottom-actions,
-body.nabd-dark .donor-detail-page .action-buttons,
-body.nabd-dark .donor-page .action-buttons,
-body.nabd-dark .donor-detail-page .donor-actions,
-body.nabd-dark .donor-page .donor-actions,
-body.nabd-dark .donor-detail-page .donor-bottom,
-body.nabd-dark .donor-page .donor-bottom {
-  background: #0d2a2e !important;
-  border-color: rgba(170,230,225,.15) !important;
-  color: #e9ffff !important;
-}
-
-/* النصوص والأيقونات جوه الشريط */
-body.nabd-dark .donor-detail-page .actions-bar *,
-body.nabd-dark .donor-page .actions-bar *,
-body.nabd-dark .donor-detail-page .bottom-actions *,
-body.nabd-dark .donor-page .bottom-actions *,
-body.nabd-dark .donor-detail-page .action-buttons *,
-body.nabd-dark .donor-page .action-buttons *,
-body.nabd-dark .donor-detail-page .donor-actions *,
-body.nabd-dark .donor-page .donor-actions *,
-body.nabd-dark .donor-detail-page .donor-bottom *,
-body.nabd-dark .donor-page .donor-bottom * {
-  color: #e9ffff !important;
-}
-
-/* الأيقونات تحديداً */
-body.nabd-dark .donor-detail-page .actions-bar svg,
-body.nabd-dark .donor-page .actions-bar svg,
-body.nabd-dark .donor-detail-page .bottom-actions svg,
-body.nabd-dark .donor-page .bottom-actions svg,
-body.nabd-dark .donor-detail-page .action-buttons svg,
-body.nabd-dark .donor-page .action-buttons svg,
-body.nabd-dark .donor-detail-page .donor-actions svg,
-body.nabd-dark .donor-page .donor-actions svg {
-  color: #5ed9c5 !important;
-  stroke: #5ed9c5 !important;
 }
