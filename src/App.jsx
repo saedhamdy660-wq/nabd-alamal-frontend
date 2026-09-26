@@ -11,7 +11,6 @@ import PhoneVerify from "./pages/PhoneVerify.jsx";
 import VerifyIdentity from "./pages/VerifyIdentity";
 import LocationPermission from "./pages/LocationPermission.jsx";
 
-
 import Home from "./pages/Home.jsx";
 import BloodDonation from "./pages/BloodDonation.jsx";
 import MedicineExchange from "./pages/MedicineExchange.jsx";
@@ -40,11 +39,8 @@ const noNavRoutes = [
   "/verify-phone",
   "/verify-identity",
   "/location-permission",
-
   "/home",
-
   "/notification-settings",
-
   "/settings",
 ];
 
@@ -52,31 +48,77 @@ export default function App() {
   const location = useLocation();
 
   const [theme, setTheme] = useState(() => {
-    return localStorage.getItem("nabd_theme") || "light";
+    const savedTheme = localStorage.getItem("nabd_theme");
+
+    if (savedTheme === "dark" || savedTheme === "light") {
+      return savedTheme;
+    }
+
+    // Backward compatibility with the old Dark Mode key.
+    return localStorage.getItem("nabd_dark_mode") === "true"
+      ? "dark"
+      : "light";
   });
 
   useEffect(() => {
     const applyTheme = () => {
       const savedTheme =
-        localStorage.getItem("nabd_theme") || "light";
+        localStorage.getItem("nabd_theme") ||
+        (
+          localStorage.getItem("nabd_dark_mode") === "true"
+            ? "dark"
+            : "light"
+        );
 
-      setTheme(savedTheme);
+      const normalizedTheme =
+        savedTheme === "dark" ? "dark" : "light";
+
+      setTheme(normalizedTheme);
 
       document.documentElement.setAttribute(
         "data-theme",
-        savedTheme
+        normalizedTheme
       );
 
       document.body.setAttribute(
         "data-theme",
-        savedTheme
+        normalizedTheme
+      );
+
+      // The existing project dark-mode CSS uses nabd-dark.
+      document.documentElement.classList.toggle(
+        "nabd-dark",
+        normalizedTheme === "dark"
+      );
+
+      document.body.classList.toggle(
+        "nabd-dark",
+        normalizedTheme === "dark"
+      );
+
+      // Keep both keys synchronized for compatibility.
+      localStorage.setItem(
+        "nabd_theme",
+        normalizedTheme
+      );
+
+      localStorage.setItem(
+        "nabd_dark_mode",
+        String(normalizedTheme === "dark")
       );
     };
 
     applyTheme();
 
-    window.addEventListener("theme-changed", applyTheme);
-    window.addEventListener("storage", applyTheme);
+    window.addEventListener(
+      "theme-changed",
+      applyTheme
+    );
+
+    window.addEventListener(
+      "storage",
+      applyTheme
+    );
 
     return () => {
       window.removeEventListener(
@@ -259,13 +301,9 @@ export default function App() {
           min-height: 100vh;
         }
 
-        /* ================= LIGHT ================= */
-
         [data-theme="light"] {
           color-scheme: light;
         }
-
-        /* ================= DARK ================= */
 
         [data-theme="dark"] {
           color-scheme: dark;
