@@ -7836,4 +7836,116 @@ body.nabd-dark .medicine-empty-state p {
 body.nabd-dark .medicine-empty-icon {
   background: #123d40 !important;
 }
+/* =========================================================
+   🌙 MEDICINE DETAIL PAGE - DARK MODE FIX
+   ========================================================= */
 
+body.nabd-dark .medicine-detail-page {
+  background:
+    radial-gradient(circle at 10% 5%, rgba(21,155,138,.12), transparent 28%),
+    radial-gradient(circle at 90% 35%, rgba(21,155,138,.08), transparent 25%),
+    linear-gradient(180deg, #071a1d 0%, #092326 100%) !important;
+  color: #e9ffff !important;
+}
+
+/* ================= HEADER ================= */
+
+body.nabd-dark .detail-circle-btn {
+  background: rgba(18,61,64,.85) !important;
+  color: #65d7c7 !important;
+}
+body.nabd-dark .favorite-active {
+  color: #ff9fb1 !important;
+  background: rgba(192,82,103,.25) !important;
+}
+
+/* ================= MAIN CARD ================= */
+
+body.nabd-dark .medicine-info-card {
+  background: #0d2a2e !important;
+  border-color: rgba(170,230,225,.15) !important;
+}
+
+/* ================= TITLE ================= */
+
+body.nabd-dark .medicine-title-row h1 {
+  color: #e9ffff !important;
+}
+
+body.nabd-dark .availability.available {
+  color: #5ed9c5 !important;
+  background: rgba(94,217,197,.15) !important;
+}
+body.nabd-dark .availability.requested {
+  color: #ff9fb1 !important;
+  background: rgba(192,82,103,.2) !important;
+}
+
+/* ================= TAGS ================= */
+
+body.nabd-dark .medicine-tags span {
+  background: #123d40 !important;
+  color: #5ed9c5 !important;
+}
+
+/* ================= DIVIDER ================= */
+
+body.nabd-dark .info-divider {
+  background: rgba(170,230,225,.12) !important;
+}
+
+/* ================= DETAILS ================= */
+
+body.nabd-dark .detail-icon {
+  color: #5ed9c5 !important;
+}
+body.nabd-dark .detail-text span {
+  color: #9bbdbc !important;
+}
+body.nabd-dark .detail-text strong {
+  color: #e9ffff !important;
+}
+
+/* ================= DONOR ================= */
+
+body.nabd-dark .donor-avatar {
+  background: #123d40 !important;
+  color: #5ed9c5 !important;
+}
+body.nabd-dark .donor-info strong {
+  color: #e9ffff !important;
+}
+body.nabd-dark .donor-info span {
+  color: #9bbdbc !important;
+}
+body.nabd-dark .donor-arrow {
+  color: #5ed9c5 !important;
+}
+
+/* ================= USAGE ================= */
+
+body.nabd-dark .usage-card {
+  background: #0d2a2e !important;
+  border-color: rgba(170,230,225,.15) !important;
+}
+body.nabd-dark .usage-icon {
+  background: #123d40 !important;
+  color: #5ed9c5 !important;
+}
+body.nabd-dark .usage-header h2 {
+  color: #e9ffff !important;
+}
+body.nabd-dark .usage-header p {
+  color: #9bbdbc !important;
+}
+body.nabd-dark .safety-note {
+  background: #123d40 !important;
+  color: #5ed9c5 !important;
+}
+
+/* ================= BUTTON ================= */
+
+body.nabd-dark .contact-sender-btn {
+  background: linear-gradient(135deg, #159b8a, #087d70) !important;
+  color: #ffffff !important;
+}
