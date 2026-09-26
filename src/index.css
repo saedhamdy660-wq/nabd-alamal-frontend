@@ -9274,22 +9274,43 @@ body.nabd-dark .state-icon {
   color: #ff9fb1 !important;
 }
 /* =========================================================
-   🌙 DONATION REQUEST DETAILS - ACTIONS BUTTONS FIX
+   🌙 DONATION REQUEST DETAILS - ACTIONS CARD FIX
    ========================================================= */
 
-/* خلي الزرارين جنب بعض دايماً */
+/* الكارت كله يبقى عمودي */
+body.nabd-dark .donation-request-page .actions-card,
+.donation-request-page .actions-card {
+  display: flex !important;
+  flex-direction: column !important;
+  padding: 18px !important;
+  overflow: hidden !important;
+}
+
+/* العنوان (هل تريد التبرع؟) ياخد عرض كامل */
+.donation-request-page .actions-header {
+  display: flex !important;
+  flex-direction: row !important;
+  align-items: center !important;
+  gap: 12px !important;
+  margin-bottom: 16px !important;
+  width: 100% !important;
+}
+
+/* الزرارين جنب بعض */
 .donation-request-page .actions {
   display: flex !important;
   flex-direction: row !important;
   gap: 10px !important;
+  width: 100% !important;
   align-items: stretch !important;
 }
 
 /* كل زرار ياخد نص المساحة */
 .donation-request-page .actions button {
   flex: 1 1 0 !important;
+  min-width: 0 !important;
   min-height: 60px !important;
-  padding: 12px 14px !important;
+  padding: 14px 10px !important;
   display: flex !important;
   flex-direction: row !important;
   align-items: center !important;
@@ -9300,21 +9321,14 @@ body.nabd-dark .state-icon {
   font-weight: 900 !important;
   white-space: nowrap !important;
   text-align: center !important;
+  box-sizing: border-box !important;
 }
 
-/* الأيقونات جوه الزرار */
+/* الأيقونات */
 .donation-request-page .actions button svg {
   width: 20px !important;
   height: 20px !important;
   flex-shrink: 0 !important;
-}
-
-/* لو النص طويل، نخليه في سطر واحد على الشاشات الكبيرة */
-@media (min-width: 361px) {
-  .donation-request-page .actions button {
-    font-size: 13px !important;
-    padding: 12px 8px !important;
-  }
 }
 
 /* على الشاشات الصغيرة جداً، نخليهم فوق بعض */
