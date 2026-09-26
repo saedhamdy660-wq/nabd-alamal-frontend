@@ -8449,3 +8449,171 @@ body.nabd-dark [class*="actions-card"] svg {
   color: #5ed9c5 !important;
   stroke: #5ed9c5 !important;
 }
+/* =========================================================
+   🌙 NOTIFICATIONS PAGE - DARK MODE
+   ========================================================= */
+
+* { box-sizing: border-box; }
+
+.notifications-page {
+  min-height: 100vh;
+  padding: 22px 18px 35px;
+  direction: rtl;
+  color: #24575a;
+  font-family: Arial, Tahoma, sans-serif;
+  background:
+    radial-gradient(circle at 10% 5%, rgba(70,193,177,.17), transparent 28%),
+    radial-gradient(circle at 95% 28%, rgba(154,231,216,.18), transparent 30%),
+    linear-gradient(160deg, #fbffff 0%, #f1fbfa 45%, #e8f7f4 100%);
+}
+
+.notifications-header { max-width: 520px; margin: 0 auto 22px; display: flex; align-items: center; justify-content: space-between; gap: 15px; }
+.header-title { display: flex; align-items: center; gap: 12px; }
+.header-bell {
+  width: 48px; height: 48px; flex-shrink: 0; display: flex;
+  align-items: center; justify-content: center; border-radius: 16px;
+  color: #159b8a; background: linear-gradient(145deg, #e3faf6, #d2f2ec);
+  border: 1px solid rgba(255,255,255,.9);
+  box-shadow: 0 7px 18px rgba(35,139,128,.08), inset 0 1px 0 rgba(255,255,255,.85);
+}
+.header-bell svg { width: 25px; height: 25px; }
+.header-title h1 { margin: 0 0 4px; color: #218d83; font-size: 22px; font-weight: 800; }
+.header-title p { margin: 0; color: #88a3a2; font-size: 11px; }
+.settings-button {
+  width: 44px; height: 44px; flex-shrink: 0;
+  display: flex; align-items: center; justify-content: center;
+  border-radius: 15px; color: #218d83;
+  background: rgba(255,255,255,.72);
+  border: 1px solid rgba(255,255,255,.9);
+  box-shadow: 0 7px 18px rgba(35,139,128,.08), inset 0 1px 0 rgba(255,255,255,.9);
+  text-decoration: none;
+}
+.settings-button svg { width: 23px; height: 23px; }
+
+.notifications-list { max-width: 520px; margin: 0 auto; }
+
+.notification-card {
+  width: 100%; min-height: 88px; margin-bottom: 12px; padding: 14px;
+  display: flex; align-items: flex-start; gap: 12px; border-radius: 23px;
+  border: 1px solid rgba(255,255,255,.92);
+  box-shadow: 0 10px 27px rgba(42,128,128,.07), inset 0 1px 0 rgba(255,255,255,.85);
+}
+.notification-card.urgent { background: linear-gradient(145deg, rgba(255,232,238,.96), rgba(249,215,224,.9)); }
+.notification-card.success { background: linear-gradient(145deg, rgba(218,251,242,.96), rgba(201,243,232,.9)); }
+.notification-card.info { background: linear-gradient(145deg, rgba(255,255,255,.9), rgba(232,249,246,.8)); }
+
+.notification-icon {
+  width: 48px; height: 48px; flex-shrink: 0;
+  display: flex; align-items: center; justify-content: center;
+  border-radius: 16px;
+}
+.notification-icon svg { width: 24px; height: 24px; }
+.notification-card.urgent .notification-icon { color: #c05267; background: rgba(255,255,255,.62); }
+.notification-card.success .notification-icon { color: #159b8a; background: rgba(255,255,255,.65); }
+.notification-card.info .notification-icon { color: #4c9290; background: rgba(255,255,255,.72); }
+
+.notification-content { flex: 1; min-width: 0; position: relative; }
+.notification-content h3 { margin: 0 0 5px; font-size: 14px; line-height: 1.6; font-weight: 800; padding-left: 34px; }
+.notification-card.urgent .notification-content h3 { color: #98505f; }
+.notification-card.success .notification-content h3 { color: #28786e; }
+.notification-card.info .notification-content h3 { color: #286d6d; }
+.notification-content p { margin: 0 0 6px; color: #718f8f; font-size: 11px; line-height: 1.7; padding-left: 34px; }
+.notification-content span { color: #9aafae; font-size: 10px; }
+
+.details-arrow {
+  position: absolute; left: 0; top: 0; width: 31px; height: 31px;
+  display: flex; align-items: center; justify-content: center; padding: 0;
+  border: 0; border-radius: 10px; color: #159b8a;
+  background: rgba(255,255,255,.72);
+  box-shadow: 0 5px 12px rgba(21,155,138,.08); cursor: pointer;
+}
+.details-arrow svg { width: 17px; height: 17px; }
+.details-arrow-open svg { transform: rotate(90deg); }
+
+.donation-details { margin-top: 13px; padding: 13px; border-radius: 17px; background: rgba(255,255,255,.65); border: 1px solid rgba(255,255,255,.88); }
+.details-title { margin-bottom: 11px; color: #28786e; font-size: 12px; font-weight: 800; }
+.details-loading { padding: 12px 5px; color: #7f9b9a; font-size: 11px; text-align: center; }
+.detail-row { display: flex; align-items: center; gap: 9px; margin-bottom: 9px; padding: 9px; border-radius: 13px; background: rgba(255,255,255,.62); }
+.detail-row:last-of-type { margin-bottom: 10px; }
+.detail-row-icon { width: 34px; height: 34px; flex-shrink: 0; display: flex; align-items: center; justify-content: center; border-radius: 10px; color: #159b8a; background: #e5f8f4; }
+.detail-row-icon svg { width: 18px; height: 18px; }
+.detail-row-content { min-width: 0; display: flex; flex-direction: column; gap: 2px; }
+.detail-row-content span { color: #8aa3a2; font-size: 9px; }
+.detail-row-content strong { color: #286d6d; font-size: 11px; font-weight: 800; line-height: 1.5; }
+.detail-row-content small { color: #7b9796; font-size: 9px; line-height: 1.6; }
+.directions-button { width: 100%; min-height: 38px; display: flex; align-items: center; justify-content: center; gap: 7px; margin-top: 8px; border-radius: 13px; color: #159b8a; background: rgba(229,248,244,.9); font-size: 11px; font-weight: 800; text-decoration: none; }
+.directions-button svg { width: 17px; height: 17px; }
+
+.donation-actions { display: flex; gap: 8px; margin-top: 11px; }
+.donation-actions button { flex: 1; min-height: 38px; border: 0; border-radius: 13px; font-size: 12px; font-weight: 800; cursor: pointer; }
+.donation-actions button:disabled { opacity: .55; cursor: not-allowed; }
+.accept-button { color: white; background: linear-gradient(135deg, #19ad98, #159b8a); }
+.reject-button { color: #98505f; background: #ffe7ed; }
+
+.request-status { margin-top: 10px; padding: 8px 10px; border-radius: 12px; font-size: 11px; font-weight: 800; text-align: center; }
+.accepted-status { color: #28786e; background: rgba(213,248,239,.9); }
+.rejected-status { color: #98505f; background: rgba(255,231,237,.9); }
+
+.view-donor-button { width: 100%; min-height: 38px; margin-top: 10px; border: 0; border-radius: 13px; color: #159b8a; background: rgba(255,255,255,.72); font-size: 12px; font-weight: 800; cursor: pointer; }
+.action-error { margin-top: 8px; color: #98505f; font-size: 10px; font-weight: 700; }
+
+.empty-notifications { padding: 45px 20px; text-align: center; border-radius: 25px; background: linear-gradient(145deg, rgba(255,255,255,.88), rgba(232,249,246,.78)); border: 1px solid rgba(255,255,255,.92); box-shadow: 0 12px 30px rgba(42,128,128,.08); }
+.empty-icon { width: 64px; height: 64px; margin: 0 auto 13px; display: flex; align-items: center; justify-content: center; border-radius: 22px; color: #159b8a; background: linear-gradient(145deg, #e2faf6, #cfeee8); }
+.empty-icon svg { width: 30px; height: 30px; }
+.empty-notifications h3 { margin: 0 0 6px; color: #286d6d; font-size: 16px; }
+.empty-notifications p { margin: 0; color: #8aa3a2; font-size: 12px; }
+
+/* =========================================================
+   NOTIFICATIONS - DARK MODE
+   ========================================================= */
+
+body.nabd-dark .notifications-page {
+  background:
+    radial-gradient(circle at 10% 5%, rgba(21,155,138,.12), transparent 28%),
+    radial-gradient(circle at 95% 28%, rgba(21,155,138,.08), transparent 30%),
+    linear-gradient(160deg, #071a1d 0%, #092326 50%, #071a1d 100%) !important;
+  color: #e9ffff !important;
+}
+
+body.nabd-dark .header-title h1 { color: #e9ffff !important; }
+body.nabd-dark .header-title p { color: #9bbdbc !important; }
+body.nabd-dark .header-bell,
+body.nabd-dark .settings-button {
+  background: rgba(18,61,64,.85) !important;
+  color: #65d7c7 !important;
+  border-color: rgba(170,230,225,.15) !important;
+}
+
+body.nabd-dark .notification-card { border-color: rgba(170,230,225,.15) !important; }
+body.nabd-dark .notification-card.urgent { background: linear-gradient(145deg, #2a1418, #3a1c22) !important; }
+body.nabd-dark .notification-card.success { background: linear-gradient(145deg, #0a2a28, #0d3a36) !important; }
+body.nabd-dark .notification-card.info { background: #0d2a2e !important; }
+
+body.nabd-dark .notification-content h3 { color: #e9ffff !important; }
+body.nabd-dark .notification-content p { color: #9bbdbc !important; }
+body.nabd-dark .notification-content span { color: #789b99 !important; }
+
+body.nabd-dark .notification-icon { background: rgba(255,255,255,.08) !important; }
+body.nabd-dark .notification-card.urgent .notification-icon { color: #ff9fb1 !important; }
+body.nabd-dark .notification-card.success .notification-icon { color: #5ed9c5 !important; }
+body.nabd-dark .notification-card.info .notification-icon { color: #5ed9c5 !important; }
+
+body.nabd-dark .details-arrow { background: rgba(255,255,255,.08) !important; color: #5ed9c5 !important; }
+body.nabd-dark .donation-details { background: #0a2428 !important; border-color: rgba(170,230,225,.12) !important; }
+body.nabd-dark .details-title { color: #5ed9c5 !important; }
+body.nabd-dark .detail-row { background: #0d2a2e !important; }
+body.nabd-dark .detail-row-icon { background: #123d40 !important; color: #5ed9c5 !important; }
+body.nabd-dark .detail-row-content span { color: #9bbdbc !important; }
+body.nabd-dark .detail-row-content strong { color: #e9ffff !important; }
+body.nabd-dark .detail-row-content small { color: #9bbdbc !important; }
+body.nabd-dark .directions-button { background: rgba(94,217,197,.15) !important; color: #5ed9c5 !important; }
+body.nabd-dark .accept-button { background: linear-gradient(135deg, #159b8a, #087d70) !important; }
+body.nabd-dark .reject-button { background: rgba(192,82,103,.2) !important; color: #ff9fb1 !important; }
+body.nabd-dark .accepted-status { background: rgba(94,217,197,.15) !important; color: #5ed9c5 !important; }
+body.nabd-dark .rejected-status { background: rgba(192,82,103,.2) !important; color: #ff9fb1 !important; }
+body.nabd-dark .view-donor-button { background: rgba(94,217,197,.15) !important; color: #5ed9c5 !important; }
+
+body.nabd-dark .empty-notifications { background: #0d2a2e !important; border-color: rgba(170,230,225,.15) !important; }
+body.nabd-dark .empty-icon { background: #123d40 !important; color: #5ed9c5 !important; }
+body.nabd-dark .empty-notifications h3 { color: #e9ffff !important; }
+body.nabd-dark .empty-notifications p { color: #9bbdbc !important; }
