@@ -8061,3 +8061,67 @@ body.nabd-dark .success-message {
 body.nabd-dark .pharmacy-note {
   color: #9bbdbc !important;
 }
+/* =========================================================
+   🌙 DONOR DETAIL PAGE - DARK MODE FIX
+   ========================================================= */
+
+body.nabd-dark .donor-page,
+body.nabd-dark .donor-detail-page {
+  background:
+    radial-gradient(circle at 15% 10%, rgba(21,155,138,.12), transparent 28%),
+    linear-gradient(180deg, #071a1d 0%, #092326 100%) !important;
+  color: #e9ffff !important;
+}
+
+/* الكارت الرئيسي */
+body.nabd-dark .donor-page .card,
+body.nabd-dark .donor-detail-page .card,
+body.nabd-dark .donor-page .donor-card,
+body.nabd-dark .donor-detail-page .donor-card,
+body.nabd-dark .donor-page .info-card,
+body.nabd-dark .donor-detail-page .info-card {
+  background: #0d2a2e !important;
+  color: #e9ffff !important;
+  border-color: rgba(170,230,225,.15) !important;
+}
+
+/* العناوين والنصوص */
+body.nabd-dark .donor-page h1,
+body.nabd-dark .donor-page h2,
+body.nabd-dark .donor-page h3,
+body.nabd-dark .donor-page strong,
+body.nabd-dark .donor-detail-page h1,
+body.nabd-dark .donor-detail-page h2,
+body.nabd-dark .donor-detail-page h3,
+body.nabd-dark .donor-detail-page strong {
+  color: #e9ffff !important;
+}
+
+body.nabd-dark .donor-page p,
+body.nabd-dark .donor-page span,
+body.nabd-dark .donor-page small,
+body.nabd-dark .donor-detail-page p,
+body.nabd-dark .donor-detail-page span,
+body.nabd-dark .donor-detail-page small {
+  color: #9bbdbc !important;
+}
+
+/* الأيقونات الدائرية */
+body.nabd-dark .donor-page .icon-circle,
+body.nabd-dark .donor-detail-page .icon-circle,
+body.nabd-dark .donor-page .info-icon,
+body.nabd-dark .donor-detail-page .info-icon,
+body.nabd-dark .donor-page .detail-icon,
+body.nabd-dark .donor-detail-page .detail-icon {
+  background: #123d40 !important;
+  color: #5ed9c5 !important;
+}
+
+/* الفواصل */
+body.nabd-dark .donor-page hr,
+body.nabd-dark .donor-page .divider,
+body.nabd-dark .donor-detail-page hr,
+body.nabd-dark .donor-detail-page .divider {
+  border-color: rgba(170,230,225,.12) !important;
+  background: rgba(170,230,225,.12) !important;
+}
