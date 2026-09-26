@@ -8411,3 +8411,26 @@ body.nabd-dark .error-card {
 }
 body.nabd-dark .success-card strong,
 body.nabd-dark
+/* =========================================================
+   🌙 DONOR DETAIL - ACTIONS CARD DARK MODE FIX
+   ========================================================= */
+
+body.nabd-dark .actions-card {
+  background: #0d2a2e !important;
+  border-color: rgba(170, 230, 225, 0.15) !important;
+  box-shadow: 0 10px 26px rgba(0, 0, 0, 0.22) !important;
+}
+
+body.nabd-dark .action-button {
+  color: #5ed9c5 !important;
+  background: transparent !important;
+}
+
+body.nabd-dark .action-button svg {
+  color: #5ed9c5 !important;
+  stroke: #5ed9c5 !important;
+}
+
+body.nabd-dark .action-button span {
+  color: #5ed9c5 !important;
+}
