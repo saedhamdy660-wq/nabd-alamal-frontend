@@ -7949,3 +7949,115 @@ body.nabd-dark .contact-sender-btn {
   background: linear-gradient(135deg, #159b8a, #087d70) !important;
   color: #ffffff !important;
 }
+/* =========================================================
+   🌙 PHARMACY PARTNER PAGE - DARK MODE FIX
+   ========================================================= */
+
+body.nabd-dark .pharmacy-page {
+  background:
+    radial-gradient(circle at 10% 5%, rgba(21,155,138,.12), transparent 28%),
+    radial-gradient(circle at 90% 35%, rgba(21,155,138,.08), transparent 27%),
+    linear-gradient(180deg, #071a1d 0%, #092326 100%) !important;
+  color: #e9ffff !important;
+}
+
+/* ================= HEADER ================= */
+
+body.nabd-dark .pharmacy-header h1 {
+  color: #e9ffff !important;
+}
+
+body.nabd-dark .pharmacy-back {
+  background: rgba(18,61,64,.85) !important;
+  color: #65d7c7 !important;
+}
+
+/* ================= MAP ================= */
+
+body.nabd-dark .map-card {
+  background: #0a2428 !important;
+  border-color: rgba(170,230,225,.15) !important;
+}
+
+body.nabd-dark .map-card .leaflet-container {
+  filter: invert(1) hue-rotate(180deg) brightness(0.85) contrast(0.9) !important;
+}
+
+body.nabd-dark .map-label {
+  background: rgba(13,42,46,.9) !important;
+  border-color: rgba(170,230,225,.15) !important;
+  color: #5ed9c5 !important;
+}
+
+/* ================= PHARMACY CARD ================= */
+
+body.nabd-dark .pharmacy-info-card {
+  background: #0d2a2e !important;
+  border-color: rgba(170,230,225,.15) !important;
+}
+
+body.nabd-dark .pharmacy-icon,
+body.nabd-dark .pharmacy-store-icon {
+  background: #123d40 !important;
+  color: #5ed9c5 !important;
+}
+
+body.nabd-dark .pharmacy-main-info h2 {
+  color: #e9ffff !important;
+}
+
+body.nabd-dark .pharmacy-main-info p {
+  color: #9bbdbc !important;
+}
+
+body.nabd-dark .meta-row {
+  color: #9bbdbc !important;
+}
+
+body.nabd-dark .meta-icon {
+  background: #123d40 !important;
+  color: #5ed9c5 !important;
+}
+
+body.nabd-dark .hours-pill {
+  background: #123d40 !important;
+  color: #5ed9c5 !important;
+}
+
+body.nabd-dark .directions-button {
+  background: linear-gradient(135deg, #159b8a, #087d70) !important;
+  color: #ffffff !important;
+}
+
+/* ================= EMPTY ================= */
+
+body.nabd-dark .empty-pharmacy-card {
+  background: #0d2a2e !important;
+  color: #e9ffff !important;
+}
+
+body.nabd-dark .empty-icon {
+  background: #123d40 !important;
+  color: #5ed9c5 !important;
+}
+
+body.nabd-dark .empty-pharmacy-card h2 {
+  color: #e9ffff !important;
+}
+
+body.nabd-dark .empty-pharmacy-card p {
+  color: #9bbdbc !important;
+}
+
+/* ================= SUCCESS ================= */
+
+body.nabd-dark .success-message {
+  background: #123d40 !important;
+  color: #5ed9c5 !important;
+}
+
+/* ================= FOOTER NOTE ================= */
+
+body.nabd-dark .pharmacy-note {
+  color: #9bbdbc !important;
+}
