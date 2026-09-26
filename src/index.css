@@ -7061,6 +7061,7 @@ body.nabd-dark * {
   min-height: 100vh; width: 100%;
   padding: 12px 13px 105px;
   overflow-x: hidden; position: relative; color: #16494b;
+  font-family: Arial, Tahoma, sans-serif;
   background:
     radial-gradient(circle at 5% 8%, rgba(255,255,255,.85) 0 3%, transparent 20%),
     radial-gradient(circle at 93% 18%, rgba(255,255,255,.48) 0 5%, transparent 21%),
