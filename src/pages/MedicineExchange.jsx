@@ -1,1165 +1,2074 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { api, getCurrentLocation } from "../api.js";
+import { api } from "../api.js";
 
-function getLastDonationText(date) {
-  if (!date) return "آخر تبرع غير مسجل";
+/*
+الأقسام الرئيسية
+*/
 
-  const donationDate = new Date(date);
-  const today = new Date();
+const categories = [
+  {
+    key: "الأورام",
+    label: "الأورام",
+    icon: "🩺",
+  },
+  {
+    key: "الضغط والقلب",
+    label: "الضغط والقلب",
+    icon: "❤️",
+  },
+  {
+    key: "السكري",
+    label: "السكري",
+    icon: "🩸",
+  },
+  {
+    key: "الجهاز الهضمي",
+    label: "الجهاز الهضمي",
+    icon: "🫃",
+  },
+  {
+    key: "البرد والحساسية",
+    label: "البرد والحساسية",
+    icon: "🤧",
+  },
+  {
+    key: "مسكنات",
+    label: "مسكنات",
+    icon: "💊",
+  },
+  {
+    key: "المضادات الحيوية",
+    label: "المضادات الحيوية",
+    icon: "💊",
+  },
+  {
+    key: "الأدوية الجلدية",
+    label: "الأدوية الجلدية",
+    icon: "🧴",
+  },
+  {
+    key: "الجهاز التنفسي",
+    label: "الجهاز التنفسي",
+    icon: "🫁",
+  },
+];
 
-  const diffMs = today - donationDate;
-  const diffDays = Math.max(
-    0,
-    Math.floor(diffMs / (1000 * 60 * 60 * 24))
-  );
+/*
+زر الكل
+*/
 
-  if (diffDays === 0) {
-    return "آخر تبرع اليوم";
+const allCategory = {
+  key: "all",
+  label: "الكل",
+  icon: "💊",
+};
+
+/*
+لون واحد موحّد لكل الأقسام.
+*/
+
+const defaultCategoryColor = {
+  background: "#edf9f6",
+  iconBackground: "#dbf3ee",
+};
+
+/*
+توحيد اسم القسم القادم من الـ API.
+*/
+
+function normalizeCategory(category) {
+  if (!category) {
+    return "أخرى";
   }
 
-  if (diffDays === 1) {
-    return "آخر تبرع منذ يوم";
+  const value = String(category).trim();
+
+  const aliases = {
+    "مضادات حيوية": "المضادات الحيوية",
+    "مضادات حيويه": "المضادات الحيوية",
+    "المضادات الحيويه": "المضادات الحيوية",
+
+    "جلدية": "الأدوية الجلدية",
+    "أدوية جلدية": "الأدوية الجلدية",
+
+    "تنفسي": "الجهاز التنفسي",
+    "أدوية الجهاز التنفسي": "الجهاز التنفسي",
+
+    "هضمي": "الجهاز الهضمي",
+    "أدوية الجهاز الهضمي": "الجهاز الهضمي",
+
+    "برد": "البرد والحساسية",
+    "الحساسية": "البرد والحساسية",
+
+    "قلب": "الضغط والقلب",
+    "ضغط": "الضغط والقلب",
+    "أدوية الضغط": "الضغط والقلب",
+    "أدوية القلب": "الضغط والقلب",
+
+    "سكر": "السكري",
+    "أدوية السكر": "السكري",
+
+    "أدوية الأورام": "الأورام",
+  };
+
+  return aliases[value] || value;
+}
+
+function getMedicineCategory(medicine) {
+  return normalizeCategory(
+    medicine?.category ||
+      medicine?.medicineCategory ||
+      medicine?.typeCategory ||
+      ""
+  );
+}
+
+function getAvailability(medicine) {
+  const quantity = medicine?.quantity;
+
+  if (
+    quantity === "غير متوفر" ||
+    medicine?.status === "unavailable" ||
+    medicine?.status === "مطلوب"
+  ) {
+    return {
+      label: "مطلوب",
+      className: "medicine-status-requested",
+    };
   }
 
-  if (diffDays < 30) {
-    return `آخر تبرع منذ ${diffDays} يوم`;
-  }
-
-  const months = Math.floor(diffDays / 30);
-
-  if (months === 1) {
-    return "آخر تبرع منذ شهر";
-  }
-
-  if (months < 12) {
-    return `آخر تبرع منذ ${months} أشهر`;
-  }
-
-  const years = Math.floor(months / 12);
-
-  if (years === 1) {
-    return "آخر تبرع منذ سنة";
-  }
-
-  return `آخر تبرع منذ ${years} سنوات`;
+  return {
+    label: "متاح",
+    className: "medicine-status-available",
+  };
 }
 
-function getDonorInitial(name) {
-  if (!name) return "م";
-  return name.trim().charAt(0);
-}
-
-function LocationIcon() {
-  return (
-    <svg viewBox="0 0 24 24">
-      <path
-        d="M12 21s7-6.1 7-12a7 7 0 1 0-14 0c0 5.9 7 12 7 12Z"
-        fill="none"
-        stroke="currentColor"
-        strokeWidth="1.8"
-      />
-      <circle
-        cx="12"
-        cy="9"
-        r="2.2"
-        fill="none"
-        stroke="currentColor"
-        strokeWidth="1.8"
-      />
-    </svg>
-  );
-}
-
-function BloodIcon() {
-  return (
-    <svg viewBox="0 0 24 24">
-      <path
-        d="M12 3.5S6.5 9.8 6.5 14.2a5.5 5.5 0 0 0 11 0C17.5 9.8 12 3.5 12 3.5Z"
-        fill="none"
-        stroke="currentColor"
-        strokeWidth="1.8"
-      />
-    </svg>
-  );
-}
-
-function HomeIcon() {
-  return (
-    <svg viewBox="0 0 24 24">
-      <path
-        d="M4 10.5L12 4l8 6.5V20a1 1 0 0 1-1 1h-4.5v-5h-5v5H5a1 1 0 0 1-1-1v-9.5Z"
-        fill="none"
-        stroke="currentColor"
-        strokeWidth="1.8"
-        strokeLinejoin="round"
-      />
-    </svg>
-  );
-}
-
-function RequestsIcon() {
-  return (
-    <svg viewBox="0 0 24 24">
-      <rect
-        x="5"
-        y="4"
-        width="14"
-        height="16"
-        rx="2"
-        fill="none"
-        stroke="currentColor"
-        strokeWidth="1.8"
-      />
-      <path
-        d="M8.5 9h7M8.5 13h7M8.5 17h4"
-        fill="none"
-        stroke="currentColor"
-        strokeWidth="1.8"
-        strokeLinecap="round"
-      />
-    </svg>
-  );
-}
-
-function BellIcon() {
-  return (
-    <svg viewBox="0 0 24 24">
-      <path
-        d="M6 17h12l-1.2-1.7V10a4.8 4.8 0 0 0-9.6 0v5.3L6 17Z"
-        fill="none"
-        stroke="currentColor"
-        strokeWidth="1.8"
-      />
-      <path
-        d="M10 20h4"
-        fill="none"
-        stroke="currentColor"
-        strokeWidth="1.8"
-        strokeLinecap="round"
-      />
-    </svg>
-  );
-}
-
-function ProfileIcon() {
-  return (
-    <svg viewBox="0 0 24 24">
-      <circle
-        cx="12"
-        cy="8"
-        r="3.2"
-        fill="none"
-        stroke="currentColor"
-        strokeWidth="1.8"
-      />
-      <path
-        d="M5.5 20c.8-3.3 3-5 6.5-5s5.7 1.7 6.5 5"
-        fill="none"
-        stroke="currentColor"
-        strokeWidth="1.8"
-        strokeLinecap="round"
-      />
-    </svg>
-  );
-}
-
-function DonorRow({ donor, onClick }) {
-  return (
-    <button className="donor-row" onClick={onClick}>
-      <div className="donor-avatar-small">
-        {donor.avatar ? (
-          <img src={donor.avatar} alt={donor.name} />
-        ) : (
-          getDonorInitial(donor.name)
-        )}
-      </div>
-
-      <div className="donor-info">
-        <strong>{donor.name}</strong>
-
-        <span>
-          على بعد {donor.distanceKm} كم
-        </span>
-
-        <small>
-          {getLastDonationText(donor.lastDonation)}
-        </small>
-      </div>
-
-      <div className="blood-badge">
-        🩸 {donor.bloodType}
-      </div>
-
-      <div className="donor-arrow">
-        ←
-      </div>
-    </button>
-  );
-}
-
-export default function BloodDonation() {
-  const [tab, setTab] = useState("urgent");
-  const [requests, setRequests] = useState([]);
-  const [donors, setDonors] = useState([]);
-
+export default function MedicineExchange() {
   const navigate = useNavigate();
 
-  useEffect(() => {
-    api
-      .getBloodRequests()
-      .then(setRequests)
-      .catch(() => {});
-  }, []);
+  const [medicines, setMedicines] = useState([]);
+  const [search, setSearch] = useState("");
+
+  /*
+  البداية على "الكل"
+  والكل يعرض الأقسام فقط.
+  */
+
+  const [selectedCategory, setSelectedCategory] =
+    useState("all");
+
+  const [loading, setLoading] = useState(true);
+
+  /*
+  الأدوية التي قام المستخدم الحالي بطلبها.
+  */
+
+  const [requestedMedicineIds, setRequestedMedicineIds] =
+    useState(new Set());
+
+  /*
+  الدواء الذي يتم إرسال أو إلغاء طلبه حاليًا.
+  */
+
+  const [requestingMedicineId, setRequestingMedicineId] =
+    useState(null);
+
+  /*
+  المستخدم الحقيقي القادم من الـ Backend.
+  */
+
+  const [currentUserId, setCurrentUserId] =
+    useState(null);
+
+  /*
+  تحميل بيانات المستخدم الحقيقية من الـ Backend.
+  */
 
   useEffect(() => {
-    let cancelled = false;
+    let mounted = true;
 
-    const loadDonors = async () => {
+    const loadCurrentUser = async () => {
       try {
-        const savedUser =
+        const storedUser =
           localStorage.getItem("nabd_user");
 
-        let currentUser = null;
-
-        if (savedUser) {
-          try {
-            currentUser = JSON.parse(savedUser);
-          } catch {
-            currentUser = null;
-          }
+        if (!storedUser) {
+          return;
         }
 
-        let lat = currentUser?.lat;
-        let lng = currentUser?.lng;
+        const localUser =
+          JSON.parse(storedUser);
 
         /*
-          استخدام الموقع المحفوظ أولًا.
+        لو عندنا email نجيب المستخدم
+        من الـ Backend ونأخذ الـ ID الحقيقي.
         */
-        if (
-          !Number.isFinite(Number(lat)) ||
-          !Number.isFinite(Number(lng))
-        ) {
-          try {
-            const location =
-              await getCurrentLocation();
 
-            lat = location.lat;
-            lng = location.lng;
+        if (localUser?.email) {
+          const user =
+            await api.getUser(
+              localUser.email
+            );
+
+          if (!mounted) return;
+
+          if (user?.id) {
+            setCurrentUserId(
+              user.id
+            );
 
             /*
-              حفظ الموقع محليًا.
+            تحديث المستخدم المخزن
+            بالبيانات الصحيحة من السيرفر.
             */
-            if (currentUser) {
-              currentUser = {
-                ...currentUser,
-                lat,
-                lng,
-                locationEnabled: true,
-              };
 
-              localStorage.setItem(
-                "nabd_user",
-                JSON.stringify(currentUser)
-              );
+            localStorage.setItem(
+              "nabd_user",
+              JSON.stringify({
+                ...localUser,
+                ...user,
+              })
+            );
 
-              /*
-                تحديث الموقع في الـ Backend
-                حتى لو المستخدم دخل الصفحة
-                بدون المرور على LocationPermission.
-              */
-              if (currentUser.id) {
-                try {
-                  await api.updateUserLocation(
-                    currentUser.id,
-                    lat,
-                    lng
-                  );
-                } catch {
-                  // الموقع المحلي يكفي لاستكمال البحث
-                }
-              }
-            }
-          } catch {
-            /*
-              المستخدم لم يسمح بالموقع.
-              سنستمر بالموقع المحفوظ إن وجد.
-            */
+            return;
           }
         }
 
-        const hasLocation =
-          Number.isFinite(Number(lat)) &&
-          Number.isFinite(Number(lng));
+        /*
+        fallback:
+        لو الـ Backend لم يرجع المستخدم،
+        نستخدم الـ ID الموجود محليًا.
+        */
 
-        const data =
-          await api.getNearbyDonors({
-            userId:
-              currentUser?.id || "",
-            lat: hasLocation
-              ? Number(lat)
-              : "",
-            lng: hasLocation
-              ? Number(lng)
-              : "",
-          });
-
-        if (cancelled) return;
-
-        if (Array.isArray(data)) {
-          setDonors(data);
-        } else {
-          setDonors([]);
+        if (localUser?.id) {
+          setCurrentUserId(
+            localUser.id
+          );
         }
-      } catch {
-        if (!cancelled) {
-          setDonors([]);
+      } catch (error) {
+        console.error(
+          "Failed to load current user:",
+          error
+        );
+
+        /*
+        fallback للـ ID المحلي.
+        */
+
+        try {
+          const storedUser =
+            localStorage.getItem(
+              "nabd_user"
+            );
+
+          if (!storedUser) return;
+
+          const localUser =
+            JSON.parse(storedUser);
+
+          if (
+            mounted &&
+            localUser?.id
+          ) {
+            setCurrentUserId(
+              localUser.id
+            );
+          }
+        } catch {
+          // Ignore invalid local user
         }
       }
     };
 
-    loadDonors();
-
-    const interval = setInterval(
-      loadDonors,
-      5000
-    );
+    loadCurrentUser();
 
     return () => {
-      cancelled = true;
-      clearInterval(interval);
+      mounted = false;
     };
   }, []);
 
-  const joinDonation = async (id) => {
-    try {
-      await api.respondToRequest(id);
-    } catch (error) {}
+  /*
+  تحميل الأدوية.
+  */
 
-    navigate(`/track/${id}`);
+  useEffect(() => {
+    let mounted = true;
+
+    setLoading(true);
+
+    api
+      .getMedicines()
+      .then((data) => {
+        if (!mounted) return;
+
+        setMedicines(
+          Array.isArray(data) ? data : []
+        );
+      })
+      .catch((error) => {
+        console.error(
+          "Medicines loading error:",
+          error
+        );
+
+        if (mounted) {
+          setMedicines([]);
+        }
+      })
+      .finally(() => {
+        if (mounted) {
+          setLoading(false);
+        }
+      });
+
+    return () => {
+      mounted = false;
+    };
+  }, []);
+
+  /*
+  تحميل طلبات الدواء الخاصة بالمستخدم الحالي.
+  */
+
+  useEffect(() => {
+    let mounted = true;
+
+    const loadRequestedMedicines = async () => {
+      try {
+        if (!currentUserId) {
+          return;
+        }
+
+        const data =
+          await api.getMyRequests(
+            currentUserId
+          );
+
+        if (!mounted) return;
+
+        const ids = new Set(
+          (Array.isArray(data)
+            ? data
+            : []
+          )
+            .filter(
+              (item) =>
+                item?.type === "دواء" &&
+                item?.medicineId
+            )
+            .map(
+              (item) =>
+                String(item.medicineId)
+            )
+        );
+
+        setRequestedMedicineIds(
+          ids
+        );
+      } catch (error) {
+        console.error(
+          "Failed to load medicine requests:",
+          error
+        );
+      }
+    };
+
+    loadRequestedMedicines();
+
+    return () => {
+      mounted = false;
+    };
+  }, [currentUserId]);
+
+  /*
+  طلب أو إلغاء طلب الدواء.
+
+  +  = طلب الدواء
+  ✓  = إلغاء الطلب
+  */
+
+  const requestMedicine = async (
+    e,
+    medicine
+  ) => {
+    e.stopPropagation();
+
+    if (!medicine?.id) {
+      return;
+    }
+
+    const medicineId =
+      String(medicine.id);
+
+    try {
+      /*
+      استخدام ID المستخدم الحقيقي
+      القادم من الـ Backend.
+      */
+
+      if (!currentUserId) {
+        alert(
+          "يجب تسجيل الدخول أولاً"
+        );
+        return;
+      }
+
+      setRequestingMedicineId(
+        medicine.id
+      );
+
+      const isRequested =
+        requestedMedicineIds.has(
+          medicineId
+        );
+
+      /*
+      ==========================================
+      إلغاء الطلب الحالي
+      ==========================================
+      */
+
+      if (isRequested) {
+        await api.cancelMedicineRequest(
+          medicine.id,
+          currentUserId
+        );
+
+        /*
+        بعد نجاح الإلغاء
+        نحول ✓ إلى +.
+        */
+
+        setRequestedMedicineIds(
+          (prev) => {
+            const next =
+              new Set(prev);
+
+            next.delete(
+              medicineId
+            );
+
+            return next;
+          }
+        );
+
+        return;
+      }
+
+      /*
+      ==========================================
+      إرسال طلب جديد
+      ==========================================
+      */
+
+      await api.requestMedicine(
+        medicine.id,
+        currentUserId
+      );
+
+      /*
+      بعد نجاح الطلب
+      نحول + إلى ✓.
+      */
+
+      setRequestedMedicineIds(
+        (prev) => {
+          const next =
+            new Set(prev);
+
+          next.add(
+            medicineId
+          );
+
+          return next;
+        }
+      );
+    } catch (error) {
+      console.error(
+        "Medicine request error:",
+        error
+      );
+
+      /*
+      لو الـ Backend قال إن الطلب موجود بالفعل
+      نعتبره مطلوبًا بالفعل.
+      */
+
+      if (
+        error?.message?.includes(
+          "لديك بالفعل طلب قائم"
+        )
+      ) {
+        setRequestedMedicineIds(
+          (prev) => {
+            const next =
+              new Set(prev);
+
+            next.add(
+              medicineId
+            );
+
+            return next;
+          }
+        );
+      } else {
+        alert(
+          error?.message ||
+            "حدث خطأ أثناء تنفيذ طلب الدواء"
+        );
+      }
+    } finally {
+      setRequestingMedicineId(
+        null
+      );
+    }
+  };
+
+  /*
+  البحث.
+  */
+
+  const handleSearch = async (e) => {
+    e.preventDefault();
+
+    try {
+      setLoading(true);
+
+      const results =
+        await api.getMedicines(
+          search.trim()
+        );
+
+      setMedicines(
+        Array.isArray(results)
+          ? results
+          : []
+      );
+
+      /*
+      بعد البحث نرجع إلى "الكل"
+      بحيث تظهر الأقسام فقط.
+      */
+
+      setSelectedCategory("all");
+    } catch (error) {
+      console.error(
+        "Medicine search error:",
+        error
+      );
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  /*
+  البحث أثناء الكتابة.
+  */
+
+  const searchFilteredMedicines =
+    useMemo(() => {
+      const value =
+        search.trim().toLowerCase();
+
+      if (!value) {
+        return medicines;
+      }
+
+      return medicines.filter(
+        (medicine) => {
+          const name =
+            String(
+              medicine?.name ||
+                medicine?.medicineName ||
+                medicine?.title ||
+                ""
+            ).toLowerCase();
+
+          const category =
+            String(
+              getMedicineCategory(
+                medicine
+              )
+            ).toLowerCase();
+
+          return (
+            name.includes(value) ||
+            category.includes(value)
+          );
+        }
+      );
+    }, [medicines, search]);
+
+  /*
+  الأدوية الخاصة بالقسم المختار فقط.
+  */
+
+  const visibleMedicines =
+    useMemo(() => {
+      /*
+      "الكل" لا يعرض الأدوية.
+      */
+
+      if (
+        selectedCategory === "all"
+      ) {
+        return [];
+      }
+
+      return searchFilteredMedicines.filter(
+        (medicine) =>
+          getMedicineCategory(
+            medicine
+          ) === selectedCategory
+      );
+    }, [
+      searchFilteredMedicines,
+      selectedCategory,
+    ]);
+
+  /*
+  عدد الأدوية في كل قسم.
+  */
+
+  const categoryCounts =
+    useMemo(() => {
+      const counts = {};
+
+      categories.forEach(
+        (category) => {
+          counts[category.key] =
+            searchFilteredMedicines.filter(
+              (medicine) =>
+                getMedicineCategory(
+                  medicine
+                ) === category.key
+            ).length;
+        }
+      );
+
+      return counts;
+    }, [searchFilteredMedicines]);
+
+  /*
+  القسم الحالي.
+  */
+
+  const currentCategory =
+    categories.find(
+      (category) =>
+        category.key ===
+        selectedCategory
+    ) || null;
+
+  /*
+  الضغط على القسم.
+  */
+
+  const selectCategory = (
+    categoryKey
+  ) => {
+    setSelectedCategory(
+      categoryKey
+    );
+
+    window.scrollTo({
+      top: 0,
+      behavior: "smooth",
+    });
+  };
+
+  /*
+  فتح تفاصيل الدواء.
+  */
+
+  const openMedicine = (
+    medicine
+  ) => {
+    if (!medicine?.id) {
+      return;
+    }
+
+    navigate(
+      `/medicines/${medicine.id}`
+    );
   };
 
   return (
-    <div className="blood-page">
+    <div
+      className="medicine-exchange-page"
+      dir="rtl"
+    >
+      {/* =====================================================
+          HEADER
+      ===================================================== */}
 
-      {/* Header */}
-      <header className="blood-header">
-
+      <header className="medicine-exchange-header">
         <button
-          className="back-button"
+          type="button"
+          className="medicine-header-icon"
+          aria-label="العودة"
           onClick={() => navigate(-1)}
         >
-          ←
+          <svg viewBox="0 0 24 24">
+            <path d="M9 5l7 7-7 7" />
+          </svg>
         </button>
 
-        <h1>التبرع بالدم والصفائح</h1>
+        <div className="medicine-header-title">
+          <h1>تبادل الأدوية</h1>
 
-        <button className="more-button">
-          ⋮
-        </button>
+          <p>
+            معًا ... لدعم صحتك
+          </p>
+        </div>
 
+        <div className="medicine-header-logo">
+          <svg
+            viewBox="0 0 24 24"
+            fill="none"
+          >
+            <path
+              d="M8.5 3.8a4.7 4.7 0 0 1 6.7 0l5 5a4.7 4.7 0 0 1-6.7 6.7l-5-5a4.7 4.7 0 0 1 0-6.7Z"
+              stroke="currentColor"
+              strokeWidth="1.7"
+            />
+
+            <path
+              d="M9.5 20.2a4.7 4.7 0 0 1-6.7 0l-1-1a4.7 4.7 0 0 1 6.7-6.7l1 1a4.7 4.7 0 0 1 0 6.7Z"
+              stroke="currentColor"
+              strokeWidth="1.7"
+            />
+
+            <path
+              d="m8 8 8 8"
+              stroke="currentColor"
+              strokeWidth="1.7"
+              strokeLinecap="round"
+            />
+          </svg>
+        </div>
       </header>
 
-      {/* Tabs */}
-      <div className="tabs-card">
+      {/* =====================================================
+          SEARCH
+      ===================================================== */}
+
+      <form
+        className="medicine-search"
+        onSubmit={handleSearch}
+      >
+        <input
+          type="search"
+          value={search}
+          onChange={(e) =>
+            setSearch(e.target.value)
+          }
+          placeholder="إبحث عن دواء أو اسم تجاري..."
+          aria-label="البحث عن دواء"
+        />
 
         <button
-          className={
-            tab === "urgent"
-              ? "tab active"
-              : "tab"
-          }
-          onClick={() => setTab("urgent")}
+          type="submit"
+          aria-label="بحث"
         >
-          حالات طارئة
+          <svg viewBox="0 0 24 24">
+            <circle
+              cx="10.8"
+              cy="10.8"
+              r="6.5"
+            />
+
+            <path d="m16 16 5 5" />
+          </svg>
         </button>
+      </form>
+
+      {/* =====================================================
+          CATEGORY PILLS
+      ===================================================== */}
+
+      <div className="medicine-category-pills">
+        {/* الكل */}
 
         <button
+          type="button"
           className={
-            tab === "donors"
-              ? "tab active"
-              : "tab"
+            selectedCategory === "all"
+              ? "medicine-category-pill active"
+              : "medicine-category-pill"
           }
-          onClick={() => setTab("donors")}
+          onClick={() =>
+            selectCategory("all")
+          }
         >
-          متبرعين مسجلين
+          الكل
         </button>
 
+        {/* الأقسام */}
+
+        {categories.map(
+          (category) => (
+            <button
+              key={category.key}
+              type="button"
+              className={
+                selectedCategory ===
+                category.key
+                  ? "medicine-category-pill active"
+                  : "medicine-category-pill"
+              }
+              onClick={() =>
+                selectCategory(
+                  category.key
+                )
+              }
+            >
+              {category.label}
+            </button>
+          )
+        )}
       </div>
 
-      {/* Emergency */}
-      {tab === "urgent" && (
-        <>
-          <section className="section-title">
-            <div>
-              <h2>الحالات الطارئة</h2>
-              <p>حالات تحتاج إلى متبرعين الآن</p>
-            </div>
+      {/* =====================================================
+          MAIN
+      ===================================================== */}
 
-            <div className="section-icon">
-              <BloodIcon />
-            </div>
-          </section>
+      <main>
+        {/* ===================================================
+            MAIN CATEGORIES
+        =================================================== */}
 
-          {requests.length === 0 && (
-            <div className="empty-card">
-              <div className="empty-icon">
-                <BloodIcon />
-              </div>
+        <section className="medicine-section">
+          <div className="medicine-section-heading">
+            <h2>
+              {selectedCategory ===
+              "all"
+                ? "الأقسام الرئيسية"
+                : currentCategory?.label}
+            </h2>
 
-              <strong>
-                لا توجد حالات طارئة حاليًا
-              </strong>
+            <p>
+              {selectedCategory ===
+              "all"
+                ? "اختر القسم الذي تريد تصفحه"
+                : `الأدوية الموجودة في قسم ${currentCategory?.label}`}
+            </p>
+          </div>
 
-              <p>
-                سيتم عرض الحالات هنا عند وجود طلب جديد.
-              </p>
+          {/* =================================================
+              عندما يكون "الكل" مختار:
+              نعرض الأقسام فقط
+          ================================================= */}
+
+          {selectedCategory ===
+            "all" && (
+            <div className="medicine-category-grid">
+              {categories.map(
+                (category) => {
+                  return (
+                    <button
+                      key={category.key}
+                      type="button"
+                      className="medicine-category-card"
+                      onClick={() =>
+                        selectCategory(
+                          category.key
+                        )
+                      }
+                      style={{
+                        background:
+                          defaultCategoryColor.background,
+                      }}
+                    >
+                      <div
+                        className="medicine-category-card-icon"
+                        style={{
+                          background:
+                            defaultCategoryColor.iconBackground,
+                        }}
+                      >
+                        {category.icon}
+                      </div>
+
+                      <div className="medicine-category-card-text">
+                        <strong>
+                          {
+                            category.label
+                          }
+                        </strong>
+
+                        <span>
+                          {
+                            categoryCounts[
+                              category.key
+                            ] || 0
+                          }{" "}
+                          {categoryCounts[
+                            category.key
+                          ] === 1
+                            ? "دواء"
+                            : "أدوية"}
+                        </span>
+                      </div>
+
+                      <span className="medicine-category-arrow">
+                        ‹
+                      </span>
+                    </button>
+                  );
+                }
+              )}
             </div>
           )}
+        </section>
 
-          {requests.map((request) => (
-            <div
-              key={request.id}
-              className="emergency-card"
-            >
-              <div className="emergency-top">
+        {/* ===================================================
+            MEDICINES
+        =================================================== */}
 
-                <div className="blood-large">
-                  {request.bloodType}
-                </div>
+        {selectedCategory !==
+          "all" && (
+          <section className="medicine-list-section">
+            <div className="medicine-list-heading">
+              <div>
+                <h2>
+                  {
+                    currentCategory?.label
+                  }
+                </h2>
 
-                <div className="emergency-info">
-                  <span className="emergency-label">
-                    حالة طارئة
-                  </span>
-
-                  <h3>
-                    مطلوب فصيلة دم {request.bloodType}
-                  </h3>
-
-                  <p>
-                    {request.hospital}
-                  </p>
-
-                  <span className="distance">
-                    <LocationIcon />
-                    على بعد {request.distanceKm} كم
-                  </span>
-                </div>
-
+                <p>
+                  الأدوية الموجودة في قسم{" "}
+                  {
+                    currentCategory?.label
+                  }
+                </p>
               </div>
 
-              <button
-                className="follow-button"
-                onClick={() =>
-                  joinDonation(request.id)
-                }
-              >
-                متابعة الطلب
-              </button>
-            </div>
-          ))}
-        </>
-      )}
-
-      {/* Donors */}
-      {tab === "donors" && (
-        <section>
-          <div className="section-title">
-            <div>
-              <h2>متبرعون قريبون منك</h2>
-              <p>اختر متبرعًا لعرض ملفه</p>
+              <span className="medicine-count-badge">
+                {visibleMedicines.length}{" "}
+                دواء
+              </span>
             </div>
 
-            <div className="section-icon">
-              <LocationIcon />
-            </div>
-          </div>
+            {loading ? (
+              <div className="medicine-empty-state">
+                <div className="medicine-spinner"></div>
 
-          <div className="donors-card">
-            {donors.map((donor) => (
-              <DonorRow
-                key={donor.id}
-                donor={donor}
-                onClick={() =>
-                  navigate(`/donor/${donor.id}`)
-                }
-              />
-            ))}
-          </div>
-        </section>
-      )}
+                <p>
+                  جارِ تحميل الأدوية...
+                </p>
+              </div>
+            ) : visibleMedicines.length ===
+              0 ? (
+              <div className="medicine-empty-state">
+                <div className="medicine-empty-icon">
+                  💊
+                </div>
 
-      {/* Always show nearby donors under emergency cases */}
-      {tab === "urgent" && (
-        <section className="nearby-section">
+                <h3>
+                  لا توجد أدوية هنا
+                </h3>
 
-          <div className="section-title">
-            <div>
-              <h2>متبرعون قريبون منك</h2>
-              <p>
-                اضغط على المتبرع لعرض ملفه
-              </p>
-            </div>
+                <p>
+                  لم يتم العثور على أدوية في هذا القسم حاليًا.
+                </p>
+              </div>
+            ) : (
+              <div className="medicine-list">
+                {visibleMedicines.map(
+                  (medicine) => {
+                    const medicineName =
+                      medicine?.name ||
+                      medicine?.medicineName ||
+                      medicine?.title ||
+                      "دواء";
 
-            <div className="section-icon">
-              <LocationIcon />
-            </div>
-          </div>
+                    const medicineCategory =
+                      getMedicineCategory(
+                        medicine
+                      );
 
-          <div className="donors-card">
-            {donors.map((donor) => (
-              <DonorRow
-                key={donor.id}
-                donor={donor}
-                onClick={() =>
-                  navigate(`/donor/${donor.id}`)
-                }
-              />
-            ))}
-          </div>
+                    const status =
+                      getAvailability(
+                        medicine
+                      );
 
-        </section>
-      )}
+                    const isRequested =
+                      requestedMedicineIds.has(
+                        String(
+                          medicine.id
+                        )
+                      );
 
-      {/* Bottom Navigation */}
-      <nav className="blood-bottom-nav">
+                    return (
+                      <div
+                        key={medicine.id}
+                        className="medicine-list-item"
+                        role="button"
+                        tabIndex={0}
+                        onClick={() =>
+                          openMedicine(
+                            medicine
+                          )
+                        }
+                        onKeyDown={(
+                          e
+                        ) => {
+                          if (
+                            e.key ===
+                              "Enter" ||
+                            e.key === " "
+                          ) {
+                            e.preventDefault();
 
-        <button
-          onClick={() => navigate("/profile")}
-          className="nav-item"
-        >
-          <ProfileIcon />
-          <span>الملف الشخصي</span>
-        </button>
+                            openMedicine(
+                              medicine
+                            );
+                          }
+                        }}
+                      >
+                        <div className="medicine-list-right">
+                          <div
+                            className="medicine-list-icon"
+                            style={{
+                              background:
+                                defaultCategoryColor.iconBackground,
+                            }}
+                          >
+                            {categories.find(
+                              (
+                                category
+                              ) =>
+                                category.key ===
+                                medicineCategory
+                            )?.icon ||
+                              "💊"}
+                          </div>
 
-        <button
-          onClick={() => navigate("/notifications")}
-          className="nav-item"
-        >
-          <BellIcon />
-          <span>الإشعارات</span>
-        </button>
+                          <div className="medicine-list-info">
+                            <strong>
+                              {
+                                medicineName
+                              }
+                            </strong>
 
-        <button
-          onClick={() => navigate("/requests")}
-          className="nav-item"
-        >
-          <RequestsIcon />
-          <span>الطلبات</span>
-        </button>
+                            <span>
+                              {
+                                medicineCategory
+                              }
+                            </span>
 
-        <button
-          onClick={() => navigate("/home")}
-          className="nav-item active"
-        >
-          <HomeIcon />
-          <span>الرئيسية</span>
-        </button>
+                            <small>
+                              {medicine?.quantity
+                                ? `الكمية: ${medicine.quantity}`
+                                : "اضغط لعرض التفاصيل"}
+                            </small>
+                          </div>
+                        </div>
 
-      </nav>
+                        <div className="medicine-list-left">
+                          {/* زر طلب / إلغاء طلب الدواء */}
+
+                          <button
+                            type="button"
+                            className={
+                              isRequested
+                                ? "medicine-request-button requested"
+                                : "medicine-request-button"
+                            }
+                            aria-label={
+                              isRequested
+                                ? "إلغاء طلب الدواء"
+                                : "طلب الدواء"
+                            }
+                            title={
+                              isRequested
+                                ? "اضغط لإلغاء الطلب"
+                                : "اضغط لطلب الدواء"
+                            }
+                            disabled={
+                              requestingMedicineId ===
+                              medicine.id
+                            }
+                            onClick={(e) =>
+                              requestMedicine(
+                                e,
+                                medicine
+                              )
+                            }
+                          >
+                            {isRequested
+                              ? "✓"
+                              : "+"}
+                          </button>
+
+                          <span
+                            className={
+                              `medicine-status ${status.className}`
+                            }
+                          >
+                            {
+                              status.label
+                            }
+                          </span>
+
+                          <span className="medicine-list-arrow">
+                            ‹
+                          </span>
+                        </div>
+                      </div>
+                    );
+                  }
+                )}
+              </div>
+            )}
+          </section>
+        )}
+      </main>
+
+      {/* =====================================================
+          CSS
+      ===================================================== */}
 
       <style>{`
+    * {
+      box-sizing: border-box;
+    }
+
+    .medicine-exchange-page {
+      min-height: 100vh;
+
+      padding:
+        18px
+        14px
+        110px;
+
+      background:
+        radial-gradient(
+          circle at 12% 4%,
+          rgba(180, 241, 232, .48),
+          transparent 27%
+        ),
+        radial-gradient(
+          circle at 90% 20%,
+          rgba(192, 244, 237, .42),
+          transparent 27%
+        ),
+        linear-gradient(
+          180deg,
+          #f4fffd 0%,
+          #eefbf8 48%,
+          #e7f8f5 100%
+        );
+
+      color: #174c50;
+      overflow-x: hidden;
+    }
+
+    .medicine-exchange-header {
+      display: grid;
+      grid-template-columns: 52px 1fr 52px;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 18px;
+    }
+
+    .medicine-header-icon,
+    .medicine-header-logo {
+      width: 50px;
+      height: 50px;
+
+      border: 0;
+      border-radius: 50%;
+
+      display: flex;
+      align-items: center;
+      justify-content: center;
+
+      color: #159b8a;
+
+      background:
+        rgba(222, 249, 244, .82);
+
+      box-shadow:
+        0 8px 22px
+          rgba(35, 139, 128, .08),
+        inset 0 1px 0
+          rgba(255,255,255,.9);
+    }
+
+    .medicine-header-icon {
+      cursor: pointer;
+    }
+
+    .medicine-header-icon svg {
+      width: 25px;
+      height: 25px;
+
+      fill: none;
+      stroke: currentColor;
+      stroke-width: 2;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+    }
+
+    .medicine-header-logo {
+      color: #17a391;
+    }
+
+    .medicine-header-logo svg {
+      width: 29px;
+      height: 29px;
+    }
+
+    .medicine-header-title {
+      text-align: center;
+    }
+
+    .medicine-header-title h1 {
+      margin: 0;
+
+      color: #124c53;
+
+      font-size: 27px;
+      line-height: 1.25;
+      font-weight: 900;
+    }
 
-        * {
-          box-sizing: border-box;
-        }
-
-        .blood-page {
-          min-height: 100vh;
-          padding: 22px 18px 110px;
-          direction: rtl;
-
-          background:
-            radial-gradient(
-              circle at 10% 5%,
-              rgba(70,193,177,.17),
-              transparent 28%
-            ),
-            radial-gradient(
-              circle at 95% 28%,
-              rgba(154,231,216,.18),
-              transparent 30%
-            ),
-            linear-gradient(
-              160deg,
-              #fbffff 0%,
-              #f1fbfa 45%,
-              #e8f7f4 100%
-            );
-
-          color: #24575a;
-          font-family: Arial, Tahoma, sans-serif;
-        }
-
-        .blood-header {
-          max-width: 520px;
-          margin: 0 auto 20px;
-
-          display: grid;
-          grid-template-columns: 44px 1fr 44px;
-          align-items: center;
-        }
-
-        .blood-header h1 {
-          margin: 0;
-          text-align: center;
-          color: #218d83;
-          font-size: 21px;
-          font-weight: 800;
-        }
+    .medicine-header-title p {
+      margin:
+        4px
+        0
+        0;
 
-        .back-button,
-        .more-button {
-          width: 42px;
-          height: 42px;
+      color: #8aa7a6;
 
-          border: 1px solid rgba(255,255,255,.9);
-          border-radius: 14px;
+      font-size: 13px;
+      font-weight: 600;
+    }
 
-          display: flex;
-          align-items: center;
-          justify-content: center;
+    .medicine-search {
+      width: 100%;
+      height: 58px;
 
-          color: #218d83;
-          background: rgba(255,255,255,.72);
+      display: flex;
+      align-items: center;
 
-          box-shadow:
-            0 7px 18px rgba(35,139,128,.08),
-            inset 0 1px 0 rgba(255,255,255,.9);
+      margin-bottom: 16px;
 
-          cursor: pointer;
-        }
+      border-radius: 30px;
 
-        .back-button {
-          font-size: 25px;
-        }
+      background:
+        rgba(255,255,255,.88);
 
-        .more-button {
-          font-size: 25px;
-        }
+      border:
+        1px solid
+        rgba(255,255,255,.96);
 
-        .tabs-card {
-          max-width: 520px;
-          margin: 0 auto 20px;
+      box-shadow:
+        0 10px 25px
+          rgba(44, 135, 126, .07),
+        inset 0 1px 0
+          rgba(255,255,255,.95);
 
-          padding: 5px;
+      overflow: hidden;
+    }
 
-          display: grid;
-          grid-template-columns: 1fr 1fr;
+    .medicine-search input {
+      flex: 1;
 
-          border-radius: 19px;
+      height: 100%;
 
-          background: rgba(255,255,255,.65);
+      padding:
+        0
+        18px;
 
-          border: 1px solid rgba(255,255,255,.9);
+      border: 0;
+      outline: 0;
 
-          box-shadow:
-            0 8px 22px rgba(42,128,128,.06);
-        }
+      background: transparent;
 
-        .tab {
-          border: 0;
+      color: #174c50;
 
-          min-height: 44px;
+      font-family: inherit;
+      font-size: 15px;
+      font-weight: 600;
 
-          border-radius: 15px;
+      text-align: right;
+    }
 
-          color: #8aa5a4;
-          background: transparent;
+    .medicine-search input::placeholder {
+      color: #91aaaa;
+    }
 
-          font-size: 13px;
-          font-weight: 800;
+    .medicine-search button {
+      width: 55px;
+      height: 55px;
 
-          cursor: pointer;
-        }
+      display: flex;
+      align-items: center;
+      justify-content: center;
 
-        .tab.active {
-          color: #159b8a;
+      border: 0;
+      background: transparent;
 
-          background:
-            linear-gradient(
-              145deg,
-              #e0f8f3,
-              #d1f1eb
-            );
+      color: #5e8488;
 
-          box-shadow:
-            0 5px 14px rgba(21,155,138,.08);
-        }
+      cursor: pointer;
+    }
 
-        .section-title {
-          max-width: 520px;
-          margin: 0 auto 12px;
+    .medicine-search button svg {
+      width: 28px;
+      height: 28px;
 
-          display: flex;
-          align-items: center;
-          justify-content: space-between;
-          gap: 12px;
-        }
+      fill: none;
+      stroke: currentColor;
+      stroke-width: 2;
+      stroke-linecap: round;
+    }
 
-        .section-title h2 {
-          margin: 0 0 4px;
+    .medicine-category-pills {
+      display: flex;
 
-          color: #286d6d;
+      gap: 9px;
 
-          font-size: 17px;
-          font-weight: 800;
-        }
+      overflow-x: auto;
 
-        .section-title p {
-          margin: 0;
+      padding:
+        2px
+        2px
+        7px;
 
-          color: #88a3a2;
+      margin-bottom: 15px;
 
-          font-size: 11px;
-        }
+      scrollbar-width: none;
+    }
 
-        .section-icon {
-          width: 42px;
-          height: 42px;
+    .medicine-category-pills::-webkit-scrollbar {
+      display: none;
+    }
 
-          flex-shrink: 0;
+    .medicine-category-pill {
+      flex-shrink: 0;
 
-          display: flex;
-          align-items: center;
-          justify-content: center;
+      padding:
+        10px
+        18px;
 
-          border-radius: 14px;
+      border: 0;
 
-          color: #159b8a;
-          background: #dff7f2;
+      border-radius: 24px;
 
-          box-shadow:
-            inset 0 1px 0 rgba(255,255,255,.9);
-        }
+      background:
+        rgba(231,248,245,.78);
 
-        .section-icon svg {
-          width: 22px;
-          height: 22px;
-        }
+      color: #39747a;
 
-        .empty-card {
-          max-width: 520px;
-          margin: 0 auto 18px;
-          padding: 24px 18px;
+      font-family: inherit;
+      font-size: 13px;
+      font-weight: 700;
 
-          text-align: center;
+      cursor: pointer;
 
-          border-radius: 25px;
+      box-shadow:
+        inset 0 1px 0
+          rgba(255,255,255,.75);
+    }
 
-          background:
-            linear-gradient(
-              145deg,
-              rgba(255,255,255,.88),
-              rgba(232,249,246,.78)
-            );
+    .medicine-category-pill.active {
+      color: white;
 
-          border: 1px solid rgba(255,255,255,.92);
+      background:
+        linear-gradient(
+          135deg,
+          #18ae9c,
+          #109886
+        );
 
-          box-shadow:
-            0 12px 30px rgba(42,128,128,.08),
-            inset 0 1px 0 rgba(255,255,255,.9);
-        }
+      box-shadow:
+        0 8px 18px
+          rgba(20, 155, 138, .18);
+    }
 
-        .empty-icon {
-          width: 50px;
-          height: 50px;
+    .medicine-section,
+    .medicine-list-section {
+      padding:
+        18px
+        14px;
 
-          margin: 0 auto 10px;
+      margin-top: 12px;
 
-          display: flex;
-          align-items: center;
-          justify-content: center;
+      border-radius: 28px;
 
-          border-radius: 50%;
+      background:
+        rgba(255,255,255,.78);
 
-          color: #159b8a;
-          background: #dff7f2;
-        }
+      border:
+        1px solid
+        rgba(255,255,255,.94);
 
-        .empty-icon svg {
-          width: 25px;
-          height: 25px;
-        }
+      box-shadow:
+        0 12px 32px
+          rgba(39,132,124,.07),
+        inset 0 1px 0
+          rgba(255,255,255,.9);
 
-        .empty-card strong {
-          display: block;
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+    }
 
-          color: #286d6d;
+    .medicine-section-heading {
+      margin-bottom: 15px;
+      text-align: right;
+    }
 
-          font-size: 15px;
-        }
+    .medicine-section-heading h2,
+    .medicine-list-heading h2 {
+      margin: 0;
 
-        .empty-card p {
-          margin: 7px 0 0;
+      color: #174c50;
 
-          color: #88a3a2;
+      font-size: 21px;
+      line-height: 1.4;
 
-          font-size: 11px;
-        }
+      font-weight: 900;
+    }
 
-        .emergency-card {
-          max-width: 520px;
-          margin: 0 auto 14px;
-          padding: 17px;
+    .medicine-section-heading p,
+    .medicine-list-heading p {
+      margin:
+        4px
+        0
+        0;
 
-          border-radius: 25px;
+      color: #91a9aa;
 
-          background:
-            linear-gradient(
-              145deg,
-              rgba(255,255,255,.9),
-              rgba(233,249,246,.78)
-            );
+      font-size: 12px;
+      line-height: 1.6;
+    }
 
-          border: 1px solid rgba(255,255,255,.94);
+    .medicine-category-grid {
+      display: grid;
 
-          box-shadow:
-            0 12px 30px rgba(42,128,128,.08),
-            inset 0 1px 0 rgba(255,255,255,.9);
-        }
+      grid-template-columns:
+        repeat(2, minmax(0, 1fr));
 
-        .emergency-top {
-          display: flex;
-          align-items: center;
-          gap: 14px;
-        }
+      gap: 12px;
+    }
 
-        .blood-large {
-          width: 58px;
-          height: 58px;
+    .medicine-category-card {
+      min-height: 88px;
 
-          flex-shrink: 0;
+      position: relative;
 
-          display: flex;
-          align-items: center;
-          justify-content: center;
+      display: flex;
+      align-items: center;
 
-          border-radius: 18px;
+      gap: 10px;
 
-          color: #c05267;
-          background: #ffe7ed;
+      padding:
+        12px
+        10px;
 
-          font-size: 17px;
-          font-weight: 900;
-        }
+      border:
+        1px solid
+        rgba(213,238,233,.85);
 
-        .emergency-info {
-          min-width: 0;
-        }
+      border-radius: 20px;
 
-        .emergency-label {
-          display: inline-block;
+      color: #205b60;
 
-          margin-bottom: 4px;
+      font-family: inherit;
 
-          color: #d06b7d;
+      text-align: right;
 
-          font-size: 10px;
-          font-weight: 800;
-        }
+      cursor: pointer;
 
-        .emergency-info h3 {
-          margin: 0 0 5px;
+      transition:
+        transform .18s ease,
+        box-shadow .18s ease,
+        border-color .18s ease;
+    }
 
-          color: #286d6d;
+    .medicine-category-card:active {
+      transform: scale(.98);
+    }
 
-          font-size: 14px;
-          font-weight: 800;
-        }
+    .medicine-category-card.active {
+      border-color:
+        rgba(25,174,157,.32);
 
-        .emergency-info p {
-          margin: 0 0 5px;
+      box-shadow:
+        0 8px 22px
+          rgba(28,158,144,.10);
+    }
 
-          color: #7c9b9a;
+    .medicine-category-card-icon {
+      width: 43px;
+      height: 43px;
 
-          font-size: 11px;
-        }
+      flex-shrink: 0;
 
-        .distance {
-          display: flex;
-          align-items: center;
-          gap: 4px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
 
-          color: #159b8a;
+      border-radius: 50%;
 
-          font-size: 10px;
-          font-weight: 700;
-        }
+      font-size: 21px;
+    }
 
-        .distance svg {
-          width: 14px;
-          height: 14px;
-        }
+    .medicine-category-card-text {
+      min-width: 0;
+      flex: 1;
+    }
 
-        .follow-button {
-          width: 100%;
-          min-height: 46px;
+    .medicine-category-card-text strong {
+      display: block;
 
-          margin-top: 15px;
+      color: #17545a;
 
-          border: 0;
-          border-radius: 17px;
+      font-size: 13px;
+      line-height: 1.4;
+      font-weight: 900;
 
-          color: white;
+      word-break: break-word;
+    }
 
-          background:
-            linear-gradient(
-              135deg,
-              #19ad98,
-              #159b8a
-            );
+    .medicine-category-card-text span {
+      display: block;
 
-          font-size: 14px;
-          font-weight: 800;
+      margin-top: 4px;
 
-          cursor: pointer;
+      color: #8ba5a5;
 
-          box-shadow:
-            0 8px 18px rgba(21,155,138,.14);
-        }
+      font-size: 11px;
+    }
 
-        .donors-card {
-          max-width: 520px;
-          margin: 0 auto;
+    .medicine-category-arrow {
+      color: #3d8a88;
 
-          padding: 7px 12px;
+      font-size: 29px;
+      line-height: 1;
+    }
 
-          border-radius: 25px;
+    .medicine-list-section {
+      margin-top: 15px;
+    }
 
-          background:
-            linear-gradient(
-              145deg,
-              rgba(255,255,255,.88),
-              rgba(232,249,246,.78)
-            );
+    .medicine-list-heading {
+      display: flex;
 
-          border: 1px solid rgba(255,255,255,.92);
+      align-items: center;
+      justify-content: space-between;
 
-          box-shadow:
-            0 12px 30px rgba(42,128,128,.08),
-            inset 0 1px 0 rgba(255,255,255,.9);
+      gap: 12px;
 
-          overflow: hidden;
-        }
+      margin-bottom: 15px;
+    }
 
-        .donor-row {
-          width: 100%;
-          min-height: 76px;
+    .medicine-count-badge {
+      flex-shrink: 0;
 
-          padding: 10px 3px;
+      padding:
+        8px
+        12px;
 
-          display: flex;
-          align-items: center;
-          gap: 10px;
+      border-radius: 20px;
 
-          border: 0;
-          border-bottom: 1px solid rgba(124,184,177,.15);
+      color: #159a89;
 
-          color: inherit;
-          background: transparent;
+      background:
+        #ddf7f1;
 
-          text-align: right;
+      font-size: 11px;
+      font-weight: 900;
+    }
 
-          cursor: pointer;
-        }
+    .medicine-list {
+      display: flex;
+      flex-direction: column;
 
-        .donor-row:last-child {
-          border-bottom: 0;
-        }
+      gap: 10px;
+    }
 
-        .donor-avatar-small {
-          width: 47px;
-          height: 47px;
+    .medicine-list-item {
+      width: 100%;
 
-          flex-shrink: 0;
+      min-height: 76px;
 
-          display: flex;
-          align-items: center;
-          justify-content: center;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
 
-          overflow: hidden;
+      gap: 10px;
 
-          border-radius: 50%;
+      padding:
+        10px
+        11px;
 
-          color: #218d83;
+      border:
+        1px solid
+        rgba(221,240,237,.9);
 
-          background:
-            linear-gradient(
-              145deg,
-              #dff8f3,
-              #bcece3
-            );
+      border-radius: 21px;
 
-          font-size: 18px;
-          font-weight: 800;
-        }
+      background:
+        rgba(255,255,255,.86);
 
-        .donor-avatar-small img {
-          width: 100%;
-          height: 100%;
-          object-fit: cover;
-        }
+      color: #174c50;
 
-        .donor-info {
-          min-width: 0;
-          flex: 1;
+      font-family: inherit;
 
-          display: flex;
-          flex-direction: column;
-          align-items: flex-start;
-          gap: 2px;
-        }
+      text-align: right;
 
-        .donor-info strong {
-          max-width: 100%;
+      cursor: pointer;
 
-          overflow: hidden;
+      box-shadow:
+        0 5px 17px
+          rgba(39,132,124,.05),
+        inset 0 1px 0
+          rgba(255,255,255,.95);
 
-          color: #286d6d;
+      transition:
+        transform .16s ease,
+        box-shadow .16s ease;
+    }
 
-          font-size: 13px;
-          font-weight: 800;
+    .medicine-list-item:active {
+      transform: scale(.985);
+    }
 
-          white-space: nowrap;
-          text-overflow: ellipsis;
-        }
+    .medicine-list-right {
+      min-width: 0;
 
-        .donor-info span {
-          color: #88a3a2;
+      display: flex;
+      align-items: center;
 
-          font-size: 10px;
-          font-weight: 700;
-        }
+      gap: 10px;
+    }
 
-        .donor-info small {
-          color: #159b8a;
+    .medicine-list-icon {
+      width: 45px;
+      height: 45px;
 
-          font-size: 9px;
-          font-weight: 800;
-        }
+      flex-shrink: 0;
 
-        .blood-badge {
-          flex-shrink: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
 
-          padding: 7px 9px;
+      border-radius: 50%;
 
-          border-radius: 14px;
+      font-size: 20px;
+    }
 
-          color: #c05267;
-          background: #ffe7ed;
+    .medicine-list-info {
+      min-width: 0;
+    }
 
-          font-size: 11px;
-          font-weight: 900;
-        }
+    .medicine-list-info strong {
+      display: block;
 
-        .donor-arrow {
-          flex-shrink: 0;
+      max-width: 180px;
 
-          color: #8aa5a4;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
 
-          font-size: 19px;
-        }
+      color: #174c50;
 
-        .nearby-section {
-          max-width: 520px;
+      font-size: 14px;
+      font-weight: 900;
+    }
 
-          margin: 24px auto 0;
-        }
+    .medicine-list-info span {
+      display: block;
 
-        .blood-bottom-nav {
-          position: fixed;
+      margin-top: 2px;
 
-          left: 50%;
-          bottom: 12px;
+      color: #5f8b8d;
 
-          transform: translateX(-50%);
+      font-size: 11px;
+      font-weight: 700;
+    }
 
-          width: calc(100% - 28px);
-          max-width: 520px;
+    .medicine-list-info small {
+      display: block;
 
-          min-height: 68px;
+      margin-top: 3px;
 
-          padding: 7px 8px;
+      color: #99adae;
 
-          display: grid;
-          grid-template-columns: repeat(4, 1fr);
-          gap: 3px;
+      font-size: 10px;
+    }
 
-          border-radius: 23px;
+    .medicine-list-left {
+      display: flex;
+      align-items: center;
 
-          background:
-            rgba(255,255,255,.86);
+      gap: 5px;
+    }
 
-          border: 1px solid rgba(255,255,255,.95);
+    /*
+    زر طلب الدواء
+    */
 
-          box-shadow:
-            0 12px 32px rgba(42,128,128,.13),
-            inset 0 1px 0 rgba(255,255,255,.95);
+    .medicine-request-button {
+      width: 34px;
+      height: 34px;
 
-          backdrop-filter: blur(15px);
-          -webkit-backdrop-filter: blur(15px);
+      flex-shrink: 0;
 
-          z-index: 20;
-        }
+      display: flex;
+      align-items: center;
+      justify-content: center;
 
-        .nav-item {
-          border: 0;
-          border-radius: 17px;
+      border: 0;
+      border-radius: 50%;
 
-          display: flex;
-          flex-direction: column;
-          align-items: center;
-          justify-content: center;
-          gap: 3px;
+      color: #159b8a;
 
-          color: #91a9a8;
-          background: transparent;
+      background: #ddf7f0;
 
-          font-size: 9px;
-          font-weight: 800;
+      font-family: inherit;
+      font-size: 22px;
+      font-weight: 900;
+      line-height: 1;
 
-          cursor: pointer;
-        }
+      cursor: pointer;
 
-        .nav-item svg {
-          width: 20px;
-          height: 20px;
-        }
+      box-shadow:
+        0 5px 12px
+          rgba(21,155,138,.10);
 
-        .nav-item.active {
-          color: #159b8a;
+      transition:
+        transform .16s ease,
+        background .16s ease,
+        color .16s ease;
+    }
 
-          background: #e5f8f4;
-        }
+    .medicine-request-button:active {
+      transform: scale(.92);
+    }
 
-        @media (max-width: 380px) {
-          .blood-page {
-            padding-left: 13px;
-            padding-right: 13px;
-          }
+    .medicine-request-button:disabled {
+      cursor: default;
+      opacity: .75;
+    }
 
-          .donor-row {
-            gap: 7px;
-          }
+    /*
+    بعد نجاح الطلب
+    */
 
-          .donor-avatar-small {
-            width: 43px;
-            height: 43px;
-          }
+    .medicine-request-button.requested {
+      color: white;
 
-          .donor-info strong {
-            font-size: 11px;
-          }
+      background:
+        linear-gradient(
+          135deg,
+          #39b8a5,
+          #159b8a
+        );
 
-          .blood-badge {
-            padding: 6px 7px;
-            font-size: 10px;
-          }
-        }
+      font-size: 16px;
+    }
 
-      `}</style>
+    .medicine-status {
+      padding:
+        7px
+        10px;
+
+      border-radius: 17px;
+
+      font-size: 10px;
+      font-weight: 900;
+    }
+
+    .medicine-status-available {
+      color: #13927f;
+      background: #ddf7f0;
+    }
+
+    .medicine-status-requested {
+      color: #b45d69;
+      background: #ffe7eb;
+    }
+
+    .medicine-list-arrow {
+      color: #24877f;
+
+      font-size: 29px;
+      line-height: 1;
+    }
+
+    .medicine-empty-state {
+      min-height: 180px;
+
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+
+      text-align: center;
+    }
+
+    .medicine-spinner {
+      width: 34px;
+      height: 34px;
+
+      margin-bottom: 10px;
+
+      border:
+        4px solid
+        #d9f1ed;
+
+      border-top-color:
+        #159b8a;
+
+      border-radius: 50%;
+
+      animation:
+        medicineSpin .8s
+        linear infinite;
+    }
+
+    .medicine-empty-icon {
+      width: 58px;
+      height: 58px;
+
+      display: flex;
+      align-items: center;
+      justify-content: center;
+
+      margin-bottom: 8px;
+
+      border-radius: 50%;
+
+      background: #e1f6f1;
+
+      font-size: 26px;
+    }
+
+    .medicine-empty-state h3 {
+      margin: 0;
+
+      color: #20565b;
+
+      font-size: 16px;
+      font-weight: 900;
+    }
+
+    .medicine-empty-state p {
+      margin:
+        5px
+        0
+        12px;
+
+      color: #91a7a8;
+
+      font-size: 12px;
+    }
+
+    @keyframes medicineSpin {
+      to {
+        transform: rotate(360deg);
+      }
+    }
+
+    @media (max-width: 380px) {
+      .medicine-exchange-page {
+        padding:
+          14px
+          10px
+          100px;
+      }
+
+      .medicine-header-title h1 {
+        font-size: 24px;
+      }
+
+      .medicine-header-icon,
+      .medicine-header-logo {
+        width: 46px;
+        height: 46px;
+      }
+
+      .medicine-category-grid {
+        gap: 8px;
+      }
+
+      .medicine-category-card {
+        min-height: 82px;
+        padding: 9px 7px;
+        gap: 7px;
+      }
+
+      .medicine-category-card-icon {
+        width: 37px;
+        height: 37px;
+        font-size: 18px;
+      }
+
+      .medicine-category-card-text strong {
+        font-size: 11px;
+      }
+
+      .medicine-category-card-text span {
+        font-size: 10px;
+      }
+
+      .medicine-list-info strong {
+        max-width: 145px;
+        font-size: 13px;
+      }
+
+      .medicine-status {
+        padding:
+          6px
+          8px;
+      }
+    }
+
+    /* ================= DARK MODE ================= */
+
+    html.nabd-dark .medicine-exchange-page,
+    body.nabd-dark .medicine-exchange-page {
+      background:
+        radial-gradient(
+          circle at 12% 4%,
+          rgba(21,155,138,.12),
+          transparent 28%
+        ),
+        linear-gradient(
+          180deg,
+          #071a1d 0%,
+          #092326 100%
+        );
+
+      color: #e9ffff;
+    }
+
+    html.nabd-dark .medicine-header-title h1,
+    body.nabd-dark .medicine-header-title h1,
+    html.nabd-dark .medicine-section-heading h2,
+    body.nabd-dark .medicine-section-heading h2,
+    html.nabd-dark .medicine-list-heading h2,
+    body.nabd-dark .medicine-list-heading h2 {
+      color: #e9ffff;
+    }
+
+    html.nabd-dark .medicine-header-title p,
+    body.nabd-dark .medicine-header-title p,
+    html.nabd-dark .medicine-section-heading p,
+    body.nabd-dark .medicine-section-heading p,
+    html.nabd-dark .medicine-list-heading p {
+      color: #9bbdbc;
+    }
+
+    html.nabd-dark .medicine-header-icon,
+    body.nabd-dark .medicine-header-icon,
+    html.nabd-dark .medicine-header-logo,
+    body.nabd-dark .medicine-header-logo {
+      background: rgba(18,61,64,.85);
+      color: #65d7c7;
+    }
+
+    html.nabd-dark .medicine-search,
+    body.nabd-dark .medicine-search,
+    html.nabd-dark .medicine-section,
+    body.nabd-dark .medicine-section,
+    html.nabd-dark .medicine-list-section,
+    body.nabd-dark .medicine-list-section {
+      background: rgba(13,42,46,.92);
+      border-color: rgba(170,230,225,.12);
+    }
+
+    html.nabd-dark .medicine-search input,
+    body.nabd-dark .medicine-search input {
+      color: #e9ffff;
+    }
+
+    html.nabd-dark .medicine-search input::placeholder,
+    body.nabd-dark .medicine-search input::placeholder {
+      color: #7f9f9e;
+    }
+
+    html.nabd-dark .medicine-category-pill,
+    body.nabd-dark .medicine-category-pill {
+      background: #123d40;
+      color: #a9cfcb;
+    }
+
+    html.nabd-dark .medicine-category-pill.active,
+    body.nabd-dark .medicine-category-pill.active {
+      color: white;
+
+      background:
+        linear-gradient(
+          135deg,
+          #159b8a,
+          #087d70
+        );
+    }
+
+    html.nabd-dark .medicine-category-card,
+    body.nabd-dark .medicine-category-card {
+      border-color: rgba(170,230,225,.12);
+    }
+
+    html.nabd-dark .medicine-category-card-text strong,
+    body.nabd-dark .medicine-category-card-text strong,
+    html.nabd-dark .medicine-list-info strong,
+    body.nabd-dark .medicine-list-info strong {
+      color: #e5ffff;
+    }
+
+    html.nabd-dark .medicine-category-card-text span,
+    body.nabd-dark .medicine-category-card-text span,
+    html.nabd-dark .medicine-list-info span,
+    body.nabd-dark .medicine-list-info span,
+    html.nabd-dark .medicine-list-info small,
+    body.nabd-dark .medicine-list-info small {
+      color: #91b5b3;
+    }
+
+    html.nabd-dark .medicine-list-item,
+    body.nabd-dark .medicine-list-item {
+      background: #0d2a2e;
+      border-color: rgba(170,230,225,.12);
+    }
+
+    /*
+    زر طلب الدواء في Dark Mode
+    */
+
+    html.nabd-dark .medicine-request-button,
+    body.nabd-dark .medicine-request-button {
+      color: #67d7c4;
+      background: #123d40;
+    }
+
+    html.nabd-dark .medicine-request-button.requested,
+    body.nabd-dark .medicine-request-button.requested {
+      color: white;
+
+      background:
+        linear-gradient(
+          135deg,
+          #39b8a5,
+          #159b8a
+        );
+    }
+
+    html.nabd-dark .medicine-count-badge,
+    body.nabd-dark .medicine-count-badge {
+      background: #123d40;
+      color: #62d7c6;
+    }
+  `}</style>
     </div>
   );
 }
