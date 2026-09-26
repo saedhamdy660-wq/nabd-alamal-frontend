@@ -8434,3 +8434,18 @@ body.nabd-dark .action-button svg {
 body.nabd-dark .action-button span {
   color: #5ed9c5 !important;
 }
+/* =========================================================
+   🌙 DONOR DETAIL - ACTIONS CARD FINAL FIX
+   ========================================================= */
+
+body.nabd-dark [class*="actions-card"],
+body.nabd-dark [class*="actions-card"] * {
+  background: #0d2a2e !important;
+  color: #5ed9c5 !important;
+  border-color: rgba(170, 230, 225, 0.15) !important;
+}
+
+body.nabd-dark [class*="actions-card"] svg {
+  color: #5ed9c5 !important;
+  stroke: #5ed9c5 !important;
+}
