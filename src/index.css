@@ -8701,3 +8701,61 @@ body.nabd-dark .support-item p,
 body.nabd-dark .help-item p {
   color: #9bbdbc !important;
 }
+/* =========================================================
+   🌙 SUPPORT PAGE - FAQ & BOTTOM CARD FIX
+   ========================================================= */
+
+body.nabd-dark .faq-card,
+body.nabd-dark .faq-section,
+body.nabd-dark .accordion,
+body.nabd-dark .accordion-card,
+body.nabd-dark .questions-card,
+body.nabd-dark .questions-section {
+  background: #0d2a2e !important;
+  border-color: rgba(170,230,225,.15) !important;
+  color: #e9ffff !important;
+}
+
+body.nabd-dark .faq-card *,
+body.nabd-dark .faq-section *,
+body.nabd-dark .accordion *,
+body.nabd-dark .accordion-card *,
+body.nabd-dark .questions-card *,
+body.nabd-dark .questions-section * {
+  color: #e9ffff !important;
+}
+
+body.nabd-dark .faq-card svg,
+body.nabd-dark .accordion svg,
+body.nabd-dark .questions-card svg {
+  color: #5ed9c5 !important;
+  stroke: #5ed9c5 !important;
+}
+
+/* الكارت اللي تحت خالص (مشكلتك تهمنا) */
+body.nabd-dark .support-footer,
+body.nabd-dark .footer-card,
+body.nabd-dark .bottom-card,
+body.nabd-dark .love-card,
+body.nabd-dark .heart-card {
+  background: #0d2a2e !important;
+  border-color: rgba(170,230,225,.15) !important;
+  color: #e9ffff !important;
+}
+
+body.nabd-dark .support-footer *,
+body.nabd-dark .footer-card *,
+body.nabd-dark .bottom-card *,
+body.nabd-dark .love-card *,
+body.nabd-dark .heart-card * {
+  color: #e9ffff !important;
+}
+
+body.nabd-dark .support-footer svg,
+body.nabd-dark .footer-card svg,
+body.nabd-dark .bottom-card svg,
+body.nabd-dark .love-card svg,
+body.nabd-dark .heart-card svg {
+  color: #5ed9c5 !important;
+  stroke: #5ed9c5 !important;
+}
