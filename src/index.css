@@ -9273,3 +9273,56 @@ body.nabd-dark .state-icon {
   background: rgba(192,82,103,.25) !important;
   color: #ff9fb1 !important;
 }
+/* =========================================================
+   🌙 DONATION REQUEST DETAILS - ACTIONS BUTTONS FIX
+   ========================================================= */
+
+/* خلي الزرارين جنب بعض دايماً */
+.donation-request-page .actions {
+  display: flex !important;
+  flex-direction: row !important;
+  gap: 10px !important;
+  align-items: stretch !important;
+}
+
+/* كل زرار ياخد نص المساحة */
+.donation-request-page .actions button {
+  flex: 1 1 0 !important;
+  min-height: 60px !important;
+  padding: 12px 14px !important;
+  display: flex !important;
+  flex-direction: row !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 8px !important;
+  border-radius: 16px !important;
+  font-size: 14px !important;
+  font-weight: 900 !important;
+  white-space: nowrap !important;
+  text-align: center !important;
+}
+
+/* الأيقونات جوه الزرار */
+.donation-request-page .actions button svg {
+  width: 20px !important;
+  height: 20px !important;
+  flex-shrink: 0 !important;
+}
+
+/* لو النص طويل، نخليه في سطر واحد على الشاشات الكبيرة */
+@media (min-width: 361px) {
+  .donation-request-page .actions button {
+    font-size: 13px !important;
+    padding: 12px 8px !important;
+  }
+}
+
+/* على الشاشات الصغيرة جداً، نخليهم فوق بعض */
+@media (max-width: 360px) {
+  .donation-request-page .actions {
+    flex-direction: column !important;
+  }
+  .donation-request-page .actions button {
+    width: 100% !important;
+  }
+}
