@@ -354,6 +354,16 @@ export default function AppSettings() {
   });
 
   const [darkMode, setDarkMode] = useState(() => {
+    const savedTheme = localStorage.getItem("nabd_theme");
+
+    if (savedTheme === "dark") {
+      return true;
+    }
+
+    if (savedTheme === "light") {
+      return false;
+    }
+
     return localStorage.getItem("nabd_dark_mode") === "true";
   });
 
@@ -369,16 +379,65 @@ export default function AppSettings() {
     const root = document.documentElement;
     const body = document.body;
 
-    if (darkMode) {
-      root.classList.add("nabd-dark");
-      body.classList.add("nabd-dark");
-      localStorage.setItem("nabd_dark_mode", "true");
-    } else {
-      root.classList.remove("nabd-dark");
-      body.classList.remove("nabd-dark");
-      localStorage.setItem("nabd_dark_mode", "false");
-    }
+    const theme = darkMode ? "dark" : "light";
+
+    root.setAttribute("data-theme", theme);
+    body.setAttribute("data-theme", theme);
+
+    root.classList.toggle("nabd-dark", darkMode);
+    body.classList.toggle("nabd-dark", darkMode);
+
+    localStorage.setItem("nabd_theme", theme);
+    localStorage.setItem(
+      "nabd_dark_mode",
+      String(darkMode)
+    );
+
+    window.dispatchEvent(new Event("theme-changed"));
   }, [darkMode]);
+
+  /* -------------------------------------------------------
+     LISTEN FOR GLOBAL THEME CHANGES
+  ------------------------------------------------------- */
+
+  useEffect(() => {
+    const handleThemeChange = () => {
+      const savedTheme =
+        localStorage.getItem("nabd_theme");
+
+      if (savedTheme === "dark") {
+        setDarkMode(true);
+      } else if (savedTheme === "light") {
+        setDarkMode(false);
+      } else {
+        setDarkMode(
+          localStorage.getItem("nabd_dark_mode") === "true"
+        );
+      }
+    };
+
+    window.addEventListener(
+      "theme-changed",
+      handleThemeChange
+    );
+
+    window.addEventListener(
+      "storage",
+      handleThemeChange
+    );
+
+    return () => {
+      window.removeEventListener(
+        "theme-changed",
+        handleThemeChange
+      );
+
+      window.removeEventListener(
+        "storage",
+        handleThemeChange
+      );
+    };
+  }, []);
 
   /* -------------------------------------------------------
      APPLY LANGUAGE
