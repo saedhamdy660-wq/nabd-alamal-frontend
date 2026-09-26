@@ -7055,3 +7055,57 @@ body.nabd-dark * {
     color 0.2s ease,
     box-shadow 0.2s ease;
 }
+/* =========================================================
+   GLOBAL DARK MODE OVERRIDE - FOR ANY CONTAINER
+   ========================================================= */
+
+body.nabd-dark .app-shell :is(
+  .card,
+  .list-item,
+  .service-card,
+  .medicine-card,
+  .hospital-card,
+  .pharmacy-card,
+  .request-card,
+  .notification-card,
+  .address-card,
+  .profile-card,
+  .donor-card,
+  .tracking-card,
+  .field-card,
+  .white-card,
+  .surface,
+  .panel,
+  .section-card,
+  .menu-card,
+  .box,
+  .item,
+  .row
+) {
+  background-color: #0d2a2e !important;
+  color: #e9ffff !important;
+  border-color: rgba(170, 230, 225, 0.14) !important;
+}
+
+/* لو فيه كارت لسه لونه فاتح (أبيض)، ده هيغيره */
+body.nabd-dark .app-shell div[style*="background-color: rgb(255, 255, 255)"],
+body.nabd-dark .app-shell div[style*="background-color: #fff"],
+body.nabd-dark .app-shell div[style*="background: white"] {
+  background-color: #0d2a2e !important;
+  color: #e9ffff !important;
+}
+
+/* النصوص جوه أي كارت في الدارك مود */
+body.nabd-dark .app-shell .card *,
+body.nabd-dark .app-shell .list-item *,
+body.nabd-dark .app-shell .service-card *,
+body.nabd-dark .app-shell .medicine-card * {
+  color: #e9ffff !important;
+}
+
+/* النصوص الثانوية (الرمادي) */
+body.nabd-dark .app-shell .card .muted,
+body.nabd-dark .app-shell .list-item .muted,
+body.nabd-dark .app-shell .service-card .muted {
+  color: #9bbdbc !important;
+}
