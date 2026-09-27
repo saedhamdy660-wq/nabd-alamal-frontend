@@ -293,6 +293,129 @@ const api = {
     ),
 
   // ============================================================
+  // Blood Donation Appointments
+  // ============================================================
+
+  createBloodDonationAppointment: (
+    centerId,
+    userId,
+    appointmentDate,
+    appointmentTime,
+    donationType
+  ) =>
+    request(
+      `/blood/centers/${centerId}/appointments`,
+      {
+        method: "POST",
+
+        body: JSON.stringify({
+          userId,
+          appointmentDate,
+          appointmentTime,
+          donationType,
+        }),
+      }
+    ),
+
+  getBloodDonationAppointments: (
+    userId
+  ) =>
+    request(
+      `/blood/appointments?userId=${encodeURIComponent(
+        userId
+      )}`
+    ),
+
+  getBloodDonationAppointment: (
+    id,
+    userId
+  ) =>
+    request(
+      `/blood/appointments/${id}?userId=${encodeURIComponent(
+        userId
+      )}`
+    ),
+
+  cancelBloodDonationAppointment: (
+    id,
+    userId
+  ) =>
+    request(
+      `/blood/appointments/${id}/cancel`,
+      {
+        method: "POST",
+
+        body: JSON.stringify({
+          userId,
+        }),
+      }
+    ),
+
+  // ============================================================
+  // Blood Bank Requests
+  // ============================================================
+
+  createBloodBankRequest: (
+    userId,
+    centerId,
+    bloodType,
+    units,
+    urgency,
+    neededDate,
+    notes
+  ) =>
+    request(
+      "/blood/blood-bank-requests",
+      {
+        method: "POST",
+
+        body: JSON.stringify({
+          userId,
+          centerId,
+          bloodType,
+          units,
+          urgency,
+          neededDate,
+          notes,
+        }),
+      }
+    ),
+
+  getBloodBankRequests: (
+    userId
+  ) =>
+    request(
+      `/blood/blood-bank-requests?userId=${encodeURIComponent(
+        userId
+      )}`
+    ),
+
+  getBloodBankRequest: (
+    id,
+    userId
+  ) =>
+    request(
+      `/blood/blood-bank-requests/${id}?userId=${encodeURIComponent(
+        userId
+      )}`
+    ),
+
+  cancelBloodBankRequest: (
+    id,
+    userId
+  ) =>
+    request(
+      `/blood/blood-bank-requests/${id}/cancel`,
+      {
+        method: "POST",
+
+        body: JSON.stringify({
+          userId,
+        }),
+      }
+    ),
+
+  // ============================================================
   // Medicines
   // ============================================================
 
