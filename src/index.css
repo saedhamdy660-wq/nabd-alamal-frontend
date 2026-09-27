@@ -9698,3 +9698,191 @@ body.nabd-dark .donation-request-page .actions-card,
   border-color: rgba(255, 255, 255, 0.35) !important;
   color: #ffffff !important;
 }
+/* =========================================================
+   🌙 BLOOD CENTER DETAILS - ENHANCEMENT
+   ========================================================= */
+
+/* خلفية الصفحة زي صفحة الصيدلية */
+.blood-center-page {
+  background:
+    radial-gradient(circle at 10% 5%, rgba(179,239,228,.42), transparent 28%),
+    radial-gradient(circle at 90% 35%, rgba(201,244,237,.35), transparent 27%),
+    linear-gradient(180deg, #f5fffd 0%, #eefbf8 100%) !important;
+  color: #164c50 !important;
+  font-family: inherit !important;
+}
+
+/* الهيدر */
+.blood-center-page .details-header {
+  background: rgba(239, 249, 246, 0.96) !important;
+}
+
+.blood-center-page .details-header h1 {
+  color: #123f43 !important;
+  font-size: 22px !important;
+  font-weight: 800 !important;
+}
+
+.blood-center-page .back-button {
+  background: rgba(219, 248, 243, 0.92) !important;
+  color: #138578 !important;
+  border-radius: 16px !important;
+  box-shadow: 0 7px 18px rgba(30, 130, 120, 0.07) !important;
+}
+
+/* كارت المركز الأخضر - تغميق وتوضيح */
+.blood-center-page .center-hero {
+  background: linear-gradient(135deg, #0aa88f 0%, #067a6d 55%, #055e54 100%) !important;
+  box-shadow: 0 14px 32px rgba(5, 100, 90, 0.25) !important;
+  border-radius: 28px !important;
+}
+
+.blood-center-page .center-hero h2 {
+  color: #ffffff !important;
+  font-weight: 900 !important;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.15) !important;
+}
+
+.blood-center-page .center-type {
+  color: #ffffff !important;
+  font-weight: 800 !important;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.15) !important;
+}
+
+.blood-center-page .hero-location {
+  color: #ffffff !important;
+  font-weight: 800 !important;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.15) !important;
+}
+
+.blood-center-page .verified-badge {
+  background: rgba(255, 255, 255, 0.25) !important;
+  border-color: rgba(255, 255, 255, 0.35) !important;
+  color: #ffffff !important;
+}
+
+/* الكروت البيضاء */
+.blood-center-page .details-card {
+  background: rgba(255, 255, 255, 0.91) !important;
+  border: 1px solid rgba(255, 255, 255, 0.97) !important;
+  border-radius: 28px !important;
+  box-shadow: 0 12px 32px rgba(39, 132, 124, 0.08) !important;
+  backdrop-filter: blur(14px) !important;
+  -webkit-backdrop-filter: blur(14px) !important;
+}
+
+.blood-center-page .details-card h3 {
+  color: #123f43 !important;
+  font-weight: 800 !important;
+}
+
+/* أيقونات المعلومات */
+.blood-center-page .info-icon {
+  background: #ddf7f1 !important;
+  color: #159b8a !important;
+  border-radius: 50% !important;
+}
+
+.blood-center-page .info-text span {
+  color: #829a9b !important;
+  font-size: 11px !important;
+}
+
+.blood-center-page .info-text strong,
+.blood-center-page .phone-value {
+  color: #16484d !important;
+  font-size: 13px !important;
+  font-weight: 800 !important;
+}
+
+.blood-center-page .phone-value {
+  color: #138578 !important;
+}
+
+.blood-center-page .info-divider {
+  background: rgba(21, 155, 138, 0.08) !important;
+}
+
+/* شارات المسافة */
+.blood-center-page .distance-badge {
+  background: #e4f8f4 !important;
+  color: #188477 !important;
+  border-radius: 18px !important;
+  border: 1px solid rgba(10, 168, 143, 0.08) !important;
+  font-weight: 700 !important;
+}
+
+/* الخدمات */
+.blood-center-page .service-item {
+  background: #edf8f5 !important;
+  color: #315f60 !important;
+  border-radius: 14px !important;
+}
+
+.blood-center-page .service-check {
+  color: #159b8a !important;
+}
+
+/* كارت الخريطة */
+.blood-center-page .map-card {
+  background: rgba(255, 255, 255, 0.91) !important;
+  border: 1px solid rgba(255, 255, 255, 0.97) !important;
+  border-radius: 28px !important;
+  box-shadow: 0 12px 32px rgba(39, 132, 124, 0.08) !important;
+  margin-top: 22px !important;
+  overflow: hidden !important;
+}
+
+.blood-center-page .real-map-wrapper {
+  height: 315px !important;
+}
+
+/* كارت العنوان اللي فوق الخريطة */
+.blood-center-page .map-floating-label {
+  position: absolute !important;
+  right: 20px !important;
+  top: 22px !important;
+  max-width: calc(100% - 40px) !important;
+  padding: 8px 12px 8px 9px !important;
+  border-radius: 20px !important;
+  background: rgba(239, 255, 251, 0.92) !important;
+  border: 1px solid rgba(255, 255, 255, 0.9) !important;
+  color: #167f75 !important;
+  font-weight: 800 !important;
+  box-shadow: 0 7px 20px rgba(34, 128, 118, 0.12) !important;
+  backdrop-filter: blur(10px) !important;
+}
+
+.blood-center-page .map-floating-label strong {
+  color: #167f75 !important;
+}
+
+.blood-center-page .map-floating-label span {
+  color: #167f75 !important;
+  font-weight: 700 !important;
+}
+
+/* زرار الاتجاهات */
+.blood-center-page .directions-button {
+  background: #ffffff !important;
+  color: #138578 !important;
+  font-weight: 800 !important;
+  border-radius: 0 0 28px 28px !important;
+  padding: 15px 18px !important;
+}
+
+/* زرار الاتصال */
+.blood-center-page .call-button {
+  background: linear-gradient(135deg, #19a995, #159b8a) !important;
+  color: #ffffff !important;
+  border-radius: 22px !important;
+  font-weight: 800 !important;
+  padding: 15px 18px !important;
+  box-shadow: 0 12px 26px rgba(21, 155, 138, 0.20) !important;
+}
+
+/* ملاحظة تحت */
+.blood-center-page .center-note,
+.blood-center-page .pharmacy-note {
+  color: #8ba1a2 !important;
+}
