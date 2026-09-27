@@ -10601,3 +10601,87 @@ body.nabd-dark .clear-search {
   background: rgba(10,168,143,.10) !important;
   color: #43c9b6 !important;
 }
+/* =========================================================
+   🩸 BLOOD CENTER - TYPE / VERIFIED BADGES FIX
+   ========================================================= */
+
+/* اسم المركز: مركز إقليمي لنقل الدم */
+.blood-center-card .center-type {
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+
+  width: fit-content !important;
+  max-width: 100% !important;
+
+  min-height: 30px !important;
+
+  padding: 6px 12px !important;
+
+  border-radius: 10px !important;
+
+  box-sizing: border-box !important;
+
+  white-space: nowrap !important;
+
+  overflow: visible !important;
+
+  text-overflow: clip !important;
+}
+
+
+/* Light Mode */
+
+body:not(.nabd-dark) .blood-center-card .center-type {
+  background: rgba(10, 168, 143, 0.10) !important;
+  color: #078876 !important;
+  border: 1px solid rgba(10, 168, 143, 0.12) !important;
+}
+
+
+/* Dark Mode */
+
+body.nabd-dark .blood-center-card .center-type {
+  background: rgba(10, 168, 143, 0.15) !important;
+  color: #5ed9c5 !important;
+  border: 1px solid rgba(94, 217, 197, 0.16) !important;
+}
+
+
+/* موثق */
+
+.blood-center-card .center-governorate {
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+
+  width: fit-content !important;
+
+  min-height: 30px !important;
+
+  padding: 6px 12px !important;
+
+  border-radius: 10px !important;
+
+  box-sizing: border-box !important;
+
+  white-space: nowrap !important;
+}
+
+
+/* Light */
+
+body:not(.nabd-dark) .blood-center-card .center-governorate {
+  background: rgba(10, 168, 143, 0.06) !important;
+  color: #6b7c79 !important;
+  border: 1px solid rgba(10, 168, 143, 0.10) !important;
+}
+
+
+/* Dark */
+
+body.nabd-dark .blood-center-card .center-governorate {
+  background: rgba(255, 255, 255, 0.07) !important;
+  color: #a9cfcb !important;
+  border: 1px solid rgba(255, 255, 255, 0.08) !important;
+}
