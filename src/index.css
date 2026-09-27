@@ -10265,3 +10265,33 @@ body.nabd-dark .home-reference .home-service[href*="blood-centers"] .service-arr
   background: rgba(94, 217, 197, 0.15) !important;
   color: #5ed9c5 !important;
 }
+/* =========================================================
+   🌙 HOME - MEDICINE CARD DARK MODE (PURPLE)
+   ========================================================= */
+
+body.nabd-dark .home-reference .home-service.medicine-service {
+  background: linear-gradient(145deg, #2a1a4a, #1f1235) !important;
+  border-color: rgba(170, 130, 240, 0.25) !important;
+  color: #c4a8f5 !important;
+  box-shadow: 0 10px 25px rgba(80, 40, 150, 0.25) !important;
+}
+
+body.nabd-dark .home-reference .home-service.medicine-service .service-content h3 {
+  color: #e0d0ff !important;
+}
+
+body.nabd-dark .home-reference .home-service.medicine-service .service-content p {
+  color: #b8a5d9 !important;
+  opacity: 0.85 !important;
+}
+
+body.nabd-dark .home-reference .home-service.medicine-service .service-icon {
+  background: rgba(170, 130, 240, 0.15) !important;
+  border-color: rgba(170, 130, 240, 0.25) !important;
+  color: #c4a8f5 !important;
+}
+
+body.nabd-dark .home-reference .home-service.medicine-service .service-arrow {
+  background: rgba(170, 130, 240, 0.15) !important;
+  color: #c4a8f5 !important;
+}
