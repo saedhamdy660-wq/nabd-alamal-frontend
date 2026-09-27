@@ -10163,3 +10163,33 @@ body.nabd-dark .donation-request-page .actions-card,
   background: rgba(10,168,143,.10) !important;
   color: #43c9b6 !important;
 }
+ةة/* =========================================================
+   🌙 BLOOD CENTERS - FILTERS DARK MODE FIX
+   ========================================================= */
+
+body.nabd-dark .blood-centers-page .filter-button:not(.active) {
+  background: rgba(13, 42, 46, 0.85) !important;
+  border-color: rgba(170, 230, 225, 0.12) !important;
+  color: #a9cfcb !important;
+}
+
+body.nabd-dark .blood-centers-page .filter-button.active {
+  background: linear-gradient(135deg, #159b8a, #087d70) !important;
+  color: #ffffff !important;
+  border-color: rgba(94, 217, 197, 0.3) !important;
+  box-shadow: 0 8px 18px rgba(21, 155, 138, 0.25) !important;
+}
+
+body.nabd-dark .blood-centers-page .filter-check {
+  background: rgba(255, 255, 255, 0.2) !important;
+  color: #ffffff !important;
+}
+
+body.nabd-dark .blood-centers-page .location-active {
+  color: #5ed9c5 !important;
+}
+
+body.nabd-dark .blood-centers-page .location-active span {
+  background: #5ed9c5 !important;
+  box-shadow: 0 0 0 4px rgba(94, 217, 197, 0.12) !important;
+}
