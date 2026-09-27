@@ -753,13 +753,13 @@ export default function BloodCenters() {
           )}
         </div>
 
-        <div className="filters">
-          {[
-            "الأقرب إليك",
-            "الكل",
-            "بنوك الدم",
-            "المراكز",
-          ].map((filter) => {
+      <div className="filters">
+  {[
+    "الكل",
+    "بنوك الدم",
+    "المراكز",
+    "الأقرب إليك",
+  ].map((filter) => {
             const normalizedFilter =
               filter === "الكل"
                 ? "الكل"
