@@ -10230,3 +10230,38 @@ body.nabd-dark .blood-centers-page .governorate-select-wrapper select option {
   color: #e9ffff !important;
   padding: 10px !important;
 }
+/* =========================================================
+   🌙 HOME - BLOOD CENTERS CARD DARK MODE FIX
+   ========================================================= */
+
+/* كارت "مراكز وبنوك الدم" في الصفحة الرئيسية */
+body.nabd-dark .home-reference .home-service.blood-centers-service,
+body.nabd-dark .home-reference .home-service[href*="blood-centers"],
+body.nabd-dark .home-reference .home-service[href*="blood-centers"] {
+  background: linear-gradient(145deg, #0a2a28, #0d3a36) !important;
+  border-color: rgba(100, 230, 210, 0.2) !important;
+  color: #5ed9c5 !important;
+}
+
+body.nabd-dark .home-reference .home-service.blood-centers-service .service-content h3,
+body.nabd-dark .home-reference .home-service[href*="blood-centers"] .service-content h3 {
+  color: #e9ffff !important;
+}
+
+body.nabd-dark .home-reference .home-service.blood-centers-service .service-content p,
+body.nabd-dark .home-reference .home-service[href*="blood-centers"] .service-content p {
+  color: #9bbdbc !important;
+}
+
+body.nabd-dark .home-reference .home-service.blood-centers-service .service-icon,
+body.nabd-dark .home-reference .home-service[href*="blood-centers"] .service-icon {
+  background: rgba(94, 217, 197, 0.15) !important;
+  border-color: rgba(94, 217, 197, 0.25) !important;
+  color: #5ed9c5 !important;
+}
+
+body.nabd-dark .home-reference .home-service.blood-centers-service .service-arrow,
+body.nabd-dark .home-reference .home-service[href*="blood-centers"] .service-arrow {
+  background: rgba(94, 217, 197, 0.15) !important;
+  color: #5ed9c5 !important;
+}
