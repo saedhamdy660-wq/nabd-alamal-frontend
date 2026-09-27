@@ -23,7 +23,7 @@ import "leaflet/dist/leaflet.css";
 import { api } from "../api.js";
 
 /* =====================================================
-   HELPERS
+HELPERS
 ===================================================== */
 
 function getCenterName(center) {
@@ -153,7 +153,7 @@ function getCenterCoordinates(center) {
 }
 
 /* =====================================================
-   LEAFLET MARKER
+LEAFLET MARKER
 ===================================================== */
 
 const bloodCenterIcon = L.divIcon({
@@ -173,7 +173,7 @@ const bloodCenterIcon = L.divIcon({
 });
 
 /* =====================================================
-   ICONS
+ICONS
 ===================================================== */
 
 function LocationIcon({
@@ -343,7 +343,7 @@ function CheckIcon({
 }
 
 /* =====================================================
-   MAIN
+MAIN
 ===================================================== */
 
 export default function BloodCenterDetails() {
@@ -367,7 +367,21 @@ export default function BloodCenterDetails() {
   ] = useState("");
 
   /* ===================================================
-     LOAD CENTER
+  GEOCODED COORDINATES
+  =================================================== */
+
+  const [
+    geocodedCoordinates,
+    setGeocodedCoordinates,
+  ] = useState(null);
+
+  const [
+    geocodingLoading,
+    setGeocodingLoading,
+  ] = useState(false);
+
+  /* ===================================================
+  LOAD CENTER
   =================================================== */
 
   useEffect(() => {
@@ -387,6 +401,8 @@ export default function BloodCenterDetails() {
       try {
         setLoading(true);
         setError("");
+
+        setGeocodedCoordinates(null);
 
         const data =
           await api.getBloodCenter(id);
@@ -421,7 +437,7 @@ export default function BloodCenterDetails() {
   }, [id]);
 
   /* ===================================================
-     DATA
+  DATA
   =================================================== */
 
   const name = useMemo(
@@ -470,17 +486,32 @@ export default function BloodCenterDetails() {
     [center]
   );
 
-  const coordinates = useMemo(
+  const storedCoordinates = useMemo(
     () =>
       getCenterCoordinates(center),
     [center]
+  );
+
+  /*
+   * لو الـ backend عنده إحداثيات نستخدمها.
+   * لو مفيش، هنستخدم الإحداثيات اللي
+   * رجعها الـ Geocoding.
+   */
+  const coordinates = useMemo(
+    () =>
+      storedCoordinates ||
+      geocodedCoordinates,
+    [
+      storedCoordinates,
+      geocodedCoordinates,
+    ]
   );
 
   const verified =
     center?.verified === true;
 
   /* ===================================================
-     MAP QUERY
+  MAP QUERY
   =================================================== */
 
   const mapQuery = useMemo(() => {
@@ -507,7 +538,173 @@ export default function BloodCenterDetails() {
   ]);
 
   /* ===================================================
-     ACTIONS
+  AUTOMATIC GEOCODING
+  =================================================== */
+
+  useEffect(() => {
+    let cancelled = false;
+
+    async function geocodeCenter() {
+      /*
+       * لو عندنا إحداثيات حقيقية من الـ backend
+       * مش محتاجين نعمل Geocoding.
+       */
+      if (
+        !center ||
+        storedCoordinates ||
+        !mapQuery
+      ) {
+        setGeocodingLoading(false);
+        return;
+      }
+
+      try {
+        setGeocodingLoading(true);
+
+        const query =
+          encodeURIComponent(
+            mapQuery
+          );
+
+        const response =
+          await fetch(
+            `https://nominatim.openstreetmap.org/search?format=jsonv2&limit=1&countrycodes=eg&accept-language=ar&q=${query}`
+          );
+
+        if (!response.ok) {
+          throw new Error(
+            `Geocoding request failed: ${response.status}`
+          );
+        }
+
+        const results =
+          await response.json();
+
+        if (
+          !Array.isArray(results) ||
+          results.length === 0
+        ) {
+          /*
+           * محاولة ثانية بعنوان أبسط
+           * لو البحث الكامل لم يرجع نتيجة.
+           */
+          const fallbackParts = [
+            name,
+            city,
+            governorate,
+            "مصر",
+          ].filter(Boolean);
+
+          const fallbackQuery =
+            encodeURIComponent(
+              fallbackParts.join(", ")
+            );
+
+          const fallbackResponse =
+            await fetch(
+              `https://nominatim.openstreetmap.org/search?format=jsonv2&limit=1&countrycodes=eg&accept-language=ar&q=${fallbackQuery}`
+            );
+
+          if (!fallbackResponse.ok) {
+            throw new Error(
+              "Fallback geocoding failed"
+            );
+          }
+
+          const fallbackResults =
+            await fallbackResponse.json();
+
+          if (
+            !Array.isArray(
+              fallbackResults
+            ) ||
+            fallbackResults.length === 0
+          ) {
+            throw new Error(
+              "لم يتم العثور على موقع المركز"
+            );
+          }
+
+          const result =
+            fallbackResults[0];
+
+          const lat = Number(
+            result?.lat
+          );
+
+          const lng = Number(
+            result?.lon
+          );
+
+          if (
+            Number.isFinite(lat) &&
+            Number.isFinite(lng)
+          ) {
+            if (!cancelled) {
+              setGeocodedCoordinates({
+                lat,
+                lng,
+              });
+            }
+          }
+
+          return;
+        }
+
+        const result =
+          results[0];
+
+        const lat = Number(
+          result?.lat
+        );
+
+        const lng = Number(
+          result?.lon
+        );
+
+        if (
+          !Number.isFinite(lat) ||
+          !Number.isFinite(lng)
+        ) {
+          throw new Error(
+            "الإحداثيات غير صالحة"
+          );
+        }
+
+        if (!cancelled) {
+          setGeocodedCoordinates({
+            lat,
+            lng,
+          });
+        }
+      } catch (err) {
+        console.error(
+          "Failed to geocode blood center:",
+          err
+        );
+      } finally {
+        if (!cancelled) {
+          setGeocodingLoading(false);
+        }
+      }
+    }
+
+    geocodeCenter();
+
+    return () => {
+      cancelled = true;
+    };
+  }, [
+    center,
+    storedCoordinates,
+    mapQuery,
+    name,
+    city,
+    governorate,
+  ]);
+
+  /* ===================================================
+  ACTIONS
   =================================================== */
 
   const handleCall = () => {
@@ -542,7 +739,7 @@ export default function BloodCenterDetails() {
   };
 
   /* ===================================================
-     LOADING
+  LOADING
   =================================================== */
 
   if (loading) {
@@ -590,7 +787,7 @@ export default function BloodCenterDetails() {
   }
 
   /* ===================================================
-     ERROR
+  ERROR
   =================================================== */
 
   if (
@@ -658,7 +855,7 @@ export default function BloodCenterDetails() {
   }
 
   /* ===================================================
-     PAGE
+  PAGE
   =================================================== */
 
   return (
@@ -933,7 +1130,6 @@ export default function BloodCenterDetails() {
                     ]}
                     icon={bloodCenterIcon}
                   >
-
                     <Popup>
                       <div
                         dir="rtl"
@@ -948,7 +1144,6 @@ export default function BloodCenterDetails() {
                         </span>
                       </div>
                     </Popup>
-
                   </Marker>
 
                 </MapContainer>
@@ -968,7 +1163,6 @@ export default function BloodCenterDetails() {
                     </span>
 
                   </div>
-
                 </div>
 
               </div>
@@ -978,15 +1172,25 @@ export default function BloodCenterDetails() {
               <div className="map-unavailable">
 
                 <div className="map-unavailable-icon">
-                  <MapIcon size={30} />
+
+                  {geocodingLoading ? (
+                    <div className="map-mini-spinner" />
+                  ) : (
+                    <MapIcon size={30} />
+                  )}
+
                 </div>
 
                 <h3>
-                  العنوان غير متوفر
+                  {geocodingLoading
+                    ? "جاري تحديد موقع المركز"
+                    : "العنوان غير متوفر"}
                 </h3>
 
                 <p>
-                  لا توجد إحداثيات كافية لعرض موقع المركز على الخريطة.
+                  {geocodingLoading
+                    ? "جاري البحث عن موقع المركز على الخريطة..."
+                    : "لا توجد إحداثيات كافية لعرض موقع المركز على الخريطة."}
                 </p>
 
               </div>
@@ -1036,1647 +1240,1678 @@ export default function BloodCenterDetails() {
 }
 
 /* =====================================================
-   STYLES
+STYLES
 ===================================================== */
 
 const styles = `
 
-  *,
-  *::before,
-  *::after {
-    box-sizing: border-box;
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html,
+body,
+#root {
+  width: 100%;
+  min-height: 100%;
+}
+
+html {
+  background: #edf7f4;
+  overflow-x: hidden;
+}
+
+body {
+  margin: 0;
+  width: 100%;
+  min-width: 0;
+  overflow-x: hidden;
+
+  background:
+    linear-gradient(
+      160deg,
+      #f7fffd 0%,
+      #edf9f6 48%,
+      #e5f5f1 100%
+    );
+
+  -webkit-tap-highlight-color:
+    transparent;
+}
+
+button,
+a,
+input {
+  -webkit-tap-highlight-color:
+    transparent;
+}
+
+button {
+  font-family: inherit;
+}
+
+#root {
+  width: 100%;
+  min-height: 100vh;
+  min-height: 100dvh;
+  overflow-x: hidden;
+}
+
+/* =====================================================
+MAIN PAGE
+===================================================== */
+
+.blood-center-page {
+  --primary: #0aa88f;
+  --primary-dark: #078876;
+  --primary-light: #e6f7f4;
+
+  --text-dark: #17332e;
+  --text-main: #245b5d;
+  --text-muted: #6b7c79;
+
+  --bg: #edf7f4;
+  --card: #ffffff;
+
+  width: 100%;
+
+  min-height: 100vh;
+  min-height: 100dvh;
+
+  overflow-x: hidden;
+
+  background:
+    radial-gradient(
+      circle at 5% 4%,
+      rgba(70, 193, 177, 0.15),
+      transparent 27%
+    ),
+
+    radial-gradient(
+      circle at 96% 35%,
+      rgba(154, 231, 216, 0.17),
+      transparent 29%
+    ),
+
+    linear-gradient(
+      160deg,
+      #f7fffd 0%,
+      #edf9f6 48%,
+      #e5f5f1 100%
+    );
+
+  color:
+    var(--text-dark);
+
+  font-family:
+    "Tajawal",
+    "Cairo",
+    Arial,
+    sans-serif;
+
+  padding-bottom:
+    env(safe-area-inset-bottom);
+}
+
+/* =====================================================
+HEADER
+===================================================== */
+
+.details-header {
+  width: 100%;
+
+  min-height: 68px;
+
+  padding:
+    10px 14px;
+
+  padding-top:
+    max(
+      10px,
+      env(safe-area-inset-top)
+    );
+
+  display: flex;
+
+  align-items: center;
+
+  justify-content: space-between;
+
+  gap: 10px;
+
+  background:
+    rgba(
+      239,
+      249,
+      246,
+      0.96
+    );
+
+  border-bottom:
+    1px solid
+    rgba(
+      10,
+      168,
+      143,
+      0.10
+    );
+
+  position: sticky;
+
+  top: 0;
+
+  z-index: 20;
+
+  backdrop-filter:
+    blur(16px);
+
+  -webkit-backdrop-filter:
+    blur(16px);
+
+  box-shadow:
+    0 4px 18px
+    rgba(
+      35,
+      102,
+      99,
+      0.05
+    );
+}
+
+.details-header h1 {
+  margin: 0;
+
+  flex: 1;
+
+  min-width: 0;
+
+  text-align: center;
+
+  font-size: 18px;
+
+  line-height: 1.3;
+
+  font-weight: 900;
+
+  color:
+    var(--text-dark);
+}
+
+.header-spacer {
+  width: 42px;
+
+  height: 42px;
+
+  flex-shrink: 0;
+}
+
+.back-button {
+  width: 42px;
+  height: 42px;
+
+  flex-shrink: 0;
+
+  border: 0;
+
+  border-radius: 14px;
+
+  background:
+    rgba(
+      255,
+      255,
+      255,
+      0.90
+    );
+
+  color:
+    var(--primary);
+
+  display: flex;
+
+  align-items: center;
+
+  justify-content: center;
+
+  cursor: pointer;
+
+  box-shadow:
+    0 5px 14px
+    rgba(
+      35,
+      102,
+      99,
+      0.07
+    );
+
+  transition:
+    0.18s ease;
+}
+
+.back-button:active {
+  transform:
+    scale(0.95);
+}
+
+/* =====================================================
+CONTENT
+===================================================== */
+
+.details-content {
+  width: 100%;
+
+  max-width: 680px;
+
+  margin: 0 auto;
+
+  padding:
+    15px 13px 32px;
+}
+
+/* =====================================================
+HERO
+===================================================== */
+
+.center-hero {
+  width: 100%;
+
+  min-width: 0;
+
+  display: flex;
+
+  align-items: center;
+
+  gap: 13px;
+
+  padding:
+    18px;
+
+  border-radius: 24px;
+
+  background:
+    linear-gradient(
+      135deg,
+      #0aa88f 0%,
+      #079b88 52%,
+      #078876 100%
+    );
+
+  box-shadow:
+    0 14px 32px
+    rgba(
+      10,
+      168,
+      143,
+      0.18
+    );
+}
+
+.center-icon {
+  width: 66px;
+  height: 66px;
+
+  flex-shrink: 0;
+
+  border-radius: 20px;
+
+  background:
+    rgba(
+      255,
+      255,
+      255,
+      0.16
+    );
+
+  border:
+    1px solid
+    rgba(
+      255,
+      255,
+      255,
+      0.28
+    );
+
+  display: flex;
+
+  align-items: center;
+
+  justify-content: center;
+}
+
+.center-icon svg {
+  width: 40px;
+  height: 40px;
+}
+
+.center-hero-info {
+  min-width: 0;
+
+  flex: 1;
+}
+
+.hero-title-row {
+  display: flex;
+
+  align-items: flex-start;
+
+  flex-wrap: wrap;
+
+  gap: 6px;
+}
+
+.center-hero h2 {
+  margin: 0;
+
+  min-width: 0;
+
+  color: #ffffff;
+
+  font-size: 17px;
+
+  line-height: 1.55;
+
+  font-weight: 900;
+
+  overflow-wrap: anywhere;
+}
+
+.verified-badge {
+  display: inline-flex;
+
+  align-items: center;
+
+  gap: 3px;
+
+  padding:
+    4px 7px;
+
+  border-radius: 10px;
+
+  background:
+    rgba(
+      255,
+      255,
+      255,
+      0.17
+    );
+
+  border:
+    1px solid
+    rgba(
+      255,
+      255,
+      255,
+      0.14
+    );
+
+  color: #ffffff;
+
+  font-size: 9px;
+
+  font-weight: 800;
+
+  white-space: nowrap;
+}
+
+.center-type {
+  display: block;
+
+  margin-top: 3px;
+
+  color: #ffffff;
+
+  font-size: 11px;
+
+  font-weight: 800;
+}
+
+.hero-location {
+  margin-top: 7px;
+
+  display: flex;
+
+  align-items: center;
+
+  gap: 5px;
+
+  color: #ffffff;
+
+  font-size: 10px;
+
+  font-weight: 800;
+
+  min-width: 0;
+}
+
+.hero-location span {
+  overflow-wrap: anywhere;
+}
+
+/* =====================================================
+DISTANCE
+===================================================== */
+
+.distance-badge {
+  margin:
+    11px 0;
+
+  padding:
+    10px 13px;
+
+  display: flex;
+
+  align-items: center;
+
+  gap: 6px;
+
+  border-radius: 14px;
+
+  background:
+    rgba(
+      230,
+      247,
+      244,
+      0.92
+    );
+
+  border:
+    1px solid
+    rgba(
+      10,
+      168,
+      143,
+      0.07
+    );
+
+  color:
+    var(--primary-dark);
+
+  font-size: 11px;
+
+  font-weight: 700;
+}
+
+.distance-badge strong {
+  font-weight: 900;
+}
+
+/* =====================================================
+CARDS
+===================================================== */
+
+.details-card {
+  width: 100%;
+
+  margin-top: 12px;
+
+  padding:
+    17px;
+
+  border-radius: 22px;
+
+  background:
+    rgba(
+      255,
+      255,
+      255,
+      0.95
+    );
+
+  border:
+    1px solid
+    rgba(
+      10,
+      168,
+      143,
+      0.08
+    );
+
+  box-shadow:
+    0 10px 28px
+    rgba(
+      35,
+      102,
+      99,
+      0.07
+    );
+}
+
+.details-card h3 {
+  margin:
+    0 0 14px;
+
+  color:
+    var(--text-main);
+
+  font-size: 15px;
+
+  line-height: 1.4;
+
+  font-weight: 900;
+}
+
+/* =====================================================
+INFO ROW
+===================================================== */
+
+.info-item {
+  display: flex;
+
+  align-items: flex-start;
+
+  gap: 10px;
+
+  min-width: 0;
+}
+
+.info-icon {
+  width: 40px;
+  height: 40px;
+
+  flex-shrink: 0;
+
+  border-radius: 13px;
+
+  background:
+    #e6f7f4;
+
+  color:
+    var(--primary);
+
+  display: flex;
+
+  align-items: center;
+
+  justify-content: center;
+}
+
+.info-text {
+  min-width: 0;
+
+  flex: 1;
+
+  display: flex;
+
+  flex-direction: column;
+
+  gap: 3px;
+
+  padding-top: 1px;
+}
+
+.info-text span {
+  color:
+    var(--text-muted);
+
+  font-size: 10px;
+
+  line-height: 1.4;
+
+  font-weight: 700;
+}
+
+.info-text strong,
+.phone-value {
+  margin: 0;
+
+  padding: 0;
+
+  border: 0;
+
+  background: transparent;
+
+  color:
+    var(--text-main);
+
+  font-family: inherit;
+
+  font-size: 12px;
+
+  line-height: 1.65;
+
+  font-weight: 800;
+
+  text-align: right;
+
+  overflow-wrap: anywhere;
+}
+
+.phone-value {
+  color:
+    var(--primary-dark);
+
+  cursor: pointer;
+
+  text-decoration: none;
+}
+
+.phone-value:active {
+  opacity: 0.7;
+}
+
+.info-divider {
+  height: 1px;
+
+  margin:
+    12px 0;
+
+  background:
+    #e3eeeb;
+}
+
+/* =====================================================
+SERVICES
+===================================================== */
+
+.services-grid {
+  display: grid;
+
+  grid-template-columns:
+    repeat(
+      2,
+      minmax(0, 1fr)
+    );
+
+  gap: 8px;
+}
+
+.service-item {
+  min-width: 0;
+
+  min-height: 44px;
+
+  padding:
+    8px 9px;
+
+  display: flex;
+
+  align-items: center;
+
+  gap: 6px;
+
+  border-radius: 13px;
+
+  background:
+    #edf8f5;
+
+  border:
+    1px solid
+    rgba(
+      10,
+      168,
+      143,
+      0.06
+    );
+
+  color:
+    #315f60;
+
+  font-size: 10px;
+
+  line-height: 1.45;
+
+  font-weight: 800;
+}
+
+.service-item > span:last-child {
+  overflow-wrap: anywhere;
+}
+
+.service-check {
+  color:
+    var(--primary);
+
+  display: flex;
+
+  align-items: center;
+
+  justify-content: center;
+
+  flex-shrink: 0;
+}
+
+/* =====================================================
+LEAFLET MAP
+===================================================== */
+
+.map-card {
+  width: 100%;
+
+  margin-top: 22px;
+
+  overflow: hidden;
+
+  border-radius: 22px;
+
+  background:
+    #ffffff;
+
+  border:
+    1px solid
+    rgba(
+      10,
+      168,
+      143,
+      0.08
+    );
+
+  box-shadow:
+    0 10px 28px
+    rgba(
+      35,
+      102,
+      99,
+      0.07
+    );
+}
+
+.real-map-wrapper {
+  width: 100%;
+
+  position: relative;
+
+  overflow: hidden;
+
+  background:
+    #f1faf8;
+}
+
+.leaflet-map {
+  width: 100%;
+  height: 250px;
+
+  z-index: 1;
+}
+
+/* =====================================================
+CUSTOM LEAFLET MARKER
+===================================================== */
+
+.blood-center-marker {
+  background: transparent !important;
+  border: 0 !important;
+}
+
+.leaflet-marker-pin {
+  width: 44px;
+  height: 44px;
+
+  border-radius:
+    50% 50% 50% 0;
+
+  background:
+    #0aa88f;
+
+  transform:
+    rotate(-45deg);
+
+  display: flex;
+
+  align-items: center;
+
+  justify-content: center;
+
+  box-shadow:
+    0 5px 14px
+    rgba(
+      10,
+      168,
+      143,
+      0.30
+    );
+}
+
+.leaflet-marker-icon {
+  width: 28px;
+  height: 28px;
+
+  border-radius: 50%;
+
+  background:
+    #ffffff;
+
+  color:
+    #0aa88f;
+
+  display: flex;
+
+  align-items: center;
+
+  justify-content: center;
+
+  font-size: 17px;
+
+  font-weight: 900;
+
+  transform:
+    rotate(45deg);
+}
+
+/* =====================================================
+LEAFLET POPUP
+===================================================== */
+
+.leaflet-popup-content-wrapper {
+  border-radius: 14px;
+}
+
+.leaflet-popup-content {
+  margin: 11px 13px;
+
+  min-width: 150px;
+
+  direction: rtl;
+
+  text-align: right;
+
+  font-family:
+    "Tajawal",
+    "Cairo",
+    Arial,
+    sans-serif;
+}
+
+.leaflet-popup-tip {
+  background:
+    #ffffff;
+}
+
+.leaflet-popup-content-custom {
+  display: flex;
+
+  flex-direction: column;
+
+  gap: 4px;
+}
+
+.leaflet-popup-content-custom strong {
+  color:
+    #245b5d;
+
+  font-size: 12px;
+
+  font-weight: 900;
+}
+
+.leaflet-popup-content-custom span {
+  color:
+    #6b7c79;
+
+  font-size: 9px;
+
+  line-height: 1.5;
+
+  font-weight: 700;
+}
+
+/* =====================================================
+MAP LABEL
+===================================================== */
+
+.map-floating-label {
+  position: relative;
+
+  margin: 10px;
+
+  padding:
+    10px 12px;
+
+  display: flex;
+
+  align-items: center;
+
+  gap: 8px;
+
+  border-radius: 14px;
+
+  background:
+    #f1faf8;
+
+  border:
+    1px solid
+    rgba(
+      10,
+      168,
+      143,
+      .10
+    );
+
+  color:
+    var(--primary);
+}
+
+.map-floating-label > div {
+  min-width: 0;
+
+  display: flex;
+
+  flex-direction: column;
+
+  gap: 2px;
+}
+
+.map-floating-label strong {
+  color:
+    var(--text-main);
+
+  font-size: 10px;
+
+  line-height: 1.3;
+
+  font-weight: 900;
+}
+
+.map-floating-label span {
+  color:
+    var(--text-muted);
+
+  font-size: 8px;
+
+  line-height: 1.4;
+
+  font-weight: 700;
+
+  overflow-wrap: anywhere;
+}
+
+/* =====================================================
+MAP UNAVAILABLE
+===================================================== */
+
+.map-unavailable {
+  min-height: 220px;
+
+  padding:
+    24px 20px;
+
+  background:
+    linear-gradient(
+      145deg,
+      #e9f7f4,
+      #f1f9f7
+    );
+
+  display: flex;
+
+  flex-direction: column;
+
+  align-items: center;
+
+  justify-content: center;
+
+  text-align: center;
+}
+
+.map-unavailable-icon {
+  width: 58px;
+  height: 58px;
+
+  border-radius: 18px;
+
+  background:
+    #ffffff;
+
+  color:
+    var(--primary);
+
+  display: flex;
+
+  align-items: center;
+
+  justify-content: center;
+
+  box-shadow:
+    0 7px 20px
+    rgba(
+      35,
+      102,
+      99,
+      0.08
+    );
+}
+
+.map-mini-spinner {
+  width: 27px;
+  height: 27px;
+
+  border:
+    3px solid
+    #cce5df;
+
+  border-top-color:
+    var(--primary);
+
+  border-radius: 50%;
+
+  animation:
+    bloodCenterSpin
+    0.8s linear infinite;
+}
+
+.map-unavailable h3 {
+  margin:
+    11px 0 5px;
+
+  color:
+    var(--text-main);
+
+  font-size: 13px;
+
+  font-weight: 900;
+}
+
+.map-unavailable p {
+  max-width: 360px;
+
+  margin:
+    0 0 7px;
+
+  color:
+    var(--text-muted);
+
+  font-size: 10px;
+
+  line-height: 1.7;
+
+  font-weight: 600;
+}
+
+/* =====================================================
+DIRECTIONS
+===================================================== */
+
+.directions-button {
+  width: 100%;
+
+  min-height: 51px;
+
+  border: 0;
+
+  background:
+    #ffffff;
+
+  color:
+    var(--primary-dark);
+
+  display: flex;
+
+  align-items: center;
+
+  justify-content: center;
+
+  gap: 7px;
+
+  font-family: inherit;
+
+  font-size: 12px;
+
+  font-weight: 900;
+
+  cursor: pointer;
+
+  transition:
+    background 0.18s ease;
+}
+
+.directions-button:active {
+  background:
+    var(--primary-light);
+}
+
+/* =====================================================
+CALL BUTTON
+===================================================== */
+
+.call-button {
+  width: 100%;
+
+  min-height: 53px;
+
+  margin-top: 12px;
+
+  border: 0;
+
+  border-radius: 17px;
+
+  background:
+    linear-gradient(
+      135deg,
+      #0aa88f,
+      #078876
+    );
+
+  color: #ffffff;
+
+  display: flex;
+
+  align-items: center;
+
+  justify-content: center;
+
+  gap: 7px;
+
+  font-family: inherit;
+
+  font-size: 13px;
+
+  font-weight: 900;
+
+  cursor: pointer;
+
+  box-shadow:
+    0 10px 23px
+    rgba(
+      10,
+      168,
+      143,
+      0.18
+    );
+
+  transition:
+    transform 0.18s ease,
+    box-shadow 0.18s ease;
+}
+
+.call-button:active {
+  transform:
+    scale(0.985);
+
+  box-shadow:
+    0 7px 16px
+    rgba(
+      10,
+      168,
+      143,
+      0.12
+    );
+}
+
+/* =====================================================
+LOADING / ERROR
+===================================================== */
+
+.loading-card,
+.error-card {
+  width: 100%;
+
+  min-height: 280px;
+
+  padding:
+    30px 20px;
+
+  border-radius: 23px;
+
+  background:
+    rgba(
+      255,
+      255,
+      255,
+      0.95
+    );
+
+  display: flex;
+
+  align-items: center;
+
+  justify-content: center;
+
+  flex-direction: column;
+
+  text-align: center;
+
+  box-shadow:
+    0 10px 28px
+    rgba(
+      35,
+      102,
+      99,
+      0.08
+    );
+}
+
+.loading-spinner {
+  width: 38px;
+  height: 38px;
+
+  border:
+    3px solid
+    #cce5df;
+
+  border-top-color:
+    var(--primary);
+
+  border-radius: 50%;
+
+  animation:
+    bloodCenterSpin
+    0.8s linear infinite;
+}
+
+.loading-card p {
+  margin:
+    14px 0 0;
+
+  color:
+    var(--text-muted);
+
+  font-size: 12px;
+
+  font-weight: 700;
+}
+
+.error-icon {
+  width: 48px;
+  height: 48px;
+
+  border-radius: 50%;
+
+  background:
+    #fff0f0;
+
+  color:
+    #d85858;
+
+  display: flex;
+
+  align-items: center;
+
+  justify-content: center;
+
+  font-size: 22px;
+
+  font-weight: 900;
+}
+
+.error-card h2 {
+  margin:
+    13px 0 6px;
+
+  color:
+    var(--text-main);
+
+  font-size: 16px;
+
+  font-weight: 900;
+}
+
+.error-card p {
+  max-width: 340px;
+
+  margin:
+    0 0 18px;
+
+  color:
+    var(--text-muted);
+
+  font-size: 11px;
+
+  line-height: 1.7;
+
+  font-weight: 600;
+}
+
+.primary-button {
+  min-height: 44px;
+
+  padding:
+    0 18px;
+
+  border: 0;
+
+  border-radius: 13px;
+
+  background:
+    linear-gradient(
+      135deg,
+      var(--primary),
+      var(--primary-dark)
+    );
+
+  color: #ffffff;
+
+  font-family: inherit;
+
+  font-size: 11px;
+
+  font-weight: 900;
+
+  cursor: pointer;
+}
+
+/* =====================================================
+ANIMATION
+===================================================== */
+
+@keyframes bloodCenterSpin {
+  to {
+    transform:
+      rotate(360deg);
   }
+}
 
-  html,
-  body,
-  #root {
-    width: 100%;
-    min-height: 100%;
+/* =====================================================
+TABLET
+===================================================== */
+
+@media (min-width: 601px) {
+
+  .details-content {
+    padding:
+      24px 20px 40px;
   }
-
-  html {
-    background: #edf7f4;
-    overflow-x: hidden;
-  }
-
-  body {
-    margin: 0;
-    width: 100%;
-    min-width: 0;
-    overflow-x: hidden;
-
-    background:
-      linear-gradient(
-        160deg,
-        #f7fffd 0%,
-        #edf9f6 48%,
-        #e5f5f1 100%
-      );
-
-    -webkit-tap-highlight-color:
-      transparent;
-  }
-
-  button,
-  a,
-  input {
-    -webkit-tap-highlight-color:
-      transparent;
-  }
-
-  button {
-    font-family: inherit;
-  }
-
-  #root {
-    width: 100%;
-    min-height: 100vh;
-    min-height: 100dvh;
-    overflow-x: hidden;
-  }
-
-  /* =====================================================
-     MAIN PAGE
-  ===================================================== */
-
-  .blood-center-page {
-    --primary: #0aa88f;
-    --primary-dark: #078876;
-    --primary-light: #e6f7f4;
-
-    --text-dark: #17332e;
-    --text-main: #245b5d;
-    --text-muted: #6b7c79;
-
-    --bg: #edf7f4;
-    --card: #ffffff;
-
-    width: 100%;
-
-    min-height: 100vh;
-    min-height: 100dvh;
-
-    overflow-x: hidden;
-
-    background:
-      radial-gradient(
-        circle at 5% 4%,
-        rgba(70, 193, 177, 0.15),
-        transparent 27%
-      ),
-
-      radial-gradient(
-        circle at 96% 35%,
-        rgba(154, 231, 216, 0.17),
-        transparent 29%
-      ),
-
-      linear-gradient(
-        160deg,
-        #f7fffd 0%,
-        #edf9f6 48%,
-        #e5f5f1 100%
-      );
-
-    color:
-      var(--text-dark);
-
-    font-family:
-      "Tajawal",
-      "Cairo",
-      Arial,
-      sans-serif;
-
-    padding-bottom:
-      env(safe-area-inset-bottom);
-  }
-
-  /* =====================================================
-     HEADER
-  ===================================================== */
 
   .details-header {
-    width: 100%;
+    padding-left: 20px;
+    padding-right: 20px;
+  }
 
-    min-height: 68px;
+  .center-hero {
+    padding: 22px;
+  }
+
+  .center-hero h2 {
+    font-size: 20px;
+  }
+
+  .leaflet-map {
+    height: 320px;
+  }
+
+}
+
+/* =====================================================
+MOBILE
+===================================================== */
+
+@media (max-width: 600px) {
+
+  .details-content {
+    width: 100%;
+    max-width: 100%;
+
+    margin: 0;
 
     padding:
-      10px 14px;
+      14px 12px 28px;
+  }
 
-    padding-top:
-      max(
-        10px,
-        env(safe-area-inset-top)
-      );
-
-    display: flex;
-
-    align-items: center;
-
-    justify-content: space-between;
-
-    gap: 10px;
-
-    background:
-      rgba(
-        239,
-        249,
-        246,
-        0.96
-      );
-
-    border-bottom:
-      1px solid
-      rgba(
-        10,
-        168,
-        143,
-        0.10
-      );
-
-    position: sticky;
-
-    top: 0;
-
-    z-index: 20;
-
-    backdrop-filter:
-      blur(16px);
-
-    -webkit-backdrop-filter:
-      blur(16px);
-
-    box-shadow:
-      0 4px 18px
-      rgba(
-        35,
-        102,
-        99,
-        0.05
-      );
+  .details-header {
+    min-height: 64px;
   }
 
   .details-header h1 {
-    margin: 0;
-
-    flex: 1;
-
-    min-width: 0;
-
-    text-align: center;
-
-    font-size: 18px;
-
-    line-height: 1.3;
-
-    font-weight: 900;
-
-    color:
-      var(--text-dark);
-  }
-
-  .header-spacer {
-    width: 42px;
-
-    height: 42px;
-
-    flex-shrink: 0;
+    font-size: 17px;
   }
 
   .back-button {
     width: 42px;
     height: 42px;
 
-    flex-shrink: 0;
-
-    border: 0;
-
     border-radius: 14px;
-
-    background:
-      rgba(
-        255,
-        255,
-        255,
-        0.90
-      );
-
-    color:
-      var(--primary);
-
-    display: flex;
-
-    align-items: center;
-
-    justify-content: center;
-
-    cursor: pointer;
-
-    box-shadow:
-      0 5px 14px
-      rgba(
-        35,
-        102,
-        99,
-        0.07
-      );
-
-    transition:
-      0.18s ease;
   }
-
-  .back-button:active {
-    transform:
-      scale(0.95);
-  }
-
-  /* =====================================================
-     CONTENT
-  ===================================================== */
-
-  .details-content {
-    width: 100%;
-
-    max-width: 680px;
-
-    margin: 0 auto;
-
-    padding:
-      15px 13px 32px;
-  }
-
-  /* =====================================================
-     HERO
-  ===================================================== */
 
   .center-hero {
     width: 100%;
 
-    min-width: 0;
+    padding: 17px;
 
-    display: flex;
+    border-radius: 23px;
 
-    align-items: center;
-
-    gap: 13px;
-
-    padding:
-      18px;
-
-    border-radius: 24px;
-
-    background:
-      linear-gradient(
-        135deg,
-        #0aa88f 0%,
-        #079b88 52%,
-        #078876 100%
-      );
-
-    box-shadow:
-      0 14px 32px
-      rgba(
-        10,
-        168,
-        143,
-        0.18
-      );
+    gap: 12px;
   }
 
   .center-icon {
-    width: 66px;
-    height: 66px;
+    width: 64px;
+    height: 64px;
 
-    flex-shrink: 0;
-
-    border-radius: 20px;
-
-    background:
-      rgba(
-        255,
-        255,
-        255,
-        0.16
-      );
-
-    border:
-      1px solid
-      rgba(
-        255,
-        255,
-        255,
-        0.28
-      );
-
-    display: flex;
-
-    align-items: center;
-
-    justify-content: center;
+    border-radius: 19px;
   }
 
   .center-icon svg {
-    width: 40px;
-    height: 40px;
-  }
-
-  .center-hero-info {
-    min-width: 0;
-
-    flex: 1;
-  }
-
-  .hero-title-row {
-    display: flex;
-
-    align-items: flex-start;
-
-    flex-wrap: wrap;
-
-    gap: 6px;
+    width: 38px;
+    height: 38px;
   }
 
   .center-hero h2 {
-    margin: 0;
-
-    min-width: 0;
-
-    color: #ffffff;
-
     font-size: 17px;
 
-    line-height: 1.55;
-
-    font-weight: 900;
-
-    overflow-wrap: anywhere;
-  }
-
-  .verified-badge {
-    display: inline-flex;
-
-    align-items: center;
-
-    gap: 3px;
-
-    padding:
-      4px 7px;
-
-    border-radius: 10px;
-
-    background:
-      rgba(
-        255,
-        255,
-        255,
-        0.17
-      );
-
-    border:
-      1px solid
-      rgba(
-        255,
-        255,
-        255,
-        0.14
-      );
-
-    color: #ffffff;
-
-    font-size: 9px;
-
-    font-weight: 800;
-
-    white-space: nowrap;
+    line-height: 1.5;
   }
 
   .center-type {
-    display: block;
-    margin-top: 3px;
-    color: #ffffff;
     font-size: 11px;
-    font-weight: 800;
   }
 
   .hero-location {
-    margin-top: 7px;
-    display: flex;
-    align-items: center;
-    gap: 5px;
-    color: #ffffff;
     font-size: 10px;
-    font-weight: 800;
-    min-width: 0;
   }
 
-  .hero-location span {
-    overflow-wrap: anywhere;
+  .verified-badge {
+    font-size: 9px;
   }
-
-  /* =====================================================
-     DISTANCE
-  ===================================================== */
-
-  .distance-badge {
-    margin:
-      11px 0;
-
-    padding:
-      10px 13px;
-
-    display: flex;
-
-    align-items: center;
-
-    gap: 6px;
-
-    border-radius: 14px;
-
-    background:
-      rgba(
-        230,
-        247,
-        244,
-        0.92
-      );
-
-    border:
-      1px solid
-      rgba(
-        10,
-        168,
-        143,
-        0.07
-      );
-
-    color:
-      var(--primary-dark);
-
-    font-size: 11px;
-
-    font-weight: 700;
-  }
-
-  .distance-badge strong {
-    font-weight: 900;
-  }
-
-  /* =====================================================
-     CARDS
-  ===================================================== */
 
   .details-card {
     width: 100%;
 
-    margin-top: 12px;
+    padding: 17px;
 
-    padding:
-      17px;
-
-    border-radius: 22px;
-
-    background:
-      rgba(
-        255,
-        255,
-        255,
-        0.95
-      );
-
-    border:
-      1px solid
-      rgba(
-        10,
-        168,
-        143,
-        0.08
-      );
-
-    box-shadow:
-      0 10px 28px
-      rgba(
-        35,
-        102,
-        99,
-        0.07
-      );
+    border-radius: 21px;
   }
 
   .details-card h3 {
-    margin:
-      0 0 14px;
-
-    color:
-      var(--text-main);
-
     font-size: 15px;
-
-    line-height: 1.4;
-
-    font-weight: 900;
   }
 
-  /* =====================================================
-     INFO ROW
-  ===================================================== */
-
   .info-item {
-    display: flex;
-
-    align-items: flex-start;
-
     gap: 10px;
-
-    min-width: 0;
   }
 
   .info-icon {
     width: 40px;
     height: 40px;
 
-    flex-shrink: 0;
-
     border-radius: 13px;
-
-    background:
-      #e6f7f4;
-
-    color:
-      var(--primary);
-
-    display: flex;
-
-    align-items: center;
-
-    justify-content: center;
-  }
-
-  .info-text {
-    min-width: 0;
-
-    flex: 1;
-
-    display: flex;
-
-    flex-direction: column;
-
-    gap: 3px;
-
-    padding-top: 1px;
   }
 
   .info-text span {
-    color:
-      var(--text-muted);
-
     font-size: 10px;
-
-    line-height: 1.4;
-
-    font-weight: 700;
   }
 
   .info-text strong,
   .phone-value {
-    margin: 0;
-
-    padding: 0;
-
-    border: 0;
-
-    background: transparent;
-
-    color:
-      var(--text-main);
-
-    font-family: inherit;
-
     font-size: 12px;
-
-    line-height: 1.65;
-
-    font-weight: 800;
-
-    text-align: right;
-
-    overflow-wrap: anywhere;
   }
-
-  .phone-value {
-    color:
-      var(--primary-dark);
-
-    cursor: pointer;
-
-    text-decoration: none;
-  }
-
-  .phone-value:active {
-    opacity: 0.7;
-  }
-
-  .info-divider {
-    height: 1px;
-
-    margin:
-      12px 0;
-
-    background:
-      #e3eeeb;
-  }
-
-  /* =====================================================
-     SERVICES
-  ===================================================== */
-
-  .services-grid {
-    display: grid;
-
-    grid-template-columns:
-      repeat(
-        2,
-        minmax(0, 1fr)
-      );
-
-    gap: 8px;
-  }
-
-  .service-item {
-    min-width: 0;
-
-    min-height: 44px;
-
-    padding:
-      8px 9px;
-
-    display: flex;
-
-    align-items: center;
-
-    gap: 6px;
-
-    border-radius: 13px;
-
-    background:
-      #edf8f5;
-
-    border:
-      1px solid
-      rgba(
-        10,
-        168,
-        143,
-        0.06
-      );
-
-    color:
-      #315f60;
-
-    font-size: 10px;
-
-    line-height: 1.45;
-
-    font-weight: 800;
-  }
-
-  .service-item > span:last-child {
-    overflow-wrap: anywhere;
-  }
-
-  .service-check {
-    color:
-      var(--primary);
-
-    display: flex;
-
-    align-items: center;
-
-    justify-content: center;
-
-    flex-shrink: 0;
-  }
-
-  /* =====================================================
-     LEAFLET MAP
-  ===================================================== */
 
   .map-card {
     width: 100%;
 
     margin-top: 22px;
 
-    overflow: hidden;
-
-    border-radius: 22px;
-
-    background:
-      #ffffff;
-
-    border:
-      1px solid
-      rgba(
-        10,
-        168,
-        143,
-        0.08
-      );
-
-    box-shadow:
-      0 10px 28px
-      rgba(
-        35,
-        102,
-        99,
-        0.07
-      );
+    border-radius: 21px;
   }
 
   .real-map-wrapper {
     width: 100%;
 
-    position: relative;
-
-    overflow: hidden;
-
-    background:
-      #f1faf8;
+    height: auto;
   }
 
   .leaflet-map {
     width: 100%;
     height: 250px;
-
-    z-index: 1;
   }
-
-  /* =====================================================
-     CUSTOM LEAFLET MARKER
-  ===================================================== */
-
-  .blood-center-marker {
-    background: transparent !important;
-    border: 0 !important;
-  }
-
-  .leaflet-marker-pin {
-    width: 44px;
-    height: 44px;
-
-    border-radius:
-      50% 50% 50% 0;
-
-    background:
-      #0aa88f;
-
-    transform:
-      rotate(-45deg);
-
-    display: flex;
-
-    align-items: center;
-
-    justify-content: center;
-
-    box-shadow:
-      0 5px 14px
-      rgba(
-        10,
-        168,
-        143,
-        0.30
-      );
-  }
-
-  .leaflet-marker-icon {
-    width: 28px;
-    height: 28px;
-
-    border-radius: 50%;
-
-    background:
-      #ffffff;
-
-    color:
-      #0aa88f;
-
-    display: flex;
-
-    align-items: center;
-
-    justify-content: center;
-
-    font-size: 17px;
-
-    font-weight: 900;
-
-    transform:
-      rotate(45deg);
-  }
-
-  /* =====================================================
-     LEAFLET POPUP
-  ===================================================== */
-
-  .leaflet-popup-content-wrapper {
-    border-radius: 14px;
-  }
-
-  .leaflet-popup-content {
-    margin: 11px 13px;
-
-    min-width: 150px;
-
-    direction: rtl;
-
-    text-align: right;
-
-    font-family:
-      "Tajawal",
-      "Cairo",
-      Arial,
-      sans-serif;
-  }
-
-  .leaflet-popup-tip {
-    background:
-      #ffffff;
-  }
-
-  .leaflet-popup-content-custom {
-    display: flex;
-
-    flex-direction: column;
-
-    gap: 4px;
-  }
-
-  .leaflet-popup-content-custom strong {
-    color:
-      #245b5d;
-
-    font-size: 12px;
-
-    font-weight: 900;
-  }
-
-  .leaflet-popup-content-custom span {
-    color:
-      #6b7c79;
-
-    font-size: 9px;
-
-    line-height: 1.5;
-
-    font-weight: 700;
-  }
-
-  /* =====================================================
-     MAP LABEL
-  ===================================================== */
-
-  .map-floating-label {
-    position: relative;
-
-    margin: 10px;
-
-    padding:
-      10px 12px;
-
-    display: flex;
-
-    align-items: center;
-
-    gap: 8px;
-
-    border-radius: 14px;
-
-    background:
-      #f1faf8;
-
-    border:
-      1px solid
-      rgba(
-        10,
-        168,
-        143,
-        .10
-      );
-
-    color:
-      var(--primary);
-  }
-
-  .map-floating-label > div {
-    min-width: 0;
-
-    display: flex;
-
-    flex-direction: column;
-
-    gap: 2px;
-  }
-
-  .map-floating-label strong {
-    color:
-      var(--text-main);
-
-    font-size: 10px;
-
-    line-height: 1.3;
-
-    font-weight: 900;
-  }
-
-  .map-floating-label span {
-    color:
-      var(--text-muted);
-
-    font-size: 8px;
-
-    line-height: 1.4;
-
-    font-weight: 700;
-
-    overflow-wrap: anywhere;
-  }
-
-  /* =====================================================
-     MAP UNAVAILABLE
-  ===================================================== */
-
-  .map-unavailable {
-    min-height: 220px;
-
-    padding:
-      24px 20px;
-
-    background:
-      linear-gradient(
-        145deg,
-        #e9f7f4,
-        #f1f9f7
-      );
-
-    display: flex;
-
-    flex-direction: column;
-
-    align-items: center;
-
-    justify-content: center;
-
-    text-align: center;
-  }
-
-  .map-unavailable-icon {
-    width: 58px;
-    height: 58px;
-
-    border-radius: 18px;
-
-    background:
-      #ffffff;
-
-    color:
-      var(--primary);
-
-    display: flex;
-
-    align-items: center;
-
-    justify-content: center;
-
-    box-shadow:
-      0 7px 20px
-      rgba(
-        35,
-        102,
-        99,
-        0.08
-      );
-  }
-
-  .map-unavailable h3 {
-    margin:
-      11px 0 5px;
-
-    color:
-      var(--text-main);
-
-    font-size: 13px;
-
-    font-weight: 900;
-  }
-
-  .map-unavailable p {
-    max-width: 360px;
-
-    margin:
-      0 0 7px;
-
-    color:
-      var(--text-muted);
-
-    font-size: 10px;
-
-    line-height: 1.7;
-
-    font-weight: 600;
-  }
-
-  /* =====================================================
-     DIRECTIONS
-  ===================================================== */
 
   .directions-button {
-    width: 100%;
-
-    min-height: 51px;
-
-    border: 0;
-
-    background:
-      #ffffff;
-
-    color:
-      var(--primary-dark);
-
-    display: flex;
-
-    align-items: center;
-
-    justify-content: center;
-
-    gap: 7px;
-
-    font-family: inherit;
+    min-height: 52px;
 
     font-size: 12px;
-
-    font-weight: 900;
-
-    cursor: pointer;
-
-    transition:
-      background 0.18s ease;
   }
-
-  .directions-button:active {
-    background:
-      var(--primary-light);
-  }
-
-  /* =====================================================
-     CALL BUTTON
-  ===================================================== */
 
   .call-button {
-    width: 100%;
-
     min-height: 53px;
 
     margin-top: 12px;
 
-    border: 0;
-
     border-radius: 17px;
 
-    background:
-      linear-gradient(
-        135deg,
-        #0aa88f,
-        #078876
-      );
-
-    color: #ffffff;
-
-    display: flex;
-
-    align-items: center;
-
-    justify-content: center;
-
-    gap: 7px;
-
-    font-family: inherit;
-
     font-size: 13px;
+  }
+}
 
-    font-weight: 900;
+/* =====================================================
+SMALL PHONES
+===================================================== */
 
-    cursor: pointer;
+@media (max-width: 430px) {
 
-    box-shadow:
-      0 10px 23px
-      rgba(
-        10,
-        168,
-        143,
-        0.18
-      );
-
-    transition:
-      transform 0.18s ease,
-      box-shadow 0.18s ease;
+  .details-content {
+    padding-left: 11px;
+    padding-right: 11px;
   }
 
-  .call-button:active {
-    transform:
-      scale(0.985);
+  .center-hero {
+    padding: 16px;
 
-    box-shadow:
-      0 7px 16px
-      rgba(
-        10,
-        168,
-        143,
-        0.12
-      );
+    border-radius: 22px;
   }
 
-  /* =====================================================
-     LOADING / ERROR
-  ===================================================== */
+  .center-icon {
+    width: 61px;
+    height: 61px;
 
-  .loading-card,
-  .error-card {
-    width: 100%;
-
-    min-height: 280px;
-
-    padding:
-      30px 20px;
-
-    border-radius: 23px;
-
-    background:
-      rgba(
-        255,
-        255,
-        255,
-        0.95
-      );
-
-    display: flex;
-
-    align-items: center;
-
-    justify-content: center;
-
-    flex-direction: column;
-
-    text-align: center;
-
-    box-shadow:
-      0 10px 28px
-      rgba(
-        35,
-        102,
-        99,
-        0.08
-      );
+    border-radius: 18px;
   }
 
-  .loading-spinner {
+  .center-icon svg {
+    width: 36px;
+    height: 36px;
+  }
+
+  .center-hero h2 {
+    font-size: 16px;
+  }
+
+  .details-card {
+    padding: 16px;
+  }
+
+  .real-map-wrapper {
+    height: auto;
+  }
+
+  .leaflet-map {
+    height: 245px;
+  }
+}
+
+/* =====================================================
+VERY SMALL PHONES
+===================================================== */
+
+@media (max-width: 380px) {
+
+  .details-content {
+    padding-left: 9px;
+    padding-right: 9px;
+  }
+
+  .details-header {
+    padding-left: 10px;
+    padding-right: 10px;
+  }
+
+  .details-header h1 {
+    font-size: 16px;
+  }
+
+  .back-button {
+    width: 40px;
+    height: 40px;
+  }
+
+  .header-spacer {
+    width: 40px;
+    height: 40px;
+  }
+
+  .center-hero {
+    padding: 14px;
+
+    gap: 10px;
+
+    border-radius: 20px;
+  }
+
+  .center-icon {
+    width: 57px;
+    height: 57px;
+
+    border-radius: 17px;
+  }
+
+  .center-icon svg {
+    width: 33px;
+    height: 33px;
+  }
+
+  .center-hero h2 {
+    font-size: 15px;
+  }
+
+  .center-type {
+    font-size: 10px;
+  }
+
+  .hero-location {
+    font-size: 9px;
+  }
+
+  .details-card {
+    padding: 14px;
+
+    border-radius: 19px;
+  }
+
+  .details-card h3 {
+    font-size: 14px;
+  }
+
+  .info-icon {
     width: 38px;
     height: 38px;
-
-    border:
-      3px solid
-      #cce5df;
-
-    border-top-color:
-      var(--primary);
-
-    border-radius: 50%;
-
-    animation:
-      bloodCenterSpin
-      0.8s linear infinite;
   }
 
-  .loading-card p {
-    margin:
-      14px 0 0;
+  .info-text strong,
+  .phone-value {
+    font-size: 11px;
+  }
 
-    color:
-      var(--text-muted);
+  .services-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .real-map-wrapper {
+    height: auto;
+  }
+
+  .leaflet-map {
+    height: 230px;
+  }
+
+  .map-floating-label strong {
+    font-size: 9px;
+  }
+
+  .map-floating-label span {
+    font-size: 7px;
+  }
+
+  .call-button {
+    min-height: 51px;
 
     font-size: 12px;
-
-    font-weight: 700;
   }
-
-  .error-icon {
-    width: 48px;
-    height: 48px;
-
-    border-radius: 50%;
-
-    background:
-      #fff0f0;
-
-    color:
-      #d85858;
-
-    display: flex;
-
-    align-items: center;
-
-    justify-content: center;
-
-    font-size: 22px;
-
-    font-weight: 900;
-  }
-
-  .error-card h2 {
-    margin:
-      13px 0 6px;
-
-    color:
-      var(--text-main);
-
-    font-size: 16px;
-
-    font-weight: 900;
-  }
-
-  .error-card p {
-    max-width: 340px;
-
-    margin:
-      0 0 18px;
-
-    color:
-      var(--text-muted);
-
-    font-size: 11px;
-
-    line-height: 1.7;
-
-    font-weight: 600;
-  }
-
-  .primary-button {
-    min-height: 44px;
-
-    padding:
-      0 18px;
-
-    border: 0;
-
-    border-radius: 13px;
-
-    background:
-      linear-gradient(
-        135deg,
-        var(--primary),
-        var(--primary-dark)
-      );
-
-    color: #ffffff;
-
-    font-family: inherit;
-
-    font-size: 11px;
-
-    font-weight: 900;
-
-    cursor: pointer;
-  }
-
-  /* =====================================================
-     ANIMATION
-  ===================================================== */
-
-  @keyframes bloodCenterSpin {
-    to {
-      transform:
-        rotate(360deg);
-    }
-  }
-
-  /* =====================================================
-     TABLET
-  ===================================================== */
-
-  @media (min-width: 601px) {
-
-    .details-content {
-      padding:
-        24px 20px 40px;
-    }
-
-    .details-header {
-      padding-left: 20px;
-      padding-right: 20px;
-    }
-
-    .center-hero {
-      padding: 22px;
-    }
-
-    .center-hero h2 {
-      font-size: 20px;
-    }
-
-    .leaflet-map {
-      height: 320px;
-    }
-  }
-
-  /* =====================================================
-     MOBILE
-  ===================================================== */
-
-  @media (max-width: 600px) {
-
-    .details-content {
-      width: 100%;
-      max-width: 100%;
-
-      margin: 0;
-
-      padding:
-        14px 12px 28px;
-    }
-
-    .details-header {
-      min-height: 64px;
-    }
-
-    .details-header h1 {
-      font-size: 17px;
-    }
-
-    .back-button {
-      width: 42px;
-      height: 42px;
-
-      border-radius: 14px;
-    }
-
-    .center-hero {
-      width: 100%;
-
-      padding: 17px;
-
-      border-radius: 23px;
-
-      gap: 12px;
-    }
-
-    .center-icon {
-      width: 64px;
-      height: 64px;
-
-      border-radius: 19px;
-    }
-
-    .center-icon svg {
-      width: 38px;
-      height: 38px;
-    }
-
-    .center-hero h2 {
-      font-size: 17px;
-
-      line-height: 1.5;
-    }
-
-    .center-type {
-      font-size: 11px;
-    }
-
-    .hero-location {
-      font-size: 10px;
-    }
-
-    .verified-badge {
-      font-size: 9px;
-    }
-
-    .details-card {
-      width: 100%;
-
-      padding: 17px;
-
-      border-radius: 21px;
-    }
-
-    .details-card h3 {
-      font-size: 15px;
-    }
-
-    .info-item {
-      gap: 10px;
-    }
-
-    .info-icon {
-      width: 40px;
-      height: 40px;
-
-      border-radius: 13px;
-    }
-
-    .info-text span {
-      font-size: 10px;
-    }
-
-    .info-text strong,
-    .phone-value {
-      font-size: 12px;
-    }
-
-    .map-card {
-      width: 100%;
-
-      margin-top: 22px;
-
-      border-radius: 21px;
-    }
-
-    .real-map-wrapper {
-      width: 100%;
-
-      height: auto;
-    }
-
-    .leaflet-map {
-      width: 100%;
-      height: 250px;
-    }
-
-    .directions-button {
-      min-height: 52px;
-
-      font-size: 12px;
-    }
-
-    .call-button {
-      min-height: 53px;
-
-      margin-top: 12px;
-
-      border-radius: 17px;
-
-      font-size: 13px;
-    }
-  }
-
-  /* =====================================================
-     SMALL PHONES
-  ===================================================== */
-
-  @media (max-width: 430px) {
-
-    .details-content {
-      padding-left: 11px;
-      padding-right: 11px;
-    }
-
-    .center-hero {
-      padding: 16px;
-
-      border-radius: 22px;
-    }
-
-    .center-icon {
-      width: 61px;
-      height: 61px;
-
-      border-radius: 18px;
-    }
-
-    .center-icon svg {
-      width: 36px;
-      height: 36px;
-    }
-
-    .center-hero h2 {
-      font-size: 16px;
-    }
-
-    .details-card {
-      padding: 16px;
-    }
-
-    .real-map-wrapper {
-      height: auto;
-    }
-
-    .leaflet-map {
-      height: 245px;
-    }
-  }
-
-  /* =====================================================
-     VERY SMALL PHONES
-  ===================================================== */
-
-  @media (max-width: 380px) {
-
-    .details-content {
-      padding-left: 9px;
-      padding-right: 9px;
-    }
-
-    .details-header {
-      padding-left: 10px;
-      padding-right: 10px;
-    }
-
-    .details-header h1 {
-      font-size: 16px;
-    }
-
-    .back-button {
-      width: 40px;
-      height: 40px;
-    }
-
-    .header-spacer {
-      width: 40px;
-      height: 40px;
-    }
-
-    .center-hero {
-      padding: 14px;
-
-      gap: 10px;
-
-      border-radius: 20px;
-    }
-
-    .center-icon {
-      width: 57px;
-      height: 57px;
-
-      border-radius: 17px;
-    }
-
-    .center-icon svg {
-      width: 33px;
-      height: 33px;
-    }
-
-    .center-hero h2 {
-      font-size: 15px;
-    }
-
-    .center-type {
-      font-size: 10px;
-    }
-
-    .hero-location {
-      font-size: 9px;
-    }
-
-    .details-card {
-      padding: 14px;
-
-      border-radius: 19px;
-    }
-
-    .details-card h3 {
-      font-size: 14px;
-    }
-
-    .info-icon {
-      width: 38px;
-      height: 38px;
-    }
-
-    .info-text strong,
-    .phone-value {
-      font-size: 11px;
-    }
-
-    .services-grid {
-      grid-template-columns: 1fr;
-    }
-
-    .real-map-wrapper {
-      height: auto;
-    }
-
-    .leaflet-map {
-      height: 230px;
-    }
-
-    .map-floating-label strong {
-      font-size: 9px;
-    }
-
-    .map-floating-label span {
-      font-size: 7px;
-    }
-
-    .call-button {
-      min-height: 51px;
-      font-size: 12px;
-    }
-  }
+}
 
 `;
