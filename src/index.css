@@ -10193,3 +10193,40 @@ body.nabd-dark .blood-centers-page .location-active span {
   background: #5ed9c5 !important;
   box-shadow: 0 0 0 4px rgba(94, 217, 197, 0.12) !important;
 }
+/* =========================================================
+   🌙 BLOOD CENTERS - FIX INPUT/SELECT BACKGROUND
+   ========================================================= */
+
+/* إزالة الخلفية السوداء من الـ select */
+body.nabd-dark .blood-centers-page .governorate-select-wrapper select {
+  background: transparent !important;
+  background-color: transparent !important;
+  color: #e9ffff !important;
+  border: none !important;
+  outline: none !important;
+  appearance: none !important;
+  -webkit-appearance: none !important;
+  -moz-appearance: none !important;
+}
+
+/* إزالة الخلفية السوداء من الـ input */
+body.nabd-dark .blood-centers-page .search-box input {
+  background: transparent !important;
+  background-color: transparent !important;
+  color: #e9ffff !important;
+  border: none !important;
+  outline: none !important;
+}
+
+/* إزالة أي خلفية من الـ wrapper نفسه (احتياطي) */
+body.nabd-dark .blood-centers-page .governorate-select-wrapper,
+body.nabd-dark .blood-centers-page .search-box {
+  background: rgba(13, 42, 46, 0.9) !important;
+}
+
+/* خيارات القائمة المنسدلة */
+body.nabd-dark .blood-centers-page .governorate-select-wrapper select option {
+  background: #0d2a2e !important;
+  color: #e9ffff !important;
+  padding: 10px !important;
+}
