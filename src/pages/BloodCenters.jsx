@@ -35,8 +35,6 @@ export default function BloodCenters() {
         setLoading(true);
         setError("");
 
-        // نحاول أولاً الحصول على موقع المستخدم
-        // حتى نستخدم endpoint الأقرب إليك.
         try {
           const location =
             await getCurrentLocation();
@@ -44,12 +42,10 @@ export default function BloodCenters() {
           if (!mounted) return;
 
           const nearby =
-            await api.getNearbyBloodCenters(
-              {
-                lat: location.lat,
-                lng: location.lng,
-              }
-            );
+            await api.getNearbyBloodCenters({
+              lat: location.lat,
+              lng: location.lng,
+            });
 
           if (!mounted) return;
 
@@ -72,8 +68,8 @@ export default function BloodCenters() {
 
           return;
         } catch {
-          // لو المستخدم رفض الموقع أو حصل أي خطأ
-          // نستخدم كل المراكز الموجودة في الـBackend.
+          // إذا لم يتم السماح بالموقع
+          // نستخدم جميع المراكز الموجودة.
         }
 
         if (!mounted) return;
@@ -314,12 +310,10 @@ export default function BloodCenters() {
           await getCurrentLocation();
 
         const nearby =
-          await api.getNearbyBloodCenters(
-            {
-              lat: location.lat,
-              lng: location.lng,
-            }
-          );
+          await api.getNearbyBloodCenters({
+            lat: location.lat,
+            lng: location.lng,
+          });
 
         const data =
           Array.isArray(nearby)
@@ -337,8 +331,6 @@ export default function BloodCenters() {
         setCenters(data);
         setHasLocation(true);
       } catch {
-        // لو الموقع غير متاح، نستخدم البيانات الموجودة
-        // ونرتبها حسب distanceKm إن كانت موجودة.
         setHasLocation(false);
       } finally {
         setLoading(false);
@@ -390,7 +382,6 @@ export default function BloodCenters() {
             "0 5px 18px rgba(23,51,46,.04)",
         }}
       >
-        {/* Card Header */}
         <div
           style={{
             display: "flex",
@@ -437,6 +428,7 @@ export default function BloodCenters() {
                   stroke="currentColor"
                   strokeWidth="3"
                 />
+
                 <path
                   d="M25 39C26.5 43 29 45 33 45"
                   stroke="currentColor"
@@ -516,7 +508,6 @@ export default function BloodCenters() {
           )}
         </div>
 
-        {/* Address */}
         {address && (
           <div
             style={{
@@ -546,6 +537,7 @@ export default function BloodCenters() {
                 stroke="currentColor"
                 strokeWidth="1.8"
               />
+
               <circle
                 cx="12"
                 cy="9.5"
@@ -561,7 +553,6 @@ export default function BloodCenters() {
           </div>
         )}
 
-        {/* Working Hours */}
         {hours && (
           <div
             style={{
@@ -591,6 +582,7 @@ export default function BloodCenters() {
                 stroke="currentColor"
                 strokeWidth="1.8"
               />
+
               <path
                 d="M12 7V12L15 14"
                 stroke="currentColor"
@@ -606,7 +598,6 @@ export default function BloodCenters() {
           </div>
         )}
 
-        {/* Phone */}
         {phone && (
           <a
             href={`tel:${phone}`}
@@ -628,9 +619,6 @@ export default function BloodCenters() {
               width="18"
               height="18"
               fill="none"
-              style={{
-                flexShrink: 0,
-              }}
             >
               <path
                 d="M7 4L9.5 3.5L11 8L8.8 9.2C9.7 11.2 11.3 12.8 13.3 13.7L14.5 11.5L19 13L18.5 15.5C18.3 16.6 17.4 17.5 16.3 17.7C10.1 18.7 5.3 13.9 6.3 7.7C6.5 6.6 7.4 5.7 8.5 5.5"
@@ -659,26 +647,49 @@ export default function BloodCenters() {
       dir="rtl"
       style={{
         minHeight: "100vh",
+
+        /*
+          نفس خلفية هوية نبض الأمل
+          المستخدمة في صفحات التطبيق:
+          أبيض + أخضر فاتح + تركواز.
+        */
         background:
-          "linear-gradient(160deg, #fafdfc 0%, #f1faf8 55%, #e8f7f4 100%)",
+          "linear-gradient(160deg, #fafdfc 0%, #f1faf8 55%, #e6f7f4 100%)",
+
         color: "#17332e",
+
         paddingBottom: "90px",
+
+        fontFamily:
+          "inherit",
       }}
     >
       {/* ================= HEADER ================= */}
+
       <header
         style={{
-          padding: "22px 18px 14px",
+          padding:
+            "22px 18px 14px",
+
           display: "flex",
-          alignItems: "center",
+
+          alignItems:
+            "center",
+
           gap: "12px",
+
           position: "sticky",
+
           top: 0,
+
           zIndex: 10,
+
           background:
             "rgba(250,253,252,.94)",
+
           backdropFilter:
             "blur(12px)",
+
           borderBottom:
             "1px solid #edf2f1",
         }}
@@ -691,17 +702,31 @@ export default function BloodCenters() {
           style={{
             width: "42px",
             height: "42px",
-            borderRadius: "14px",
+
+            borderRadius:
+              "14px",
+
             border:
               "1px solid #e3eeeb",
+
             background:
               "#ffffff",
-            color: "#0aa88f",
-            fontSize: "22px",
-            cursor: "pointer",
-            display: "flex",
+
+            color:
+              "#0aa88f",
+
+            fontSize:
+              "22px",
+
+            cursor:
+              "pointer",
+
+            display:
+              "flex",
+
             alignItems:
               "center",
+
             justifyContent:
               "center",
           }}
@@ -713,8 +738,10 @@ export default function BloodCenters() {
           <h1
             style={{
               margin: 0,
-              fontSize: "21px",
-              fontWeight: 800,
+              fontSize:
+                "21px",
+              fontWeight:
+                800,
             }}
           >
             مراكز وبنوك الدم
@@ -724,8 +751,12 @@ export default function BloodCenters() {
             style={{
               margin:
                 "4px 0 0",
-              color: "#6b7c79",
-              fontSize: "13px",
+
+              color:
+                "#6b7c79",
+
+              fontSize:
+                "13px",
             }}
           >
             تبرع بالدم في أقرب مركز معتمد
@@ -734,50 +765,81 @@ export default function BloodCenters() {
       </header>
 
       {/* ================= INTRO ================= */}
+
       <section
         style={{
-          margin: "18px",
-          padding: "20px",
-          borderRadius: "22px",
+          margin:
+            "18px",
+
+          padding:
+            "20px",
+
+          borderRadius:
+            "22px",
+
+          /*
+            نفس تدرج اللون الأساسي
+            في تطبيق نبض الأمل.
+          */
           background:
             "linear-gradient(135deg, #0aa88f 0%, #078876 100%)",
-          color: "#ffffff",
+
+          color:
+            "#ffffff",
+
           boxShadow:
             "0 12px 30px rgba(10,168,143,.18)",
         }}
       >
+        {/* ================= HEART + ECG ================= */}
+
         <div
           style={{
-            width: "52px",
-            height: "52px",
-            borderRadius: "17px",
+            width: "58px",
+            height: "58px",
+
+            borderRadius:
+              "18px",
+
             background:
-              "rgba(255,255,255,.16)",
-            display: "flex",
+              "rgba(255,255,255,.14)",
+
+            display:
+              "flex",
+
             alignItems:
               "center",
+
             justifyContent:
               "center",
+
             marginBottom:
               "14px",
+
+            color:
+              "#ffffff",
           }}
         >
+          {/* نفس SVG القلب والنبضة الموجود في Home */}
+
           <svg
             viewBox="0 0 64 64"
-            width="32"
-            height="32"
+            width="38"
+            height="38"
             fill="none"
           >
             <path
-              d="M32 8C32 8 17 25 17 37C17 46 23.7 53 32 53C40.3 53 47 46 47 37C47 25 32 8 32 8Z"
+              d="M32 54S9 40 9 23C9 15 14.5 10 21 10C26 10 30 13 32 17C34 13 38 10 43 10C49.5 10 55 15 55 23C55 40 32 54 32 54Z"
               stroke="currentColor"
               strokeWidth="3"
             />
+
             <path
-              d="M25 39C26.5 43 29 45 33 45"
+              d="M12 31H21L25 24L30 37L35 20L40 31H52"
               stroke="currentColor"
-              strokeWidth="2.5"
+              strokeWidth="2.8"
               strokeLinecap="round"
+              strokeLinejoin="round"
             />
           </svg>
         </div>
@@ -786,18 +848,29 @@ export default function BloodCenters() {
           style={{
             margin:
               "0 0 8px",
-            fontSize: "20px",
+
+            fontSize:
+              "20px",
+
+            fontWeight:
+              800,
           }}
         >
-          تبرعك ممكن ينقذ حياة ❤️
+          تبرعك ممكن ينقذ حياة
         </h2>
 
         <p
           style={{
             margin: 0,
-            lineHeight: 1.8,
-            fontSize: "14px",
-            opacity: 0.92,
+
+            lineHeight:
+              1.8,
+
+            fontSize:
+              "14px",
+
+            opacity:
+              0.92,
           }}
         >
           ابحث عن أقرب مركز أو بنك دم، واعرف بيانات التواصل ومواعيد العمل
@@ -806,10 +879,12 @@ export default function BloodCenters() {
       </section>
 
       {/* ================= SEARCH ================= */}
+
       <div
         style={{
           margin:
             "0 18px 18px",
+
           position:
             "relative",
         }}
@@ -822,11 +897,18 @@ export default function BloodCenters() {
           style={{
             position:
               "absolute",
-            right: "16px",
-            top: "50%",
+
+            right:
+              "16px",
+
+            top:
+              "50%",
+
             transform:
               "translateY(-50%)",
-            color: "#0aa88f",
+
+            color:
+              "#0aa88f",
           }}
         >
           <circle
@@ -836,6 +918,7 @@ export default function BloodCenters() {
             stroke="currentColor"
             strokeWidth="2"
           />
+
           <path
             d="M16 16L21 21"
             stroke="currentColor"
@@ -854,36 +937,58 @@ export default function BloodCenters() {
           }
           placeholder="ابحث عن مركز أو بنك دم..."
           style={{
-            width: "100%",
+            width:
+              "100%",
+
             boxSizing:
               "border-box",
-            height: "54px",
+
+            height:
+              "54px",
+
             borderRadius:
               "17px",
+
             border:
               "1px solid #e3eeeb",
-            outline: "none",
+
+            outline:
+              "none",
+
             padding:
               "0 48px 0 16px",
-            fontSize: "14px",
+
+            fontSize:
+              "14px",
+
             fontFamily:
               "inherit",
+
             background:
               "#ffffff",
-            color: "#17332e",
+
+            color:
+              "#17332e",
           }}
         />
       </div>
 
       {/* ================= FILTERS ================= */}
+
       <div
         style={{
-          display: "flex",
-          gap: "9px",
+          display:
+            "flex",
+
+          gap:
+            "9px",
+
           overflowX:
             "auto",
+
           padding:
             "0 18px 8px",
+
           scrollbarWidth:
             "none",
         }}
@@ -907,24 +1012,39 @@ export default function BloodCenters() {
                 )
               }
               style={{
-                flexShrink: 0,
-                border: active
-                  ? "1px solid #0aa88f"
-                  : "1px solid #e3eeeb",
-                background: active
-                  ? "#e6f7f4"
-                  : "#ffffff",
-                color: active
-                  ? "#078876"
-                  : "#6b7c79",
+                flexShrink:
+                  0,
+
+                border:
+                  active
+                    ? "1px solid #0aa88f"
+                    : "1px solid #e3eeeb",
+
+                background:
+                  active
+                    ? "#e6f7f4"
+                    : "#ffffff",
+
+                color:
+                  active
+                    ? "#078876"
+                    : "#6b7c79",
+
                 borderRadius:
                   "22px",
+
                 padding:
                   "10px 16px",
+
                 fontFamily:
                   "inherit",
-                fontSize: "13px",
-                fontWeight: 700,
+
+                fontSize:
+                  "13px",
+
+                fontWeight:
+                  700,
+
                 cursor:
                   "pointer",
               }}
@@ -935,19 +1055,28 @@ export default function BloodCenters() {
         })}
       </div>
 
-      {/* ================= MAP PLACEHOLDER ================= */}
+      {/* ================= MAP ================= */}
+
       <section
         style={{
           margin:
             "14px 18px 20px",
-          height: "190px",
+
+          height:
+            "190px",
+
           borderRadius:
             "22px",
-          overflow: "hidden",
+
+          overflow:
+            "hidden",
+
           position:
             "relative",
+
           background:
             "linear-gradient(135deg, #dff3ef 0%, #eef8f6 100%)",
+
           border:
             "1px solid #dcece8",
         }}
@@ -956,10 +1085,15 @@ export default function BloodCenters() {
           style={{
             position:
               "absolute",
+
             inset: 0,
-            opacity: 0.35,
+
+            opacity:
+              0.35,
+
             backgroundImage:
               "linear-gradient(#b9dcd5 1px, transparent 1px), linear-gradient(90deg, #b9dcd5 1px, transparent 1px)",
+
             backgroundSize:
               "32px 32px",
           }}
@@ -969,22 +1103,40 @@ export default function BloodCenters() {
           style={{
             position:
               "absolute",
-            top: "50%",
-            left: "50%",
+
+            top:
+              "50%",
+
+            left:
+              "50%",
+
             transform:
               "translate(-50%, -50%)",
-            width: "52px",
-            height: "52px",
+
+            width:
+              "52px",
+
+            height:
+              "52px",
+
             borderRadius:
               "50%",
+
             background:
               "#0aa88f",
-            color: "#ffffff",
-            display: "flex",
+
+            color:
+              "#ffffff",
+
+            display:
+              "flex",
+
             alignItems:
               "center",
+
             justifyContent:
               "center",
+
             boxShadow:
               "0 8px 22px rgba(10,168,143,.28)",
           }}
@@ -1000,6 +1152,7 @@ export default function BloodCenters() {
               stroke="currentColor"
               strokeWidth="1.8"
             />
+
             <circle
               cx="12"
               cy="9.5"
@@ -1014,17 +1167,31 @@ export default function BloodCenters() {
           style={{
             position:
               "absolute",
-            bottom: "14px",
-            right: "14px",
-            left: "14px",
+
+            bottom:
+              "14px",
+
+            right:
+              "14px",
+
+            left:
+              "14px",
+
             background:
               "rgba(255,255,255,.94)",
+
             borderRadius:
               "14px",
+
             padding:
               "10px 13px",
-            fontSize: "12px",
-            color: "#536966",
+
+            fontSize:
+              "12px",
+
+            color:
+              "#536966",
+
             textAlign:
               "center",
           }}
@@ -1034,10 +1201,12 @@ export default function BloodCenters() {
       </section>
 
       {/* ================= TITLE ================= */}
+
       <div
         style={{
           padding:
             "0 18px",
+
           marginBottom:
             "12px",
         }}
@@ -1045,8 +1214,12 @@ export default function BloodCenters() {
         <h2
           style={{
             margin: 0,
-            fontSize: "18px",
-            fontWeight: 800,
+
+            fontSize:
+              "18px",
+
+            fontWeight:
+              800,
           }}
         >
           مراكز وبنوك الدم
@@ -1056,8 +1229,12 @@ export default function BloodCenters() {
           style={{
             margin:
               "5px 0 0",
-            fontSize: "13px",
-            color: "#6b7c79",
+
+            fontSize:
+              "13px",
+
+            color:
+              "#6b7c79",
           }}
         >
           الأماكن المتاحة للتبرع بالدم
@@ -1065,37 +1242,52 @@ export default function BloodCenters() {
       </div>
 
       {/* ================= LOADING ================= */}
+
       {loading && (
         <section
           style={{
             margin:
               "0 18px",
+
             background:
               "#ffffff",
+
             border:
               "1px solid #edf2f1",
+
             borderRadius:
               "20px",
+
             padding:
               "24px 18px",
+
             textAlign:
               "center",
+
             boxShadow:
               "0 5px 18px rgba(23,51,46,.04)",
           }}
         >
           <div
             style={{
-              width: "42px",
-              height: "42px",
+              width:
+                "42px",
+
+              height:
+                "42px",
+
               margin:
                 "0 auto 14px",
+
               borderRadius:
                 "50%",
+
               border:
                 "3px solid #dff3ef",
+
               borderTopColor:
                 "#0aa88f",
+
               animation:
                 "bloodCentersSpin 1s linear infinite",
             }}
@@ -1105,7 +1297,9 @@ export default function BloodCenters() {
             style={{
               margin:
                 "0 0 8px",
-              fontSize: "16px",
+
+              fontSize:
+                "16px",
             }}
           >
             جاري تحميل المراكز
@@ -1114,8 +1308,10 @@ export default function BloodCenters() {
           <p
             style={{
               margin: 0,
+
               color:
                 "#6b7c79",
+
               fontSize:
                 "13px",
             }}
@@ -1126,79 +1322,105 @@ export default function BloodCenters() {
       )}
 
       {/* ================= ERROR ================= */}
-      {!loading && error && (
-        <section
-          style={{
-            margin:
-              "0 18px",
-            background:
-              "#ffffff",
-            border:
-              "1px solid #f0dfdf",
-            borderRadius:
-              "20px",
-            padding:
-              "24px 18px",
-            textAlign:
-              "center",
-            boxShadow:
-              "0 5px 18px rgba(23,51,46,.04)",
-          }}
-        >
-          <div
+
+      {!loading &&
+        error && (
+          <section
             style={{
-              width: "62px",
-              height: "62px",
               margin:
-                "0 auto 14px",
+                "0 18px",
+
+              background:
+                "#ffffff",
+
+              border:
+                "1px solid #f0dfdf",
+
               borderRadius:
                 "20px",
-              background:
-                "#fff1f1",
-              color:
-                "#c75c5c",
-              display: "flex",
-              alignItems:
-                "center",
-              justifyContent:
-                "center",
-              fontSize:
-                "28px",
-              fontWeight:
-                800,
-            }}
-          >
-            !
-          </div>
 
-          <h3
-            style={{
-              margin:
-                "0 0 8px",
-              fontSize:
-                "16px",
-            }}
-          >
-            حصل خطأ أثناء تحميل المراكز
-          </h3>
+              padding:
+                "24px 18px",
 
-          <p
-            style={{
-              margin: 0,
-              color:
-                "#6b7c79",
-              fontSize:
-                "13px",
-              lineHeight:
-                1.8,
+              textAlign:
+                "center",
+
+              boxShadow:
+                "0 5px 18px rgba(23,51,46,.04)",
             }}
           >
-            {error}
-          </p>
-        </section>
-      )}
+            <div
+              style={{
+                width:
+                  "62px",
+
+                height:
+                  "62px",
+
+                margin:
+                  "0 auto 14px",
+
+                borderRadius:
+                  "20px",
+
+                background:
+                  "#e6f7f4",
+
+                color:
+                  "#0aa88f",
+
+                display:
+                  "flex",
+
+                alignItems:
+                  "center",
+
+                justifyContent:
+                  "center",
+
+                fontSize:
+                  "28px",
+
+                fontWeight:
+                  800,
+              }}
+            >
+              !
+            </div>
+
+            <h3
+              style={{
+                margin:
+                  "0 0 8px",
+
+                fontSize:
+                  "16px",
+              }}
+            >
+              حصل خطأ أثناء تحميل المراكز
+            </h3>
+
+            <p
+              style={{
+                margin: 0,
+
+                color:
+                  "#6b7c79",
+
+                fontSize:
+                  "13px",
+
+                lineHeight:
+                  1.8,
+              }}
+            >
+              {error}
+            </p>
+          </section>
+        )}
 
       {/* ================= CENTER LIST ================= */}
+
       {!loading &&
         !error &&
         filteredCenters.length >
@@ -1210,7 +1432,8 @@ export default function BloodCenters() {
           </div>
         )}
 
-      {/* ================= EMPTY DATA STATE ================= */}
+      {/* ================= EMPTY ================= */}
+
       {!loading &&
         !error &&
         filteredCenters.length ===
@@ -1219,39 +1442,58 @@ export default function BloodCenters() {
             style={{
               margin:
                 "0 18px",
+
               background:
                 "#ffffff",
+
               border:
                 "1px solid #edf2f1",
+
               borderRadius:
                 "20px",
+
               padding:
                 "24px 18px",
+
               textAlign:
                 "center",
+
               boxShadow:
                 "0 5px 18px rgba(23,51,46,.04)",
             }}
           >
             <div
               style={{
-                width: "62px",
-                height: "62px",
+                width:
+                  "62px",
+
+                height:
+                  "62px",
+
                 margin:
                   "0 auto 14px",
+
                 borderRadius:
                   "20px",
+
                 background:
                   "#e6f7f4",
+
                 color:
                   "#0aa88f",
-                display: "flex",
+
+                display:
+                  "flex",
+
                 alignItems:
                   "center",
+
                 justifyContent:
                   "center",
               }}
             >
+              {/* نفس Heart + ECG بتاع نبض الأمل */}
+
               <svg
                 viewBox="0 0 64 64"
                 width="34"
@@ -1259,9 +1501,17 @@ export default function BloodCenters() {
                 fill="none"
               >
                 <path
-                  d="M32 8C32 8 17 25 17 37C17 46 23.7 53 32 53C40.3 53 47 46 47 37C47 25 32 8 32 8Z"
+                  d="M32 54S9 40 9 23C9 15 14.5 10 21 10C26 10 30 13 32 17C34 13 38 10 43 10C49.5 10 55 15 55 23C55 40 32 54 32 54Z"
                   stroke="currentColor"
                   strokeWidth="3"
+                />
+
+                <path
+                  d="M12 31H21L25 24L30 37L35 20L40 31H52"
+                  stroke="currentColor"
+                  strokeWidth="2.8"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
                 />
               </svg>
             </div>
@@ -1270,12 +1520,13 @@ export default function BloodCenters() {
               style={{
                 margin:
                   "0 0 8px",
+
                 fontSize:
                   "16px",
               }}
             >
               {centers.length ===
-                0
+              0
                 ? "لا توجد مراكز مضافة حاليًا"
                 : "لا توجد نتائج"}
             </h3>
@@ -1283,10 +1534,13 @@ export default function BloodCenters() {
             <p
               style={{
                 margin: 0,
+
                 color:
                   "#6b7c79",
+
                 fontSize:
                   "13px",
+
                 lineHeight:
                   1.8,
               }}
@@ -1299,7 +1553,8 @@ export default function BloodCenters() {
           </section>
         )}
 
-      {/* ================= SPINNER ANIMATION ================= */}
+      {/* ================= ANIMATION ================= */}
+
       <style>
         {`
           @keyframes bloodCentersSpin {
