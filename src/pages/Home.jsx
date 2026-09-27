@@ -212,7 +212,7 @@ export default function Home() {
         {/* ================= SERVICES ================= */}
         <section className="services-section">
 
-          {/* BLOOD */}
+          {/* BLOOD DONATION */}
           <Link
             to="/blood"
             className="home-service blood-service"
@@ -289,6 +289,58 @@ export default function Home() {
 
               <p>
                 أدوية غير متوفرة
+              </p>
+
+            </div>
+
+            <div className="service-arrow">
+              ←
+            </div>
+
+          </Link>
+
+
+          {/* BLOOD CENTERS */}
+          <Link
+            to="/blood-centers"
+            className="home-service blood-centers-service"
+          >
+
+            <div className="service-icon">
+              <svg
+                viewBox="0 0 64 64"
+                fill="none"
+              >
+                <path
+                  d="M32 8C32 8 17 25 17 37C17 46 23.7 53 32 53C40.3 53 47 46 47 37C47 25 32 8 32 8Z"
+                  stroke="currentColor"
+                  strokeWidth="3"
+                />
+
+                <path
+                  d="M32 24V40"
+                  stroke="currentColor"
+                  strokeWidth="3"
+                  strokeLinecap="round"
+                />
+
+                <path
+                  d="M24 32H40"
+                  stroke="currentColor"
+                  strokeWidth="3"
+                  strokeLinecap="round"
+                />
+              </svg>
+            </div>
+
+            <div className="service-content">
+
+              <h3>
+                مراكز وبنوك الدم
+              </h3>
+
+              <p>
+                أقرب مركز للتبرع
               </p>
 
             </div>
@@ -896,9 +948,9 @@ export default function Home() {
           display: grid;
 
           grid-template-columns:
-            1fr 1fr;
+            repeat(3, minmax(0, 1fr));
 
-          gap: 10px;
+          gap: 8px;
 
           margin-bottom: 14px;
         }
@@ -910,7 +962,7 @@ export default function Home() {
 
           padding:
             13px
-            10px
+            8px
             12px;
 
           display: flex;
@@ -978,6 +1030,31 @@ export default function Home() {
         }
 
 
+        /* BLOOD CENTERS CARD */
+
+        .blood-centers-service {
+          color: #287a86;
+
+          background:
+            linear-gradient(
+              145deg,
+              rgba(220,246,250,.96),
+              rgba(201,237,242,.96)
+            );
+
+          border:
+            1px solid rgba(255,255,255,.82);
+
+          box-shadow:
+            0 10px 25px rgba(52,130,145,.10),
+            inset 0 1px 0 rgba(255,255,255,.7);
+        }
+
+        .blood-centers-service .service-arrow {
+          color: #287a86;
+        }
+
+
         /* SERVICE ICON */
 
         .service-icon {
@@ -1017,8 +1094,8 @@ export default function Home() {
         .service-content h3 {
           margin: 0;
 
-          font-size: 15px;
-          line-height: 1.45;
+          font-size: 14px;
+          line-height: 1.4;
 
           font-weight: 800;
         }
@@ -1026,7 +1103,7 @@ export default function Home() {
         .service-content p {
           margin: 2px 0 0;
 
-          font-size: 11px;
+          font-size: 10px;
 
           font-weight: 600;
 
@@ -1039,11 +1116,11 @@ export default function Home() {
         .service-arrow {
           position: absolute;
 
-          left: 11px;
-          bottom: 11px;
+          left: 8px;
+          bottom: 9px;
 
-          width: 30px;
-          height: 30px;
+          width: 29px;
+          height: 29px;
 
           display: flex;
           align-items: center;
@@ -1054,7 +1131,7 @@ export default function Home() {
           background:
             rgba(255,255,255,.58);
 
-          font-size: 18px;
+          font-size: 17px;
           font-weight: 700;
         }
 
@@ -1470,7 +1547,7 @@ export default function Home() {
           }
 
           .service-content h3 {
-            font-size: 13px;
+            font-size: 12px;
           }
 
           .section-heading h2 {
