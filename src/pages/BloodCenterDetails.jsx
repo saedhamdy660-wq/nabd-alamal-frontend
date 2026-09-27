@@ -1596,9 +1596,9 @@ export default function BloodCenterDetails() {
                 )}
               </div>
 
-              <span className="center-type">
-                {type}
-              </span>
+             <span className="center-type">
+  مركز إقليمي لنقل الدم
+</span>
 
               {(city ||
                 governorate) && (
