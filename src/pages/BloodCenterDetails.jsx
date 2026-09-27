@@ -119,6 +119,10 @@ function getCenterServices(center) {
   return center.services.filter(Boolean);
 }
 
+/* =====================================================
+EXACT BACKEND COORDINATES
+===================================================== */
+
 function getCenterCoordinates(center) {
   const lat = Number(
     center?.lat ??
@@ -149,23 +153,14 @@ function getCenterCoordinates(center) {
   return {
     lat,
     lng,
+    source: "backend",
+    approximate: false,
   };
 }
 
 /* =====================================================
-FALLBACK CITY COORDINATES
+CITY FALLBACK
 ===================================================== */
-
-/*
- * هذه الإحداثيات تستخدم فقط عندما لا تكون هناك
- * إحداثيات دقيقة للمركز في الـ backend.
- *
- * هي إحداثيات تقريبية للمدينة/المنطقة وليست
- * إحداثيات دقيقة للمبنى نفسه.
- *
- * بمجرد إضافة lat/lng حقيقي للمركز في الـ backend
- * سيتم استخدامه تلقائيًا بدل هذه القيم.
- */
 
 const FALLBACK_CITY_COORDINATES = {
   "الزقازيق": {
@@ -265,13 +260,13 @@ const FALLBACK_CITY_COORDINATES = {
 };
 
 /* =====================================================
-FALLBACK GOVERNORATE COORDINATES
+GOVERNORATE FALLBACK
 ===================================================== */
 
 const FALLBACK_GOVERNORATE_COORDINATES = {
   "الشرقية": {
-    lat: 30.5877,
-    lng: 31.5020,
+    lat: 30.7327,
+    lng: 31.7195,
   },
 
   "القاهرة": {
@@ -311,7 +306,7 @@ const FALLBACK_GOVERNORATE_COORDINATES = {
 };
 
 /* =====================================================
-GET MAP COORDINATES
+FALLBACK COORDINATES
 ===================================================== */
 
 function getFallbackCoordinates(center) {
@@ -334,6 +329,7 @@ function getFallbackCoordinates(center) {
   ) {
     return {
       ...FALLBACK_CITY_COORDINATES[city],
+      source: "city-fallback",
       approximate: true,
     };
   }
@@ -348,17 +344,15 @@ function getFallbackCoordinates(center) {
       ...FALLBACK_GOVERNORATE_COORDINATES[
         governorate
       ],
+      source: "governorate-fallback",
       approximate: true,
     };
   }
 
-  /*
-   * مركز مصر تقريبًا كحل أخير جدًا.
-   * لن نصل إليه في المراكز الموجودة حاليًا.
-   */
   return {
     lat: 26.8206,
     lng: 30.8025,
+    source: "egypt-fallback",
     approximate: true,
   };
 }
@@ -577,6 +571,16 @@ export default function BloodCenterDetails() {
     setError,
   ] = useState("");
 
+  const [
+    geocodedCoordinates,
+    setGeocodedCoordinates,
+  ] = useState(null);
+
+  const [
+    geocoding,
+    setGeocoding,
+  ] = useState(false);
+
   /* ===================================================
   LOAD CENTER
   =================================================== */
@@ -598,6 +602,7 @@ export default function BloodCenterDetails() {
       try {
         setLoading(true);
         setError("");
+        setGeocodedCoordinates(null);
 
         const data =
           await api.getBloodCenter(id);
@@ -682,46 +687,6 @@ export default function BloodCenterDetails() {
   );
 
   /* ===================================================
-  MAP COORDINATES
-  =================================================== */
-
-  const storedCoordinates = useMemo(
-    () =>
-      getCenterCoordinates(center),
-    [center]
-  );
-
-  /*
-   * الأولوية:
-   * 1- الإحداثيات الحقيقية من الـbackend.
-   * 2- إحداثيات المدينة التقريبية.
-   * 3- إحداثيات المحافظة.
-   * 4- مركز مصر كحل أخير.
-   */
-
-  const mapCoordinates = useMemo(() => {
-    if (storedCoordinates) {
-      return {
-        ...storedCoordinates,
-        approximate: false,
-      };
-    }
-
-    return getFallbackCoordinates(
-      center
-    );
-  }, [
-    storedCoordinates,
-    center,
-  ]);
-
-  const isApproximate =
-    mapCoordinates?.approximate === true;
-
-  const verified =
-    center?.verified === true;
-
-  /* ===================================================
   MAP QUERY
   =================================================== */
 
@@ -747,6 +712,219 @@ export default function BloodCenterDetails() {
     city,
     governorate,
   ]);
+
+  /* ===================================================
+  REAL GEOCODING
+  =================================================== */
+
+  useEffect(() => {
+    let cancelled = false;
+
+    async function geocodeCenter() {
+      if (!center) {
+        return;
+      }
+
+      /*
+       * لو الـbackend فيه إحداثيات حقيقية
+       * مش محتاجين نعمل geocoding.
+       */
+      const backendCoordinates =
+        getCenterCoordinates(center);
+
+      if (backendCoordinates) {
+        return;
+      }
+
+      if (!mapQuery) {
+        return;
+      }
+
+      try {
+        setGeocoding(true);
+
+        /*
+         * نبدأ بالعنوان الكامل للمركز.
+         */
+        const queries = [
+          `${name}, ${address}, ${city}, ${governorate}, Egypt`,
+          `${address}, ${city}, ${governorate}, Egypt`,
+          `${name}, ${city}, ${governorate}, Egypt`,
+        ].filter(
+          (query) =>
+            query &&
+            query
+              .replace(
+                /[, ]/g,
+                ""
+              )
+              .trim()
+        );
+
+        let found = null;
+
+        for (
+          const query of queries
+        ) {
+          if (cancelled) {
+            return;
+          }
+
+          try {
+            const url =
+              `https://nominatim.openstreetmap.org/search?` +
+              new URLSearchParams({
+                q: query,
+                format: "json",
+                limit: "1",
+                countrycodes: "eg",
+                addressdetails: "1",
+              }).toString();
+
+            const response =
+              await fetch(url, {
+                headers: {
+                  Accept:
+                    "application/json",
+                },
+              });
+
+            if (!response.ok) {
+              continue;
+            }
+
+            const results =
+              await response.json();
+
+            if (
+              Array.isArray(results) &&
+              results.length > 0
+            ) {
+              const first =
+                results[0];
+
+              const lat =
+                Number(first.lat);
+
+              const lng =
+                Number(first.lon);
+
+              if (
+                Number.isFinite(lat) &&
+                Number.isFinite(lng)
+              ) {
+                found = {
+                  lat,
+                  lng,
+                  source: "geocoding",
+                  approximate: false,
+                  displayName:
+                    first.display_name ||
+                    "",
+                };
+
+                break;
+              }
+            }
+          } catch (queryError) {
+            console.warn(
+              "Geocoding query failed:",
+              queryError
+            );
+          }
+        }
+
+        if (
+          !cancelled &&
+          found
+        ) {
+          setGeocodedCoordinates(
+            found
+          );
+        }
+      } catch (err) {
+        console.warn(
+          "Blood center geocoding failed:",
+          err
+        );
+      } finally {
+        if (!cancelled) {
+          setGeocoding(false);
+        }
+      }
+    }
+
+    geocodeCenter();
+
+    return () => {
+      cancelled = true;
+    };
+  }, [
+    center,
+    mapQuery,
+    name,
+    address,
+    city,
+    governorate,
+  ]);
+
+  /* ===================================================
+  MAP COORDINATES
+  =================================================== */
+
+  const storedCoordinates = useMemo(
+    () =>
+      getCenterCoordinates(center),
+    [center]
+  );
+
+  const fallbackCoordinates =
+    useMemo(
+      () =>
+        getFallbackCoordinates(
+          center
+        ),
+      [center]
+    );
+
+  const mapCoordinates =
+    useMemo(() => {
+      /*
+       * 1. Backend coordinates
+       */
+      if (storedCoordinates) {
+        return storedCoordinates;
+      }
+
+      /*
+       * 2. Real coordinates found
+       * by OpenStreetMap geocoding
+       */
+      if (geocodedCoordinates) {
+        return geocodedCoordinates;
+      }
+
+      /*
+       * 3. City fallback
+       */
+      return fallbackCoordinates;
+    }, [
+      storedCoordinates,
+      geocodedCoordinates,
+      fallbackCoordinates,
+    ]);
+
+  const isApproximate =
+    mapCoordinates?.approximate === true;
+
+  const isRealLocation =
+    mapCoordinates?.source ===
+      "backend" ||
+    mapCoordinates?.source ===
+      "geocoding";
+
+  const verified =
+    center?.verified === true;
 
   /* ===================================================
   ACTIONS
@@ -1143,7 +1321,7 @@ export default function BloodCenterDetails() {
           )}
 
           {/* =================================================
-             LEAFLET MAP
+             MAP
           ================================================= */}
 
           <section className="map-card">
@@ -1159,7 +1337,7 @@ export default function BloodCenterDetails() {
                 zoom={
                   isApproximate
                     ? 13
-                    : 15
+                    : 16
                 }
                 scrollWheelZoom={false}
                 className="leaflet-map"
@@ -1187,9 +1365,9 @@ export default function BloodCenterDetails() {
                       </strong>
 
                       <span>
-                        {isApproximate
-                          ? "الموقع التقريبي حسب المدينة"
-                          : address}
+                        {isRealLocation
+                          ? address
+                          : "الموقع التقريبي حسب المدينة"}
                       </span>
                     </div>
                   </Popup>
@@ -1204,15 +1382,23 @@ export default function BloodCenterDetails() {
                 <div>
 
                   <strong>
-                    {isApproximate
-                      ? "موقع تقريبي للمركز"
-                      : "موقع المركز"}
+                    {geocoding
+                      ? "جاري تحديد الموقع الحقيقي..."
+                      : isRealLocation
+                        ? "موقع المركز"
+                        : "موقع تقريبي للمركز"}
                   </strong>
 
                   <span>
-                    {isApproximate
-                      ? `الموقع حسب مدينة ${city || governorate || "المركز"}`
-                      : address}
+                    {geocoding
+                      ? "يتم البحث عن الموقع من العنوان"
+                      : isRealLocation
+                        ? address
+                        : `الموقع حسب مدينة ${
+                            city ||
+                            governorate ||
+                            "المركز"
+                          }`}
                   </span>
 
                 </div>
@@ -2048,7 +2234,7 @@ LEAFLET MAP
 }
 
 /* =====================================================
-CUSTOM LEAFLET MARKER
+CUSTOM MARKER
 ===================================================== */
 
 .blood-center-marker {
@@ -2112,7 +2298,7 @@ CUSTOM LEAFLET MARKER
 }
 
 /* =====================================================
-LEAFLET POPUP
+POPUP
 ===================================================== */
 
 .leaflet-popup-content-wrapper {
