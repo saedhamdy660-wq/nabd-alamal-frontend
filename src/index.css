@@ -9651,3 +9651,50 @@ body.nabd-dark .donation-request-page .actions-card,
 .distance-badge {
   min-width: 55px; padding: 6px 7px;
   display: flex; align-items
+/* =========================================================
+   🌙 BLOOD CENTER DETAILS - HERO CARD ENHANCEMENT
+   ========================================================= */
+
+/* تغميق خلفية الكارت الأخضر */
+.blood-center-page .center-hero {
+  background: linear-gradient(
+    135deg,
+    #0aa88f 0%,
+    #067a6d 55%,
+    #055e54 100%
+  ) !important;
+  box-shadow: 0 14px 32px rgba(5, 100, 90, 0.25) !important;
+  color: #ffffff !important;
+}
+
+/* اسم المركز */
+.blood-center-page .center-hero h2 {
+  color: #ffffff !important;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.15) !important;
+}
+
+/* كلمة "مركز إقليمي لنقل الدم" */
+.blood-center-page .center-type {
+  color: #ffffff !important;
+  font-weight: 800 !important;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.15) !important;
+}
+
+/* كلمة "الزقازيق، الشرقية" */
+.blood-center-page .hero-location {
+  color: #ffffff !important;
+  font-weight: 800 !important;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.15) !important;
+}
+
+/* الأيقونة اللي جوه الكارت */
+.blood-center-page .center-hero svg {
+  filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.15)) !important;
+}
+
+/* شارة "موثق" */
+.blood-center-page .verified-badge {
+  background: rgba(255, 255, 255, 0.25) !important;
+  border-color: rgba(255, 255, 255, 0.35) !important;
+  color: #ffffff !important;
+}
