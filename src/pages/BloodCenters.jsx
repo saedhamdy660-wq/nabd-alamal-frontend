@@ -12,7 +12,7 @@ export default function BloodCenters() {
   const [centers, setCenters] = useState([]);
   const [search, setSearch] = useState("");
   const [activeFilter, setActiveFilter] =
-    useState("الأقرب إليك");
+    useState("الكل");
 
   const [loading, setLoading] =
     useState(true);
