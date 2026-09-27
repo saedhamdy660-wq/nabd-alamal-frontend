@@ -11,7 +11,9 @@ import {
 
 import { api } from "../api.js";
 
-/* ================= HELPERS ================= */
+/* =====================================================
+   HELPERS
+===================================================== */
 
 function getCenterName(center) {
   return (
@@ -106,10 +108,6 @@ function getCenterServices(center) {
   return center.services.filter(Boolean);
 }
 
-/*
-  لو فيه إحداثيات حقيقية من الـ backend نستخدمها.
-  غير كده هنستخدم Google Maps بالعنوان.
-*/
 function getCenterCoordinates(center) {
   const lat = Number(
     center?.lat ??
@@ -143,7 +141,9 @@ function getCenterCoordinates(center) {
   };
 }
 
-/* ================= ICONS ================= */
+/* =====================================================
+   ICONS
+===================================================== */
 
 function LocationIcon({
   size = 22,
@@ -311,7 +311,9 @@ function CheckIcon({
   );
 }
 
-/* ================= MAIN ================= */
+/* =====================================================
+   MAIN
+===================================================== */
 
 export default function BloodCenterDetails() {
   const { id } = useParams();
@@ -333,7 +335,9 @@ export default function BloodCenterDetails() {
     setError,
   ] = useState("");
 
-  /* ================= LOAD CENTER ================= */
+  /* ===================================================
+     LOAD CENTER
+  =================================================== */
 
   useEffect(() => {
     let cancelled = false;
@@ -385,7 +389,9 @@ export default function BloodCenterDetails() {
     };
   }, [id]);
 
-  /* ================= DATA ================= */
+  /* ===================================================
+     DATA
+  =================================================== */
 
   const name = useMemo(
     () => getCenterName(center),
@@ -442,7 +448,9 @@ export default function BloodCenterDetails() {
   const verified =
     center?.verified === true;
 
-  /* ================= GOOGLE MAP QUERY ================= */
+  /* ===================================================
+     GOOGLE MAP QUERY
+  =================================================== */
 
   const mapQuery = useMemo(() => {
     const parts = [
@@ -467,15 +475,6 @@ export default function BloodCenterDetails() {
     governorate,
   ]);
 
-  /*
-    Google Maps Embed بدون API Key.
-
-    لو عندنا coordinates:
-    نستخدمها مباشرة.
-
-    لو مفيش:
-    نستخدم اسم المركز والعنوان.
-  */
   const googleMapUrl = useMemo(() => {
     if (coordinates) {
       return (
@@ -499,7 +498,9 @@ export default function BloodCenterDetails() {
     mapQuery,
   ]);
 
-  /* ================= ACTIONS ================= */
+  /* ===================================================
+     ACTIONS
+  =================================================== */
 
   const handleCall = () => {
     if (!phone) {
@@ -532,7 +533,9 @@ export default function BloodCenterDetails() {
     }
   };
 
-  /* ================= LOADING ================= */
+  /* ===================================================
+     LOADING
+  =================================================== */
 
   if (loading) {
     return (
@@ -541,7 +544,10 @@ export default function BloodCenterDetails() {
           {styles}
         </style>
 
-        <div className="blood-center-page">
+        <div
+          className="blood-center-page"
+          dir="rtl"
+        >
           <header className="details-header">
             <button
               type="button"
@@ -575,7 +581,9 @@ export default function BloodCenterDetails() {
     );
   }
 
-  /* ================= ERROR ================= */
+  /* ===================================================
+     ERROR
+  =================================================== */
 
   if (
     error ||
@@ -587,7 +595,10 @@ export default function BloodCenterDetails() {
           {styles}
         </style>
 
-        <div className="blood-center-page">
+        <div
+          className="blood-center-page"
+          dir="rtl"
+        >
           <header className="details-header">
             <button
               type="button"
@@ -638,6 +649,10 @@ export default function BloodCenterDetails() {
     );
   }
 
+  /* ===================================================
+     PAGE
+  =================================================== */
+
   return (
     <>
       <style>
@@ -668,9 +683,13 @@ export default function BloodCenterDetails() {
         </header>
 
         <main className="details-content">
-          {/* ================= HERO ================= */}
+
+          {/* =================================================
+             HERO
+          ================================================= */}
 
           <section className="center-hero">
+
             <div className="center-icon">
               <svg
                 width="42"
@@ -695,6 +714,7 @@ export default function BloodCenterDetails() {
             </div>
 
             <div className="center-hero-info">
+
               <div className="hero-title-row">
                 <h2>
                   {name}
@@ -727,10 +747,13 @@ export default function BloodCenterDetails() {
                   </span>
                 </div>
               )}
+
             </div>
           </section>
 
-          {/* ================= DISTANCE ================= */}
+          {/* =================================================
+             DISTANCE
+          ================================================= */}
 
           {distance !== null && (
             <div className="distance-badge">
@@ -745,19 +768,24 @@ export default function BloodCenterDetails() {
             </div>
           )}
 
-          {/* ================= INFO ================= */}
+          {/* =================================================
+             INFO
+          ================================================= */}
 
           <section className="details-card">
+
             <h3>
               معلومات المركز
             </h3>
 
             <div className="info-item">
+
               <div className="info-icon">
                 <LocationIcon size={20} />
               </div>
 
               <div className="info-text">
+
                 <span>
                   العنوان
                 </span>
@@ -765,17 +793,20 @@ export default function BloodCenterDetails() {
                 <strong>
                   {address}
                 </strong>
+
               </div>
             </div>
 
             <div className="info-divider" />
 
             <div className="info-item">
+
               <div className="info-icon">
                 <PhoneIcon size={20} />
               </div>
 
               <div className="info-text">
+
                 <span>
                   رقم الهاتف
                 </span>
@@ -795,17 +826,20 @@ export default function BloodCenterDetails() {
                     غير متوفر حاليًا
                   </strong>
                 )}
+
               </div>
             </div>
 
             <div className="info-divider" />
 
             <div className="info-item">
+
               <div className="info-icon">
                 <ClockIcon size={20} />
               </div>
 
               <div className="info-text">
+
                 <span>
                   مواعيد العمل
                 </span>
@@ -814,19 +848,25 @@ export default function BloodCenterDetails() {
                   {hours ||
                     "غير متوفرة حاليًا"}
                 </strong>
+
               </div>
             </div>
+
           </section>
 
-          {/* ================= SERVICES ================= */}
+          {/* =================================================
+             SERVICES
+          ================================================= */}
 
           {services.length > 0 && (
             <section className="details-card">
+
               <h3>
                 الخدمات المتاحة
               </h3>
 
               <div className="services-grid">
+
                 {services.map(
                   (
                     service,
@@ -846,15 +886,22 @@ export default function BloodCenterDetails() {
                     </div>
                   )
                 )}
+
               </div>
+
             </section>
           )}
 
-          {/* ================= GOOGLE MAP ================= */}
+          {/* =================================================
+             GOOGLE MAP
+          ================================================= */}
 
           <section className="map-card">
+
             {googleMapUrl ? (
+
               <div className="real-map-wrapper">
+
                 <iframe
                   title={`موقع ${name}`}
                   src={googleMapUrl}
@@ -865,9 +912,11 @@ export default function BloodCenterDetails() {
                 />
 
                 <div className="map-floating-label">
+
                   <LocationIcon size={17} />
 
                   <div>
+
                     <strong>
                       موقع المركز
                     </strong>
@@ -875,11 +924,17 @@ export default function BloodCenterDetails() {
                     <span>
                       {address}
                     </span>
+
                   </div>
+
                 </div>
+
               </div>
+
             ) : (
+
               <div className="map-unavailable">
+
                 <div className="map-unavailable-icon">
                   <MapIcon size={30} />
                 </div>
@@ -891,7 +946,9 @@ export default function BloodCenterDetails() {
                 <p>
                   لا يوجد عنوان كافٍ لعرض موقع المركز على الخريطة.
                 </p>
+
               </div>
+
             )}
 
             <button
@@ -907,9 +964,12 @@ export default function BloodCenterDetails() {
                 عرض الاتجاهات
               </span>
             </button>
+
           </section>
 
-          {/* ================= CALL ================= */}
+          {/* =================================================
+             CALL
+          ================================================= */}
 
           {phone && (
             <button
@@ -926,41 +986,81 @@ export default function BloodCenterDetails() {
               </span>
             </button>
           )}
+
         </main>
       </div>
     </>
   );
 }
 
-/* ================= STYLES ================= */
+/* =====================================================
+   STYLES
+===================================================== */
 
 const styles = `
-  * {
+
+  /* =====================================================
+     RESET
+  ===================================================== */
+
+  *,
+  *::before,
+  *::after {
     box-sizing: border-box;
   }
 
   html,
   body,
   #root {
+    width: 100%;
     min-height: 100%;
   }
 
   html {
-    background: #edf4f2;
+    background: #edf7f4;
+    overflow-x: hidden;
   }
 
   body {
     margin: 0;
+    width: 100%;
+    min-width: 0;
+
+    overflow-x: hidden;
 
     background:
       linear-gradient(
-        180deg,
-        #e8f1ef 0%,
-        #edf4f2 38%,
-        #f1f6f5 72%,
-        #f4f8f7 100%
+        160deg,
+        #f7fffd 0%,
+        #edf9f6 48%,
+        #e5f5f1 100%
       );
+
+    -webkit-tap-highlight-color:
+      transparent;
   }
+
+  button,
+  a,
+  input {
+    -webkit-tap-highlight-color:
+      transparent;
+  }
+
+  button {
+    font-family: inherit;
+  }
+
+  #root {
+    width: 100%;
+    min-height: 100vh;
+    min-height: 100dvh;
+    overflow-x: hidden;
+  }
+
+  /* =====================================================
+     MAIN PAGE
+  ===================================================== */
 
   .blood-center-page {
     --primary: #0aa88f;
@@ -971,19 +1071,34 @@ const styles = `
     --text-main: #245b5d;
     --text-muted: #6b7c79;
 
-    --bg: #edf4f2;
+    --bg: #edf7f4;
     --card: #ffffff;
 
+    width: 100%;
+
     min-height: 100vh;
+    min-height: 100dvh;
+
+    overflow-x: hidden;
 
     background:
+      radial-gradient(
+        circle at 5% 4%,
+        rgba(70, 193, 177, 0.15),
+        transparent 27%
+      ),
+
+      radial-gradient(
+        circle at 96% 35%,
+        rgba(154, 231, 216, 0.17),
+        transparent 29%
+      ),
+
       linear-gradient(
-        180deg,
-        #e8f1ef 0%,
-        #edf4f2 28%,
-        #eff5f4 55%,
-        #f2f7f6 78%,
-        #f5f9f8 100%
+        160deg,
+        #f7fffd 0%,
+        #edf9f6 48%,
+        #e5f5f1 100%
       );
 
     color:
@@ -991,44 +1106,77 @@ const styles = `
 
     font-family:
       "Tajawal",
+      "Cairo",
       Arial,
       sans-serif;
+
+    padding-bottom:
+      env(safe-area-inset-bottom);
   }
 
-  /* ================= HEADER ================= */
+  /* =====================================================
+     HEADER
+  ===================================================== */
 
   .details-header {
+    width: 100%;
+
     min-height: 68px;
 
     padding:
-      12px 18px;
+      10px 14px;
+
+    padding-top:
+      max(
+        10px,
+        env(safe-area-inset-top)
+      );
 
     display: flex;
+
     align-items: center;
+
     justify-content: space-between;
 
-    gap: 12px;
+    gap: 10px;
 
     background:
-      rgba(235, 244, 242, 0.96);
+      rgba(
+        239,
+        249,
+        246,
+        0.96
+      );
 
     border-bottom:
       1px solid
-      rgba(10, 168, 143, 0.12);
+      rgba(
+        10,
+        168,
+        143,
+        0.10
+      );
 
     position: sticky;
+
     top: 0;
+
     z-index: 20;
 
     backdrop-filter:
-      blur(14px);
+      blur(16px);
 
     -webkit-backdrop-filter:
-      blur(14px);
+      blur(16px);
 
     box-shadow:
       0 4px 18px
-      rgba(35, 102, 99, 0.05);
+      rgba(
+        35,
+        102,
+        99,
+        0.05
+      );
   }
 
   .details-header h1 {
@@ -1036,9 +1184,14 @@ const styles = `
 
     flex: 1;
 
+    min-width: 0;
+
     text-align: center;
 
-    font-size: 17px;
+    font-size: 18px;
+
+    line-height: 1.3;
+
     font-weight: 900;
 
     color:
@@ -1046,95 +1199,148 @@ const styles = `
   }
 
   .header-spacer {
-    width: 40px;
+    width: 42px;
+
+    height: 42px;
 
     flex-shrink: 0;
   }
 
   .back-button {
-    width: 40px;
-    height: 40px;
+    width: 42px;
+    height: 42px;
+
+    flex-shrink: 0;
 
     border: 0;
 
-    border-radius: 13px;
+    border-radius: 14px;
 
     background:
-      rgba(255, 255, 255, 0.82);
+      rgba(
+        255,
+        255,
+        255,
+        0.90
+      );
 
     color:
       var(--primary);
 
     display: flex;
+
     align-items: center;
+
     justify-content: center;
 
     cursor: pointer;
 
-    transition:
-      0.2s ease;
-
     box-shadow:
-      0 4px 12px
-      rgba(35, 102, 99, 0.06);
+      0 5px 14px
+      rgba(
+        35,
+        102,
+        99,
+        0.07
+      );
+
+    transition:
+      0.18s ease;
   }
 
-  .back-button:hover {
-    background:
-      white;
+  .back-button:active {
+    transform:
+      scale(0.95);
   }
 
-  /* ================= CONTENT ================= */
+  /* =====================================================
+     CONTENT
+  ===================================================== */
 
   .details-content {
-    width:
-      min(100%, 680px);
+    width: 100%;
 
-    margin:
-      0 auto;
+    max-width: 680px;
+
+    margin: 0 auto;
 
     padding:
-      18px 16px 34px;
+      15px 13px 32px;
   }
 
-  /* ================= HERO ================= */
+  /* =====================================================
+     HERO
+  ===================================================== */
 
   .center-hero {
+    width: 100%;
+
+    min-width: 0;
+
     display: flex;
+
     align-items: center;
 
-    gap: 14px;
+    gap: 13px;
 
-    padding: 20px;
+    padding:
+      18px;
 
-    border-radius: 25px;
+    border-radius: 24px;
 
     background:
       linear-gradient(
         135deg,
-        var(--primary) 0%,
-        var(--primary-dark) 100%
+        #0aa88f 0%,
+        #079b88 52%,
+        #078876 100%
       );
 
     box-shadow:
       0 14px 32px
-      rgba(10, 168, 143, 0.17);
+      rgba(
+        10,
+        168,
+        143,
+        0.18
+      );
   }
 
   .center-icon {
-    width: 72px;
-    height: 72px;
+    width: 66px;
+    height: 66px;
 
     flex-shrink: 0;
 
-    border-radius: 22px;
+    border-radius: 20px;
 
     background:
-      rgba(255, 255, 255, 0.17);
+      rgba(
+        255,
+        255,
+        255,
+        0.16
+      );
+
+    border:
+      1px solid
+      rgba(
+        255,
+        255,
+        255,
+        0.28
+      );
 
     display: flex;
+
     align-items: center;
+
     justify-content: center;
+  }
+
+  .center-icon svg {
+    width: 40px;
+    height: 40px;
   }
 
   .center-hero-info {
@@ -1145,19 +1351,23 @@ const styles = `
 
   .hero-title-row {
     display: flex;
+
     align-items: flex-start;
 
     flex-wrap: wrap;
 
-    gap: 7px;
+    gap: 6px;
   }
 
   .center-hero h2 {
     margin: 0;
 
-    color: white;
+    min-width: 0;
 
-    font-size: 18px;
+    color: #ffffff;
+
+    font-size: 17px;
+
     line-height: 1.55;
 
     font-weight: 900;
@@ -1167,6 +1377,7 @@ const styles = `
 
   .verified-badge {
     display: inline-flex;
+
     align-items: center;
 
     gap: 3px;
@@ -1177,11 +1388,26 @@ const styles = `
     border-radius: 10px;
 
     background:
-      rgba(255, 255, 255, 0.18);
+      rgba(
+        255,
+        255,
+        255,
+        0.17
+      );
 
-    color: white;
+    border:
+      1px solid
+      rgba(
+        255,
+        255,
+        255,
+        0.14
+      );
 
-    font-size: 10px;
+    color: #ffffff;
+
+    font-size: 9px;
+
     font-weight: 800;
 
     white-space: nowrap;
@@ -1190,119 +1416,184 @@ const styles = `
   .center-type {
     display: block;
 
-    margin-top: 4px;
+    margin-top: 3px;
 
     color:
-      rgba(255, 255, 255, 0.88);
+      rgba(
+        255,
+        255,
+        255,
+        0.86
+      );
 
-    font-size: 12px;
+    font-size: 11px;
+
     font-weight: 700;
   }
 
   .hero-location {
-    margin-top: 8px;
+    margin-top: 7px;
 
     display: flex;
+
     align-items: center;
 
     gap: 5px;
 
     color:
-      rgba(255, 255, 255, 0.9);
+      rgba(
+        255,
+        255,
+        255,
+        0.90
+      );
 
-    font-size: 11px;
+    font-size: 10px;
+
     font-weight: 700;
+
+    min-width: 0;
   }
 
-  /* ================= DISTANCE ================= */
+  .hero-location span {
+    overflow-wrap: anywhere;
+  }
+
+  /* =====================================================
+     DISTANCE
+  ===================================================== */
 
   .distance-badge {
     margin:
-      12px 0;
+      11px 0;
 
     padding:
-      11px 14px;
+      10px 13px;
 
     display: flex;
+
     align-items: center;
 
-    gap: 7px;
+    gap: 6px;
 
-    border-radius: 15px;
+    border-radius: 14px;
 
     background:
-      #e8f2f0;
+      rgba(
+        230,
+        247,
+        244,
+        0.92
+      );
+
+    border:
+      1px solid
+      rgba(
+        10,
+        168,
+        143,
+        0.07
+      );
 
     color:
       var(--primary-dark);
 
-    font-size: 12px;
-    font-weight: 700;
+    font-size: 11px;
 
-    border:
-      1px solid
-      rgba(10, 168, 143, 0.08);
+    font-weight: 700;
   }
 
   .distance-badge strong {
     font-weight: 900;
   }
 
-  /* ================= INFO CARDS ================= */
+  /* =====================================================
+     CARDS
+  ===================================================== */
 
   .details-card {
-    margin-top: 13px;
+    width: 100%;
 
-    padding: 18px;
+    margin-top: 12px;
+
+    padding:
+      17px;
 
     border-radius: 22px;
 
     background:
-      var(--card);
+      rgba(
+        255,
+        255,
+        255,
+        0.95
+      );
 
     border:
       1px solid
-      rgba(10, 168, 143, 0.09);
+      rgba(
+        10,
+        168,
+        143,
+        0.08
+      );
 
     box-shadow:
-      0 9px 26px
-      rgba(35, 102, 99, 0.07);
+      0 10px 28px
+      rgba(
+        35,
+        102,
+        99,
+        0.07
+      );
   }
 
   .details-card h3 {
     margin:
-      0 0 15px;
+      0 0 14px;
 
     color:
       var(--text-main);
 
-    font-size: 14px;
+    font-size: 15px;
+
+    line-height: 1.4;
+
     font-weight: 900;
   }
 
+  /* =====================================================
+     INFO ROW
+  ===================================================== */
+
   .info-item {
     display: flex;
+
     align-items: flex-start;
 
-    gap: 11px;
+    gap: 10px;
+
+    min-width: 0;
   }
 
   .info-icon {
-    width: 38px;
-    height: 38px;
+    width: 40px;
+    height: 40px;
 
     flex-shrink: 0;
 
-    border-radius: 12px;
+    border-radius: 13px;
 
     background:
-      var(--primary-light);
+      #e6f7f4;
 
     color:
       var(--primary);
 
     display: flex;
+
     align-items: center;
+
     justify-content: center;
   }
 
@@ -1312,9 +1603,12 @@ const styles = `
     flex: 1;
 
     display: flex;
+
     flex-direction: column;
 
-    gap: 4px;
+    gap: 3px;
+
+    padding-top: 1px;
   }
 
   .info-text span {
@@ -1322,12 +1616,16 @@ const styles = `
       var(--text-muted);
 
     font-size: 10px;
+
+    line-height: 1.4;
+
     font-weight: 700;
   }
 
   .info-text strong,
   .phone-value {
     margin: 0;
+
     padding: 0;
 
     border: 0;
@@ -1341,7 +1639,7 @@ const styles = `
 
     font-size: 12px;
 
-    line-height: 1.6;
+    line-height: 1.65;
 
     font-weight: 800;
 
@@ -1359,17 +1657,23 @@ const styles = `
     text-decoration: none;
   }
 
+  .phone-value:active {
+    opacity: 0.7;
+  }
+
   .info-divider {
     height: 1px;
 
     margin:
-      13px 0;
+      12px 0;
 
     background:
-      #e5eeec;
+      #e3eeeb;
   }
 
-  /* ================= SERVICES ================= */
+  /* =====================================================
+     SERVICES
+  ===================================================== */
 
   .services-grid {
     display: grid;
@@ -1380,16 +1684,19 @@ const styles = `
         minmax(0, 1fr)
       );
 
-    gap: 9px;
+    gap: 8px;
   }
 
   .service-item {
+    min-width: 0;
+
     min-height: 44px;
 
     padding:
-      9px 10px;
+      8px 9px;
 
     display: flex;
+
     align-items: center;
 
     gap: 6px;
@@ -1397,19 +1704,29 @@ const styles = `
     border-radius: 13px;
 
     background:
-      #edf5f3;
+      #edf8f5;
+
+    border:
+      1px solid
+      rgba(
+        10,
+        168,
+        143,
+        0.06
+      );
 
     color:
       #315f60;
 
-    font-size: 11px;
+    font-size: 10px;
+
+    line-height: 1.45;
+
     font-weight: 800;
+  }
 
-    line-height: 1.4;
-
-    border:
-      1px solid
-      rgba(10, 168, 143, 0.05);
+  .service-item > span:last-child {
+    overflow-wrap: anywhere;
   }
 
   .service-check {
@@ -1417,35 +1734,53 @@ const styles = `
       var(--primary);
 
     display: flex;
+
     align-items: center;
+
     justify-content: center;
 
     flex-shrink: 0;
   }
 
-  /* ================= MAP ================= */
+  /* =====================================================
+     MAP
+  ===================================================== */
 
   .map-card {
-    margin-top: 13px;
+    width: 100%;
+
+    margin-top: 12px;
 
     overflow: hidden;
 
     border-radius: 22px;
 
     background:
-      var(--card);
+      #ffffff;
 
     border:
       1px solid
-      rgba(10, 168, 143, 0.09);
+      rgba(
+        10,
+        168,
+        143,
+        0.08
+      );
 
     box-shadow:
-      0 9px 26px
-      rgba(35, 102, 99, 0.07);
+      0 10px 28px
+      rgba(
+        35,
+        102,
+        99,
+        0.07
+      );
   }
 
   .real-map-wrapper {
-    height: 270px;
+    width: 100%;
+
+    height: 250px;
 
     position: relative;
 
@@ -1464,30 +1799,51 @@ const styles = `
   .map-floating-label {
     position: absolute;
 
-    right: 12px;
-    top: 12px;
+    right: 9px;
+
+    top: 9px;
 
     max-width:
-      calc(100% - 24px);
+      calc(100% - 18px);
 
     z-index: 5;
 
     padding:
-      9px 11px;
+      8px 10px;
 
     display: flex;
+
     align-items: flex-start;
 
-    gap: 7px;
+    gap: 6px;
 
     border-radius: 13px;
 
     background:
-      rgba(255, 255, 255, 0.94);
+      rgba(
+        255,
+        255,
+        255,
+        0.94
+      );
+
+    border:
+      1px solid
+      rgba(
+        10,
+        168,
+        143,
+        0.06
+      );
 
     box-shadow:
       0 6px 18px
-      rgba(30, 80, 78, 0.10);
+      rgba(
+        30,
+        80,
+        78,
+        0.11
+      );
 
     color:
       var(--primary);
@@ -1503,6 +1859,7 @@ const styles = `
     min-width: 0;
 
     display: flex;
+
     flex-direction: column;
 
     gap: 2px;
@@ -1513,6 +1870,9 @@ const styles = `
       var(--text-main);
 
     font-size: 10px;
+
+    line-height: 1.3;
+
     font-weight: 900;
   }
 
@@ -1521,9 +1881,10 @@ const styles = `
       var(--text-muted);
 
     font-size: 8px;
-    font-weight: 700;
 
     line-height: 1.4;
+
+    font-weight: 700;
 
     overflow-wrap: anywhere;
   }
@@ -1537,14 +1898,16 @@ const styles = `
     background:
       linear-gradient(
         145deg,
-        #e9f2f0,
-        #eff6f4
+        #e9f7f4,
+        #f1f9f7
       );
 
     display: flex;
+
     flex-direction: column;
 
     align-items: center;
+
     justify-content: center;
 
     text-align: center;
@@ -1557,18 +1920,25 @@ const styles = `
     border-radius: 18px;
 
     background:
-      white;
+      #ffffff;
 
     color:
       var(--primary);
 
     display: flex;
+
     align-items: center;
+
     justify-content: center;
 
     box-shadow:
       0 7px 20px
-      rgba(35, 102, 99, 0.08);
+      rgba(
+        35,
+        102,
+        99,
+        0.08
+      );
   }
 
   .map-unavailable h3 {
@@ -1579,6 +1949,7 @@ const styles = `
       var(--text-main);
 
     font-size: 13px;
+
     font-weight: 900;
   }
 
@@ -1598,10 +1969,14 @@ const styles = `
     font-weight: 600;
   }
 
+  /* =====================================================
+     DIRECTIONS
+  ===================================================== */
+
   .directions-button {
     width: 100%;
 
-    min-height: 50px;
+    min-height: 51px;
 
     border: 0;
 
@@ -1612,7 +1987,9 @@ const styles = `
       var(--primary-dark);
 
     display: flex;
+
     align-items: center;
+
     justify-content: center;
 
     gap: 7px;
@@ -1620,6 +1997,7 @@ const styles = `
     font-family: inherit;
 
     font-size: 12px;
+
     font-weight: 900;
 
     cursor: pointer;
@@ -1628,19 +2006,21 @@ const styles = `
       background 0.18s ease;
   }
 
-  .directions-button:hover {
+  .directions-button:active {
     background:
       var(--primary-light);
   }
 
-  /* ================= CALL BUTTON ================= */
+  /* =====================================================
+     CALL BUTTON
+  ===================================================== */
 
   .call-button {
     width: 100%;
 
-    min-height: 52px;
+    min-height: 53px;
 
-    margin-top: 13px;
+    margin-top: 12px;
 
     border: 0;
 
@@ -1649,14 +2029,16 @@ const styles = `
     background:
       linear-gradient(
         135deg,
-        var(--primary),
-        var(--primary-dark)
+        #0aa88f,
+        #078876
       );
 
-    color: white;
+    color: #ffffff;
 
     display: flex;
+
     align-items: center;
+
     justify-content: center;
 
     gap: 7px;
@@ -1664,13 +2046,19 @@ const styles = `
     font-family: inherit;
 
     font-size: 13px;
+
     font-weight: 900;
 
     cursor: pointer;
 
     box-shadow:
-      0 10px 22px
-      rgba(10, 168, 143, 0.17);
+      0 10px 23px
+      rgba(
+        10,
+        168,
+        143,
+        0.18
+      );
 
     transition:
       transform 0.18s ease,
@@ -1683,25 +2071,41 @@ const styles = `
 
     box-shadow:
       0 7px 16px
-      rgba(10, 168, 143, 0.12);
+      rgba(
+        10,
+        168,
+        143,
+        0.12
+      );
   }
 
-  /* ================= STATES ================= */
+  /* =====================================================
+     LOADING / ERROR
+  ===================================================== */
 
   .loading-card,
   .error-card {
+    width: 100%;
+
     min-height: 280px;
 
     padding:
       30px 20px;
 
-    border-radius: 24px;
+    border-radius: 23px;
 
     background:
-      var(--card);
+      rgba(
+        255,
+        255,
+        255,
+        0.95
+      );
 
     display: flex;
+
     align-items: center;
+
     justify-content: center;
 
     flex-direction: column;
@@ -1709,8 +2113,13 @@ const styles = `
     text-align: center;
 
     box-shadow:
-      0 9px 28px
-      rgba(35, 102, 99, 0.08);
+      0 10px 28px
+      rgba(
+        35,
+        102,
+        99,
+        0.08
+      );
   }
 
   .loading-spinner {
@@ -1739,6 +2148,7 @@ const styles = `
       var(--text-muted);
 
     font-size: 12px;
+
     font-weight: 700;
   }
 
@@ -1755,10 +2165,13 @@ const styles = `
       #d85858;
 
     display: flex;
+
     align-items: center;
+
     justify-content: center;
 
     font-size: 22px;
+
     font-weight: 900;
   }
 
@@ -1770,6 +2183,7 @@ const styles = `
       var(--text-main);
 
     font-size: 16px;
+
     font-weight: 900;
   }
 
@@ -1806,17 +2220,20 @@ const styles = `
         var(--primary-dark)
       );
 
-    color: white;
+    color: #ffffff;
 
     font-family: inherit;
 
     font-size: 11px;
+
     font-weight: 900;
 
     cursor: pointer;
   }
 
-  /* ================= ANIMATION ================= */
+  /* =====================================================
+     ANIMATION
+  ===================================================== */
 
   @keyframes bloodCenterSpin {
     to {
@@ -1825,35 +2242,153 @@ const styles = `
     }
   }
 
-  /* ================= MOBILE ================= */
+  /* =====================================================
+     TABLET
+  ===================================================== */
 
-  @media (max-width: 430px) {
+  @media (min-width: 601px) {
+
     .details-content {
-      padding-left: 13px;
-      padding-right: 13px;
+      padding:
+        24px 20px 40px;
+    }
+
+    .details-header {
+      padding-left: 20px;
+      padding-right: 20px;
     }
 
     .center-hero {
-      padding: 16px;
-      border-radius: 22px;
-    }
-
-    .center-icon {
-      width: 62px;
-      height: 62px;
-      border-radius: 19px;
+      padding: 22px;
     }
 
     .center-hero h2 {
-      font-size: 16px;
-    }
-
-    .services-grid {
-      grid-template-columns: 1fr;
+      font-size: 20px;
     }
 
     .real-map-wrapper {
-      height: 245px;
+      height: 320px;
+    }
+  }
+
+  /* =====================================================
+     MOBILE
+  ===================================================== */
+
+  @media (max-width: 600px) {
+
+    .details-content {
+      width: 100%;
+      max-width: 100%;
+
+      margin: 0;
+
+      padding:
+        14px 12px 28px;
+    }
+
+    .details-header {
+      min-height: 64px;
+    }
+
+    .details-header h1 {
+      font-size: 17px;
+    }
+
+    .back-button {
+      width: 42px;
+      height: 42px;
+
+      border-radius: 14px;
+    }
+
+    .center-hero {
+      width: 100%;
+
+      padding: 17px;
+
+      border-radius: 23px;
+
+      gap: 12px;
+    }
+
+    .center-icon {
+      width: 64px;
+      height: 64px;
+
+      border-radius: 19px;
+    }
+
+    .center-icon svg {
+      width: 38px;
+      height: 38px;
+    }
+
+    .center-hero h2 {
+      font-size: 17px;
+
+      line-height: 1.5;
+    }
+
+    .center-type {
+      font-size: 11px;
+    }
+
+    .hero-location {
+      font-size: 10px;
+    }
+
+    .verified-badge {
+      font-size: 9px;
+    }
+
+    .details-card {
+      width: 100%;
+
+      padding: 17px;
+
+      border-radius: 21px;
+    }
+
+    .details-card h3 {
+      font-size: 15px;
+    }
+
+    .info-item {
+      gap: 10px;
+    }
+
+    .info-icon {
+      width: 40px;
+      height: 40px;
+
+      border-radius: 13px;
+    }
+
+    .info-text span {
+      font-size: 10px;
+    }
+
+    .info-text strong,
+    .phone-value {
+      font-size: 12px;
+    }
+
+    .map-card {
+      width: 100%;
+
+      border-radius: 21px;
+    }
+
+    .real-map-wrapper {
+      width: 100%;
+
+      height: 250px;
+    }
+
+    .google-map-frame {
+      width: 100%;
+      height: 100%;
     }
 
     .map-floating-label {
@@ -1862,6 +2397,179 @@ const styles = `
 
       max-width:
         calc(100% - 18px);
+
+      padding:
+        8px 10px;
+
+      border-radius: 12px;
+    }
+
+    .directions-button {
+      min-height: 52px;
+
+      font-size: 12px;
+    }
+
+    .call-button {
+      min-height: 53px;
+
+      margin-top: 12px;
+
+      border-radius: 17px;
+
+      font-size: 13px;
     }
   }
+
+  /* =====================================================
+     SMALL PHONES
+  ===================================================== */
+
+  @media (max-width: 430px) {
+
+    .details-content {
+      padding-left: 11px;
+      padding-right: 11px;
+    }
+
+    .center-hero {
+      padding: 16px;
+
+      border-radius: 22px;
+    }
+
+    .center-icon {
+      width: 61px;
+      height: 61px;
+
+      border-radius: 18px;
+    }
+
+    .center-icon svg {
+      width: 36px;
+      height: 36px;
+    }
+
+    .center-hero h2 {
+      font-size: 16px;
+    }
+
+    .details-card {
+      padding: 16px;
+    }
+
+    .real-map-wrapper {
+      height: 245px;
+    }
+  }
+
+  /* =====================================================
+     VERY SMALL PHONES
+  ===================================================== */
+
+  @media (max-width: 380px) {
+
+    .details-content {
+      padding-left: 9px;
+      padding-right: 9px;
+    }
+
+    .details-header {
+      padding-left: 10px;
+      padding-right: 10px;
+    }
+
+    .details-header h1 {
+      font-size: 16px;
+    }
+
+    .back-button {
+      width: 40px;
+      height: 40px;
+    }
+
+    .header-spacer {
+      width: 40px;
+      height: 40px;
+    }
+
+    .center-hero {
+      padding: 14px;
+
+      gap: 10px;
+
+      border-radius: 20px;
+    }
+
+    .center-icon {
+      width: 57px;
+      height: 57px;
+
+      border-radius: 17px;
+    }
+
+    .center-icon svg {
+      width: 33px;
+      height: 33px;
+    }
+
+    .center-hero h2 {
+      font-size: 15px;
+    }
+
+    .center-type {
+      font-size: 10px;
+    }
+
+    .hero-location {
+      font-size: 9px;
+    }
+
+    .details-card {
+      padding: 14px;
+
+      border-radius: 19px;
+    }
+
+    .details-card h3 {
+      font-size: 14px;
+    }
+
+    .info-icon {
+      width: 38px;
+      height: 38px;
+    }
+
+    .info-text strong,
+    .phone-value {
+      font-size: 11px;
+    }
+
+    .services-grid {
+      grid-template-columns: 1fr;
+    }
+
+    .real-map-wrapper {
+      height: 230px;
+    }
+
+    .map-floating-label {
+      padding:
+        7px 8px;
+    }
+
+    .map-floating-label strong {
+      font-size: 9px;
+    }
+
+    .map-floating-label span {
+      font-size: 7px;
+    }
+
+    .call-button {
+      min-height: 51px;
+      font-size: 12px;
+    }
+  }
+
 `;
