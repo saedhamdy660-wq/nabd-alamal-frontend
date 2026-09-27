@@ -264,6 +264,19 @@ export default function BloodCenters() {
   // ============================================================
 
   const filteredCenters = useMemo(() => {
+    /*
+      مهم:
+      "الكل" في اكتشف حسب النوع لا يعرض أي نتائج.
+      لازم المستخدم يختار:
+      - بنوك الدم
+      - المراكز
+      - الأقرب إليك
+    */
+
+    if (activeFilter === "الكل") {
+      return [];
+    }
+
     let result = [...centers];
 
     // Search
@@ -482,15 +495,6 @@ export default function BloodCenters() {
     setActiveGovernorate(
       governorate
     );
-
-    // عند اختيار محافظة نرجع من فلتر
-    // الأقرب إلى الكل حتى تظهر مراكز المحافظة
-    if (
-      activeFilter ===
-      "الأقرب إليك"
-    ) {
-      setActiveFilter("الكل");
-    }
   };
 
   // ============================================================
@@ -863,7 +867,7 @@ export default function BloodCenters() {
       </section>
 
       {/* ======================================================
-          SEARCH
+          SEARCH + GOVERNORATE
       ====================================================== */}
 
       <section className="search-section">
@@ -873,124 +877,67 @@ export default function BloodCenters() {
           </span>
         </div>
 
-        <div className="search-box">
-          <SearchIcon />
+        <div className="search-and-governorate">
+          <div className="search-box">
+            <SearchIcon />
 
-          <input
-            type="text"
-            value={search}
-            onChange={(event) =>
-              setSearch(
-                event.target.value
-              )
-            }
-            placeholder="اسم المركز أو المنطقة..."
-          />
-
-          {search && (
-            <button
-              type="button"
-              className="clear-search"
-              onClick={() =>
-                setSearch("")
-              }
-              aria-label="مسح البحث"
-            >
-              ×
-            </button>
-          )}
-        </div>
-      </section>
-
-      {/* ======================================================
-          GOVERNORATES
-      ====================================================== */}
-
-      <section className="governorates-section">
-        <div className="governorates-header">
-          <div>
-            <span className="governorates-eyebrow">
-              تصفح حسب المكان
-            </span>
-
-            <h2>
-              اختر المحافظة
-            </h2>
-          </div>
-
-          {activeGovernorate !==
-            "الكل" && (
-            <button
-              type="button"
-              className="governorate-reset"
-              onClick={() =>
-                setActiveGovernorate(
-                  "الكل"
+            <input
+              type="text"
+              value={search}
+              onChange={(event) =>
+                setSearch(
+                  event.target.value
                 )
               }
+              placeholder="اسم المركز أو المنطقة..."
+            />
+
+            {search && (
+              <button
+                type="button"
+                className="clear-search"
+                onClick={() =>
+                  setSearch("")
+                }
+                aria-label="مسح البحث"
+              >
+                ×
+              </button>
+            )}
+          </div>
+
+          <div className="governorate-select-wrapper">
+            <LocationIcon size={18} />
+
+            <select
+              value={activeGovernorate}
+              onChange={(event) =>
+                handleGovernorateChange(
+                  event.target.value
+                )
+              }
+              aria-label="اختيار المحافظة"
             >
-              عرض الكل
-            </button>
-          )}
-        </div>
-
-        <div className="governorates-list">
-          {governorates.map(
-            (governorate) => {
-              const active =
-                activeGovernorate ===
-                governorate.id;
-
-              return (
-                <button
-                  key={
-                    governorate.id
-                  }
-                  type="button"
-                  onClick={() =>
-                    handleGovernorateChange(
+              {governorates.map(
+                (governorate) => (
+                  <option
+                    key={
                       governorate.id
-                    )
-                  }
-                  className={
-                    active
-                      ? "governorate-card active"
-                      : "governorate-card"
-                  }
-                >
-                  <div className="governorate-card-icon">
-                    <LocationIcon
-                      size={19}
-                    />
-                  </div>
+                    }
+                    value={
+                      governorate.id
+                    }
+                  >
+                    {governorate.label}
+                  </option>
+                )
+              )}
+            </select>
 
-                  <div className="governorate-card-content">
-                    <strong>
-                      {
-                        governorate.label
-                      }
-                    </strong>
-
-                    <span>
-                      {governorate.id ===
-                      "الكل"
-                        ? "كل المراكز"
-                        : governorate.id ===
-                          "محافظات أخرى"
-                        ? "محافظات أخرى"
-                        : "مراكز وبنوك الدم"}
-                    </span>
-                  </div>
-
-                  {active && (
-                    <div className="governorate-check">
-                      ✓
-                    </div>
-                  )}
-                </button>
-              );
-            }
-          )}
+            <span className="select-arrow">
+              ⌄
+            </span>
+          </div>
         </div>
       </section>
 
@@ -1239,15 +1186,21 @@ export default function BloodCenters() {
             </div>
 
             <h3>
-              {centers.length ===
-              0
+              {activeFilter ===
+              "الكل"
+                ? "اختر نوع المركز أولًا"
+                : centers.length ===
+                  0
                 ? "لا توجد مراكز مضافة حاليًا"
                 : "لا توجد نتائج"}
             </h3>
 
             <p>
-              {centers.length ===
-              0
+              {activeFilter ===
+              "الكل"
+                ? "اختار بنوك الدم أو المراكز أو الأقرب إليك علشان تظهر لك النتائج."
+                : centers.length ===
+                  0
                 ? "سيتم إضافة بيانات المراكز والبنوك المعتمدة قريبًا، مع عرض الموقع ومواعيد العمل ووسائل التواصل والخدمات المتاحة."
                 : "لم نجد مركزًا أو بنك دم يطابق البحث أو الاختيار الحالي."}
             </p>
@@ -1591,7 +1544,16 @@ export default function BloodCenters() {
             color: #245b5d;
           }
 
+          .search-and-governorate {
+            display: flex;
+            align-items: stretch;
+            gap: 8px;
+          }
+
           .search-box {
+            min-width: 0;
+            flex: 1;
+
             height: 55px;
 
             display: flex;
@@ -1660,217 +1622,82 @@ export default function BloodCenters() {
             cursor: pointer;
           }
 
-          /* ================= GOVERNORATES ================= */
+          /* ================= GOVERNORATE DROPDOWN ================= */
 
-          .governorates-section {
-            margin: 0 13px 18px;
-          }
-
-          .governorates-header {
-            display: flex;
-            align-items: flex-end;
-            justify-content: space-between;
-
-            gap: 10px;
-
-            padding: 0 3px 10px;
-          }
-
-          .governorates-eyebrow {
-            display: block;
-
-            margin-bottom: 3px;
-
-            font-size: 10px;
-            font-weight: 800;
-
-            color: #159b8a;
-          }
-
-          .governorates-header h2 {
-            margin: 0;
-
-            font-size: 15px;
-            font-weight: 850;
-
-            color: #245b5d;
-          }
-
-          .governorate-reset {
-            height: 30px;
-
-            padding: 0 10px;
-
-            border: 0;
-            border-radius: 10px;
-
-            background:
-              rgba(255,255,255,.60);
-
-            color: #159b8a;
-
-            font-family: inherit;
-            font-size: 9.5px;
-            font-weight: 800;
-
-            cursor: pointer;
-          }
-
-          .governorates-list {
-            display: flex;
-            gap: 9px;
-
-            overflow-x: auto;
-
-            padding:
-              1px 1px 4px;
-
-            scrollbar-width: none;
-          }
-
-          .governorates-list::-webkit-scrollbar {
-            display: none;
-          }
-
-          .governorate-card {
-            width: 135px;
-            min-height: 76px;
-
-            flex-shrink: 0;
+          .governorate-select-wrapper {
+            width: 145px;
+            min-width: 145px;
+            height: 55px;
 
             position: relative;
 
             display: flex;
             align-items: center;
 
-            gap: 9px;
+            gap: 6px;
 
-            padding: 10px;
+            padding: 0 11px;
 
-            border-radius: 17px;
+            border-radius: 18px;
+
+            background:
+              rgba(255,255,255,.72);
 
             border:
-              1px solid rgba(255,255,255,.76);
-
-            background:
-              rgba(255,255,255,.50);
-
-            color: #527576;
-
-            font-family: inherit;
-
-            text-align: right;
-
-            cursor: pointer;
-
-            transition:
-              transform .18s ease,
-              background .18s ease,
-              box-shadow .18s ease;
-          }
-
-          .governorate-card:active {
-            transform: scale(.97);
-          }
-
-          .governorate-card.active {
-            background:
-              linear-gradient(
-                145deg,
-                #0aa88f,
-                #078876
-              );
-
-            border-color:
-              rgba(255,255,255,.38);
-
-            color: white;
+              1px solid rgba(255,255,255,.88);
 
             box-shadow:
-              0 9px 20px rgba(10,168,143,.17);
-          }
-
-          .governorate-card-icon {
-            width: 36px;
-            height: 36px;
-
-            flex-shrink: 0;
-
-            display: flex;
-            align-items: center;
-            justify-content: center;
-
-            border-radius: 11px;
-
-            background:
-              rgba(225,249,245,.88);
+              0 9px 24px rgba(42,128,128,.08);
 
             color: #159b8a;
           }
 
-          .governorate-card.active
-          .governorate-card-icon {
-            background:
-              rgba(255,255,255,.18);
-
-            color: white;
-          }
-
-          .governorate-card-content {
+          .governorate-select-wrapper select {
             min-width: 0;
+            flex: 1;
 
-            display: flex;
-            flex-direction: column;
+            height: 100%;
 
-            gap: 3px;
-          }
+            padding: 0 2px;
 
-          .governorate-card-content strong {
-            font-size: 11.5px;
-            line-height: 1.35;
+            border: 0;
+            outline: 0;
+
+            appearance: none;
+            -webkit-appearance: none;
+
+            background: transparent;
 
             color: #245b5d;
+
+            font-family: inherit;
+            font-size: 10.5px;
+            font-weight: 800;
+
+            cursor: pointer;
           }
 
-          .governorate-card-content span {
-            font-size: 8.5px;
-            line-height: 1.35;
-
-            color: #789495;
+          .governorate-select-wrapper select option {
+            color: #245b5d;
+            background: white;
+            font-family: inherit;
           }
 
-          .governorate-card.active
-          .governorate-card-content strong {
-            color: white;
-          }
-
-          .governorate-card.active
-          .governorate-card-content span {
-            color:
-              rgba(255,255,255,.72);
-          }
-
-          .governorate-check {
+          .select-arrow {
             position: absolute;
 
-            left: 7px;
-            top: 7px;
+            left: 9px;
+            top: 50%;
 
-            width: 17px;
-            height: 17px;
+            transform:
+              translateY(-54%);
 
-            border-radius: 50%;
+            pointer-events: none;
 
-            display: flex;
-            align-items: center;
-            justify-content: center;
+            color: #159b8a;
 
-            background:
-              rgba(255,255,255,.18);
-
-            color: white;
-
-            font-size: 9px;
+            font-size: 17px;
+            font-weight: 800;
           }
 
           /* ================= FILTERS ================= */
@@ -2460,12 +2287,6 @@ export default function BloodCenters() {
             padding-top: 2px;
           }
 
-          /*
-            مهم:
-            الاسم لم يعد يتقص بـ ...
-            ويسمح بسطرين على الموبايل.
-          */
-
           .center-title-area h3 {
             margin: 0;
 
@@ -2808,8 +2629,29 @@ export default function BloodCenters() {
           /* ================= SMALL SCREENS ================= */
 
           @media (max-width: 380px) {
-            .governorate-card {
-              width: 128px;
+            .search-and-governorate {
+              gap: 6px;
+            }
+
+            .governorate-select-wrapper {
+              width: 116px;
+              min-width: 116px;
+              padding:
+                0 8px;
+              gap: 4px;
+            }
+
+            .governorate-select-wrapper select {
+              font-size: 9px;
+            }
+
+            .governorate-select-wrapper svg {
+              width: 16px;
+              height: 16px;
+            }
+
+            .select-arrow {
+              left: 6px;
             }
 
             .center-title-area h3 {
@@ -2834,6 +2676,15 @@ export default function BloodCenters() {
           }
 
           @media (max-width: 350px) {
+            .search-and-governorate {
+              flex-direction: column;
+            }
+
+            .governorate-select-wrapper {
+              width: 100%;
+              min-width: 100%;
+            }
+
             .hero-text h2 {
               font-size: 19px;
             }
@@ -2873,10 +2724,6 @@ export default function BloodCenters() {
             .distance-badge {
               min-width: 48px;
               font-size: 8.5px;
-            }
-
-            .governorate-card {
-              width: 122px;
             }
           }
         `}
