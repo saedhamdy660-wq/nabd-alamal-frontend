@@ -1415,43 +1415,20 @@ const styles = `
 
   .center-type {
     display: block;
-
     margin-top: 3px;
-
-    color:
-      rgba(
-        255,
-        255,
-        255,
-        0.86
-      );
-
+    color: #ffffff;
     font-size: 11px;
-
-    font-weight: 700;
+    font-weight: 800;
   }
 
   .hero-location {
     margin-top: 7px;
-
     display: flex;
-
     align-items: center;
-
     gap: 5px;
-
-    color:
-      rgba(
-        255,
-        255,
-        255,
-        0.90
-      );
-
+    color: #ffffff;
     font-size: 10px;
-
-    font-weight: 700;
-
+    font-weight: 800;
     min-width: 0;
   }
 
@@ -1780,16 +1757,17 @@ const styles = `
   .real-map-wrapper {
     width: 100%;
 
-    height: 250px;
-
     position: relative;
 
     overflow: hidden;
+
+    background:
+      #f1faf8;
   }
 
   .google-map-frame {
     width: 100%;
-    height: 100%;
+    height: 250px;
 
     display: block;
 
@@ -1798,34 +1776,15 @@ const styles = `
 
   .map-floating-label {
     position: relative;
-
     margin: 10px;
-
-    padding:
-      10px 12px;
-
+    padding: 10px 12px;
     display: flex;
-
     align-items: center;
-
     gap: 8px;
-
     border-radius: 14px;
-
-    background:
-      #f1faf8;
-
-    border:
-      1px solid
-      rgba(
-        10,
-        168,
-        143,
-        0.10
-      );
-
-    color:
-      var(--primary);
+    background: #f1faf8;
+    border: 1px solid rgba(10,168,143,.10);
+    color: var(--primary);
   }
 
   .map-floating-label > div {
@@ -2240,6 +2199,10 @@ const styles = `
     }
 
     .real-map-wrapper {
+      height: auto;
+    }
+
+    .google-map-frame {
       height: 320px;
     }
   }
@@ -2358,25 +2321,12 @@ const styles = `
     .real-map-wrapper {
       width: 100%;
 
-      height: 250px;
+      height: auto;
     }
 
     .google-map-frame {
       width: 100%;
-      height: 100%;
-    }
-
-    .map-floating-label {
-      position: relative;
-
-      margin: 10px;
-
-      padding:
-        10px 12px;
-
-      border-radius: 14px;
-
-      gap: 8px;
+      height: 250px;
     }
 
     .directions-button {
@@ -2434,6 +2384,10 @@ const styles = `
     }
 
     .real-map-wrapper {
+      height: auto;
+    }
+
+    .google-map-frame {
       height: 245px;
     }
   }
@@ -2525,18 +2479,11 @@ const styles = `
     }
 
     .real-map-wrapper {
-      height: 230px;
+      height: auto;
     }
 
-    .map-floating-label {
-      position: relative;
-
-      margin: 10px;
-
-      padding:
-        9px 10px;
-
-      gap: 7px;
+    .google-map-frame {
+      height: 230px;
     }
 
     .map-floating-label strong {
