@@ -153,6 +153,217 @@ function getCenterCoordinates(center) {
 }
 
 /* =====================================================
+FALLBACK CITY COORDINATES
+===================================================== */
+
+/*
+ * هذه الإحداثيات تستخدم فقط عندما لا تكون هناك
+ * إحداثيات دقيقة للمركز في الـ backend.
+ *
+ * هي إحداثيات تقريبية للمدينة/المنطقة وليست
+ * إحداثيات دقيقة للمبنى نفسه.
+ *
+ * بمجرد إضافة lat/lng حقيقي للمركز في الـ backend
+ * سيتم استخدامه تلقائيًا بدل هذه القيم.
+ */
+
+const FALLBACK_CITY_COORDINATES = {
+  "الزقازيق": {
+    lat: 30.5877,
+    lng: 31.5020,
+  },
+
+  "منيا القمح": {
+    lat: 30.3060,
+    lng: 31.4520,
+  },
+
+  "أبوحماد": {
+    lat: 30.5480,
+    lng: 31.6730,
+  },
+
+  "أبو كبير": {
+    lat: 30.7250,
+    lng: 31.6710,
+  },
+
+  "كفر صقر": {
+    lat: 30.7930,
+    lng: 31.6260,
+  },
+
+  "شبرا": {
+    lat: 30.0780,
+    lng: 31.2450,
+  },
+
+  "السيدة زينب": {
+    lat: 30.0310,
+    lng: 31.2350,
+  },
+
+  "منشية البكري": {
+    lat: 30.0880,
+    lng: 31.3200,
+  },
+
+  "دار السلام": {
+    lat: 29.9690,
+    lng: 31.2370,
+  },
+
+  "بنها": {
+    lat: 30.4660,
+    lng: 31.1840,
+  },
+
+  "كفر شكر": {
+    lat: 30.5490,
+    lng: 31.2480,
+  },
+
+  "شبرا الخيمة": {
+    lat: 30.1280,
+    lng: 31.2420,
+  },
+
+  "القناطر الخيرية": {
+    lat: 30.1930,
+    lng: 31.1370,
+  },
+
+  "طوخ": {
+    lat: 30.3540,
+    lng: 31.2020,
+  },
+
+  "الإسكندرية": {
+    lat: 31.2001,
+    lng: 29.9187,
+  },
+
+  "دمنهور": {
+    lat: 31.0341,
+    lng: 30.4682,
+  },
+
+  "المنصورة": {
+    lat: 31.0409,
+    lng: 31.3785,
+  },
+
+  "طنطا": {
+    lat: 30.7865,
+    lng: 31.0004,
+  },
+
+  "الإسماعيلية": {
+    lat: 30.5965,
+    lng: 32.2715,
+  },
+};
+
+/* =====================================================
+FALLBACK GOVERNORATE COORDINATES
+===================================================== */
+
+const FALLBACK_GOVERNORATE_COORDINATES = {
+  "الشرقية": {
+    lat: 30.5877,
+    lng: 31.5020,
+  },
+
+  "القاهرة": {
+    lat: 30.0444,
+    lng: 31.2357,
+  },
+
+  "القليوبية": {
+    lat: 30.4660,
+    lng: 31.1840,
+  },
+
+  "الإسكندرية": {
+    lat: 31.2001,
+    lng: 29.9187,
+  },
+
+  "البحيرة": {
+    lat: 31.0341,
+    lng: 30.4682,
+  },
+
+  "الدقهلية": {
+    lat: 31.0409,
+    lng: 31.3785,
+  },
+
+  "الغربية": {
+    lat: 30.7865,
+    lng: 31.0004,
+  },
+
+  "الإسماعيلية": {
+    lat: 30.5965,
+    lng: 32.2715,
+  },
+};
+
+/* =====================================================
+GET MAP COORDINATES
+===================================================== */
+
+function getFallbackCoordinates(center) {
+  const city = String(
+    center?.city ||
+      center?.area ||
+      ""
+  ).trim();
+
+  const governorate = String(
+    center?.governorate ||
+      center?.province ||
+      center?.region ||
+      ""
+  ).trim();
+
+  if (
+    city &&
+    FALLBACK_CITY_COORDINATES[city]
+  ) {
+    return {
+      ...FALLBACK_CITY_COORDINATES[city],
+      approximate: true,
+    };
+  }
+
+  if (
+    governorate &&
+    FALLBACK_GOVERNORATE_COORDINATES[
+      governorate
+    ]
+  ) {
+    return {
+      ...FALLBACK_GOVERNORATE_COORDINATES[
+        governorate
+      ],
+      approximate: true,
+    };
+  }
+
+  /*
+   * مركز مصر تقريبًا كحل أخير جدًا.
+   * لن نصل إليه في المراكز الموجودة حاليًا.
+   */
+  return {
+    lat: 26.8206,
+    lng: 30.8025,
+    approximate: true,
+  };
+}
+
+/* =====================================================
 LEAFLET MARKER
 ===================================================== */
 
@@ -367,20 +578,6 @@ export default function BloodCenterDetails() {
   ] = useState("");
 
   /* ===================================================
-  GEOCODED COORDINATES
-  =================================================== */
-
-  const [
-    geocodedCoordinates,
-    setGeocodedCoordinates,
-  ] = useState(null);
-
-  const [
-    geocodingLoading,
-    setGeocodingLoading,
-  ] = useState(false);
-
-  /* ===================================================
   LOAD CENTER
   =================================================== */
 
@@ -401,8 +598,6 @@ export default function BloodCenterDetails() {
       try {
         setLoading(true);
         setError("");
-
-        setGeocodedCoordinates(null);
 
         const data =
           await api.getBloodCenter(id);
@@ -486,6 +681,10 @@ export default function BloodCenterDetails() {
     [center]
   );
 
+  /* ===================================================
+  MAP COORDINATES
+  =================================================== */
+
   const storedCoordinates = useMemo(
     () =>
       getCenterCoordinates(center),
@@ -493,19 +692,31 @@ export default function BloodCenterDetails() {
   );
 
   /*
-   * لو الـ backend عنده إحداثيات نستخدمها.
-   * لو مفيش، هنستخدم الإحداثيات اللي
-   * رجعها الـ Geocoding.
+   * الأولوية:
+   * 1- الإحداثيات الحقيقية من الـbackend.
+   * 2- إحداثيات المدينة التقريبية.
+   * 3- إحداثيات المحافظة.
+   * 4- مركز مصر كحل أخير.
    */
-  const coordinates = useMemo(
-    () =>
-      storedCoordinates ||
-      geocodedCoordinates,
-    [
-      storedCoordinates,
-      geocodedCoordinates,
-    ]
-  );
+
+  const mapCoordinates = useMemo(() => {
+    if (storedCoordinates) {
+      return {
+        ...storedCoordinates,
+        approximate: false,
+      };
+    }
+
+    return getFallbackCoordinates(
+      center
+    );
+  }, [
+    storedCoordinates,
+    center,
+  ]);
+
+  const isApproximate =
+    mapCoordinates?.approximate === true;
 
   const verified =
     center?.verified === true;
@@ -538,172 +749,6 @@ export default function BloodCenterDetails() {
   ]);
 
   /* ===================================================
-  AUTOMATIC GEOCODING
-  =================================================== */
-
-  useEffect(() => {
-    let cancelled = false;
-
-    async function geocodeCenter() {
-      /*
-       * لو عندنا إحداثيات حقيقية من الـ backend
-       * مش محتاجين نعمل Geocoding.
-       */
-      if (
-        !center ||
-        storedCoordinates ||
-        !mapQuery
-      ) {
-        setGeocodingLoading(false);
-        return;
-      }
-
-      try {
-        setGeocodingLoading(true);
-
-        const query =
-          encodeURIComponent(
-            mapQuery
-          );
-
-        const response =
-          await fetch(
-            `https://nominatim.openstreetmap.org/search?format=jsonv2&limit=1&countrycodes=eg&accept-language=ar&q=${query}`
-          );
-
-        if (!response.ok) {
-          throw new Error(
-            `Geocoding request failed: ${response.status}`
-          );
-        }
-
-        const results =
-          await response.json();
-
-        if (
-          !Array.isArray(results) ||
-          results.length === 0
-        ) {
-          /*
-           * محاولة ثانية بعنوان أبسط
-           * لو البحث الكامل لم يرجع نتيجة.
-           */
-          const fallbackParts = [
-            name,
-            city,
-            governorate,
-            "مصر",
-          ].filter(Boolean);
-
-          const fallbackQuery =
-            encodeURIComponent(
-              fallbackParts.join(", ")
-            );
-
-          const fallbackResponse =
-            await fetch(
-              `https://nominatim.openstreetmap.org/search?format=jsonv2&limit=1&countrycodes=eg&accept-language=ar&q=${fallbackQuery}`
-            );
-
-          if (!fallbackResponse.ok) {
-            throw new Error(
-              "Fallback geocoding failed"
-            );
-          }
-
-          const fallbackResults =
-            await fallbackResponse.json();
-
-          if (
-            !Array.isArray(
-              fallbackResults
-            ) ||
-            fallbackResults.length === 0
-          ) {
-            throw new Error(
-              "لم يتم العثور على موقع المركز"
-            );
-          }
-
-          const result =
-            fallbackResults[0];
-
-          const lat = Number(
-            result?.lat
-          );
-
-          const lng = Number(
-            result?.lon
-          );
-
-          if (
-            Number.isFinite(lat) &&
-            Number.isFinite(lng)
-          ) {
-            if (!cancelled) {
-              setGeocodedCoordinates({
-                lat,
-                lng,
-              });
-            }
-          }
-
-          return;
-        }
-
-        const result =
-          results[0];
-
-        const lat = Number(
-          result?.lat
-        );
-
-        const lng = Number(
-          result?.lon
-        );
-
-        if (
-          !Number.isFinite(lat) ||
-          !Number.isFinite(lng)
-        ) {
-          throw new Error(
-            "الإحداثيات غير صالحة"
-          );
-        }
-
-        if (!cancelled) {
-          setGeocodedCoordinates({
-            lat,
-            lng,
-          });
-        }
-      } catch (err) {
-        console.error(
-          "Failed to geocode blood center:",
-          err
-        );
-      } finally {
-        if (!cancelled) {
-          setGeocodingLoading(false);
-        }
-      }
-    }
-
-    geocodeCenter();
-
-    return () => {
-      cancelled = true;
-    };
-  }, [
-    center,
-    storedCoordinates,
-    mapQuery,
-    name,
-    city,
-    governorate,
-  ]);
-
-  /* ===================================================
   ACTIONS
   =================================================== */
 
@@ -717,9 +762,9 @@ export default function BloodCenterDetails() {
   };
 
   const handleDirections = () => {
-    if (coordinates) {
+    if (mapCoordinates) {
       window.open(
-        `https://www.google.com/maps/dir/?api=1&destination=${coordinates.lat},${coordinates.lng}`,
+        `https://www.google.com/maps/dir/?api=1&destination=${mapCoordinates.lat},${mapCoordinates.lng}`,
         "_blank",
         "noopener,noreferrer"
       );
@@ -1103,99 +1148,77 @@ export default function BloodCenterDetails() {
 
           <section className="map-card">
 
-            {coordinates ? (
+            <div className="real-map-wrapper">
 
-              <div className="real-map-wrapper">
+              <MapContainer
+                key={`${mapCoordinates.lat}-${mapCoordinates.lng}`}
+                center={[
+                  mapCoordinates.lat,
+                  mapCoordinates.lng,
+                ]}
+                zoom={
+                  isApproximate
+                    ? 13
+                    : 15
+                }
+                scrollWheelZoom={false}
+                className="leaflet-map"
+              >
 
-                <MapContainer
-                  key={`${coordinates.lat}-${coordinates.lng}`}
-                  center={[
-                    coordinates.lat,
-                    coordinates.lng,
+                <TileLayer
+                  attribution='&copy; OpenStreetMap contributors'
+                  url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+                />
+
+                <Marker
+                  position={[
+                    mapCoordinates.lat,
+                    mapCoordinates.lng,
                   ]}
-                  zoom={15}
-                  scrollWheelZoom={false}
-                  className="leaflet-map"
+                  icon={bloodCenterIcon}
                 >
+                  <Popup>
+                    <div
+                      dir="rtl"
+                      className="leaflet-popup-content-custom"
+                    >
+                      <strong>
+                        {name}
+                      </strong>
 
-                  <TileLayer
-                    attribution='&copy; OpenStreetMap contributors'
-                    url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-                  />
+                      <span>
+                        {isApproximate
+                          ? "الموقع التقريبي حسب المدينة"
+                          : address}
+                      </span>
+                    </div>
+                  </Popup>
+                </Marker>
 
-                  <Marker
-                    position={[
-                      coordinates.lat,
-                      coordinates.lng,
-                    ]}
-                    icon={bloodCenterIcon}
-                  >
-                    <Popup>
-                      <div
-                        dir="rtl"
-                        className="leaflet-popup-content-custom"
-                      >
-                        <strong>
-                          {name}
-                        </strong>
+              </MapContainer>
 
-                        <span>
-                          {address}
-                        </span>
-                      </div>
-                    </Popup>
-                  </Marker>
+              <div className="map-floating-label">
 
-                </MapContainer>
+                <LocationIcon size={17} />
 
-                <div className="map-floating-label">
+                <div>
 
-                  <LocationIcon size={17} />
+                  <strong>
+                    {isApproximate
+                      ? "موقع تقريبي للمركز"
+                      : "موقع المركز"}
+                  </strong>
 
-                  <div>
-
-                    <strong>
-                      موقع المركز
-                    </strong>
-
-                    <span>
-                      {address}
-                    </span>
-
-                  </div>
-                </div>
-
-              </div>
-
-            ) : (
-
-              <div className="map-unavailable">
-
-                <div className="map-unavailable-icon">
-
-                  {geocodingLoading ? (
-                    <div className="map-mini-spinner" />
-                  ) : (
-                    <MapIcon size={30} />
-                  )}
+                  <span>
+                    {isApproximate
+                      ? `الموقع حسب مدينة ${city || governorate || "المركز"}`
+                      : address}
+                  </span>
 
                 </div>
-
-                <h3>
-                  {geocodingLoading
-                    ? "جاري تحديد موقع المركز"
-                    : "العنوان غير متوفر"}
-                </h3>
-
-                <p>
-                  {geocodingLoading
-                    ? "جاري البحث عن موقع المركز على الخريطة..."
-                    : "لا توجد إحداثيات كافية لعرض موقع المركز على الخريطة."}
-                </p>
-
               </div>
 
-            )}
+            </div>
 
             <button
               type="button"
@@ -2213,108 +2236,6 @@ MAP LABEL
   font-weight: 700;
 
   overflow-wrap: anywhere;
-}
-
-/* =====================================================
-MAP UNAVAILABLE
-===================================================== */
-
-.map-unavailable {
-  min-height: 220px;
-
-  padding:
-    24px 20px;
-
-  background:
-    linear-gradient(
-      145deg,
-      #e9f7f4,
-      #f1f9f7
-    );
-
-  display: flex;
-
-  flex-direction: column;
-
-  align-items: center;
-
-  justify-content: center;
-
-  text-align: center;
-}
-
-.map-unavailable-icon {
-  width: 58px;
-  height: 58px;
-
-  border-radius: 18px;
-
-  background:
-    #ffffff;
-
-  color:
-    var(--primary);
-
-  display: flex;
-
-  align-items: center;
-
-  justify-content: center;
-
-  box-shadow:
-    0 7px 20px
-    rgba(
-      35,
-      102,
-      99,
-      0.08
-    );
-}
-
-.map-mini-spinner {
-  width: 27px;
-  height: 27px;
-
-  border:
-    3px solid
-    #cce5df;
-
-  border-top-color:
-    var(--primary);
-
-  border-radius: 50%;
-
-  animation:
-    bloodCenterSpin
-    0.8s linear infinite;
-}
-
-.map-unavailable h3 {
-  margin:
-    11px 0 5px;
-
-  color:
-    var(--text-main);
-
-  font-size: 13px;
-
-  font-weight: 900;
-}
-
-.map-unavailable p {
-  max-width: 360px;
-
-  margin:
-    0 0 7px;
-
-  color:
-    var(--text-muted);
-
-  font-size: 10px;
-
-  line-height: 1.7;
-
-  font-weight: 600;
 }
 
 /* =====================================================
