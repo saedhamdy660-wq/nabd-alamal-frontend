@@ -1,6 +1,28 @@
-import React, { useEffect, useState } from "react";
-import { useNavigate, useParams } from "react-router-dom";
+import React, {
+  useEffect,
+  useMemo,
+  useState,
+} from "react";
+
+import {
+  MapContainer,
+  Marker,
+  Popup,
+  TileLayer,
+  useMap,
+} from "react-leaflet";
+
+import L from "leaflet";
+import "leaflet/dist/leaflet.css";
+
+import {
+  useNavigate,
+  useParams,
+} from "react-router-dom";
+
 import { api } from "../api.js";
+
+/* ================= HELPERS ================= */
 
 function getCenterName(center) {
   return (
@@ -95,7 +117,125 @@ function getCenterServices(center) {
   return center.services.filter(Boolean);
 }
 
-function LocationIcon({ size = 22 }) {
+function getCenterCoordinates(center) {
+  const lat = Number(
+    center?.lat ??
+      center?.latitude
+  );
+
+  const lng = Number(
+    center?.lng ??
+      center?.longitude
+  );
+
+  if (
+    !Number.isFinite(lat) ||
+    !Number.isFinite(lng)
+  ) {
+    return null;
+  }
+
+  if (
+    lat < -90 ||
+    lat > 90 ||
+    lng < -180 ||
+    lng > 180
+  ) {
+    return null;
+  }
+
+  return {
+    lat,
+    lng,
+  };
+}
+
+/* ================= LEAFLET ICON ================= */
+
+const centerMarkerIcon =
+  new L.DivIcon({
+    className:
+      "blood-center-marker-wrapper",
+
+    html: `
+      <div class="blood-center-marker">
+        <div class="blood-center-marker-heart">
+          <svg
+            width="27"
+            height="27"
+            viewBox="0 0 100 100"
+            fill="none"
+            aria-hidden="true"
+          >
+            <path
+              d="M50 88C50 88 12 63 12 35C12 19 24 9 38 9C46 9 50 15 50 15C50 15 54 9 62 9C76 9 88 19 88 35C88 63 50 88 50 88Z"
+              fill="white"
+            />
+
+            <path
+              d="M18 46H34L40 34L48 58L54 46H82"
+              stroke="#0aa88f"
+              stroke-width="5"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            />
+          </svg>
+        </div>
+      </div>
+    `,
+
+    iconSize: [
+      54,
+      64,
+    ],
+
+    iconAnchor: [
+      27,
+      62,
+    ],
+
+    popupAnchor: [
+      0,
+      -57,
+    ],
+  });
+
+/* ================= MAP CENTER CONTROLLER ================= */
+
+function MapViewController({
+  center,
+}) {
+  const map =
+    useMap();
+
+  useEffect(() => {
+    if (!center) {
+      return;
+    }
+
+    map.setView(
+      [
+        center.lat,
+        center.lng,
+      ],
+      15,
+      {
+        animate: true,
+      }
+    );
+  }, [
+    center,
+    map,
+  ]);
+
+  return null;
+}
+
+/* ================= ICONS ================= */
+
+function LocationIcon({
+  size = 22,
+}) {
   return (
     <svg
       width={size}
@@ -121,7 +261,9 @@ function LocationIcon({ size = 22 }) {
   );
 }
 
-function PhoneIcon({ size = 21 }) {
+function PhoneIcon({
+  size = 21,
+}) {
   return (
     <svg
       width={size}
@@ -141,7 +283,9 @@ function PhoneIcon({ size = 21 }) {
   );
 }
 
-function ClockIcon({ size = 21 }) {
+function ClockIcon({
+  size = 21,
+}) {
   return (
     <svg
       width={size}
@@ -169,7 +313,9 @@ function ClockIcon({ size = 21 }) {
   );
 }
 
-function ArrowIcon({ size = 20 }) {
+function ArrowIcon({
+  size = 20,
+}) {
   return (
     <svg
       width={size}
@@ -196,7 +342,9 @@ function ArrowIcon({ size = 20 }) {
   );
 }
 
-function MapIcon({ size = 21 }) {
+function MapIcon({
+  size = 21,
+}) {
   return (
     <svg
       width={size}
@@ -221,7 +369,9 @@ function MapIcon({ size = 21 }) {
   );
 }
 
-function CheckIcon({ size = 18 }) {
+function CheckIcon({
+  size = 18,
+}) {
   return (
     <svg
       width={size}
@@ -249,21 +399,41 @@ function CheckIcon({ size = 18 }) {
   );
 }
 
-export default function BloodCenterDetails() {
-  const { id } = useParams();
-  const navigate = useNavigate();
+/* ================= MAIN ================= */
 
-  const [center, setCenter] = useState(null);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState("");
+export default function BloodCenterDetails() {
+  const { id } =
+    useParams();
+
+  const navigate =
+    useNavigate();
+
+  const [
+    center,
+    setCenter,
+  ] = useState(null);
+
+  const [
+    loading,
+    setLoading,
+  ] = useState(true);
+
+  const [
+    error,
+    setError,
+  ] = useState("");
 
   useEffect(() => {
     let cancelled = false;
 
     async function loadCenter() {
       if (!id) {
-        setError("المركز غير موجود");
+        setError(
+          "المركز غير موجود"
+        );
+
         setLoading(false);
+
         return;
       }
 
@@ -272,7 +442,9 @@ export default function BloodCenterDetails() {
         setError("");
 
         const data =
-          await api.getBloodCenter(id);
+          await api.getBloodCenter(
+            id
+          );
 
         if (!cancelled) {
           setCenter(data);
@@ -303,62 +475,83 @@ export default function BloodCenterDetails() {
     };
   }, [id]);
 
-  const handleCall = () => {
-    const phone =
-      getCenterPhone(center);
-
-    if (!phone) {
-      return;
-    }
-
-    window.location.href =
-      `tel:${phone}`;
-  };
-
-  const handleDirections = () => {
-    const lat = Number(
-      center?.lat
+  const coordinates =
+    useMemo(
+      () =>
+        getCenterCoordinates(
+          center
+        ),
+      [center]
     );
 
-    const lng = Number(
-      center?.lng
-    );
+  const handleCall =
+    () => {
+      const phone =
+        getCenterPhone(
+          center
+        );
 
-    if (
-      Number.isFinite(lat) &&
-      Number.isFinite(lng)
-    ) {
-      window.open(
-        `https://www.google.com/maps/dir/?api=1&destination=${lat},${lng}`,
-        "_blank",
-        "noopener,noreferrer"
-      );
+      if (!phone) {
+        return;
+      }
 
-      return;
-    }
+      window.location.href =
+        `tel:${phone}`;
+    };
 
-    const address =
-      getCenterAddress(center);
+  const handleDirections =
+    () => {
+      const lat =
+        Number(
+          center?.lat
+        );
 
-    if (
-      address &&
-      address !==
-        "العنوان غير متوفر حاليًا"
-    ) {
-      window.open(
-        `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(
-          address
-        )}`,
-        "_blank",
-        "noopener,noreferrer"
-      );
-    }
-  };
+      const lng =
+        Number(
+          center?.lng
+        );
+
+      if (
+        Number.isFinite(lat) &&
+        Number.isFinite(lng)
+      ) {
+        window.open(
+          `https://www.google.com/maps/dir/?api=1&destination=${lat},${lng}`,
+          "_blank",
+          "noopener,noreferrer"
+        );
+
+        return;
+      }
+
+      const address =
+        getCenterAddress(
+          center
+        );
+
+      if (
+        address &&
+        address !==
+          "العنوان غير متوفر حاليًا"
+      ) {
+        window.open(
+          `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(
+            address
+          )}`,
+          "_blank",
+          "noopener,noreferrer"
+        );
+      }
+    };
+
+  /* ================= LOADING ================= */
 
   if (loading) {
     return (
       <>
-        <style>{styles}</style>
+        <style>
+          {styles}
+        </style>
 
         <div className="blood-center-page">
           <header className="details-header">
@@ -394,10 +587,17 @@ export default function BloodCenterDetails() {
     );
   }
 
-  if (error || !center) {
+  /* ================= ERROR ================= */
+
+  if (
+    error ||
+    !center
+  ) {
     return (
       <>
-        <style>{styles}</style>
+        <style>
+          {styles}
+        </style>
 
         <div className="blood-center-page">
           <header className="details-header">
@@ -450,39 +650,62 @@ export default function BloodCenterDetails() {
     );
   }
 
+  /* ================= DATA ================= */
+
   const name =
-    getCenterName(center);
+    getCenterName(
+      center
+    );
 
   const type =
-    getCenterType(center);
+    getCenterType(
+      center
+    );
 
   const governorate =
-    getCenterGovernorate(center);
+    getCenterGovernorate(
+      center
+    );
 
   const city =
-    getCenterCity(center);
+    getCenterCity(
+      center
+    );
 
   const address =
-    getCenterAddress(center);
+    getCenterAddress(
+      center
+    );
 
   const phone =
-    getCenterPhone(center);
+    getCenterPhone(
+      center
+    );
 
   const hours =
-    getCenterHours(center);
+    getCenterHours(
+      center
+    );
 
   const distance =
-    getCenterDistance(center);
+    getCenterDistance(
+      center
+    );
 
   const services =
-    getCenterServices(center);
+    getCenterServices(
+      center
+    );
 
   const verified =
-    center?.verified === true;
+    center?.verified ===
+    true;
 
   return (
     <>
-      <style>{styles}</style>
+      <style>
+        {styles}
+      </style>
 
       <div
         className="blood-center-page"
@@ -508,6 +731,8 @@ export default function BloodCenterDetails() {
         </header>
 
         <main className="details-content">
+          {/* ================= HERO ================= */}
+
           <section className="center-hero">
             <div className="center-icon">
               <svg
@@ -568,6 +793,8 @@ export default function BloodCenterDetails() {
             </div>
           </section>
 
+          {/* ================= DISTANCE ================= */}
+
           {distance !== null && (
             <div className="distance-badge">
               <LocationIcon size={17} />
@@ -583,6 +810,8 @@ export default function BloodCenterDetails() {
               </span>
             </div>
           )}
+
+          {/* ================= INFO ================= */}
 
           <section className="details-card">
             <h3>
@@ -655,7 +884,10 @@ export default function BloodCenterDetails() {
             </div>
           </section>
 
-          {services.length > 0 && (
+          {/* ================= SERVICES ================= */}
+
+          {services.length >
+            0 && (
             <section className="details-card">
               <h3>
                 الخدمات المتاحة
@@ -687,24 +919,94 @@ export default function BloodCenterDetails() {
             </section>
           )}
 
+          {/* ================= REAL MAP ================= */}
+
           <section className="map-card">
-            <div className="map-placeholder">
-              <div className="map-pattern" />
+            {coordinates ? (
+              <div className="real-map-wrapper">
+                <MapContainer
+                  center={[
+                    coordinates.lat,
+                    coordinates.lng,
+                  ]}
+                  zoom={15}
+                  scrollWheelZoom={true}
+                  zoomControl={true}
+                  className="blood-center-map"
+                >
+                  <MapViewController
+                    center={
+                      coordinates
+                    }
+                  />
 
-              <div className="map-pin">
-                <LocationIcon size={29} />
+                  <TileLayer
+                    attribution='&copy; <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noreferrer">OpenStreetMap</a> contributors'
+                    url="https://tile.openstreetmap.org/{z}/{x}/{y}.png"
+                  />
+
+                  <Marker
+                    position={[
+                      coordinates.lat,
+                      coordinates.lng,
+                    ]}
+                    icon={
+                      centerMarkerIcon
+                    }
+                  >
+                    <Popup>
+                      <div
+                        className="map-popup"
+                        dir="rtl"
+                      >
+                        <strong>
+                          {name}
+                        </strong>
+
+                        <span>
+                          {address}
+                        </span>
+                      </div>
+                    </Popup>
+                  </Marker>
+                </MapContainer>
+
+                <div className="map-floating-label">
+                  <LocationIcon size={17} />
+
+                  <div>
+                    <strong>
+                      موقع المركز
+                    </strong>
+
+                    <span>
+                      {address}
+                    </span>
+                  </div>
+                </div>
               </div>
+            ) : (
+              <div className="map-unavailable">
+                <div className="map-unavailable-icon">
+                  <MapIcon size={30} />
+                </div>
 
-              <div className="map-label">
-                <span>
+                <h3>
                   موقع المركز
-                </span>
+                </h3>
 
-                <small>
+                <p>
+                  لا توجد إحداثيات جغرافية
+                  للمركز حاليًا، لذلك لا
+                  يمكن عرض موقعه على الخريطة
+                  بدقة.
+                </p>
+
+                <span>
                   {address}
-                </small>
+                </span>
               </div>
-            </div>
+            )}
 
             <button
               type="button"
@@ -720,6 +1022,8 @@ export default function BloodCenterDetails() {
               </span>
             </button>
           </section>
+
+          {/* ================= CALL ================= */}
 
           {phone && (
             <button
@@ -742,6 +1046,8 @@ export default function BloodCenterDetails() {
   );
 }
 
+/* ================= STYLES ================= */
+
 const styles = `
   * {
     box-sizing: border-box;
@@ -754,18 +1060,19 @@ const styles = `
   }
 
   html {
-    background: #dff5f0;
+    background: #edf4f2;
   }
 
   body {
     margin: 0;
+
     background:
       linear-gradient(
         180deg,
-        #dff5f0 0%,
-        #e6f7f4 35%,
-        #edf9f6 70%,
-        #f2faf8 100%
+        #e8f1ef 0%,
+        #edf4f2 38%,
+        #f1f6f5 72%,
+        #f4f8f7 100%
       );
   }
 
@@ -773,10 +1080,12 @@ const styles = `
     --primary: #0aa88f;
     --primary-dark: #078876;
     --primary-light: #e6f7f4;
+
     --text-dark: #17332e;
     --text-main: #245b5d;
     --text-muted: #6b7c79;
-    --bg: #eaf8f5;
+
+    --bg: #edf4f2;
     --card: #ffffff;
 
     min-height: 100vh;
@@ -784,11 +1093,11 @@ const styles = `
     background:
       linear-gradient(
         180deg,
-        #dff5f0 0%,
-        #e6f7f4 28%,
-        #eaf8f5 55%,
-        #edf9f7 78%,
-        #f2faf8 100%
+        #e8f1ef 0%,
+        #edf4f2 28%,
+        #eff5f4 55%,
+        #f2f7f6 78%,
+        #f5f9f8 100%
       );
 
     color:
@@ -815,11 +1124,11 @@ const styles = `
     gap: 12px;
 
     background:
-      rgba(223, 245, 240, 0.94);
+      rgba(235, 244, 242, 0.96);
 
     border-bottom:
       1px solid
-      rgba(10, 168, 143, 0.14);
+      rgba(10, 168, 143, 0.12);
 
     position: sticky;
     top: 0;
@@ -833,7 +1142,7 @@ const styles = `
 
     box-shadow:
       0 4px 18px
-      rgba(10, 168, 143, 0.06);
+      rgba(35, 102, 99, 0.05);
   }
 
   .details-header h1 {
@@ -865,7 +1174,7 @@ const styles = `
     border-radius: 13px;
 
     background:
-      rgba(255, 255, 255, 0.72);
+      rgba(255, 255, 255, 0.82);
 
     color:
       var(--primary);
@@ -881,7 +1190,7 @@ const styles = `
 
     box-shadow:
       0 4px 12px
-      rgba(10, 168, 143, 0.08);
+      rgba(35, 102, 99, 0.06);
   }
 
   .back-button:hover {
@@ -922,8 +1231,8 @@ const styles = `
       );
 
     box-shadow:
-      0 14px 35px
-      rgba(10, 168, 143, 0.20);
+      0 14px 32px
+      rgba(10, 168, 143, 0.17);
   }
 
   .center-icon {
@@ -1036,7 +1345,7 @@ const styles = `
     border-radius: 15px;
 
     background:
-      rgba(230, 247, 244, 0.95);
+      #e8f2f0;
 
     color:
       var(--primary-dark);
@@ -1067,11 +1376,11 @@ const styles = `
 
     border:
       1px solid
-      rgba(10, 168, 143, 0.10);
+      rgba(10, 168, 143, 0.09);
 
     box-shadow:
-      0 9px 28px
-      rgba(35, 102, 99, 0.08);
+      0 9px 26px
+      rgba(35, 102, 99, 0.07);
   }
 
   .details-card h3 {
@@ -1171,7 +1480,7 @@ const styles = `
       13px 0;
 
     background:
-      #e1f0ed;
+      #e5eeec;
   }
 
   /* ================= SERVICES ================= */
@@ -1202,7 +1511,7 @@ const styles = `
     border-radius: 13px;
 
     background:
-      #e9f8f5;
+      #edf5f3;
 
     color:
       #315f60;
@@ -1242,71 +1551,265 @@ const styles = `
 
     border:
       1px solid
-      rgba(10, 168, 143, 0.10);
+      rgba(10, 168, 143, 0.09);
 
     box-shadow:
-      0 9px 28px
-      rgba(35, 102, 99, 0.08);
+      0 9px 26px
+      rgba(35, 102, 99, 0.07);
   }
 
-  .map-placeholder {
-    min-height: 190px;
+  .real-map-wrapper {
+    height: 270px;
 
     position: relative;
 
     overflow: hidden;
+  }
+
+  .blood-center-map {
+    width: 100%;
+    height: 100%;
+
+    z-index: 1;
+
+    font-family:
+      "Tajawal",
+      Arial,
+      sans-serif;
+  }
+
+  .blood-center-map .leaflet-control-zoom {
+    border: 0;
+
+    box-shadow:
+      0 4px 14px
+      rgba(30, 80, 78, 0.12);
+  }
+
+  .blood-center-map
+    .leaflet-control-zoom
+    a {
+    color:
+      #245b5d;
+
+    border: 0;
+
+    font-weight: 900;
+  }
+
+  .blood-center-map
+    .leaflet-control-attribution {
+    font-size: 8px;
+
+    background:
+      rgba(255, 255, 255, 0.88);
+
+    border-radius:
+      7px 0 0 0;
+
+    padding:
+      2px 5px;
+  }
+
+  .blood-center-marker-wrapper {
+    background: transparent;
+
+    border: 0;
+  }
+
+  .blood-center-marker {
+    width: 54px;
+    height: 64px;
+
+    position: relative;
+
+    display: flex;
+    align-items: flex-start;
+    justify-content: center;
+
+    filter:
+      drop-shadow(
+        0 6px 8px
+        rgba(10, 90, 80, 0.24)
+      );
+  }
+
+  .blood-center-marker::after {
+    content: "";
+
+    position: absolute;
+
+    bottom: 1px;
+    left: 50%;
+
+    width: 22px;
+    height: 22px;
+
+    transform:
+      translateX(-50%)
+      rotate(45deg);
+
+    border-radius:
+      5px;
+
+    background:
+      #078876;
+
+    z-index: 0;
+  }
+
+  .blood-center-marker-heart {
+    width: 50px;
+    height: 50px;
+
+    position: relative;
+
+    z-index: 2;
+
+    border-radius: 50%;
 
     background:
       linear-gradient(
         135deg,
-        #dff5f0,
-        #e6f7f4,
-        #d9f2ed
-      );
-  }
-
-  .map-pattern {
-    position: absolute;
-
-    inset: 0;
-
-    opacity: 0.35;
-
-    background-image:
-      linear-gradient(
-        90deg,
-        transparent 48%,
-        rgba(255, 255, 255, 0.9) 49%,
-        transparent 51%
-      ),
-      linear-gradient(
-        0deg,
-        transparent 48%,
-        rgba(255, 255, 255, 0.9) 49%,
-        transparent 51%
+        #0aa88f,
+        #078876
       );
 
-    background-size:
-      48px 48px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 
-    transform:
-      rotate(-12deg)
-      scale(1.3);
+    box-shadow:
+      0 5px 14px
+      rgba(10, 168, 143, 0.28);
   }
 
-  .map-pin {
+  .map-floating-label {
     position: absolute;
 
-    top: 50%;
-    left: 50%;
+    right: 12px;
+    top: 12px;
 
+    max-width:
+      calc(100% - 24px);
+
+    z-index: 5;
+
+    padding:
+      9px 11px;
+
+    display: flex;
+    align-items: flex-start;
+
+    gap: 7px;
+
+    border-radius: 13px;
+
+    background:
+      rgba(255, 255, 255, 0.94);
+
+    box-shadow:
+      0 6px 18px
+      rgba(30, 80, 78, 0.10);
+
+    color:
+      var(--primary);
+
+    backdrop-filter:
+      blur(8px);
+
+    -webkit-backdrop-filter:
+      blur(8px);
+  }
+
+  .map-floating-label > div {
+    min-width: 0;
+
+    display: flex;
+    flex-direction: column;
+
+    gap: 2px;
+  }
+
+  .map-floating-label strong {
+    color:
+      var(--text-main);
+
+    font-size: 10px;
+    font-weight: 900;
+  }
+
+  .map-floating-label span {
+    color:
+      var(--text-muted);
+
+    font-size: 8px;
+    font-weight: 700;
+
+    line-height: 1.4;
+
+    overflow-wrap: anywhere;
+  }
+
+  .map-popup {
+    min-width: 150px;
+
+    display: flex;
+    flex-direction: column;
+
+    gap: 4px;
+
+    font-family:
+      "Tajawal",
+      Arial,
+      sans-serif;
+
+    text-align: right;
+  }
+
+  .map-popup strong {
+    color:
+      #245b5d;
+
+    font-size: 12px;
+    font-weight: 900;
+  }
+
+  .map-popup span {
+    color:
+      #6b7c79;
+
+    font-size: 10px;
+
+    line-height: 1.5;
+  }
+
+  .map-unavailable {
+    min-height: 220px;
+
+    padding:
+      24px 20px;
+
+    background:
+      linear-gradient(
+        145deg,
+        #e9f2f0,
+        #eff6f4
+      );
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+
+    text-align: center;
+  }
+
+  .map-unavailable-icon {
     width: 58px;
     height: 58px;
 
-    transform:
-      translate(-50%, -50%);
-
-    border-radius: 50%;
+    border-radius: 18px;
 
     background:
       white;
@@ -1319,52 +1822,48 @@ const styles = `
     justify-content: center;
 
     box-shadow:
-      0 9px 22px
-      rgba(10, 168, 143, 0.25);
+      0 7px 20px
+      rgba(35, 102, 99, 0.08);
   }
 
-  .map-label {
-    position: absolute;
+  .map-unavailable h3 {
+    margin:
+      11px 0 5px;
 
-    right: 14px;
-    bottom: 12px;
-
-    max-width:
-      calc(100% - 28px);
-
-    padding:
-      9px 11px;
-
-    border-radius: 12px;
-
-    background:
-      rgba(255, 255, 255, 0.95);
-
-    box-shadow:
-      0 5px 16px
-      rgba(30, 80, 78, 0.08);
-
-    display: flex;
-    flex-direction: column;
-
-    gap: 2px;
-  }
-
-  .map-label span {
     color:
       var(--text-main);
 
-    font-size: 11px;
+    font-size: 13px;
     font-weight: 900;
   }
 
-  .map-label small {
+  .map-unavailable p {
+    max-width: 360px;
+
+    margin:
+      0 0 7px;
+
     color:
       var(--text-muted);
 
+    font-size: 10px;
+
+    line-height: 1.7;
+
+    font-weight: 600;
+  }
+
+  .map-unavailable > span {
+    max-width: 360px;
+
+    color:
+      var(--text-main);
+
     font-size: 9px;
 
-    line-height: 1.5;
+    line-height: 1.6;
+
+    font-weight: 800;
 
     overflow-wrap: anywhere;
   }
@@ -1441,7 +1940,7 @@ const styles = `
 
     box-shadow:
       0 10px 22px
-      rgba(10, 168, 143, 0.20);
+      rgba(10, 168, 143, 0.17);
 
     transition:
       transform 0.18s ease,
@@ -1454,7 +1953,7 @@ const styles = `
 
     box-shadow:
       0 7px 16px
-      rgba(10, 168, 143, 0.14);
+      rgba(10, 168, 143, 0.12);
   }
 
   /* ================= STATES ================= */
@@ -1490,7 +1989,7 @@ const styles = `
 
     border:
       3px solid
-      #ccebe5;
+      #cce5df;
 
     border-top-color:
       var(--primary);
@@ -1621,6 +2120,18 @@ const styles = `
 
     .services-grid {
       grid-template-columns: 1fr;
+    }
+
+    .real-map-wrapper {
+      height: 245px;
+    }
+
+    .map-floating-label {
+      right: 9px;
+      top: 9px;
+
+      max-width:
+        calc(100% - 18px);
     }
   }
 `;
