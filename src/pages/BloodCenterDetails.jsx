@@ -1749,7 +1749,7 @@ const styles = `
   .map-card {
     width: 100%;
 
-    margin-top: 12px;
+    margin-top: 22px;
 
     overflow: hidden;
 
@@ -1797,35 +1797,23 @@ const styles = `
   }
 
   .map-floating-label {
-    position: absolute;
+    position: relative;
 
-    right: 9px;
-
-    top: 9px;
-
-    max-width:
-      calc(100% - 18px);
-
-    z-index: 5;
+    margin: 10px;
 
     padding:
-      8px 10px;
+      10px 12px;
 
     display: flex;
 
-    align-items: flex-start;
+    align-items: center;
 
-    gap: 6px;
+    gap: 8px;
 
-    border-radius: 13px;
+    border-radius: 14px;
 
     background:
-      rgba(
-        255,
-        255,
-        255,
-        0.94
-      );
+      #f1faf8;
 
     border:
       1px solid
@@ -1833,26 +1821,11 @@ const styles = `
         10,
         168,
         143,
-        0.06
-      );
-
-    box-shadow:
-      0 6px 18px
-      rgba(
-        30,
-        80,
-        78,
-        0.11
+        0.10
       );
 
     color:
       var(--primary);
-
-    backdrop-filter:
-      blur(8px);
-
-    -webkit-backdrop-filter:
-      blur(8px);
   }
 
   .map-floating-label > div {
@@ -2377,6 +2350,8 @@ const styles = `
     .map-card {
       width: 100%;
 
+      margin-top: 22px;
+
       border-radius: 21px;
     }
 
@@ -2392,16 +2367,16 @@ const styles = `
     }
 
     .map-floating-label {
-      right: 9px;
-      top: 9px;
+      position: relative;
 
-      max-width:
-        calc(100% - 18px);
+      margin: 10px;
 
       padding:
-        8px 10px;
+        10px 12px;
 
-      border-radius: 12px;
+      border-radius: 14px;
+
+      gap: 8px;
     }
 
     .directions-button {
@@ -2554,8 +2529,14 @@ const styles = `
     }
 
     .map-floating-label {
+      position: relative;
+
+      margin: 10px;
+
       padding:
-        7px 8px;
+        9px 10px;
+
+      gap: 7px;
     }
 
     .map-floating-label strong {
