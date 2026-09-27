@@ -150,6 +150,140 @@ function getCenterCoordinates(center) {
   };
 }
 
+/* ================= GEOCODING ================= */
+
+/*
+  لو المركز عنده lat/lng نستخدمهم مباشرة.
+
+  لو مفيش:
+  نبحث عن:
+  اسم المركز + العنوان + المدينة + المحافظة + مصر
+
+  باستخدام OpenStreetMap Nominatim.
+*/
+
+async function geocodeBloodCenter(center) {
+  if (!center) {
+    return null;
+  }
+
+  const directCoordinates =
+    getCenterCoordinates(
+      center
+    );
+
+  if (directCoordinates) {
+    return directCoordinates;
+  }
+
+  const name =
+    getCenterName(center);
+
+  const address =
+    getCenterAddress(center);
+
+  const city =
+    getCenterCity(center);
+
+  const governorate =
+    getCenterGovernorate(center);
+
+  const queryParts = [
+    name,
+    address,
+    city,
+    governorate,
+    "مصر",
+  ].filter(
+    (item) =>
+      item &&
+      String(item).trim()
+  );
+
+  const query =
+    queryParts.join(", ");
+
+  if (!query) {
+    return null;
+  }
+
+  try {
+    const url =
+      `https://nominatim.openstreetmap.org/search` +
+      `?format=jsonv2` +
+      `&q=${encodeURIComponent(query)}` +
+      `&limit=1` +
+      `&countrycodes=eg` +
+      `&addressdetails=1`;
+
+    const response =
+      await fetch(url, {
+        method: "GET",
+        headers: {
+          Accept:
+            "application/json",
+        },
+      });
+
+    if (!response.ok) {
+      throw new Error(
+        `Geocoding failed: ${response.status}`
+      );
+    }
+
+    const results =
+      await response.json();
+
+    if (
+      !Array.isArray(results) ||
+      results.length === 0
+    ) {
+      return null;
+    }
+
+    const result =
+      results[0];
+
+    const lat =
+      Number(result?.lat);
+
+    const lng =
+      Number(result?.lon);
+
+    if (
+      !Number.isFinite(lat) ||
+      !Number.isFinite(lng)
+    ) {
+      return null;
+    }
+
+    if (
+      lat < -90 ||
+      lat > 90 ||
+      lng < -180 ||
+      lng > 180
+    ) {
+      return null;
+    }
+
+    return {
+      lat,
+      lng,
+      source: "geocoded",
+      displayName:
+        result?.display_name ||
+        "",
+    };
+  } catch (error) {
+    console.error(
+      "Blood center geocoding failed:",
+      error
+    );
+
+    return null;
+  }
+}
+
 /* ================= LEAFLET ICON ================= */
 
 const centerMarkerIcon =
@@ -423,6 +557,23 @@ export default function BloodCenterDetails() {
     setError,
   ] = useState("");
 
+  const [
+    mapCoordinates,
+    setMapCoordinates,
+  ] = useState(null);
+
+  const [
+    mapLoading,
+    setMapLoading,
+  ] = useState(false);
+
+  const [
+    mapError,
+    setMapError,
+  ] = useState("");
+
+  /* ================= LOAD CENTER ================= */
+
   useEffect(() => {
     let cancelled = false;
 
@@ -475,7 +626,9 @@ export default function BloodCenterDetails() {
     };
   }, [id]);
 
-  const coordinates =
+  /* ================= DIRECT COORDINATES ================= */
+
+  const directCoordinates =
     useMemo(
       () =>
         getCenterCoordinates(
@@ -483,6 +636,69 @@ export default function BloodCenterDetails() {
         ),
       [center]
     );
+
+  /* ================= MAP GEOCODING ================= */
+
+  useEffect(() => {
+    let cancelled = false;
+
+    async function resolveMapLocation() {
+      if (!center) {
+        return;
+      }
+
+      if (directCoordinates) {
+        setMapCoordinates(
+          directCoordinates
+        );
+
+        setMapLoading(false);
+        setMapError("");
+
+        return;
+      }
+
+      setMapLoading(true);
+      setMapError("");
+      setMapCoordinates(null);
+
+      const result =
+        await geocodeBloodCenter(
+          center
+        );
+
+      if (cancelled) {
+        return;
+      }
+
+      if (result) {
+        setMapCoordinates(
+          result
+        );
+
+        setMapError("");
+      } else {
+        setMapCoordinates(null);
+
+        setMapError(
+          "تعذر تحديد موقع المركز تلقائيًا من العنوان."
+        );
+      }
+
+      setMapLoading(false);
+    }
+
+    resolveMapLocation();
+
+    return () => {
+      cancelled = true;
+    };
+  }, [
+    center,
+    directCoordinates,
+  ]);
+
+  /* ================= ACTIONS ================= */
 
   const handleCall =
     () => {
@@ -501,22 +717,11 @@ export default function BloodCenterDetails() {
 
   const handleDirections =
     () => {
-      const lat =
-        Number(
-          center?.lat
-        );
-
-      const lng =
-        Number(
-          center?.lng
-        );
-
       if (
-        Number.isFinite(lat) &&
-        Number.isFinite(lng)
+        mapCoordinates
       ) {
         window.open(
-          `https://www.google.com/maps/dir/?api=1&destination=${lat},${lng}`,
+          `https://www.google.com/maps/dir/?api=1&destination=${mapCoordinates.lat},${mapCoordinates.lng}`,
           "_blank",
           "noopener,noreferrer"
         );
@@ -922,12 +1127,24 @@ export default function BloodCenterDetails() {
           {/* ================= REAL MAP ================= */}
 
           <section className="map-card">
-            {coordinates ? (
+            {mapLoading ? (
+              <div className="map-loading">
+                <div className="map-loading-spinner" />
+
+                <h3>
+                  جاري تحديد موقع المركز
+                </h3>
+
+                <p>
+                  بنحدد موقع المركز من العنوان...
+                </p>
+              </div>
+            ) : mapCoordinates ? (
               <div className="real-map-wrapper">
                 <MapContainer
                   center={[
-                    coordinates.lat,
-                    coordinates.lng,
+                    mapCoordinates.lat,
+                    mapCoordinates.lng,
                   ]}
                   zoom={15}
                   scrollWheelZoom={true}
@@ -936,7 +1153,7 @@ export default function BloodCenterDetails() {
                 >
                   <MapViewController
                     center={
-                      coordinates
+                      mapCoordinates
                     }
                   />
 
@@ -947,8 +1164,8 @@ export default function BloodCenterDetails() {
 
                   <Marker
                     position={[
-                      coordinates.lat,
-                      coordinates.lng,
+                      mapCoordinates.lat,
+                      mapCoordinates.lng,
                     ]}
                     icon={
                       centerMarkerIcon
@@ -992,14 +1209,12 @@ export default function BloodCenterDetails() {
                 </div>
 
                 <h3>
-                  موقع المركز
+                  تعذر تحديد الموقع
                 </h3>
 
                 <p>
-                  لا توجد إحداثيات جغرافية
-                  للمركز حاليًا، لذلك لا
-                  يمكن عرض موقعه على الخريطة
-                  بدقة.
+                  {mapError ||
+                    "لا يمكن تحديد موقع المركز من بياناته الحالية."}
                 </p>
 
                 <span>
@@ -1783,6 +1998,70 @@ const styles = `
 
     line-height: 1.5;
   }
+
+  /* ================= MAP LOADING ================= */
+
+  .map-loading {
+    min-height: 220px;
+
+    padding:
+      24px 20px;
+
+    background:
+      linear-gradient(
+        145deg,
+        #e9f2f0,
+        #eff6f4
+      );
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+
+    text-align: center;
+  }
+
+  .map-loading-spinner {
+    width: 38px;
+    height: 38px;
+
+    border:
+      3px solid
+      #cce5df;
+
+    border-top-color:
+      var(--primary);
+
+    border-radius: 50%;
+
+    animation:
+      bloodCenterSpin
+      0.8s linear infinite;
+  }
+
+  .map-loading h3 {
+    margin:
+      12px 0 5px;
+
+    color:
+      var(--text-main);
+
+    font-size: 13px;
+    font-weight: 900;
+  }
+
+  .map-loading p {
+    margin: 0;
+
+    color:
+      var(--text-muted);
+
+    font-size: 10px;
+    font-weight: 600;
+  }
+
+  /* ================= MAP UNAVAILABLE ================= */
 
   .map-unavailable {
     min-height: 220px;
