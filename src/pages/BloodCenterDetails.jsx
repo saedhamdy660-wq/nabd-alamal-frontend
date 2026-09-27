@@ -9,6 +9,17 @@ import {
   useParams,
 } from "react-router-dom";
 
+import {
+  MapContainer,
+  TileLayer,
+  Marker,
+  Popup,
+} from "react-leaflet";
+
+import L from "leaflet";
+
+import "leaflet/dist/leaflet.css";
+
 import { api } from "../api.js";
 
 /* =====================================================
@@ -140,6 +151,26 @@ function getCenterCoordinates(center) {
     lng,
   };
 }
+
+/* =====================================================
+   LEAFLET MARKER
+===================================================== */
+
+const bloodCenterIcon = L.divIcon({
+  className: "blood-center-marker",
+
+  html: `
+    <div class="leaflet-marker-pin">
+      <div class="leaflet-marker-icon">
+        ♥
+      </div>
+    </div>
+  `,
+
+  iconSize: [44, 54],
+  iconAnchor: [22, 54],
+  popupAnchor: [0, -52],
+});
 
 /* =====================================================
    ICONS
@@ -449,7 +480,7 @@ export default function BloodCenterDetails() {
     center?.verified === true;
 
   /* ===================================================
-     GOOGLE MAP QUERY
+     MAP QUERY
   =================================================== */
 
   const mapQuery = useMemo(() => {
@@ -473,29 +504,6 @@ export default function BloodCenterDetails() {
     address,
     city,
     governorate,
-  ]);
-
-  const googleMapUrl = useMemo(() => {
-    if (coordinates) {
-      return (
-        "https://www.google.com/maps" +
-        `?q=${coordinates.lat},${coordinates.lng}` +
-        "&output=embed"
-      );
-    }
-
-    if (!mapQuery) {
-      return "";
-    }
-
-    return (
-      "https://www.google.com/maps" +
-      `?q=${encodeURIComponent(mapQuery)}` +
-      "&output=embed"
-    );
-  }, [
-    coordinates,
-    mapQuery,
   ]);
 
   /* ===================================================
@@ -893,23 +901,57 @@ export default function BloodCenterDetails() {
           )}
 
           {/* =================================================
-             GOOGLE MAP
+             LEAFLET MAP
           ================================================= */}
 
           <section className="map-card">
 
-            {googleMapUrl ? (
+            {coordinates ? (
 
               <div className="real-map-wrapper">
 
-                <iframe
-                  title={`موقع ${name}`}
-                  src={googleMapUrl}
-                  className="google-map-frame"
-                  loading="lazy"
-                  allowFullScreen
-                  referrerPolicy="no-referrer-when-downgrade"
-                />
+                <MapContainer
+                  key={`${coordinates.lat}-${coordinates.lng}`}
+                  center={[
+                    coordinates.lat,
+                    coordinates.lng,
+                  ]}
+                  zoom={15}
+                  scrollWheelZoom={false}
+                  className="leaflet-map"
+                >
+
+                  <TileLayer
+                    attribution='&copy; OpenStreetMap contributors'
+                    url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+                  />
+
+                  <Marker
+                    position={[
+                      coordinates.lat,
+                      coordinates.lng,
+                    ]}
+                    icon={bloodCenterIcon}
+                  >
+
+                    <Popup>
+                      <div
+                        dir="rtl"
+                        className="leaflet-popup-content-custom"
+                      >
+                        <strong>
+                          {name}
+                        </strong>
+
+                        <span>
+                          {address}
+                        </span>
+                      </div>
+                    </Popup>
+
+                  </Marker>
+
+                </MapContainer>
 
                 <div className="map-floating-label">
 
@@ -944,7 +986,7 @@ export default function BloodCenterDetails() {
                 </h3>
 
                 <p>
-                  لا يوجد عنوان كافٍ لعرض موقع المركز على الخريطة.
+                  لا توجد إحداثيات كافية لعرض موقع المركز على الخريطة.
                 </p>
 
               </div>
@@ -999,10 +1041,6 @@ export default function BloodCenterDetails() {
 
 const styles = `
 
-  /* =====================================================
-     RESET
-  ===================================================== */
-
   *,
   *::before,
   *::after {
@@ -1025,7 +1063,6 @@ const styles = `
     margin: 0;
     width: 100%;
     min-width: 0;
-
     overflow-x: hidden;
 
     background:
@@ -1720,7 +1757,7 @@ const styles = `
   }
 
   /* =====================================================
-     MAP
+     LEAFLET MAP
   ===================================================== */
 
   .map-card {
@@ -1765,26 +1802,168 @@ const styles = `
       #f1faf8;
   }
 
-  .google-map-frame {
+  .leaflet-map {
     width: 100%;
     height: 250px;
 
-    display: block;
-
-    border: 0;
+    z-index: 1;
   }
+
+  /* =====================================================
+     CUSTOM LEAFLET MARKER
+  ===================================================== */
+
+  .blood-center-marker {
+    background: transparent !important;
+    border: 0 !important;
+  }
+
+  .leaflet-marker-pin {
+    width: 44px;
+    height: 44px;
+
+    border-radius:
+      50% 50% 50% 0;
+
+    background:
+      #0aa88f;
+
+    transform:
+      rotate(-45deg);
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    box-shadow:
+      0 5px 14px
+      rgba(
+        10,
+        168,
+        143,
+        0.30
+      );
+  }
+
+  .leaflet-marker-icon {
+    width: 28px;
+    height: 28px;
+
+    border-radius: 50%;
+
+    background:
+      #ffffff;
+
+    color:
+      #0aa88f;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    font-size: 17px;
+
+    font-weight: 900;
+
+    transform:
+      rotate(45deg);
+  }
+
+  /* =====================================================
+     LEAFLET POPUP
+  ===================================================== */
+
+  .leaflet-popup-content-wrapper {
+    border-radius: 14px;
+  }
+
+  .leaflet-popup-content {
+    margin: 11px 13px;
+
+    min-width: 150px;
+
+    direction: rtl;
+
+    text-align: right;
+
+    font-family:
+      "Tajawal",
+      "Cairo",
+      Arial,
+      sans-serif;
+  }
+
+  .leaflet-popup-tip {
+    background:
+      #ffffff;
+  }
+
+  .leaflet-popup-content-custom {
+    display: flex;
+
+    flex-direction: column;
+
+    gap: 4px;
+  }
+
+  .leaflet-popup-content-custom strong {
+    color:
+      #245b5d;
+
+    font-size: 12px;
+
+    font-weight: 900;
+  }
+
+  .leaflet-popup-content-custom span {
+    color:
+      #6b7c79;
+
+    font-size: 9px;
+
+    line-height: 1.5;
+
+    font-weight: 700;
+  }
+
+  /* =====================================================
+     MAP LABEL
+  ===================================================== */
 
   .map-floating-label {
     position: relative;
+
     margin: 10px;
-    padding: 10px 12px;
+
+    padding:
+      10px 12px;
+
     display: flex;
+
     align-items: center;
+
     gap: 8px;
+
     border-radius: 14px;
-    background: #f1faf8;
-    border: 1px solid rgba(10,168,143,.10);
-    color: var(--primary);
+
+    background:
+      #f1faf8;
+
+    border:
+      1px solid
+      rgba(
+        10,
+        168,
+        143,
+        .10
+      );
+
+    color:
+      var(--primary);
   }
 
   .map-floating-label > div {
@@ -1820,6 +1999,10 @@ const styles = `
 
     overflow-wrap: anywhere;
   }
+
+  /* =====================================================
+     MAP UNAVAILABLE
+  ===================================================== */
 
   .map-unavailable {
     min-height: 220px;
@@ -2198,11 +2381,7 @@ const styles = `
       font-size: 20px;
     }
 
-    .real-map-wrapper {
-      height: auto;
-    }
-
-    .google-map-frame {
+    .leaflet-map {
       height: 320px;
     }
   }
@@ -2324,7 +2503,7 @@ const styles = `
       height: auto;
     }
 
-    .google-map-frame {
+    .leaflet-map {
       width: 100%;
       height: 250px;
     }
@@ -2387,7 +2566,7 @@ const styles = `
       height: auto;
     }
 
-    .google-map-frame {
+    .leaflet-map {
       height: 245px;
     }
   }
@@ -2482,7 +2661,7 @@ const styles = `
       height: auto;
     }
 
-    .google-map-frame {
+    .leaflet-map {
       height: 230px;
     }
 
