@@ -10052,3 +10052,552 @@ body.nabd-dark .home-reference .home-service.medicine-service .service-arrow {
   background: rgba(255, 255, 255, 0.65) !important;
   color: #6a3ab0 !important;
 }
+/* =========================================================
+   🩸 BLOOD CENTERS - LIGHT MODE
+   ========================================================= */
+
+body:not(.nabd-dark) .blood-centers-page {
+  background:
+    radial-gradient(
+      circle at 5% 8%,
+      rgba(10, 168, 143, 0.04) 0 3%,
+      transparent 20%
+    ),
+    radial-gradient(
+      circle at 93% 18%,
+      rgba(10, 168, 143, 0.06) 0 5%,
+      transparent 21%
+    ),
+    linear-gradient(
+      145deg,
+      #f4fbfa 0%,
+      #eef9f7 48%,
+      #e7f5f2 100%
+    ) !important;
+
+  color: #17332e !important;
+}
+
+/* Header */
+
+body:not(.nabd-dark) .blood-centers-header {
+  background: rgba(255, 255, 255, 0.88) !important;
+  border-bottom-color: rgba(10, 168, 143, 0.10) !important;
+}
+
+body:not(.nabd-dark) .header-title h1 {
+  color: #17332e !important;
+}
+
+body:not(.nabd-dark) .header-title p {
+  color: #6b7c79 !important;
+}
+
+body:not(.nabd-dark) .back-button,
+body:not(.nabd-dark) .header-mini-icon {
+  background: rgba(255, 255, 255, 0.75) !important;
+  border-color: rgba(10, 168, 143, 0.12) !important;
+  color: #0aa88f !important;
+}
+
+/* Search */
+
+body:not(.nabd-dark) .search-label span,
+body:not(.nabd-dark) .list-heading h2,
+body:not(.nabd-dark) .state-card h3 {
+  color: #17332e !important;
+}
+
+body:not(.nabd-dark) .search-box,
+body:not(.nabd-dark) .governorate-select-wrapper {
+  background: rgba(255, 255, 255, 0.88) !important;
+  border-color: rgba(10, 168, 143, 0.12) !important;
+  box-shadow: 0 9px 24px rgba(10, 80, 70, 0.06) !important;
+}
+
+body:not(.nabd-dark) .search-box input,
+body:not(.nabd-dark) .governorate-select-wrapper select {
+  background: transparent !important;
+  color: #17332e !important;
+}
+
+body:not(.nabd-dark) .search-box input::placeholder {
+  color: #8b9a98 !important;
+}
+
+body:not(.nabd-dark) .governorate-select-wrapper select option {
+  background: #ffffff !important;
+  color: #17332e !important;
+}
+
+/* Filters */
+
+body:not(.nabd-dark) .filters-header > span:first-child {
+  color: #6b7c79 !important;
+}
+
+body:not(.nabd-dark) .filter-button {
+  background: rgba(255, 255, 255, 0.72) !important;
+  border-color: rgba(10, 168, 143, 0.12) !important;
+  color: #6b7c79 !important;
+}
+
+body:not(.nabd-dark) .filter-button.active {
+  background: linear-gradient(
+    135deg,
+    #0aa88f,
+    #078876
+  ) !important;
+
+  color: #ffffff !important;
+}
+
+/* Map */
+
+body:not(.nabd-dark) .map-section {
+  border-color: rgba(10, 168, 143, 0.12) !important;
+}
+
+body:not(.nabd-dark) .map-background {
+  background: linear-gradient(
+    135deg,
+    #e9f8f5,
+    #d9f1ed
+  ) !important;
+}
+
+body:not(.nabd-dark) .map-background::before {
+  opacity: 0.20 !important;
+}
+
+body:not(.nabd-dark) .map-road {
+  background: rgba(255, 255, 255, 0.80) !important;
+}
+
+body:not(.nabd-dark) .map-area {
+  background: rgba(10, 168, 143, 0.07) !important;
+}
+
+body:not(.nabd-dark) .map-top,
+body:not(.nabd-dark) .map-bottom {
+  background: rgba(255, 255, 255, 0.88) !important;
+  border-color: rgba(10, 168, 143, 0.10) !important;
+}
+
+body:not(.nabd-dark) .map-eyebrow,
+body:not(.nabd-dark) .map-bottom {
+  color: #6b7c79 !important;
+}
+
+body:not(.nabd-dark) .map-top h3 {
+  color: #17332e !important;
+}
+
+body:not(.nabd-dark) .map-location-icon {
+  background: rgba(10, 168, 143, 0.10) !important;
+  color: #0aa88f !important;
+}
+
+/* List */
+
+body:not(.nabd-dark) .section-eyebrow {
+  color: #0aa88f !important;
+}
+
+body:not(.nabd-dark) .list-heading p {
+  color: #6b7c79 !important;
+}
+
+body:not(.nabd-dark) .results-count {
+  background: rgba(255, 255, 255, 0.75) !important;
+  border-color: rgba(10, 168, 143, 0.10) !important;
+}
+
+body:not(.nabd-dark) .results-count span {
+  color: #6b7c79 !important;
+}
+
+/* Center Cards */
+
+body:not(.nabd-dark) .blood-center-card {
+  background: rgba(255, 255, 255, 0.88) !important;
+  border-color: rgba(10, 168, 143, 0.12) !important;
+
+  box-shadow:
+    0 10px 25px rgba(10, 80, 70, 0.08) !important;
+}
+
+body:not(.nabd-dark) .center-icon {
+  background: linear-gradient(
+    145deg,
+    rgba(10, 168, 143, 0.10),
+    rgba(10, 168, 143, 0.04)
+  ) !important;
+
+  border-color: rgba(10, 168, 143, 0.10) !important;
+}
+
+body:not(.nabd-dark) .center-title-area h3 {
+  color: #17332e !important;
+}
+
+body:not(.nabd-dark) .center-type {
+  background: rgba(10, 168, 143, 0.10) !important;
+  color: #078876 !important;
+}
+
+body:not(.nabd-dark) .center-governorate {
+  background: rgba(10, 168, 143, 0.06) !important;
+  color: #6b7c79 !important;
+}
+
+body:not(.nabd-dark) .distance-badge {
+  background: rgba(10, 168, 143, 0.10) !important;
+  color: #078876 !important;
+}
+
+body:not(.nabd-dark) .card-divider {
+  background: rgba(10, 168, 143, 0.08) !important;
+}
+
+body:not(.nabd-dark) .detail-icon {
+  background: rgba(10, 168, 143, 0.08) !important;
+  color: #0aa88f !important;
+}
+
+body:not(.nabd-dark) .detail-label {
+  color: #8b9a98 !important;
+}
+
+body:not(.nabd-dark) .detail-value {
+  color: #526b67 !important;
+}
+
+body:not(.nabd-dark) .center-contact {
+  background: rgba(10, 168, 143, 0.07) !important;
+  border-color: rgba(10, 168, 143, 0.10) !important;
+  color: #078876 !important;
+}
+
+body:not(.nabd-dark) .contact-icon {
+  background: rgba(10, 168, 143, 0.07) !important;
+}
+
+/* States */
+
+body:not(.nabd-dark) .state-card {
+  background: rgba(255, 255, 255, 0.88) !important;
+  border-color: rgba(10, 168, 143, 0.12) !important;
+  box-shadow: 0 10px 25px rgba(10, 80, 70, 0.07) !important;
+}
+
+body:not(.nabd-dark) .state-card p {
+  color: #6b7c79 !important;
+}
+
+body:not(.nabd-dark) .state-icon {
+  background: linear-gradient(
+    145deg,
+    rgba(10, 168, 143, 0.10),
+    rgba(10, 168, 143, 0.04)
+  ) !important;
+
+  border-color: rgba(10, 168, 143, 0.10) !important;
+}
+
+body:not(.nabd-dark) .reset-search {
+  background: linear-gradient(
+    135deg,
+    #0aa88f,
+    #078876
+  ) !important;
+}
+
+body:not(.nabd-dark) .clear-search {
+  background: rgba(10, 168, 143, 0.08) !important;
+  color: #078876 !important;
+}
+
+
+/* =========================================================
+   🌙 BLOOD CENTERS - DARK MODE
+   ========================================================= */
+
+body.nabd-dark .blood-centers-page {
+  background:
+    radial-gradient(
+      circle at 5% 8%,
+      rgba(255,255,255,.025) 0 3%,
+      transparent 20%
+    ),
+    radial-gradient(
+      circle at 93% 18%,
+      rgba(10,168,143,.08) 0 5%,
+      transparent 21%
+    ),
+    linear-gradient(
+      145deg,
+      #0b1f20 0%,
+      #102c2d 48%,
+      #163b3b 100%
+    ) !important;
+
+  color: #dcefee !important;
+}
+
+/* Header */
+
+body.nabd-dark .blood-centers-header {
+  background: rgba(11,31,32,.82) !important;
+  border-bottom-color: rgba(255,255,255,.08) !important;
+}
+
+body.nabd-dark .header-title h1 {
+  color: #e4f5f3 !important;
+}
+
+body.nabd-dark .header-title p {
+  color: #8aa9a9 !important;
+}
+
+body.nabd-dark .back-button,
+body.nabd-dark .header-mini-icon {
+  background: rgba(255,255,255,.06) !important;
+  border-color: rgba(255,255,255,.09) !important;
+  color: #43c9b6 !important;
+}
+
+/* Search */
+
+body.nabd-dark .search-label span,
+body.nabd-dark .list-heading h2,
+body.nabd-dark .state-card h3 {
+  color: #e4f5f3 !important;
+}
+
+body.nabd-dark .search-box,
+body.nabd-dark .governorate-select-wrapper {
+  background: rgba(13,42,46,.90) !important;
+  border-color: rgba(255,255,255,.09) !important;
+  box-shadow: 0 9px 24px rgba(0,0,0,.20) !important;
+}
+
+body.nabd-dark .search-box input,
+body.nabd-dark .governorate-select-wrapper select {
+  background: transparent !important;
+  color: #e9ffff !important;
+  border: none !important;
+  outline: none !important;
+}
+
+body.nabd-dark .search-box input::placeholder {
+  color: #789494 !important;
+}
+
+body.nabd-dark .governorate-select-wrapper select option {
+  background: #0d2a2e !important;
+  color: #e9ffff !important;
+}
+
+/* Filters */
+
+body.nabd-dark .filters-header > span:first-child {
+  color: #a5c1c0 !important;
+}
+
+body.nabd-dark .filter-button:not(.active) {
+  background: rgba(13,42,46,.85) !important;
+  border-color: rgba(170,230,225,.12) !important;
+  color: #a9cfcb !important;
+}
+
+body.nabd-dark .filter-button.active {
+  background: linear-gradient(
+    135deg,
+    #159b8a,
+    #087d70
+  ) !important;
+
+  color: #ffffff !important;
+  border-color: rgba(94,217,197,.30) !important;
+  box-shadow: 0 8px 18px rgba(21,155,138,.25) !important;
+}
+
+body.nabd-dark .filter-check {
+  background: rgba(255,255,255,.20) !important;
+  color: #ffffff !important;
+}
+
+body.nabd-dark .location-active {
+  color: #5ed9c5 !important;
+}
+
+body.nabd-dark .location-active span {
+  background: #5ed9c5 !important;
+  box-shadow: 0 0 0 4px rgba(94,217,197,.12) !important;
+}
+
+/* Map */
+
+body.nabd-dark .map-section {
+  border-color: rgba(255,255,255,.08) !important;
+}
+
+body.nabd-dark .map-background {
+  background: linear-gradient(
+    135deg,
+    #173c3c,
+    #214b49
+  ) !important;
+}
+
+body.nabd-dark .map-background::before {
+  opacity: .12 !important;
+}
+
+body.nabd-dark .map-road {
+  background: rgba(255,255,255,.14) !important;
+  box-shadow: 0 0 0 5px rgba(10,168,143,.06) !important;
+}
+
+body.nabd-dark .map-area {
+  background: rgba(10,168,143,.08) !important;
+}
+
+body.nabd-dark .map-top,
+body.nabd-dark .map-bottom {
+  background: rgba(12,35,36,.78) !important;
+  border-color: rgba(255,255,255,.08) !important;
+}
+
+body.nabd-dark .map-eyebrow,
+body.nabd-dark .map-bottom {
+  color: #8ba8a8 !important;
+}
+
+body.nabd-dark .map-top h3 {
+  color: #e1f2f0 !important;
+}
+
+body.nabd-dark .map-location-icon {
+  background: rgba(10,168,143,.12) !important;
+  color: #43c9b6 !important;
+}
+
+/* List */
+
+body.nabd-dark .section-eyebrow {
+  color: #38bfae !important;
+}
+
+body.nabd-dark .list-heading p {
+  color: #809c9c !important;
+}
+
+body.nabd-dark .results-count {
+  background: rgba(255,255,255,.055) !important;
+  border-color: rgba(255,255,255,.08) !important;
+}
+
+body.nabd-dark .results-count span {
+  color: #809c9c !important;
+}
+
+/* Center Cards */
+
+body.nabd-dark .blood-center-card {
+  background: rgba(255,255,255,.055) !important;
+  border-color: rgba(255,255,255,.09) !important;
+  box-shadow: 0 10px 25px rgba(0,0,0,.18) !important;
+}
+
+body.nabd-dark .center-icon {
+  background: linear-gradient(
+    145deg,
+    rgba(10,168,143,.16),
+    rgba(10,168,143,.08)
+  ) !important;
+
+  border-color: rgba(255,255,255,.08) !important;
+}
+
+body.nabd-dark .center-title-area h3 {
+  color: #e0f1ef !important;
+}
+
+body.nabd-dark .center-type {
+  background: rgba(10,168,143,.13) !important;
+  color: #45c8b7 !important;
+}
+
+body.nabd-dark .center-governorate {
+  background: rgba(255,255,255,.06) !important;
+  color: #8fa9a9 !important;
+}
+
+body.nabd-dark .distance-badge {
+  background: rgba(10,168,143,.12) !important;
+  color: #45c8b7 !important;
+}
+
+body.nabd-dark .card-divider {
+  background: rgba(255,255,255,.07) !important;
+}
+
+body.nabd-dark .detail-icon {
+  background: rgba(10,168,143,.10) !important;
+  color: #43c9b6 !important;
+}
+
+body.nabd-dark .detail-label {
+  color: #718d8d !important;
+}
+
+body.nabd-dark .detail-value {
+  color: #a9c2c1 !important;
+}
+
+body.nabd-dark .center-contact {
+  background: rgba(10,168,143,.09) !important;
+  border-color: rgba(255,255,255,.07) !important;
+  color: #45c8b7 !important;
+}
+
+body.nabd-dark .contact-icon {
+  background: rgba(255,255,255,.07) !important;
+}
+
+/* States */
+
+body.nabd-dark .state-card {
+  background: rgba(255,255,255,.055) !important;
+  border-color: rgba(255,255,255,.09) !important;
+  box-shadow: 0 10px 25px rgba(0,0,0,.16) !important;
+}
+
+body.nabd-dark .state-card p {
+  color: #829e9e !important;
+}
+
+body.nabd-dark .state-icon {
+  background: linear-gradient(
+    145deg,
+    rgba(10,168,143,.14),
+    rgba(10,168,143,.07)
+  ) !important;
+
+  border-color: rgba(255,255,255,.08) !important;
+}
+
+body.nabd-dark .reset-search {
+  background: linear-gradient(
+    135deg,
+    #0aa88f,
+    #078876
+  ) !important;
+}
+
+body.nabd-dark .clear-search {
+  background: rgba(10,168,143,.10) !important;
+  color: #43c9b6 !important;
+}
