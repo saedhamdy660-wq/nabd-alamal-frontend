@@ -228,10 +228,68 @@ const api = {
       }
     ),
 
-  // جلب المستشفيات المتاحة
+  // ============================================================
+  // Hospitals
+  // ============================================================
+
   getHospitals: () =>
     request(
       "/blood/hospitals"
+    ),
+
+  // ============================================================
+  // Blood Centers
+  // ============================================================
+
+  getBloodCenters: () =>
+    request(
+      "/blood/centers"
+    ),
+
+  getNearbyBloodCenters: ({
+    lat = "",
+    lng = "",
+  } = {}) => {
+    const params =
+      new URLSearchParams();
+
+    if (
+      lat !== "" &&
+      lat !== null &&
+      lat !== undefined
+    ) {
+      params.set(
+        "lat",
+        lat
+      );
+    }
+
+    if (
+      lng !== "" &&
+      lng !== null &&
+      lng !== undefined
+    ) {
+      params.set(
+        "lng",
+        lng
+      );
+    }
+
+    const query =
+      params.toString();
+
+    return request(
+      `/blood/centers/nearby${
+        query
+          ? `?${query}`
+          : ""
+      }`
+    );
+  },
+
+  getBloodCenter: (id) =>
+    request(
+      `/blood/centers/${id}`
     ),
 
   // ============================================================
