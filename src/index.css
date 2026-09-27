@@ -10295,3 +10295,34 @@ body.nabd-dark .home-reference .home-service.medicine-service .service-arrow {
   background: rgba(170, 130, 240, 0.15) !important;
   color: #c4a8f5 !important;
 }
+/* =========================================================
+   🌙 HOME - MEDICINE CARD (PURPLE LIGHT MODE)
+   ========================================================= */
+
+/* الوضع الفاتح - الكارت بنفسجي فاتح زي الصورة */
+.home-reference .home-service.medicine-service {
+  background: linear-gradient(145deg, #e8d9ff, #d4bfff) !important;
+  border: 1px solid rgba(180, 140, 250, 0.4) !important;
+  color: #4a2a7a !important;
+  box-shadow: 0 10px 25px rgba(120, 80, 200, 0.12) !important;
+}
+
+.home-reference .home-service.medicine-service .service-content h3 {
+  color: #3a1a6a !important;
+}
+
+.home-reference .home-service.medicine-service .service-content p {
+  color: #5a3a8a !important;
+  opacity: 0.85 !important;
+}
+
+.home-reference .home-service.medicine-service .service-icon {
+  background: rgba(255, 255, 255, 0.55) !important;
+  border: 1px solid rgba(255, 255, 255, 0.7) !important;
+  color: #6a3ab0 !important;
+}
+
+.home-reference .home-service.medicine-service .service-arrow {
+  background: rgba(255, 255, 255, 0.65) !important;
+  color: #6a3ab0 !important;
+}
