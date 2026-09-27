@@ -4,11 +4,15 @@ import React, {
   useState,
 } from "react";
 
+import { useNavigate } from "react-router-dom";
+
 import api, {
   getCurrentLocation,
 } from "../api.js";
 
 export default function BloodCenters() {
+  const navigate = useNavigate();
+
   const [centers, setCenters] = useState([]);
   const [search, setSearch] = useState("");
 
@@ -624,6 +628,26 @@ export default function BloodCenters() {
   );
 
   // ============================================================
+  // Open Center Details
+  // ============================================================
+
+  const openCenterDetails = (
+    center
+  ) => {
+    const id =
+      center?.id ||
+      center?._id;
+
+    if (!id) {
+      return;
+    }
+
+    navigate(
+      `/blood-centers/${id}`
+    );
+  };
+
+  // ============================================================
   // Center Card
   // ============================================================
 
@@ -652,14 +676,39 @@ export default function BloodCenters() {
     const governorate =
       getCenterGovernorate(center);
 
+    const centerId =
+      center?.id ||
+      center?._id;
+
     return (
       <article
         key={
-          center?.id ||
-          center?._id ||
+          centerId ||
           `${name}-${index}`
         }
         className="blood-center-card"
+        onClick={() =>
+          openCenterDetails(center)
+        }
+        onKeyDown={(event) => {
+          if (
+            event.key === "Enter" ||
+            event.key === " "
+          ) {
+            event.preventDefault();
+            openCenterDetails(center);
+          }
+        }}
+        role={
+          centerId
+            ? "button"
+            : undefined
+        }
+        tabIndex={
+          centerId
+            ? 0
+            : undefined
+        }
       >
         {/* Card Header */}
 
@@ -759,6 +808,9 @@ export default function BloodCenters() {
           <a
             href={`tel:${phone}`}
             className="center-contact"
+            onClick={(event) =>
+              event.stopPropagation()
+            }
           >
             <div className="contact-icon">
               <PhoneIcon size={17} />
@@ -2228,6 +2280,8 @@ export default function BloodCenters() {
             transition:
               transform .18s ease,
               box-shadow .18s ease;
+
+            cursor: pointer;
           }
 
           .blood-center-card:active {
@@ -2235,6 +2289,11 @@ export default function BloodCenters() {
 
             box-shadow:
               0 6px 16px rgba(42,128,128,.07);
+          }
+
+          .blood-center-card:focus-visible {
+            outline: 2px solid rgba(10,168,143,.45);
+            outline-offset: 2px;
           }
 
           .center-card-header {
