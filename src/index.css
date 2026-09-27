@@ -10601,3 +10601,32 @@ body.nabd-dark .clear-search {
   background: rgba(10,168,143,.10) !important;
   color: #43c9b6 !important;
 }
+/* =========================================================
+   🌙 BLOOD CENTER DETAILS - CENTER TYPE WHITE
+   ========================================================= */
+
+/* كلمة "بنك دم" اللي تحت شارة "موثق" */
+body.nabd-dark .blood-center-page .center-type,
+.blood-center-page .center-type {
+  color: #ffffff !important;
+  font-weight: 900 !important;
+  opacity: 1 !important;
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.25) !important;
+}
+
+/* شارة "موثق" نفسها - نخليها أوضح */
+body.nabd-dark .blood-center-page .verified-badge,
+.blood-center-page .verified-badge {
+  background: rgba(255, 255, 255, 0.22) !important;
+  border: 1px solid rgba(255, 255, 255, 0.35) !important;
+  color: #ffffff !important;
+  font-weight: 900 !important;
+}
+
+/* الموقع (الزقازيق، الشرقية) */
+body.nabd-dark .blood-center-page .hero-location,
+.blood-center-page .hero-location {
+  color: #ffffff !important;
+  font-weight: 800 !important;
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.25) !important;
+}
