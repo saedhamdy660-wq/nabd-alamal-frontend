@@ -14,6 +14,7 @@ import LocationPermission from "./pages/LocationPermission.jsx";
 import Home from "./pages/Home.jsx";
 import BloodDonation from "./pages/BloodDonation.jsx";
 import BloodCenters from "./pages/BloodCenters.jsx";
+import BloodCenterDetails from "./pages/BloodCenterDetails.jsx";
 import MedicineExchange from "./pages/MedicineExchange.jsx";
 import MedicineDetail from "./pages/MedicineDetail.jsx";
 import PharmacyPartner from "./pages/PharmacyPartner.jsx";
@@ -140,7 +141,8 @@ export default function App() {
     location.pathname.startsWith("/pharmacy/") ||
     location.pathname.startsWith("/donor/") ||
     location.pathname.startsWith("/track/") ||
-    location.pathname.startsWith("/donation-request/");
+    location.pathname.startsWith("/donation-request/") ||
+    location.pathname.startsWith("/blood-centers/");
 
   return (
     <div
@@ -223,6 +225,11 @@ export default function App() {
         <Route
           path="/blood-centers"
           element={<BloodCenters />}
+        />
+
+        <Route
+          path="/blood-centers/:id"
+          element={<BloodCenterDetails />}
         />
 
         <Route
