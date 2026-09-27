@@ -9886,3 +9886,249 @@ body.nabd-dark .donation-request-page .actions-card,
 .blood-center-page .pharmacy-note {
   color: #8ba1a2 !important;
 }
+/* =========================================================
+   🌙 BLOOD CENTERS + DETAILS - DARK MODE
+   ========================================================= */
+
+/* ================= قائمة المراكز ================= */
+
+body.nabd-dark .blood-centers-page {
+  background:
+    radial-gradient(circle at 5% 8%, rgba(21,155,138,.12) 0 3%, transparent 20%),
+    radial-gradient(circle at 93% 18%, rgba(21,155,138,.08) 0 5%, transparent 21%),
+    linear-gradient(145deg, #071a1d 0%, #092326 50%, #071a1d 100%) !important;
+  color: #e9ffff !important;
+}
+
+body.nabd-dark .blood-centers-header {
+  background: rgba(9, 31, 34, 0.92) !important;
+  border-bottom-color: rgba(170, 230, 225, 0.12) !important;
+}
+body.nabd-dark .blood-centers-header h1 { color: #e9ffff !important; }
+body.nabd-dark .blood-centers-header p { color: #9bbdbc !important; }
+body.nabd-dark .back-button {
+  background: rgba(18, 61, 64, 0.85) !important;
+  color: #65d7c7 !important;
+}
+body.nabd-dark .header-mini-icon {
+  background: rgba(18, 61, 64, 0.85) !important;
+  color: #5ed9c5 !important;
+}
+
+/* الكارت الأخضر */
+body.nabd-dark .blood-centers-hero {
+  background: linear-gradient(135deg, #0a2a28 0%, #0d3a36 55%, #0f3a3d 100%) !important;
+  border-color: rgba(170, 230, 225, 0.15) !important;
+}
+
+/* البحث */
+body.nabd-dark .search-label span { color: #e9ffff !important; }
+body.nabd-dark .search-label small { color: #9bbdbc !important; }
+body.nabd-dark .search-box {
+  background: rgba(13, 42, 46, 0.9) !important;
+  border-color: rgba(170, 230, 225, 0.15) !important;
+}
+body.nabd-dark .search-box input { color: #e9ffff !important; }
+body.nabd-dark .search-box input::placeholder { color: #789b99 !important; }
+
+/* الفلاتر */
+body.nabd-dark .filters-header > span:first-child { color: #9bbdbc !important; }
+body.nabd-dark .filter-button {
+  background: rgba(13, 42, 46, 0.85) !important;
+  border-color: rgba(170, 230, 225, 0.12) !important;
+  color: #a9cfcb !important;
+}
+body.nabd-dark .filter-button.active {
+  color: white !important;
+  background: linear-gradient(135deg, #159b8a, #087d70) !important;
+}
+
+/* الخريطة */
+body.nabd-dark .map-section {
+  background: #0a2428 !important;
+  border-color: rgba(170, 230, 225, 0.15) !important;
+}
+body.nabd-dark .map-background {
+  background: linear-gradient(135deg, #0a2428, #0d3a3d) !important;
+}
+body.nabd-dark .map-top {
+  background: rgba(13, 42, 46, 0.92) !important;
+  border-color: rgba(170, 230, 225, 0.15) !important;
+}
+body.nabd-dark .map-top h3 { color: #e9ffff !important; }
+body.nabd-dark .map-eyebrow { color: #9bbdbc !important; }
+body.nabd-dark .map-location-icon {
+  background: rgba(18, 61, 64, 0.85) !important;
+  color: #5ed9c5 !important;
+}
+body.nabd-dark .map-bottom {
+  background: rgba(13, 42, 46, 0.9) !important;
+  color: #9bbdbc !important;
+}
+
+/* قسم "الأماكن المتاحة" */
+body.nabd-dark .section-eyebrow { color: #5ed9c5 !important; }
+body.nabd-dark .list-heading h2 { color: #e9ffff !important; }
+body.nabd-dark .list-heading p { color: #9bbdbc !important; }
+body.nabd-dark .results-count {
+  background: rgba(13, 42, 46, 0.85) !important;
+  border-color: rgba(170, 230, 225, 0.12) !important;
+}
+body.nabd-dark .results-count strong { color: #5ed9c5 !important; }
+body.nabd-dark .results-count span { color: #9bbdbc !important; }
+
+/* كروت المراكز */
+body.nabd-dark .blood-center-card {
+  background: #0d2a2e !important;
+  border-color: rgba(170, 230, 225, 0.15) !important;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.25) !important;
+}
+body.nabd-dark .center-icon {
+  background: #123d40 !important;
+  color: #5ed9c5 !important;
+}
+body.nabd-dark .center-title-area h3 { color: #e9ffff !important; }
+body.nabd-dark .center-type {
+  background: rgba(94, 217, 197, 0.15) !important;
+  color: #5ed9c5 !important;
+}
+body.nabd-dark .distance-badge {
+  background: rgba(94, 217, 197, 0.15) !important;
+  color: #5ed9c5 !important;
+}
+body.nabd-dark .card-divider {
+  background: rgba(170, 230, 225, 0.1) !important;
+}
+body.nabd-dark .detail-icon {
+  background: #123d40 !important;
+  color: #5ed9c5 !important;
+}
+body.nabd-dark .detail-label { color: #9bbdbc !important; }
+body.nabd-dark .detail-value { color: #e9ffff !important; }
+body.nabd-dark .center-contact {
+  background: rgba(18, 61, 64, 0.85) !important;
+  border-color: rgba(170, 230, 225, 0.12) !important;
+  color: #5ed9c5 !important;
+}
+body.nabd-dark .contact-icon {
+  background: rgba(13, 42, 46, 0.9) !important;
+}
+body.nabd-dark .contact-arrow { color: #5ed9c5 !important; }
+
+/* حالات التحميل والفراغ */
+body.nabd-dark .state-card {
+  background: #0d2a2e !important;
+  border-color: rgba(170, 230, 225, 0.15) !important;
+}
+body.nabd-dark .state-card h3 { color: #e9ffff !important; }
+body.nabd-dark .state-card p { color: #9bbdbc !important; }
+body.nabd-dark .state-icon {
+  background: #123d40 !important;
+  color: #5ed9c5 !important;
+}
+
+/* ================= تفاصيل المركز ================= */
+
+body.nabd-dark .blood-center-page {
+  background:
+    radial-gradient(circle at 5% 4%, rgba(21,155,138,.12), transparent 27%),
+    radial-gradient(circle at 96% 35%, rgba(21,155,138,.08), transparent 29%),
+    linear-gradient(160deg, #071a1d 0%, #092326 48%, #071a1d 100%) !important;
+  color: #e9ffff !important;
+}
+
+body.nabd-dark .blood-center-page .details-header {
+  background: rgba(9, 31, 34, 0.92) !important;
+  border-bottom-color: rgba(170, 230, 225, 0.12) !important;
+}
+body.nabd-dark .blood-center-page .details-header h1 { color: #e9ffff !important; }
+body.nabd-dark .blood-center-page .back-button {
+  background: rgba(18, 61, 64, 0.85) !important;
+  color: #5ed9c5 !important;
+}
+
+/* كارت المركز الأخضر - غامق */
+body.nabd-dark .blood-center-page .center-hero {
+  background: linear-gradient(135deg, #0a2a28 0%, #0d3a36 55%, #0f3a3d 100%) !important;
+  border-color: rgba(170, 230, 225, 0.15) !important;
+  box-shadow: 0 14px 32px rgba(0, 0, 0, 0.3) !important;
+}
+body.nabd-dark .blood-center-page .center-hero h2 { color: #ffffff !important; }
+body.nabd-dark .blood-center-page .center-type { color: #5ed9c5 !important; text-shadow: none !important; }
+body.nabd-dark .blood-center-page .hero-location { color: #9bbdbc !important; text-shadow: none !important; }
+body.nabd-dark .blood-center-page .verified-badge {
+  background: rgba(94, 217, 197, 0.15) !important;
+  border-color: rgba(94, 217, 197, 0.25) !important;
+  color: #5ed9c5 !important;
+}
+
+/* شارة المسافة */
+body.nabd-dark .blood-center-page .distance-badge {
+  background: rgba(94, 217, 197, 0.15) !important;
+  color: #5ed9c5 !important;
+  border-color: rgba(94, 217, 197, 0.2) !important;
+}
+
+/* كروت المعلومات */
+body.nabd-dark .blood-center-page .details-card {
+  background: #0d2a2e !important;
+  border-color: rgba(170, 230, 225, 0.15) !important;
+  box-shadow: 0 10px 28px rgba(0, 0, 0, 0.25) !important;
+}
+body.nabd-dark .blood-center-page .details-card h3 { color: #e9ffff !important; }
+body.nabd-dark .blood-center-page .info-icon {
+  background: #123d40 !important;
+  color: #5ed9c5 !important;
+}
+body.nabd-dark .blood-center-page .info-text span { color: #9bbdbc !important; }
+body.nabd-dark .blood-center-page .info-text strong,
+body.nabd-dark .blood-center-page .phone-value { color: #e9ffff !important; }
+body.nabd-dark .blood-center-page .phone-value { color: #5ed9c5 !important; }
+body.nabd-dark .blood-center-page .info-divider {
+  background: rgba(170, 230, 225, 0.1) !important;
+}
+
+/* الخدمات */
+body.nabd-dark .blood-center-page .service-item {
+  background: #123d40 !important;
+  border-color: rgba(170, 230, 225, 0.1) !important;
+  color: #e9ffff !important;
+}
+body.nabd-dark .blood-center-page .service-check { color: #5ed9c5 !important; }
+
+/* الخريطة */
+body.nabd-dark .blood-center-page .map-card {
+  background: #0d2a2e !important;
+  border-color: rgba(170, 230, 225, 0.15) !important;
+}
+body.nabd-dark .blood-center-page .map-floating-label {
+  background: rgba(13, 42, 46, 0.94) !important;
+  border-color: rgba(170, 230, 225, 0.15) !important;
+}
+body.nabd-dark .blood-center-page .map-floating-label strong { color: #e9ffff !important; }
+body.nabd-dark .blood-center-page .map-floating-label span { color: #9bbdbc !important; }
+body.nabd-dark .blood-center-page .directions-button {
+  background: #0d2a2e !important;
+  color: #5ed9c5 !important;
+}
+
+/* زرار الاتصال */
+body.nabd-dark .blood-center-page .call-button {
+  background: linear-gradient(135deg, #159b8a, #087d70) !important;
+}
+
+/* الملاحظة */
+body.nabd-dark .blood-center-page .center-note {
+  color: #9bbdbc !important;
+}
+
+/* صفحات التحميل والأخطاء */
+body.nabd-dark .blood-center-loading {
+  background: linear-gradient(180deg, #071a1d, #0a2428) !important;
+  color: #5ed9c5 !important;
+}
+body.nabd-dark .blood-center-page .error-card {
+  background: #0d2a2e !important;
+}
+body.nabd-dark .blood-center-page .error-card h2 { color: #e9ffff !important; }
+body.nabd-dark .blood-center-page .error-card p { color: #9bbdbc !important; }
