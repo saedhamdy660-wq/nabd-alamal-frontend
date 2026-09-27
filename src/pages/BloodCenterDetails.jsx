@@ -5,17 +5,6 @@ import React, {
 } from "react";
 
 import {
-  MapContainer,
-  Marker,
-  Popup,
-  TileLayer,
-  useMap,
-} from "react-leaflet";
-
-import L from "leaflet";
-import "leaflet/dist/leaflet.css";
-
-import {
   useNavigate,
   useParams,
 } from "react-router-dom";
@@ -117,6 +106,10 @@ function getCenterServices(center) {
   return center.services.filter(Boolean);
 }
 
+/*
+  لو فيه إحداثيات حقيقية من الـ backend نستخدمها.
+  غير كده هنستخدم Google Maps بالعنوان.
+*/
 function getCenterCoordinates(center) {
   const lat = Number(
     center?.lat ??
@@ -148,221 +141,6 @@ function getCenterCoordinates(center) {
     lat,
     lng,
   };
-}
-
-/* ================= GEOCODING ================= */
-
-/*
-  لو المركز عنده lat/lng نستخدمهم مباشرة.
-
-  لو مفيش:
-  نبحث عن:
-  اسم المركز + العنوان + المدينة + المحافظة + مصر
-
-  باستخدام OpenStreetMap Nominatim.
-*/
-
-async function geocodeBloodCenter(center) {
-  if (!center) {
-    return null;
-  }
-
-  const directCoordinates =
-    getCenterCoordinates(
-      center
-    );
-
-  if (directCoordinates) {
-    return directCoordinates;
-  }
-
-  const name =
-    getCenterName(center);
-
-  const address =
-    getCenterAddress(center);
-
-  const city =
-    getCenterCity(center);
-
-  const governorate =
-    getCenterGovernorate(center);
-
-  const queryParts = [
-    name,
-    address,
-    city,
-    governorate,
-    "مصر",
-  ].filter(
-    (item) =>
-      item &&
-      String(item).trim()
-  );
-
-  const query =
-    queryParts.join(", ");
-
-  if (!query) {
-    return null;
-  }
-
-  try {
-    const url =
-      `https://nominatim.openstreetmap.org/search` +
-      `?format=jsonv2` +
-      `&q=${encodeURIComponent(query)}` +
-      `&limit=1` +
-      `&countrycodes=eg` +
-      `&addressdetails=1`;
-
-    const response =
-      await fetch(url, {
-        method: "GET",
-        headers: {
-          Accept:
-            "application/json",
-        },
-      });
-
-    if (!response.ok) {
-      throw new Error(
-        `Geocoding failed: ${response.status}`
-      );
-    }
-
-    const results =
-      await response.json();
-
-    if (
-      !Array.isArray(results) ||
-      results.length === 0
-    ) {
-      return null;
-    }
-
-    const result =
-      results[0];
-
-    const lat =
-      Number(result?.lat);
-
-    const lng =
-      Number(result?.lon);
-
-    if (
-      !Number.isFinite(lat) ||
-      !Number.isFinite(lng)
-    ) {
-      return null;
-    }
-
-    if (
-      lat < -90 ||
-      lat > 90 ||
-      lng < -180 ||
-      lng > 180
-    ) {
-      return null;
-    }
-
-    return {
-      lat,
-      lng,
-      source: "geocoded",
-      displayName:
-        result?.display_name ||
-        "",
-    };
-  } catch (error) {
-    console.error(
-      "Blood center geocoding failed:",
-      error
-    );
-
-    return null;
-  }
-}
-
-/* ================= LEAFLET ICON ================= */
-
-const centerMarkerIcon =
-  new L.DivIcon({
-    className:
-      "blood-center-marker-wrapper",
-
-    html: `
-      <div class="blood-center-marker">
-        <div class="blood-center-marker-heart">
-          <svg
-            width="27"
-            height="27"
-            viewBox="0 0 100 100"
-            fill="none"
-            aria-hidden="true"
-          >
-            <path
-              d="M50 88C50 88 12 63 12 35C12 19 24 9 38 9C46 9 50 15 50 15C50 15 54 9 62 9C76 9 88 19 88 35C88 63 50 88 50 88Z"
-              fill="white"
-            />
-
-            <path
-              d="M18 46H34L40 34L48 58L54 46H82"
-              stroke="#0aa88f"
-              stroke-width="5"
-              stroke-linecap="round"
-              stroke-linejoin="round"
-            />
-          </svg>
-        </div>
-      </div>
-    `,
-
-    iconSize: [
-      54,
-      64,
-    ],
-
-    iconAnchor: [
-      27,
-      62,
-    ],
-
-    popupAnchor: [
-      0,
-      -57,
-    ],
-  });
-
-/* ================= MAP CENTER CONTROLLER ================= */
-
-function MapViewController({
-  center,
-}) {
-  const map =
-    useMap();
-
-  useEffect(() => {
-    if (!center) {
-      return;
-    }
-
-    map.setView(
-      [
-        center.lat,
-        center.lng,
-      ],
-      15,
-      {
-        animate: true,
-      }
-    );
-  }, [
-    center,
-    map,
-  ]);
-
-  return null;
 }
 
 /* ================= ICONS ================= */
@@ -536,11 +314,9 @@ function CheckIcon({
 /* ================= MAIN ================= */
 
 export default function BloodCenterDetails() {
-  const { id } =
-    useParams();
+  const { id } = useParams();
 
-  const navigate =
-    useNavigate();
+  const navigate = useNavigate();
 
   const [
     center,
@@ -555,21 +331,6 @@ export default function BloodCenterDetails() {
   const [
     error,
     setError,
-  ] = useState("");
-
-  const [
-    mapCoordinates,
-    setMapCoordinates,
-  ] = useState(null);
-
-  const [
-    mapLoading,
-    setMapLoading,
-  ] = useState(false);
-
-  const [
-    mapError,
-    setMapError,
   ] = useState("");
 
   /* ================= LOAD CENTER ================= */
@@ -593,9 +354,7 @@ export default function BloodCenterDetails() {
         setError("");
 
         const data =
-          await api.getBloodCenter(
-            id
-          );
+          await api.getBloodCenter(id);
 
         if (!cancelled) {
           setCenter(data);
@@ -626,128 +385,152 @@ export default function BloodCenterDetails() {
     };
   }, [id]);
 
-  /* ================= DIRECT COORDINATES ================= */
+  /* ================= DATA ================= */
 
-  const directCoordinates =
-    useMemo(
-      () =>
-        getCenterCoordinates(
-          center
-        ),
-      [center]
+  const name = useMemo(
+    () => getCenterName(center),
+    [center]
+  );
+
+  const type = useMemo(
+    () => getCenterType(center),
+    [center]
+  );
+
+  const governorate = useMemo(
+    () =>
+      getCenterGovernorate(center),
+    [center]
+  );
+
+  const city = useMemo(
+    () => getCenterCity(center),
+    [center]
+  );
+
+  const address = useMemo(
+    () => getCenterAddress(center),
+    [center]
+  );
+
+  const phone = useMemo(
+    () => getCenterPhone(center),
+    [center]
+  );
+
+  const hours = useMemo(
+    () => getCenterHours(center),
+    [center]
+  );
+
+  const distance = useMemo(
+    () => getCenterDistance(center),
+    [center]
+  );
+
+  const services = useMemo(
+    () => getCenterServices(center),
+    [center]
+  );
+
+  const coordinates = useMemo(
+    () =>
+      getCenterCoordinates(center),
+    [center]
+  );
+
+  const verified =
+    center?.verified === true;
+
+  /* ================= GOOGLE MAP QUERY ================= */
+
+  const mapQuery = useMemo(() => {
+    const parts = [
+      name,
+      address,
+      city,
+      governorate,
+      "مصر",
+    ].filter(
+      (item) =>
+        item &&
+        String(item).trim() &&
+        item !==
+          "العنوان غير متوفر حاليًا"
     );
 
-  /* ================= MAP GEOCODING ================= */
+    return parts.join(", ");
+  }, [
+    name,
+    address,
+    city,
+    governorate,
+  ]);
 
-  useEffect(() => {
-    let cancelled = false;
+  /*
+    Google Maps Embed بدون API Key.
 
-    async function resolveMapLocation() {
-      if (!center) {
-        return;
-      }
+    لو عندنا coordinates:
+    نستخدمها مباشرة.
 
-      if (directCoordinates) {
-        setMapCoordinates(
-          directCoordinates
-        );
-
-        setMapLoading(false);
-        setMapError("");
-
-        return;
-      }
-
-      setMapLoading(true);
-      setMapError("");
-      setMapCoordinates(null);
-
-      const result =
-        await geocodeBloodCenter(
-          center
-        );
-
-      if (cancelled) {
-        return;
-      }
-
-      if (result) {
-        setMapCoordinates(
-          result
-        );
-
-        setMapError("");
-      } else {
-        setMapCoordinates(null);
-
-        setMapError(
-          "تعذر تحديد موقع المركز تلقائيًا من العنوان."
-        );
-      }
-
-      setMapLoading(false);
+    لو مفيش:
+    نستخدم اسم المركز والعنوان.
+  */
+  const googleMapUrl = useMemo(() => {
+    if (coordinates) {
+      return (
+        "https://www.google.com/maps" +
+        `?q=${coordinates.lat},${coordinates.lng}` +
+        "&output=embed"
+      );
     }
 
-    resolveMapLocation();
+    if (!mapQuery) {
+      return "";
+    }
 
-    return () => {
-      cancelled = true;
-    };
+    return (
+      "https://www.google.com/maps" +
+      `?q=${encodeURIComponent(mapQuery)}` +
+      "&output=embed"
+    );
   }, [
-    center,
-    directCoordinates,
+    coordinates,
+    mapQuery,
   ]);
 
   /* ================= ACTIONS ================= */
 
-  const handleCall =
-    () => {
-      const phone =
-        getCenterPhone(
-          center
-        );
+  const handleCall = () => {
+    if (!phone) {
+      return;
+    }
 
-      if (!phone) {
-        return;
-      }
+    window.location.href =
+      `tel:${phone}`;
+  };
 
-      window.location.href =
-        `tel:${phone}`;
-    };
+  const handleDirections = () => {
+    if (coordinates) {
+      window.open(
+        `https://www.google.com/maps/dir/?api=1&destination=${coordinates.lat},${coordinates.lng}`,
+        "_blank",
+        "noopener,noreferrer"
+      );
 
-  const handleDirections =
-    () => {
-      if (
-        mapCoordinates
-      ) {
-        window.open(
-          `https://www.google.com/maps/dir/?api=1&destination=${mapCoordinates.lat},${mapCoordinates.lng}`,
-          "_blank",
-          "noopener,noreferrer"
-        );
+      return;
+    }
 
-        return;
-      }
-
-      const address =
-        getCenterAddress(
-          center
-        );
-
-      if (
-        address &&
-        address !==
-          "العنوان غير متوفر حاليًا"
-      ) {
-        window.open(
-          `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(
-            address
-          )}`,
-          "_blank",
-          "noopener,noreferrer"
-        );
-      }
-    };
+    if (mapQuery) {
+      window.open(
+        `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(
+          mapQuery
+        )}`,
+        "_blank",
+        "noopener,noreferrer"
+      );
+    }
+  };
 
   /* ================= LOADING ================= */
 
@@ -855,57 +638,6 @@ export default function BloodCenterDetails() {
     );
   }
 
-  /* ================= DATA ================= */
-
-  const name =
-    getCenterName(
-      center
-    );
-
-  const type =
-    getCenterType(
-      center
-    );
-
-  const governorate =
-    getCenterGovernorate(
-      center
-    );
-
-  const city =
-    getCenterCity(
-      center
-    );
-
-  const address =
-    getCenterAddress(
-      center
-    );
-
-  const phone =
-    getCenterPhone(
-      center
-    );
-
-  const hours =
-    getCenterHours(
-      center
-    );
-
-  const distance =
-    getCenterDistance(
-      center
-    );
-
-  const services =
-    getCenterServices(
-      center
-    );
-
-  const verified =
-    center?.verified ===
-    true;
-
   return (
     <>
       <style>
@@ -1007,10 +739,7 @@ export default function BloodCenterDetails() {
               <span>
                 يبعد عنك{" "}
                 <strong>
-                  {distance.toFixed(
-                    1
-                  )}{" "}
-                  كم
+                  {distance.toFixed(1)} كم
                 </strong>
               </span>
             </div>
@@ -1091,8 +820,7 @@ export default function BloodCenterDetails() {
 
           {/* ================= SERVICES ================= */}
 
-          {services.length >
-            0 && (
+          {services.length > 0 && (
             <section className="details-card">
               <h3>
                 الخدمات المتاحة
@@ -1109,9 +837,7 @@ export default function BloodCenterDetails() {
                       key={`${service}-${index}`}
                     >
                       <span className="service-check">
-                        <CheckIcon
-                          size={18}
-                        />
+                        <CheckIcon size={18} />
                       </span>
 
                       <span>
@@ -1124,69 +850,19 @@ export default function BloodCenterDetails() {
             </section>
           )}
 
-          {/* ================= REAL MAP ================= */}
+          {/* ================= GOOGLE MAP ================= */}
 
           <section className="map-card">
-            {mapLoading ? (
-              <div className="map-loading">
-                <div className="map-loading-spinner" />
-
-                <h3>
-                  جاري تحديد موقع المركز
-                </h3>
-
-                <p>
-                  بنحدد موقع المركز من العنوان...
-                </p>
-              </div>
-            ) : mapCoordinates ? (
+            {googleMapUrl ? (
               <div className="real-map-wrapper">
-                <MapContainer
-                  center={[
-                    mapCoordinates.lat,
-                    mapCoordinates.lng,
-                  ]}
-                  zoom={15}
-                  scrollWheelZoom={true}
-                  zoomControl={true}
-                  className="blood-center-map"
-                >
-                  <MapViewController
-                    center={
-                      mapCoordinates
-                    }
-                  />
-
-                  <TileLayer
-                    attribution='&copy; <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noreferrer">OpenStreetMap</a> contributors'
-                    url="https://tile.openstreetmap.org/{z}/{x}/{y}.png"
-                  />
-
-                  <Marker
-                    position={[
-                      mapCoordinates.lat,
-                      mapCoordinates.lng,
-                    ]}
-                    icon={
-                      centerMarkerIcon
-                    }
-                  >
-                    <Popup>
-                      <div
-                        className="map-popup"
-                        dir="rtl"
-                      >
-                        <strong>
-                          {name}
-                        </strong>
-
-                        <span>
-                          {address}
-                        </span>
-                      </div>
-                    </Popup>
-                  </Marker>
-                </MapContainer>
+                <iframe
+                  title={`موقع ${name}`}
+                  src={googleMapUrl}
+                  className="google-map-frame"
+                  loading="lazy"
+                  allowFullScreen
+                  referrerPolicy="no-referrer-when-downgrade"
+                />
 
                 <div className="map-floating-label">
                   <LocationIcon size={17} />
@@ -1209,17 +885,12 @@ export default function BloodCenterDetails() {
                 </div>
 
                 <h3>
-                  تعذر تحديد الموقع
+                  العنوان غير متوفر
                 </h3>
 
                 <p>
-                  {mapError ||
-                    "لا يمكن تحديد موقع المركز من بياناته الحالية."}
+                  لا يوجد عنوان كافٍ لعرض موقع المركز على الخريطة.
                 </p>
-
-                <span>
-                  {address}
-                </span>
               </div>
             )}
 
@@ -1781,122 +1452,13 @@ const styles = `
     overflow: hidden;
   }
 
-  .blood-center-map {
+  .google-map-frame {
     width: 100%;
     height: 100%;
 
-    z-index: 1;
-
-    font-family:
-      "Tajawal",
-      Arial,
-      sans-serif;
-  }
-
-  .blood-center-map .leaflet-control-zoom {
-    border: 0;
-
-    box-shadow:
-      0 4px 14px
-      rgba(30, 80, 78, 0.12);
-  }
-
-  .blood-center-map
-    .leaflet-control-zoom
-    a {
-    color:
-      #245b5d;
+    display: block;
 
     border: 0;
-
-    font-weight: 900;
-  }
-
-  .blood-center-map
-    .leaflet-control-attribution {
-    font-size: 8px;
-
-    background:
-      rgba(255, 255, 255, 0.88);
-
-    border-radius:
-      7px 0 0 0;
-
-    padding:
-      2px 5px;
-  }
-
-  .blood-center-marker-wrapper {
-    background: transparent;
-
-    border: 0;
-  }
-
-  .blood-center-marker {
-    width: 54px;
-    height: 64px;
-
-    position: relative;
-
-    display: flex;
-    align-items: flex-start;
-    justify-content: center;
-
-    filter:
-      drop-shadow(
-        0 6px 8px
-        rgba(10, 90, 80, 0.24)
-      );
-  }
-
-  .blood-center-marker::after {
-    content: "";
-
-    position: absolute;
-
-    bottom: 1px;
-    left: 50%;
-
-    width: 22px;
-    height: 22px;
-
-    transform:
-      translateX(-50%)
-      rotate(45deg);
-
-    border-radius:
-      5px;
-
-    background:
-      #078876;
-
-    z-index: 0;
-  }
-
-  .blood-center-marker-heart {
-    width: 50px;
-    height: 50px;
-
-    position: relative;
-
-    z-index: 2;
-
-    border-radius: 50%;
-
-    background:
-      linear-gradient(
-        135deg,
-        #0aa88f,
-        #078876
-      );
-
-    display: flex;
-    align-items: center;
-    justify-content: center;
-
-    box-shadow:
-      0 5px 14px
-      rgba(10, 168, 143, 0.28);
   }
 
   .map-floating-label {
@@ -1966,103 +1528,6 @@ const styles = `
     overflow-wrap: anywhere;
   }
 
-  .map-popup {
-    min-width: 150px;
-
-    display: flex;
-    flex-direction: column;
-
-    gap: 4px;
-
-    font-family:
-      "Tajawal",
-      Arial,
-      sans-serif;
-
-    text-align: right;
-  }
-
-  .map-popup strong {
-    color:
-      #245b5d;
-
-    font-size: 12px;
-    font-weight: 900;
-  }
-
-  .map-popup span {
-    color:
-      #6b7c79;
-
-    font-size: 10px;
-
-    line-height: 1.5;
-  }
-
-  /* ================= MAP LOADING ================= */
-
-  .map-loading {
-    min-height: 220px;
-
-    padding:
-      24px 20px;
-
-    background:
-      linear-gradient(
-        145deg,
-        #e9f2f0,
-        #eff6f4
-      );
-
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-
-    text-align: center;
-  }
-
-  .map-loading-spinner {
-    width: 38px;
-    height: 38px;
-
-    border:
-      3px solid
-      #cce5df;
-
-    border-top-color:
-      var(--primary);
-
-    border-radius: 50%;
-
-    animation:
-      bloodCenterSpin
-      0.8s linear infinite;
-  }
-
-  .map-loading h3 {
-    margin:
-      12px 0 5px;
-
-    color:
-      var(--text-main);
-
-    font-size: 13px;
-    font-weight: 900;
-  }
-
-  .map-loading p {
-    margin: 0;
-
-    color:
-      var(--text-muted);
-
-    font-size: 10px;
-    font-weight: 600;
-  }
-
-  /* ================= MAP UNAVAILABLE ================= */
-
   .map-unavailable {
     min-height: 220px;
 
@@ -2078,6 +1543,7 @@ const styles = `
 
     display: flex;
     flex-direction: column;
+
     align-items: center;
     justify-content: center;
 
@@ -2130,21 +1596,6 @@ const styles = `
     line-height: 1.7;
 
     font-weight: 600;
-  }
-
-  .map-unavailable > span {
-    max-width: 360px;
-
-    color:
-      var(--text-main);
-
-    font-size: 9px;
-
-    line-height: 1.6;
-
-    font-weight: 800;
-
-    overflow-wrap: anywhere;
   }
 
   .directions-button {
