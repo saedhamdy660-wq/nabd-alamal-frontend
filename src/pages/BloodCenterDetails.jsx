@@ -1,12 +1,12 @@
 import React, {
-useEffect,
-useMemo,
-useState,
+  useEffect,
+  useMemo,
+  useState,
 } from "react";
 
 import {
-useNavigate,
-useParams,
+  useNavigate,
+  useParams,
 } from "react-router-dom";
 
 import { api } from "../api.js";
@@ -14,1920 +14,1854 @@ import { api } from "../api.js";
 /* ================= HELPERS ================= */
 
 function getCenterName(center) {
-return (
-center?.name ||
-center?.title ||
-center?.centerName ||
-center?.bloodCenterName ||
-"مركز الدم"
-);
+  return (
+    center?.name ||
+    center?.title ||
+    center?.centerName ||
+    center?.bloodCenterName ||
+    "مركز الدم"
+  );
 }
 
 function getCenterType(center) {
-return (
-center?.type ||
-center?.centerType ||
-"مركز دم"
-);
+  return (
+    center?.type ||
+    center?.centerType ||
+    "مركز دم"
+  );
 }
 
 function getCenterGovernorate(center) {
-return (
-center?.governorate ||
-center?.province ||
-center?.region ||
-""
-);
+  return (
+    center?.governorate ||
+    center?.province ||
+    center?.region ||
+    ""
+  );
 }
 
 function getCenterCity(center) {
-return (
-center?.city ||
-center?.area ||
-""
-);
+  return (
+    center?.city ||
+    center?.area ||
+    ""
+  );
 }
 
 function getCenterAddress(center) {
-return (
-center?.address ||
-center?.location ||
-center?.fullAddress ||
-"العنوان غير متوفر حاليًا"
-);
+  return (
+    center?.address ||
+    center?.location ||
+    center?.fullAddress ||
+    "العنوان غير متوفر حاليًا"
+  );
 }
 
 function getCenterPhone(center) {
-return (
-center?.phone ||
-center?.phoneNumber ||
-center?.telephone ||
-""
-);
+  return (
+    center?.phone ||
+    center?.phoneNumber ||
+    center?.telephone ||
+    ""
+  );
 }
 
 function getCenterHours(center) {
-return (
-center?.workingHours ||
-center?.hours ||
-center?.openingHours ||
-""
-);
+  return (
+    center?.workingHours ||
+    center?.hours ||
+    center?.openingHours ||
+    ""
+  );
 }
 
 function getCenterDistance(center) {
-const value =
-center?.distanceKm ??
-center?.distance ??
-null;
+  const value =
+    center?.distanceKm ??
+    center?.distance ??
+    null;
 
-if (
-value === null ||
-value === undefined ||
-value === ""
-) {
-return null;
-}
+  if (
+    value === null ||
+    value === undefined ||
+    value === ""
+  ) {
+    return null;
+  }
 
-const number = Number(value);
+  const number = Number(value);
 
-if (!Number.isFinite(number)) {
-return null;
-}
+  if (!Number.isFinite(number)) {
+    return null;
+  }
 
-return number;
+  return number;
 }
 
 function getCenterServices(center) {
-if (!Array.isArray(center?.services)) {
-return [];
-}
+  if (!Array.isArray(center?.services)) {
+    return [];
+  }
 
-return center.services.filter(Boolean);
+  return center.services.filter(Boolean);
 }
 
 /*
-لو فيه إحداثيات حقيقية من الـ backend نستخدمها.
-غير كده هنستخدم Google Maps بالعنوان.
+  لو فيه إحداثيات حقيقية من الـ backend نستخدمها.
+  غير كده هنستخدم Google Maps بالعنوان.
 */
 function getCenterCoordinates(center) {
-const lat = Number(
-center?.lat ??
-center?.latitude
-);
+  const lat = Number(
+    center?.lat ??
+      center?.latitude
+  );
 
-const lng = Number(
-center?.lng ??
-center?.longitude
-);
+  const lng = Number(
+    center?.lng ??
+      center?.longitude
+  );
 
-if (
-!Number.isFinite(lat) ||
-!Number.isFinite(lng)
-) {
-return null;
-}
+  if (
+    !Number.isFinite(lat) ||
+    !Number.isFinite(lng)
+  ) {
+    return null;
+  }
 
-if (
-lat < -90 ||
-lat > 90 ||
-lng < -180 ||
-lng > 180
-) {
-return null;
-}
+  if (
+    lat < -90 ||
+    lat > 90 ||
+    lng < -180 ||
+    lng > 180
+  ) {
+    return null;
+  }
 
-return {
-lat,
-lng,
-};
+  return {
+    lat,
+    lng,
+  };
 }
 
 /* ================= ICONS ================= */
 
 function LocationIcon({
-size = 22,
+  size = 22,
 }) {
-return (
-<svg  
-width={size}  
-height={size}  
-viewBox="0 0 24 24"  
-fill="none"  
-aria-hidden="true"  
->
-<path  
-d="M20 10.5C20 15.5 12 22 12 22C12 22 4 15.5 4 10.5C4 6.36 7.58 3 12 3C16.42 3 20 6.36 20 10.5Z"  
-stroke="currentColor"  
-strokeWidth="1.8"  
-/>
+  return (
+    <svg
+      width={size}
+      height={size}
+      viewBox="0 0 24 24"
+      fill="none"
+      aria-hidden="true"
+    >
+      <path
+        d="M20 10.5C20 15.5 12 22 12 22C12 22 4 15.5 4 10.5C4 6.36 7.58 3 12 3C16.42 3 20 6.36 20 10.5Z"
+        stroke="currentColor"
+        strokeWidth="1.8"
+      />
 
-<circle  
-    cx="12"  
-    cy="10.5"  
-    r="2.5"  
-    stroke="currentColor"  
-    strokeWidth="1.8"  
-  />  
-</svg>
-
-);
+      <circle
+        cx="12"
+        cy="10.5"
+        r="2.5"
+        stroke="currentColor"
+        strokeWidth="1.8"
+      />
+    </svg>
+  );
 }
 
 function PhoneIcon({
-size = 21,
+  size = 21,
 }) {
-return (
-<svg  
-width={size}  
-height={size}  
-viewBox="0 0 24 24"  
-fill="none"  
-aria-hidden="true"  
->
-<path  
-d="M6.7 3.5L9.1 3C9.7 2.88 10.3 3.2 10.55 3.75L12 7.1C12.2 7.55 12.08 8.08 11.7 8.4L9.9 9.9C11 12.25 12.7 14 15.05 15.1L16.6 13.3C16.92 12.92 17.45 12.8 17.9 13L21.25 14.45C21.8 14.7 22.12 15.3 22 15.9L21.5 18.3C21.35 19.02 20.72 19.55 20 19.55C11.45 19.55 4.45 12.55 4.45 4C4.45 3.28 4.98 2.65 5.7 2.5L6.7 3.5Z"  
-stroke="currentColor"  
-strokeWidth="1.7"  
-strokeLinecap="round"  
-strokeLinejoin="round"  
-/>
-</svg>
-);
+  return (
+    <svg
+      width={size}
+      height={size}
+      viewBox="0 0 24 24"
+      fill="none"
+      aria-hidden="true"
+    >
+      <path
+        d="M6.7 3.5L9.1 3C9.7 2.88 10.3 3.2 10.55 3.75L12 7.1C12.2 7.55 12.08 8.08 11.7 8.4L9.9 9.9C11 12.25 12.7 14 15.05 15.1L16.6 13.3C16.92 12.92 17.45 12.8 17.9 13L21.25 14.45C21.8 14.7 22.12 15.3 22 15.9L21.5 18.3C21.35 19.02 20.72 19.55 20 19.55C11.45 19.55 4.45 12.55 4.45 4C4.45 3.28 4.98 2.65 5.7 2.5L6.7 3.5Z"
+        stroke="currentColor"
+        strokeWidth="1.7"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+    </svg>
+  );
 }
 
 function ClockIcon({
-size = 21,
+  size = 21,
 }) {
-return (
-<svg  
-width={size}  
-height={size}  
-viewBox="0 0 24 24"  
-fill="none"  
-aria-hidden="true"  
->
-<circle  
-cx="12"  
-cy="12"  
-r="8.5"  
-stroke="currentColor"  
-strokeWidth="1.8"  
-/>
+  return (
+    <svg
+      width={size}
+      height={size}
+      viewBox="0 0 24 24"
+      fill="none"
+      aria-hidden="true"
+    >
+      <circle
+        cx="12"
+        cy="12"
+        r="8.5"
+        stroke="currentColor"
+        strokeWidth="1.8"
+      />
 
-<path  
-    d="M12 7V12L15.5 14"  
-    stroke="currentColor"  
-    strokeWidth="1.8"  
-    strokeLinecap="round"  
-    strokeLinejoin="round"  
-  />  
-</svg>
-
-);
+      <path
+        d="M12 7V12L15.5 14"
+        stroke="currentColor"
+        strokeWidth="1.8"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+    </svg>
+  );
 }
 
 function ArrowIcon({
-size = 20,
+  size = 20,
 }) {
-return (
-<svg  
-width={size}  
-height={size}  
-viewBox="0 0 24 24"  
-fill="none"  
-aria-hidden="true"  
->
-<path  
-d="M19 12H5"  
-stroke="currentColor"  
-strokeWidth="1.8"  
-strokeLinecap="round"  
-/>
+  return (
+    <svg
+      width={size}
+      height={size}
+      viewBox="0 0 24 24"
+      fill="none"
+      aria-hidden="true"
+    >
+      <path
+        d="M19 12H5"
+        stroke="currentColor"
+        strokeWidth="1.8"
+        strokeLinecap="round"
+      />
 
-<path  
-    d="M11 6L5 12L11 18"  
-    stroke="currentColor"  
-    strokeWidth="1.8"  
-    strokeLinecap="round"  
-    strokeLinejoin="round"  
-  />  
-</svg>
-
-);
+      <path
+        d="M11 6L5 12L11 18"
+        stroke="currentColor"
+        strokeWidth="1.8"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+    </svg>
+  );
 }
 
 function MapIcon({
-size = 21,
+  size = 21,
 }) {
-return (
-<svg  
-width={size}  
-height={size}  
-viewBox="0 0 24 24"  
-fill="none"  
-aria-hidden="true"  
->
-<path  
-d="M9 18L3.5 20.5V6L9 3.5L15 6L20.5 3.5V18L15 20.5L9 18Z"  
-stroke="currentColor"  
-strokeWidth="1.7"  
-strokeLinejoin="round"  
-/>
+  return (
+    <svg
+      width={size}
+      height={size}
+      viewBox="0 0 24 24"
+      fill="none"
+      aria-hidden="true"
+    >
+      <path
+        d="M9 18L3.5 20.5V6L9 3.5L15 6L20.5 3.5V18L15 20.5L9 18Z"
+        stroke="currentColor"
+        strokeWidth="1.7"
+        strokeLinejoin="round"
+      />
 
-<path  
-    d="M9 3.5V18M15 6V20.5"  
-    stroke="currentColor"  
-    strokeWidth="1.7"  
-  />  
-</svg>
-
-);
+      <path
+        d="M9 3.5V18M15 6V20.5"
+        stroke="currentColor"
+        strokeWidth="1.7"
+      />
+    </svg>
+  );
 }
 
 function CheckIcon({
-size = 18,
+  size = 18,
 }) {
-return (
-<svg  
-width={size}  
-height={size}  
-viewBox="0 0 24 24"  
-fill="none"  
-aria-hidden="true"  
->
-<circle  
-cx="12"  
-cy="12"  
-r="9"  
-fill="currentColor"  
-opacity="0.12"  
-/>
+  return (
+    <svg
+      width={size}
+      height={size}
+      viewBox="0 0 24 24"
+      fill="none"
+      aria-hidden="true"
+    >
+      <circle
+        cx="12"
+        cy="12"
+        r="9"
+        fill="currentColor"
+        opacity="0.12"
+      />
 
-<path  
-    d="M8 12.5L10.7 15L16.5 9"  
-    stroke="currentColor"  
-    strokeWidth="2"  
-    strokeLinecap="round"  
-    strokeLinejoin="round"  
-  />  
-</svg>
-
-);
+      <path
+        d="M8 12.5L10.7 15L16.5 9"
+        stroke="currentColor"
+        strokeWidth="2"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+    </svg>
+  );
 }
 
 /* ================= MAIN ================= */
 
 export default function BloodCenterDetails() {
-const { id } = useParams();
-
-const navigate = useNavigate();
-
-const [
-center,
-setCenter,
-] = useState(null);
-
-const [
-loading,
-setLoading,
-] = useState(true);
-
-const [
-error,
-setError,
-] = useState("");
-
-/* ================= LOAD CENTER ================= */
-
-useEffect(() => {
-let cancelled = false;
-
-async function loadCenter() {  
-  if (!id) {  
-    setError(  
-      "المركز غير موجود"  
-    );  
-
-    setLoading(false);  
-
-    return;  
-  }  
-
-  try {  
-    setLoading(true);  
-    setError("");  
-
-    const data =  
-      await api.getBloodCenter(id);  
-
-    if (!cancelled) {  
-      setCenter(data);  
-    }  
-  } catch (err) {  
-    console.error(  
-      "Failed to load blood center:",  
-      err  
-    );  
-
-    if (!cancelled) {  
-      setError(  
-        err?.message ||  
-          "تعذر تحميل بيانات المركز"  
-      );  
-    }  
-  } finally {  
-    if (!cancelled) {  
-      setLoading(false);  
-    }  
-  }  
-}  
-
-loadCenter();  
-
-return () => {  
-  cancelled = true;  
-};
-
-}, [id]);
-
-/* ================= DATA ================= */
-
-const name = useMemo(
-() => getCenterName(center),
-[center]
-);
-
-const type = useMemo(
-() => getCenterType(center),
-[center]
-);
-
-const governorate = useMemo(
-() =>
-getCenterGovernorate(center),
-[center]
-);
-
-const city = useMemo(
-() => getCenterCity(center),
-[center]
-);
-
-const address = useMemo(
-() => getCenterAddress(center),
-[center]
-);
-
-const phone = useMemo(
-() => getCenterPhone(center),
-[center]
-);
-
-const hours = useMemo(
-() => getCenterHours(center),
-[center]
-);
-
-const distance = useMemo(
-() => getCenterDistance(center),
-[center]
-);
-
-const services = useMemo(
-() => getCenterServices(center),
-[center]
-);
-
-const coordinates = useMemo(
-() =>
-getCenterCoordinates(center),
-[center]
-);
-
-const verified =
-center?.verified === true;
-
-/* ================= GOOGLE MAP QUERY ================= */
-
-const mapQuery = useMemo(() => {
-const parts = [
-name,
-address,
-city,
-governorate,
-"مصر",
-].filter(
-(item) =>
-item &&
-String(item).trim() &&
-item !==
-"العنوان غير متوفر حاليًا"
-);
-
-return parts.join(", ");
-
-}, [
-name,
-address,
-city,
-governorate,
-]);
-
-/*
-Google Maps Embed بدون API Key.
-
-لو عندنا coordinates:  
-نستخدمها مباشرة.  
-
-لو مفيش:  
-نستخدم اسم المركز والعنوان.
-
-*/
-const googleMapUrl = useMemo(() => {
-if (coordinates) {
-return (
-"https://www.google.com/maps" +
-?q=${coordinates.lat},${coordinates.lng} +
-"&output=embed"
-);
-}
-
-if (!mapQuery) {  
-  return "";  
-}  
-
-return (  
-  "https://www.google.com/maps" +  
-  `?q=${encodeURIComponent(mapQuery)}` +  
-  "&output=embed"  
-);
-
-}, [
-coordinates,
-mapQuery,
-]);
-
-/* ================= ACTIONS ================= */
-
-const handleCall = () => {
-if (!phone) {
-return;
-}
-
-window.location.href =  
-  `tel:${phone}`;
-
-};
-
-const handleDirections = () => {
-if (coordinates) {
-window.open(
-https://www.google.com/maps/dir/?api=1&destination=${coordinates.lat},${coordinates.lng},
-"_blank",
-"noopener,noreferrer"
-);
-
-return;  
-}  
-
-if (mapQuery) {  
-  window.open(  
-    `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(  
-      mapQuery  
-    )}`,  
-    "_blank",  
-    "noopener,noreferrer"  
-  );  
-}
-
-};
-
-/* ================= LOADING ================= */
-
-if (loading) {
-return (
-<>
-<style>
-{styles}
-</style>
-
-<div className="blood-center-page">  
-      <header className="details-header">  
-        <button  
-          type="button"  
-          className="back-button"  
-          onClick={() =>  
-            navigate(-1)  
-          }  
-          aria-label="رجوع"  
-        >  
-          <ArrowIcon size={21} />  
-        </button>  
-
-        <h1>  
-          تفاصيل المركز  
-        </h1>  
-
-        <div className="header-spacer" />  
-      </header>  
-
-      <main className="details-content">  
-        <div className="loading-card">  
-          <div className="loading-spinner" />  
-
-          <p>  
-            جاري تحميل بيانات المركز...  
-          </p>  
-        </div>  
-      </main>  
-    </div>  
-  </>  
-);
-
-}
-
-/* ================= ERROR ================= */
-
-if (
-error ||
-!center
-) {
-return (
-<>
-<style>
-{styles}
-</style>
-
-<div className="blood-center-page">  
-      <header className="details-header">  
-        <button  
-          type="button"  
-          className="back-button"  
-          onClick={() =>  
-            navigate(-1)  
-          }  
-          aria-label="رجوع"  
-        >  
-          <ArrowIcon size={21} />  
-        </button>  
-
-        <h1>  
-          تفاصيل المركز  
-        </h1>  
-
-        <div className="header-spacer" />  
-      </header>  
-
-      <main className="details-content">  
-        <div className="error-card">  
-          <div className="error-icon">  
-            !  
-          </div>  
-
-          <h2>  
-            تعذر تحميل المركز  
-          </h2>  
-
-          <p>  
-            {error ||  
-              "المركز المطلوب غير موجود حاليًا."}  
-          </p>  
-
-          <button  
-            type="button"  
-            className="primary-button"  
-            onClick={() =>  
-              navigate(-1)  
-            }  
-          >  
-            العودة للمراكز  
-          </button>  
-        </div>  
-      </main>  
-    </div>  
-  </>  
-);
-
-}
-
-return (
-<>
-<style>
-{styles}
-</style>
-
-<div  
-    className="blood-center-page"  
-    dir="rtl"  
-  >  
-    <header className="details-header">  
-      <button  
-        type="button"  
-        className="back-button"  
-        onClick={() =>  
-          navigate(-1)  
-        }  
-        aria-label="رجوع"  
-      >  
-        <ArrowIcon size={21} />  
-      </button>  
-
-      <h1>  
-        تفاصيل المركز  
-      </h1>  
-
-      <div className="header-spacer" />  
-    </header>  
-
-    <main className="details-content">  
-      {/* ================= HERO ================= */}  
-
-      <section className="center-hero">  
-        <div className="center-icon">  
-          <svg  
-            width="42"  
-            height="42"  
-            viewBox="0 0 100 100"  
-            fill="none"  
-            aria-hidden="true"  
-          >  
-            <path  
-              d="M50 88C50 88 12 63 12 35C12 19 24 9 38 9C46 9 50 15 50 15C50 15 54 9 62 9C76 9 88 19 88 35C88 63 50 88 50 88Z"  
-              fill="white"  
-            />  
-
-            <path  
-              d="M18 46H34L40 34L48 58L54 46H82"  
-              stroke="#0aa88f"  
-              strokeWidth="5"  
-              strokeLinecap="round"  
-              strokeLinejoin="round"  
-            />  
-          </svg>  
-        </div>  
-
-        <div className="center-hero-info">  
-          <div className="hero-title-row">  
-            <h2>  
-              {name}  
-            </h2>  
-
-            {verified && (  
-              <span className="verified-badge">  
-                <CheckIcon size={17} />  
-                موثق  
-              </span>  
-            )}  
-          </div>  
-
-          <span className="center-type">  
-            {type}  
-          </span>  
-
-          {(city ||  
-            governorate) && (  
-            <div className="hero-location">  
-              <LocationIcon size={16} />  
-
-              <span>  
-                {[  
-                  city,  
-                  governorate,  
-                ]  
-                  .filter(Boolean)  
-                  .join("، ")}  
-              </span>  
-            </div>  
-          )}  
-        </div>  
-      </section>  
-
-      {/* ================= DISTANCE ================= */}  
-
-      {distance !== null && (  
-        <div className="distance-badge">  
-          <LocationIcon size={17} />  
-
-          <span>  
-            يبعد عنك{" "}  
-            <strong>  
-              {distance.toFixed(1)} كم  
-            </strong>  
-          </span>  
-        </div>  
-      )}  
-
-      {/* ================= INFO ================= */}  
-
-      <section className="details-card">  
-        <h3>  
-          معلومات المركز  
-        </h3>  
-
-        <div className="info-item">  
-          <div className="info-icon">  
-            <LocationIcon size={20} />  
-          </div>  
-
-          <div className="info-text">  
-            <span>  
-              العنوان  
-            </span>  
-
-            <strong>  
-              {address}  
-            </strong>  
-          </div>  
-        </div>  
-
-        <div className="info-divider" />  
-
-        <div className="info-item">  
-          <div className="info-icon">  
-            <PhoneIcon size={20} />  
-          </div>  
-
-          <div className="info-text">  
-            <span>  
-              رقم الهاتف  
-            </span>  
-
-            {phone ? (  
-              <button  
-                type="button"  
-                className="phone-value"  
-                onClick={  
-                  handleCall  
-                }  
-              >  
-                {phone}  
-              </button>  
-            ) : (  
-              <strong>  
-                غير متوفر حاليًا  
-              </strong>  
-            )}  
-          </div>  
-        </div>  
-
-        <div className="info-divider" />  
-
-        <div className="info-item">  
-          <div className="info-icon">  
-            <ClockIcon size={20} />  
-          </div>  
-
-          <div className="info-text">  
-            <span>  
-              مواعيد العمل  
-            </span>  
-
-            <strong>  
-              {hours ||  
-                "غير متوفرة حاليًا"}  
-            </strong>  
-          </div>  
-        </div>  
-      </section>  
-
-      {/* ================= SERVICES ================= */}  
-
-      {services.length > 0 && (  
-        <section className="details-card">  
-          <h3>  
-            الخدمات المتاحة  
-          </h3>  
-
-          <div className="services-grid">  
-            {services.map(  
-              (  
-                service,  
-                index  
-              ) => (  
-                <div  
-                  className="service-item"  
-                  key={`${service}-${index}`}  
-                >  
-                  <span className="service-check">  
-                    <CheckIcon size={18} />  
-                  </span>  
-
-                  <span>  
-                    {service}  
-                  </span>  
-                </div>  
-              )  
-            )}  
-          </div>  
-        </section>  
-      )}  
-
-      {/* ================= GOOGLE MAP ================= */}  
-
-      <section className="map-card">  
-        {googleMapUrl ? (  
-          <div className="real-map-wrapper">  
-            <iframe  
-              title={`موقع ${name}`}  
-              src={googleMapUrl}  
-              className="google-map-frame"  
-              loading="lazy"  
-              allowFullScreen  
-              referrerPolicy="no-referrer-when-downgrade"  
-            />  
-
-            <div className="map-floating-label">  
-              <LocationIcon size={17} />  
-
-              <div>  
-                <strong>  
-                  موقع المركز  
-                </strong>  
-
-                <span>  
-                  {address}  
-                </span>  
-              </div>  
-            </div>  
-          </div>  
-        ) : (  
-          <div className="map-unavailable">  
-            <div className="map-unavailable-icon">  
-              <MapIcon size={30} />  
-            </div>  
-
-            <h3>  
-              العنوان غير متوفر  
-            </h3>  
-
-            <p>  
-              لا يوجد عنوان كافٍ لعرض موقع المركز على الخريطة.  
-            </p>  
-          </div>  
-        )}  
-
-        <button  
-          type="button"  
-          className="directions-button"  
-          onClick={  
-            handleDirections  
-          }  
-        >  
-          <MapIcon size={20} />  
-
-          <span>  
-            عرض الاتجاهات  
-          </span>  
-        </button>  
-      </section>  
-
-      {/* ================= CALL ================= */}  
-
-      {phone && (  
-        <button  
-          type="button"  
-          className="call-button"  
-          onClick={  
-            handleCall  
-          }  
-        >  
-          <PhoneIcon size={20} />  
-
-          <span>  
-            الاتصال بالمركز  
-          </span>  
-        </button>  
-      )}  
-    </main>  
-  </div>  
-</>
-
-);
+  const { id } = useParams();
+
+  const navigate = useNavigate();
+
+  const [
+    center,
+    setCenter,
+  ] = useState(null);
+
+  const [
+    loading,
+    setLoading,
+  ] = useState(true);
+
+  const [
+    error,
+    setError,
+  ] = useState("");
+
+  /* ================= LOAD CENTER ================= */
+
+  useEffect(() => {
+    let cancelled = false;
+
+    async function loadCenter() {
+      if (!id) {
+        setError(
+          "المركز غير موجود"
+        );
+
+        setLoading(false);
+
+        return;
+      }
+
+      try {
+        setLoading(true);
+        setError("");
+
+        const data =
+          await api.getBloodCenter(id);
+
+        if (!cancelled) {
+          setCenter(data);
+        }
+      } catch (err) {
+        console.error(
+          "Failed to load blood center:",
+          err
+        );
+
+        if (!cancelled) {
+          setError(
+            err?.message ||
+              "تعذر تحميل بيانات المركز"
+          );
+        }
+      } finally {
+        if (!cancelled) {
+          setLoading(false);
+        }
+      }
+    }
+
+    loadCenter();
+
+    return () => {
+      cancelled = true;
+    };
+  }, [id]);
+
+  /* ================= DATA ================= */
+
+  const name = useMemo(
+    () => getCenterName(center),
+    [center]
+  );
+
+  const type = useMemo(
+    () => getCenterType(center),
+    [center]
+  );
+
+  const governorate = useMemo(
+    () =>
+      getCenterGovernorate(center),
+    [center]
+  );
+
+  const city = useMemo(
+    () => getCenterCity(center),
+    [center]
+  );
+
+  const address = useMemo(
+    () => getCenterAddress(center),
+    [center]
+  );
+
+  const phone = useMemo(
+    () => getCenterPhone(center),
+    [center]
+  );
+
+  const hours = useMemo(
+    () => getCenterHours(center),
+    [center]
+  );
+
+  const distance = useMemo(
+    () => getCenterDistance(center),
+    [center]
+  );
+
+  const services = useMemo(
+    () => getCenterServices(center),
+    [center]
+  );
+
+  const coordinates = useMemo(
+    () =>
+      getCenterCoordinates(center),
+    [center]
+  );
+
+  const verified =
+    center?.verified === true;
+
+  /* ================= GOOGLE MAP QUERY ================= */
+
+  const mapQuery = useMemo(() => {
+    const parts = [
+      name,
+      address,
+      city,
+      governorate,
+      "مصر",
+    ].filter(
+      (item) =>
+        item &&
+        String(item).trim() &&
+        item !==
+          "العنوان غير متوفر حاليًا"
+    );
+
+    return parts.join(", ");
+  }, [
+    name,
+    address,
+    city,
+    governorate,
+  ]);
+
+  /*
+    Google Maps Embed بدون API Key.
+
+    لو عندنا coordinates:
+    نستخدمها مباشرة.
+
+    لو مفيش:
+    نستخدم اسم المركز والعنوان.
+  */
+  const googleMapUrl = useMemo(() => {
+    if (coordinates) {
+      return (
+        "https://www.google.com/maps" +
+        `?q=${coordinates.lat},${coordinates.lng}` +
+        "&output=embed"
+      );
+    }
+
+    if (!mapQuery) {
+      return "";
+    }
+
+    return (
+      "https://www.google.com/maps" +
+      `?q=${encodeURIComponent(mapQuery)}` +
+      "&output=embed"
+    );
+  }, [
+    coordinates,
+    mapQuery,
+  ]);
+
+  /* ================= ACTIONS ================= */
+
+  const handleCall = () => {
+    if (!phone) {
+      return;
+    }
+
+    window.location.href =
+      `tel:${phone}`;
+  };
+
+  const handleDirections = () => {
+    if (coordinates) {
+      window.open(
+        `https://www.google.com/maps/dir/?api=1&destination=${coordinates.lat},${coordinates.lng}`,
+        "_blank",
+        "noopener,noreferrer"
+      );
+
+      return;
+    }
+
+    if (mapQuery) {
+      window.open(
+        `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(
+          mapQuery
+        )}`,
+        "_blank",
+        "noopener,noreferrer"
+      );
+    }
+  };
+
+  /* ================= LOADING ================= */
+
+  if (loading) {
+    return (
+      <>
+        <style>
+          {styles}
+        </style>
+
+        <div className="blood-center-page">
+          <header className="details-header">
+            <button
+              type="button"
+              className="back-button"
+              onClick={() =>
+                navigate(-1)
+              }
+              aria-label="رجوع"
+            >
+              <ArrowIcon size={21} />
+            </button>
+
+            <h1>
+              تفاصيل المركز
+            </h1>
+
+            <div className="header-spacer" />
+          </header>
+
+          <main className="details-content">
+            <div className="loading-card">
+              <div className="loading-spinner" />
+
+              <p>
+                جاري تحميل بيانات المركز...
+              </p>
+            </div>
+          </main>
+        </div>
+      </>
+    );
+  }
+
+  /* ================= ERROR ================= */
+
+  if (
+    error ||
+    !center
+  ) {
+    return (
+      <>
+        <style>
+          {styles}
+        </style>
+
+        <div className="blood-center-page">
+          <header className="details-header">
+            <button
+              type="button"
+              className="back-button"
+              onClick={() =>
+                navigate(-1)
+              }
+              aria-label="رجوع"
+            >
+              <ArrowIcon size={21} />
+            </button>
+
+            <h1>
+              تفاصيل المركز
+            </h1>
+
+            <div className="header-spacer" />
+          </header>
+
+          <main className="details-content">
+            <div className="error-card">
+              <div className="error-icon">
+                !
+              </div>
+
+              <h2>
+                تعذر تحميل المركز
+              </h2>
+
+              <p>
+                {error ||
+                  "المركز المطلوب غير موجود حاليًا."}
+              </p>
+
+              <button
+                type="button"
+                className="primary-button"
+                onClick={() =>
+                  navigate(-1)
+                }
+              >
+                العودة للمراكز
+              </button>
+            </div>
+          </main>
+        </div>
+      </>
+    );
+  }
+
+  return (
+    <>
+      <style>
+        {styles}
+      </style>
+
+      <div
+        className="blood-center-page"
+        dir="rtl"
+      >
+        <header className="details-header">
+          <button
+            type="button"
+            className="back-button"
+            onClick={() =>
+              navigate(-1)
+            }
+            aria-label="رجوع"
+          >
+            <ArrowIcon size={21} />
+          </button>
+
+          <h1>
+            تفاصيل المركز
+          </h1>
+
+          <div className="header-spacer" />
+        </header>
+
+        <main className="details-content">
+          {/* ================= HERO ================= */}
+
+          <section className="center-hero">
+            <div className="center-icon">
+              <svg
+                width="42"
+                height="42"
+                viewBox="0 0 100 100"
+                fill="none"
+                aria-hidden="true"
+              >
+                <path
+                  d="M50 88C50 88 12 63 12 35C12 19 24 9 38 9C46 9 50 15 50 15C50 15 54 9 62 9C76 9 88 19 88 35C88 63 50 88 50 88Z"
+                  fill="white"
+                />
+
+                <path
+                  d="M18 46H34L40 34L48 58L54 46H82"
+                  stroke="#0aa88f"
+                  strokeWidth="5"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                />
+              </svg>
+            </div>
+
+            <div className="center-hero-info">
+              <div className="hero-title-row">
+                <h2>
+                  {name}
+                </h2>
+
+                {verified && (
+                  <span className="verified-badge">
+                    <CheckIcon size={17} />
+                    موثق
+                  </span>
+                )}
+              </div>
+
+              <span className="center-type">
+                {type}
+              </span>
+
+              {(city ||
+                governorate) && (
+                <div className="hero-location">
+                  <LocationIcon size={16} />
+
+                  <span>
+                    {[
+                      city,
+                      governorate,
+                    ]
+                      .filter(Boolean)
+                      .join("، ")}
+                  </span>
+                </div>
+              )}
+            </div>
+          </section>
+
+          {/* ================= DISTANCE ================= */}
+
+          {distance !== null && (
+            <div className="distance-badge">
+              <LocationIcon size={17} />
+
+              <span>
+                يبعد عنك{" "}
+                <strong>
+                  {distance.toFixed(1)} كم
+                </strong>
+              </span>
+            </div>
+          )}
+
+          {/* ================= INFO ================= */}
+
+          <section className="details-card">
+            <h3>
+              معلومات المركز
+            </h3>
+
+            <div className="info-item">
+              <div className="info-icon">
+                <LocationIcon size={20} />
+              </div>
+
+              <div className="info-text">
+                <span>
+                  العنوان
+                </span>
+
+                <strong>
+                  {address}
+                </strong>
+              </div>
+            </div>
+
+            <div className="info-divider" />
+
+            <div className="info-item">
+              <div className="info-icon">
+                <PhoneIcon size={20} />
+              </div>
+
+              <div className="info-text">
+                <span>
+                  رقم الهاتف
+                </span>
+
+                {phone ? (
+                  <button
+                    type="button"
+                    className="phone-value"
+                    onClick={
+                      handleCall
+                    }
+                  >
+                    {phone}
+                  </button>
+                ) : (
+                  <strong>
+                    غير متوفر حاليًا
+                  </strong>
+                )}
+              </div>
+            </div>
+
+            <div className="info-divider" />
+
+            <div className="info-item">
+              <div className="info-icon">
+                <ClockIcon size={20} />
+              </div>
+
+              <div className="info-text">
+                <span>
+                  مواعيد العمل
+                </span>
+
+                <strong>
+                  {hours ||
+                    "غير متوفرة حاليًا"}
+                </strong>
+              </div>
+            </div>
+          </section>
+
+          {/* ================= SERVICES ================= */}
+
+          {services.length > 0 && (
+            <section className="details-card">
+              <h3>
+                الخدمات المتاحة
+              </h3>
+
+              <div className="services-grid">
+                {services.map(
+                  (
+                    service,
+                    index
+                  ) => (
+                    <div
+                      className="service-item"
+                      key={`${service}-${index}`}
+                    >
+                      <span className="service-check">
+                        <CheckIcon size={18} />
+                      </span>
+
+                      <span>
+                        {service}
+                      </span>
+                    </div>
+                  )
+                )}
+              </div>
+            </section>
+          )}
+
+          {/* ================= GOOGLE MAP ================= */}
+
+          <section className="map-card">
+            {googleMapUrl ? (
+              <div className="real-map-wrapper">
+                <iframe
+                  title={`موقع ${name}`}
+                  src={googleMapUrl}
+                  className="google-map-frame"
+                  loading="lazy"
+                  allowFullScreen
+                  referrerPolicy="no-referrer-when-downgrade"
+                />
+
+                <div className="map-floating-label">
+                  <LocationIcon size={17} />
+
+                  <div>
+                    <strong>
+                      موقع المركز
+                    </strong>
+
+                    <span>
+                      {address}
+                    </span>
+                  </div>
+                </div>
+              </div>
+            ) : (
+              <div className="map-unavailable">
+                <div className="map-unavailable-icon">
+                  <MapIcon size={30} />
+                </div>
+
+                <h3>
+                  العنوان غير متوفر
+                </h3>
+
+                <p>
+                  لا يوجد عنوان كافٍ لعرض موقع المركز على الخريطة.
+                </p>
+              </div>
+            )}
+
+            <button
+              type="button"
+              className="directions-button"
+              onClick={
+                handleDirections
+              }
+            >
+              <MapIcon size={20} />
+
+              <span>
+                عرض الاتجاهات
+              </span>
+            </button>
+          </section>
+
+          {/* ================= CALL ================= */}
+
+          {phone && (
+            <button
+              type="button"
+              className="call-button"
+              onClick={
+                handleCall
+              }
+            >
+              <PhoneIcon size={20} />
+
+              <span>
+                الاتصال بالمركز
+              </span>
+            </button>
+          )}
+        </main>
+      </div>
+    </>
+  );
 }
 
 /* ================= STYLES ================= */
 
 const styles = `
+  * {
+    box-sizing: border-box;
+  }
 
-{
-box-sizing: border-box;
-}
+  html,
+  body,
+  #root {
+    min-height: 100%;
+  }
+
+  html {
+    background: #edf4f2;
+  }
 
+  body {
+    margin: 0;
 
-html,
-body,
-#root {
-min-height: 100%;
-}
+    background:
+      linear-gradient(
+        180deg,
+        #e8f1ef 0%,
+        #edf4f2 38%,
+        #f1f6f5 72%,
+        #f4f8f7 100%
+      );
+  }
 
-html {
-background: #edf4f2;
-}
+  .blood-center-page {
+    --primary: #0aa88f;
+    --primary-dark: #078876;
+    --primary-light: #e6f7f4;
 
-body {
-margin: 0;
+    --text-dark: #17332e;
+    --text-main: #245b5d;
+    --text-muted: #6b7c79;
 
-background:  
-  linear-gradient(  
-    180deg,  
-    #e8f1ef 0%,  
-    #edf4f2 38%,  
-    #f1f6f5 72%,  
-    #f4f8f7 100%  
-  );
+    --bg: #edf4f2;
+    --card: #ffffff;
 
-}
+    min-height: 100vh;
 
-.blood-center-page {
---primary: #0aa88f;
---primary-dark: #078876;
---primary-light: #e6f7f4;
+    background:
+      linear-gradient(
+        180deg,
+        #e8f1ef 0%,
+        #edf4f2 28%,
+        #eff5f4 55%,
+        #f2f7f6 78%,
+        #f5f9f8 100%
+      );
 
---text-dark: #17332e;  
---text-main: #245b5d;  
---text-muted: #6b7c79;  
+    color:
+      var(--text-dark);
 
---bg: #edf4f2;  
---card: #ffffff;  
+    font-family:
+      "Tajawal",
+      Arial,
+      sans-serif;
+  }
 
-min-height: 100vh;  
+  /* ================= HEADER ================= */
 
-background:  
-  linear-gradient(  
-    180deg,  
-    #e8f1ef 0%,  
-    #edf4f2 28%,  
-    #eff5f4 55%,  
-    #f2f7f6 78%,  
-    #f5f9f8 100%  
-  );  
+  .details-header {
+    min-height: 68px;
 
-color:  
-  var(--text-dark);  
+    padding:
+      12px 18px;
 
-font-family:  
-  "Tajawal",  
-  Arial,  
-  sans-serif;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
 
-}
+    gap: 12px;
 
-/* ================= HEADER ================= */
+    background:
+      rgba(235, 244, 242, 0.96);
 
-.details-header {
-min-height: 68px;
+    border-bottom:
+      1px solid
+      rgba(10, 168, 143, 0.12);
 
-padding:  
-  12px 18px;  
+    position: sticky;
+    top: 0;
+    z-index: 20;
 
-display: flex;  
-align-items: center;  
-justify-content: space-between;  
+    backdrop-filter:
+      blur(14px);
 
-gap: 12px;  
+    -webkit-backdrop-filter:
+      blur(14px);
 
-background:  
-  rgba(235, 244, 242, 0.96);  
+    box-shadow:
+      0 4px 18px
+      rgba(35, 102, 99, 0.05);
+  }
 
-border-bottom:  
-  1px solid  
-  rgba(10, 168, 143, 0.12);  
+  .details-header h1 {
+    margin: 0;
 
-position: sticky;  
-top: 0;  
-z-index: 20;  
+    flex: 1;
 
-backdrop-filter:  
-  blur(14px);  
+    text-align: center;
 
--webkit-backdrop-filter:  
-  blur(14px);  
+    font-size: 17px;
+    font-weight: 900;
 
-box-shadow:  
-  0 4px 18px  
-  rgba(35, 102, 99, 0.05);
+    color:
+      var(--text-dark);
+  }
 
-}
+  .header-spacer {
+    width: 40px;
 
-.details-header h1 {
-margin: 0;
+    flex-shrink: 0;
+  }
 
-flex: 1;  
+  .back-button {
+    width: 40px;
+    height: 40px;
 
-text-align: center;  
+    border: 0;
 
-font-size: 17px;  
-font-weight: 900;  
+    border-radius: 13px;
 
-color:  
-  var(--text-dark);
+    background:
+      rgba(255, 255, 255, 0.82);
 
-}
+    color:
+      var(--primary);
 
-.header-spacer {
-width: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 
-flex-shrink: 0;
+    cursor: pointer;
 
-}
+    transition:
+      0.2s ease;
 
-.back-button {
-width: 40px;
-height: 40px;
+    box-shadow:
+      0 4px 12px
+      rgba(35, 102, 99, 0.06);
+  }
 
-border: 0;  
+  .back-button:hover {
+    background:
+      white;
+  }
 
-border-radius: 13px;  
+  /* ================= CONTENT ================= */
 
-background:  
-  rgba(255, 255, 255, 0.82);  
+  .details-content {
+    width:
+      min(100%, 680px);
 
-color:  
-  var(--primary);  
+    margin:
+      0 auto;
 
-display: flex;  
-align-items: center;  
-justify-content: center;  
+    padding:
+      18px 16px 34px;
+  }
 
-cursor: pointer;  
+  /* ================= HERO ================= */
 
-transition:  
-  0.2s ease;  
+  .center-hero {
+    display: flex;
+    align-items: center;
 
-box-shadow:  
-  0 4px 12px  
-  rgba(35, 102, 99, 0.06);
+    gap: 14px;
 
-}
+    padding: 20px;
 
-.back-button:hover {
-background:
-white;
-}
+    border-radius: 25px;
 
-/* ================= CONTENT ================= */
+    background:
+      linear-gradient(
+        135deg,
+        var(--primary) 0%,
+        var(--primary-dark) 100%
+      );
 
-.details-content {
-width:
-min(100%, 680px);
+    box-shadow:
+      0 14px 32px
+      rgba(10, 168, 143, 0.17);
+  }
 
-margin:  
-  0 auto;  
+  .center-icon {
+    width: 72px;
+    height: 72px;
 
-padding:  
-  18px 16px 34px;
+    flex-shrink: 0;
 
-}
+    border-radius: 22px;
 
-/* ================= HERO ================= */
+    background:
+      rgba(255, 255, 255, 0.17);
 
-.center-hero {
-display: flex;
-align-items: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
 
-gap: 14px;  
+  .center-hero-info {
+    min-width: 0;
 
-padding: 20px;  
+    flex: 1;
+  }
 
-border-radius: 25px;  
+  .hero-title-row {
+    display: flex;
+    align-items: flex-start;
 
-background:  
-  linear-gradient(  
-    135deg,  
-    var(--primary) 0%,  
-    var(--primary-dark) 100%  
-  );  
+    flex-wrap: wrap;
 
-box-shadow:  
-  0 14px 32px  
-  rgba(10, 168, 143, 0.17);
+    gap: 7px;
+  }
 
-}
+  .center-hero h2 {
+    margin: 0;
 
-.center-icon {
-width: 72px;
-height: 72px;
+    color: white;
 
-flex-shrink: 0;  
+    font-size: 18px;
+    line-height: 1.55;
 
-border-radius: 22px;  
+    font-weight: 900;
 
-background:  
-  rgba(255, 255, 255, 0.17);  
+    overflow-wrap: anywhere;
+  }
 
-display: flex;  
-align-items: center;  
-justify-content: center;
+  .verified-badge {
+    display: inline-flex;
+    align-items: center;
 
-}
+    gap: 3px;
 
-.center-hero-info {
-min-width: 0;
+    padding:
+      4px 7px;
 
-flex: 1;
+    border-radius: 10px;
 
-}
+    background:
+      rgba(255, 255, 255, 0.18);
 
-.hero-title-row {
-display: flex;
-align-items: flex-start;
+    color: white;
 
-flex-wrap: wrap;  
+    font-size: 10px;
+    font-weight: 800;
 
-gap: 7px;
+    white-space: nowrap;
+  }
 
-}
+  .center-type {
+    display: block;
 
-.center-hero h2 {
-margin: 0;
+    margin-top: 4px;
 
-color: white;  
+    color:
+      rgba(255, 255, 255, 0.88);
 
-font-size: 18px;  
-line-height: 1.55;  
+    font-size: 12px;
+    font-weight: 700;
+  }
 
-font-weight: 900;  
+  .hero-location {
+    margin-top: 8px;
 
-overflow-wrap: anywhere;
+    display: flex;
+    align-items: center;
 
-}
+    gap: 5px;
 
-.verified-badge {
-display: inline-flex;
-align-items: center;
+    color:
+      rgba(255, 255, 255, 0.9);
 
-gap: 3px;  
+    font-size: 11px;
+    font-weight: 700;
+  }
 
-padding:  
-  4px 7px;  
+  /* ================= DISTANCE ================= */
 
-border-radius: 10px;  
+  .distance-badge {
+    margin:
+      12px 0;
 
-background:  
-  rgba(255, 255, 255, 0.18);  
+    padding:
+      11px 14px;
 
-color: white;  
+    display: flex;
+    align-items: center;
 
-font-size: 10px;  
-font-weight: 800;  
+    gap: 7px;
 
-white-space: nowrap;
+    border-radius: 15px;
 
-}
+    background:
+      #e8f2f0;
 
-.center-type {
-display: block;
+    color:
+      var(--primary-dark);
 
-margin-top: 4px;  
+    font-size: 12px;
+    font-weight: 700;
 
-color:  
-  rgba(255, 255, 255, 0.88);  
+    border:
+      1px solid
+      rgba(10, 168, 143, 0.08);
+  }
 
-font-size: 12px;  
-font-weight: 700;
+  .distance-badge strong {
+    font-weight: 900;
+  }
 
-}
+  /* ================= INFO CARDS ================= */
 
-.hero-location {
-margin-top: 8px;
+  .details-card {
+    margin-top: 13px;
 
-display: flex;  
-align-items: center;  
+    padding: 18px;
 
-gap: 5px;  
+    border-radius: 22px;
 
-color:  
-  rgba(255, 255, 255, 0.9);  
+    background:
+      var(--card);
 
-font-size: 11px;  
-font-weight: 700;
+    border:
+      1px solid
+      rgba(10, 168, 143, 0.09);
 
-}
+    box-shadow:
+      0 9px 26px
+      rgba(35, 102, 99, 0.07);
+  }
 
-/* ================= DISTANCE ================= */
+  .details-card h3 {
+    margin:
+      0 0 15px;
 
-.distance-badge {
-margin:
-12px 0;
+    color:
+      var(--text-main);
 
-padding:  
-  11px 14px;  
+    font-size: 14px;
+    font-weight: 900;
+  }
 
-display: flex;  
-align-items: center;  
+  .info-item {
+    display: flex;
+    align-items: flex-start;
 
-gap: 7px;  
+    gap: 11px;
+  }
 
-border-radius: 15px;  
+  .info-icon {
+    width: 38px;
+    height: 38px;
 
-background:  
-  #e8f2f0;  
+    flex-shrink: 0;
 
-color:  
-  var(--primary-dark);  
+    border-radius: 12px;
 
-font-size: 12px;  
-font-weight: 700;  
+    background:
+      var(--primary-light);
 
-border:  
-  1px solid  
-  rgba(10, 168, 143, 0.08);
+    color:
+      var(--primary);
 
-}
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
 
-.distance-badge strong {
-font-weight: 900;
-}
+  .info-text {
+    min-width: 0;
 
-/* ================= INFO CARDS ================= */
+    flex: 1;
 
-.details-card {
-margin-top: 13px;
+    display: flex;
+    flex-direction: column;
 
-padding: 18px;  
+    gap: 4px;
+  }
 
-border-radius: 22px;  
+  .info-text span {
+    color:
+      var(--text-muted);
 
-background:  
-  var(--card);  
+    font-size: 10px;
+    font-weight: 700;
+  }
 
-border:  
-  1px solid  
-  rgba(10, 168, 143, 0.09);  
+  .info-text strong,
+  .phone-value {
+    margin: 0;
+    padding: 0;
 
-box-shadow:  
-  0 9px 26px  
-  rgba(35, 102, 99, 0.07);
+    border: 0;
 
-}
+    background: transparent;
 
-.details-card h3 {
-margin:
-0 0 15px;
+    color:
+      var(--text-main);
 
-color:  
-  var(--text-main);  
+    font-family: inherit;
 
-font-size: 14px;  
-font-weight: 900;
+    font-size: 12px;
 
-}
+    line-height: 1.6;
 
-.info-item {
-display: flex;
-align-items: flex-start;
+    font-weight: 800;
 
-gap: 11px;
+    text-align: right;
 
-}
+    overflow-wrap: anywhere;
+  }
 
-.info-icon {
-width: 38px;
-height: 38px;
+  .phone-value {
+    color:
+      var(--primary-dark);
 
-flex-shrink: 0;  
+    cursor: pointer;
 
-border-radius: 12px;  
+    text-decoration: none;
+  }
 
-background:  
-  var(--primary-light);  
+  .info-divider {
+    height: 1px;
 
-color:  
-  var(--primary);  
+    margin:
+      13px 0;
 
-display: flex;  
-align-items: center;  
-justify-content: center;
+    background:
+      #e5eeec;
+  }
 
-}
+  /* ================= SERVICES ================= */
 
-.info-text {
-min-width: 0;
+  .services-grid {
+    display: grid;
 
-flex: 1;  
+    grid-template-columns:
+      repeat(
+        2,
+        minmax(0, 1fr)
+      );
 
-display: flex;  
-flex-direction: column;  
+    gap: 9px;
+  }
 
-gap: 4px;
+  .service-item {
+    min-height: 44px;
 
-}
+    padding:
+      9px 10px;
 
-.info-text span {
-color:
-var(--text-muted);
+    display: flex;
+    align-items: center;
 
-font-size: 10px;  
-font-weight: 700;
+    gap: 6px;
 
-}
+    border-radius: 13px;
 
-.info-text strong,
-.phone-value {
-margin: 0;
-padding: 0;
+    background:
+      #edf5f3;
 
-border: 0;  
+    color:
+      #315f60;
 
-background: transparent;  
+    font-size: 11px;
+    font-weight: 800;
 
-color:  
-  var(--text-main);  
+    line-height: 1.4;
 
-font-family: inherit;  
+    border:
+      1px solid
+      rgba(10, 168, 143, 0.05);
+  }
 
-font-size: 12px;  
+  .service-check {
+    color:
+      var(--primary);
 
-line-height: 1.6;  
+    display: flex;
+    align-items: center;
+    justify-content: center;
 
-font-weight: 800;  
+    flex-shrink: 0;
+  }
 
-text-align: right;  
+  /* ================= MAP ================= */
 
-overflow-wrap: anywhere;
+  .map-card {
+    margin-top: 13px;
 
-}
+    overflow: hidden;
 
-.phone-value {
-color:
-var(--primary-dark);
+    border-radius: 22px;
 
-cursor: pointer;  
+    background:
+      var(--card);
 
-text-decoration: none;
+    border:
+      1px solid
+      rgba(10, 168, 143, 0.09);
 
-}
+    box-shadow:
+      0 9px 26px
+      rgba(35, 102, 99, 0.07);
+  }
 
-.info-divider {
-height: 1px;
+  .real-map-wrapper {
+    height: 270px;
 
-margin:  
-  13px 0;  
+    position: relative;
 
-background:  
-  #e5eeec;
+    overflow: hidden;
+  }
 
-}
+  .google-map-frame {
+    width: 100%;
+    height: 100%;
 
-/* ================= SERVICES ================= */
+    display: block;
 
-.services-grid {
-display: grid;
+    border: 0;
+  }
 
-grid-template-columns:  
-  repeat(  
-    2,  
-    minmax(0, 1fr)  
-  );  
+  .map-floating-label {
+    position: absolute;
 
-gap: 9px;
+    right: 12px;
+    top: 12px;
 
-}
+    max-width:
+      calc(100% - 24px);
 
-.service-item {
-min-height: 44px;
+    z-index: 5;
 
-padding:  
-  9px 10px;  
+    padding:
+      9px 11px;
 
-display: flex;  
-align-items: center;  
+    display: flex;
+    align-items: flex-start;
 
-gap: 6px;  
+    gap: 7px;
 
-border-radius: 13px;  
+    border-radius: 13px;
 
-background:  
-  #edf5f3;  
+    background:
+      rgba(255, 255, 255, 0.94);
 
-color:  
-  #315f60;  
+    box-shadow:
+      0 6px 18px
+      rgba(30, 80, 78, 0.10);
 
-font-size: 11px;  
-font-weight: 800;  
+    color:
+      var(--primary);
 
-line-height: 1.4;  
+    backdrop-filter:
+      blur(8px);
 
-border:  
-  1px solid  
-  rgba(10, 168, 143, 0.05);
+    -webkit-backdrop-filter:
+      blur(8px);
+  }
 
-}
+  .map-floating-label > div {
+    min-width: 0;
 
-.service-check {
-color:
-var(--primary);
+    display: flex;
+    flex-direction: column;
 
-display: flex;  
-align-items: center;  
-justify-content: center;  
+    gap: 2px;
+  }
 
-flex-shrink: 0;
+  .map-floating-label strong {
+    color:
+      var(--text-main);
 
-}
+    font-size: 10px;
+    font-weight: 900;
+  }
 
-/* ================= MAP ================= */
+  .map-floating-label span {
+    color:
+      var(--text-muted);
 
-.map-card {
-margin-top: 13px;
+    font-size: 8px;
+    font-weight: 700;
 
-overflow: hidden;  
+    line-height: 1.4;
 
-border-radius: 22px;  
+    overflow-wrap: anywhere;
+  }
 
-background:  
-  var(--card);  
+  .map-unavailable {
+    min-height: 220px;
 
-border:  
-  1px solid  
-  rgba(10, 168, 143, 0.09);  
+    padding:
+      24px 20px;
 
-box-shadow:  
-  0 9px 26px  
-  rgba(35, 102, 99, 0.07);
+    background:
+      linear-gradient(
+        145deg,
+        #e9f2f0,
+        #eff6f4
+      );
 
-}
+    display: flex;
+    flex-direction: column;
 
-.real-map-wrapper {
-height: 270px;
+    align-items: center;
+    justify-content: center;
 
-position: relative;  
+    text-align: center;
+  }
 
-overflow: hidden;
+  .map-unavailable-icon {
+    width: 58px;
+    height: 58px;
 
-}
+    border-radius: 18px;
 
-.google-map-frame {
-width: 100%;
-height: 100%;
+    background:
+      white;
 
-display: block;  
+    color:
+      var(--primary);
 
-border: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 
-}
+    box-shadow:
+      0 7px 20px
+      rgba(35, 102, 99, 0.08);
+  }
 
-.map-floating-label {
-position: absolute;
+  .map-unavailable h3 {
+    margin:
+      11px 0 5px;
 
-right: 12px;  
-top: 12px;  
+    color:
+      var(--text-main);
 
-max-width:  
-  calc(100% - 24px);  
+    font-size: 13px;
+    font-weight: 900;
+  }
 
-z-index: 5;  
+  .map-unavailable p {
+    max-width: 360px;
 
-padding:  
-  9px 11px;  
+    margin:
+      0 0 7px;
 
-display: flex;  
-align-items: flex-start;  
+    color:
+      var(--text-muted);
 
-gap: 7px;  
+    font-size: 10px;
 
-border-radius: 13px;  
+    line-height: 1.7;
 
-background:  
-  rgba(255, 255, 255, 0.94);  
+    font-weight: 600;
+  }
 
-box-shadow:  
-  0 6px 18px  
-  rgba(30, 80, 78, 0.10);  
+  .directions-button {
+    width: 100%;
 
-color:  
-  var(--primary);  
+    min-height: 50px;
 
-backdrop-filter:  
-  blur(8px);  
+    border: 0;
 
--webkit-backdrop-filter:  
-  blur(8px);
+    background:
+      #ffffff;
 
-}
+    color:
+      var(--primary-dark);
 
-.map-floating-label > div {
-min-width: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 
-display: flex;  
-flex-direction: column;  
+    gap: 7px;
 
-gap: 2px;
+    font-family: inherit;
 
-}
+    font-size: 12px;
+    font-weight: 900;
 
-.map-floating-label strong {
-color:
-var(--text-main);
+    cursor: pointer;
 
-font-size: 10px;  
-font-weight: 900;
+    transition:
+      background 0.18s ease;
+  }
 
-}
+  .directions-button:hover {
+    background:
+      var(--primary-light);
+  }
 
-.map-floating-label span {
-color:
-var(--text-muted);
+  /* ================= CALL BUTTON ================= */
 
-font-size: 8px;  
-font-weight: 700;  
+  .call-button {
+    width: 100%;
 
-line-height: 1.4;  
+    min-height: 52px;
 
-overflow-wrap: anywhere;
+    margin-top: 13px;
 
-}
+    border: 0;
 
-.map-unavailable {
-min-height: 220px;
+    border-radius: 17px;
 
-padding:  
-  24px 20px;  
+    background:
+      linear-gradient(
+        135deg,
+        var(--primary),
+        var(--primary-dark)
+      );
 
-background:  
-  linear-gradient(  
-    145deg,  
-    #e9f2f0,  
-    #eff6f4  
-  );  
+    color: white;
 
-display: flex;  
-flex-direction: column;  
+    display: flex;
+    align-items: center;
+    justify-content: center;
 
-align-items: center;  
-justify-content: center;  
+    gap: 7px;
 
-text-align: center;
+    font-family: inherit;
 
-}
+    font-size: 13px;
+    font-weight: 900;
 
-.map-unavailable-icon {
-width: 58px;
-height: 58px;
+    cursor: pointer;
 
-border-radius: 18px;  
+    box-shadow:
+      0 10px 22px
+      rgba(10, 168, 143, 0.17);
 
-background:  
-  white;  
+    transition:
+      transform 0.18s ease,
+      box-shadow 0.18s ease;
+  }
 
-color:  
-  var(--primary);  
+  .call-button:active {
+    transform:
+      scale(0.985);
 
-display: flex;  
-align-items: center;  
-justify-content: center;  
+    box-shadow:
+      0 7px 16px
+      rgba(10, 168, 143, 0.12);
+  }
 
-box-shadow:  
-  0 7px 20px  
-  rgba(35, 102, 99, 0.08);
+  /* ================= STATES ================= */
 
-}
+  .loading-card,
+  .error-card {
+    min-height: 280px;
 
-.map-unavailable h3 {
-margin:
-11px 0 5px;
+    padding:
+      30px 20px;
 
-color:  
-  var(--text-main);  
+    border-radius: 24px;
 
-font-size: 13px;  
-font-weight: 900;
+    background:
+      var(--card);
 
-}
+    display: flex;
+    align-items: center;
+    justify-content: center;
 
-.map-unavailable p {
-max-width: 360px;
+    flex-direction: column;
 
-margin:  
-  0 0 7px;  
+    text-align: center;
 
-color:  
-  var(--text-muted);  
+    box-shadow:
+      0 9px 28px
+      rgba(35, 102, 99, 0.08);
+  }
 
-font-size: 10px;  
+  .loading-spinner {
+    width: 38px;
+    height: 38px;
 
-line-height: 1.7;  
+    border:
+      3px solid
+      #cce5df;
 
-font-weight: 600;
+    border-top-color:
+      var(--primary);
 
-}
+    border-radius: 50%;
 
-.directions-button {
-width: 100%;
+    animation:
+      bloodCenterSpin
+      0.8s linear infinite;
+  }
 
-min-height: 50px;  
+  .loading-card p {
+    margin:
+      14px 0 0;
 
-border: 0;  
+    color:
+      var(--text-muted);
 
-background:  
-  #ffffff;  
+    font-size: 12px;
+    font-weight: 700;
+  }
 
-color:  
-  var(--primary-dark);  
+  .error-icon {
+    width: 48px;
+    height: 48px;
 
-display: flex;  
-align-items: center;  
-justify-content: center;  
+    border-radius: 50%;
 
-gap: 7px;  
+    background:
+      #fff0f0;
 
-font-family: inherit;  
+    color:
+      #d85858;
 
-font-size: 12px;  
-font-weight: 900;  
+    display: flex;
+    align-items: center;
+    justify-content: center;
 
-cursor: pointer;  
+    font-size: 22px;
+    font-weight: 900;
+  }
 
-transition:  
-  background 0.18s ease;
+  .error-card h2 {
+    margin:
+      13px 0 6px;
 
-}
+    color:
+      var(--text-main);
 
-.directions-button:hover {
-background:
-var(--primary-light);
-}
+    font-size: 16px;
+    font-weight: 900;
+  }
 
-/* ================= CALL BUTTON ================= */
+  .error-card p {
+    max-width: 340px;
 
-.call-button {
-width: 100%;
+    margin:
+      0 0 18px;
 
-min-height: 52px;  
+    color:
+      var(--text-muted);
 
-margin-top: 13px;  
+    font-size: 11px;
 
-border: 0;  
+    line-height: 1.7;
 
-border-radius: 17px;  
+    font-weight: 600;
+  }
 
-background:  
-  linear-gradient(  
-    135deg,  
-    var(--primary),  
-    var(--primary-dark)  
-  );  
+  .primary-button {
+    min-height: 44px;
 
-color: white;  
+    padding:
+      0 18px;
 
-display: flex;  
-align-items: center;  
-justify-content: center;  
+    border: 0;
 
-gap: 7px;  
+    border-radius: 13px;
 
-font-family: inherit;  
+    background:
+      linear-gradient(
+        135deg,
+        var(--primary),
+        var(--primary-dark)
+      );
 
-font-size: 13px;  
-font-weight: 900;  
+    color: white;
 
-cursor: pointer;  
+    font-family: inherit;
 
-box-shadow:  
-  0 10px 22px  
-  rgba(10, 168, 143, 0.17);  
+    font-size: 11px;
+    font-weight: 900;
 
-transition:  
-  transform 0.18s ease,  
-  box-shadow 0.18s ease;
+    cursor: pointer;
+  }
 
-}
+  /* ================= ANIMATION ================= */
 
-.call-button:active {
-transform:
-scale(0.985);
+  @keyframes bloodCenterSpin {
+    to {
+      transform:
+        rotate(360deg);
+    }
+  }
 
-box-shadow:  
-  0 7px 16px  
-  rgba(10, 168, 143, 0.12);
+  /* ================= MOBILE ================= */
 
-}
+  @media (max-width: 430px) {
+    .details-content {
+      padding-left: 13px;
+      padding-right: 13px;
+    }
 
-/* ================= STATES ================= */
+    .center-hero {
+      padding: 16px;
+      border-radius: 22px;
+    }
 
-.loading-card,
-.error-card {
-min-height: 280px;
+    .center-icon {
+      width: 62px;
+      height: 62px;
+      border-radius: 19px;
+    }
 
-padding:  
-  30px 20px;  
+    .center-hero h2 {
+      font-size: 16px;
+    }
 
-border-radius: 24px;  
+    .services-grid {
+      grid-template-columns: 1fr;
+    }
 
-background:  
-  var(--card);  
+    .real-map-wrapper {
+      height: 245px;
+    }
 
-display: flex;  
-align-items: center;  
-justify-content: center;  
+    .map-floating-label {
+      right: 9px;
+      top: 9px;
 
-flex-direction: column;  
-
-text-align: center;  
-
-box-shadow:  
-  0 9px 28px  
-  rgba(35, 102, 99, 0.08);
-
-}
-
-.loading-spinner {
-width: 38px;
-height: 38px;
-
-border:  
-  3px solid  
-  #cce5df;  
-
-border-top-color:  
-  var(--primary);  
-
-border-radius: 50%;  
-
-animation:  
-  bloodCenterSpin  
-  0.8s linear infinite;
-
-}
-
-.loading-card p {
-margin:
-14px 0 0;
-
-color:  
-  var(--text-muted);  
-
-font-size: 12px;  
-font-weight: 700;
-
-}
-
-.error-icon {
-width: 48px;
-height: 48px;
-
-border-radius: 50%;  
-
-background:  
-  #fff0f0;  
-
-color:  
-  #d85858;  
-
-display: flex;  
-align-items: center;  
-justify-content: center;  
-
-font-size: 22px;  
-font-weight: 900;
-
-}
-
-.error-card h2 {
-margin:
-13px 0 6px;
-
-color:  
-  var(--text-main);  
-
-font-size: 16px;  
-font-weight: 900;
-
-}
-
-.error-card p {
-max-width: 340px;
-
-margin:  
-  0 0 18px;  
-
-color:  
-  var(--text-muted);  
-
-font-size: 11px;  
-
-line-height: 1.7;  
-
-font-weight: 600;
-
-}
-
-.primary-button {
-min-height: 44px;
-
-padding:  
-  0 18px;  
-
-border: 0;  
-
-border-radius: 13px;  
-
-background:  
-  linear-gradient(  
-    135deg,  
-    var(--primary),  
-    var(--primary-dark)  
-  );  
-
-color: white;  
-
-font-family: inherit;  
-
-font-size: 11px;  
-font-weight: 900;  
-
-cursor: pointer;
-
-}
-
-/* ================= ANIMATION ================= */
-
-@keyframes bloodCenterSpin {
-to {
-transform:
-rotate(360deg);
-}
-}
-
-/* ================= MOBILE ================= */
-
-@media (max-width: 430px) {
-.details-content {
-padding-left: 13px;
-padding-right: 13px;
-}
-
-.center-hero {  
-  padding: 16px;  
-  border-radius: 22px;  
-}  
-
-.center-icon {  
-  width: 62px;  
-  height: 62px;  
-  border-radius: 19px;  
-}  
-
-.center-hero h2 {  
-  font-size: 16px;  
-}  
-
-.services-grid {  
-  grid-template-columns: 1fr;  
-}  
-
-.real-map-wrapper {  
-  height: 245px;  
-}  
-
-.map-floating-label {  
-  right: 9px;  
-  top: 9px;  
-
-  max-width:  
-    calc(100% - 18px);  
-}
-
-}
+      max-width:
+        calc(100% - 18px);
+    }
+  }
 `;
