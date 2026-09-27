@@ -13,6 +13,7 @@ import LocationPermission from "./pages/LocationPermission.jsx";
 
 import Home from "./pages/Home.jsx";
 import BloodDonation from "./pages/BloodDonation.jsx";
+import BloodCenters from "./pages/BloodCenters.jsx";
 import MedicineExchange from "./pages/MedicineExchange.jsx";
 import MedicineDetail from "./pages/MedicineDetail.jsx";
 import PharmacyPartner from "./pages/PharmacyPartner.jsx";
@@ -215,6 +216,13 @@ export default function App() {
         <Route
           path="/blood"
           element={<BloodDonation />}
+        />
+
+        {/* ================= BLOOD CENTERS ================= */}
+
+        <Route
+          path="/blood-centers"
+          element={<BloodCenters />}
         />
 
         <Route
