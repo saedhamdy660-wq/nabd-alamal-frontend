@@ -747,6 +747,17 @@ const styles = `
     box-sizing: border-box;
   }
 
+  html,
+  body,
+  #root {
+    min-height: 100%;
+  }
+
+  body {
+    margin: 0;
+    background: #fafdfc;
+  }
+
   .blood-center-page {
     --primary: #0aa88f;
     --primary-dark: #078876;
@@ -760,17 +771,13 @@ const styles = `
     min-height: 100vh;
 
     background:
-      radial-gradient(
-        circle at 8% 5%,
-        rgba(10, 168, 143, 0.055),
-        transparent 25%
-      ),
-      radial-gradient(
-        circle at 92% 20%,
-        rgba(7, 136, 118, 0.045),
-        transparent 25%
-      ),
-      var(--bg);
+      linear-gradient(
+        180deg,
+        #e6f7f4 0%,
+        #f2faf8 18%,
+        #fafdfc 42%,
+        #fafdfc 100%
+      );
 
     color: var(--text-dark);
 
@@ -794,18 +801,18 @@ const styles = `
     gap: 12px;
 
     background:
-      rgba(250, 253, 252, 0.96);
+      rgba(230, 247, 244, 0.94);
 
     border-bottom:
       1px solid
-      rgba(10, 168, 143, 0.08);
+      rgba(10, 168, 143, 0.12);
 
     position: sticky;
     top: 0;
     z-index: 20;
 
-    backdrop-filter: blur(12px);
-    -webkit-backdrop-filter: blur(12px);
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
   }
 
   .details-header h1 {
@@ -818,7 +825,7 @@ const styles = `
     font-size: 17px;
     font-weight: 900;
 
-    color: var(--text-main);
+    color: var(--text-dark);
   }
 
   .header-spacer {
@@ -834,7 +841,7 @@ const styles = `
     border-radius: 13px;
 
     background:
-      var(--primary-light);
+      rgba(255, 255, 255, 0.72);
 
     color:
       var(--primary);
@@ -847,11 +854,15 @@ const styles = `
 
     transition:
       0.2s ease;
+
+    box-shadow:
+      0 4px 12px
+      rgba(10, 168, 143, 0.08);
   }
 
   .back-button:hover {
     background:
-      #d9f2ed;
+      white;
   }
 
   /* ================= CONTENT ================= */
@@ -880,8 +891,8 @@ const styles = `
     background:
       linear-gradient(
         135deg,
-        var(--primary),
-        var(--primary-dark)
+        var(--primary) 0%,
+        var(--primary-dark) 100%
       );
 
     box-shadow:
@@ -1128,7 +1139,7 @@ const styles = `
       13px 0;
 
     background:
-      #edf4f3;
+      #e6f1ef;
   }
 
   /* ================= SERVICES ================= */
@@ -1156,7 +1167,7 @@ const styles = `
     border-radius: 13px;
 
     background:
-      #f4fbfa;
+      #f0faf8;
 
     color:
       #315f60;
