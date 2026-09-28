@@ -10624,3 +10624,745 @@ body.nabd-dark .clear-search {
   visibility: visible !important;
   white-space: nowrap !important;
 }
+/* =====================================================
+   BLOOD CENTER DETAILS - DARK MODE
+   ===================================================== */
+
+html.dark .blood-center-page,
+body.dark .blood-center-page,
+[data-theme="dark"] .blood-center-page {
+  --primary: #12bfa3;
+  --primary-dark: #0fa88f;
+  --primary-light: #123d38;
+
+  --text-dark: #f1f8f6;
+  --text-main: #d9eeea;
+  --text-muted: #9ab5b0;
+
+  --bg: #071a17;
+  --card: #102824;
+
+  background:
+    radial-gradient(
+      circle at 5% 4%,
+      rgba(18, 191, 163, 0.08),
+      transparent 27%
+    ),
+    radial-gradient(
+      circle at 96% 35%,
+      rgba(18, 191, 163, 0.06),
+      transparent 29%
+    ),
+    linear-gradient(
+      160deg,
+      #071a17 0%,
+      #081f1b 48%,
+      #0a2420 100%
+    );
+
+  color: var(--text-dark);
+}
+
+
+/* =====================================================
+   PAGE BACKGROUND
+   ===================================================== */
+
+html.dark,
+body.dark,
+[data-theme="dark"] {
+  background: #071a17;
+}
+
+html.dark body,
+body.dark,
+[data-theme="dark"] {
+  background:
+    linear-gradient(
+      160deg,
+      #071a17 0%,
+      #081f1b 50%,
+      #0a2420 100%
+    );
+}
+
+
+/* =====================================================
+   HEADER
+   ===================================================== */
+
+html.dark .details-header,
+body.dark .details-header,
+[data-theme="dark"] .details-header {
+  background: rgba(8, 29, 25, 0.96);
+
+  border-bottom-color:
+    rgba(18, 191, 163, 0.12);
+
+  box-shadow:
+    0 4px 18px
+    rgba(0, 0, 0, 0.20);
+}
+
+html.dark .details-header h1,
+body.dark .details-header h1,
+[data-theme="dark"] .details-header h1 {
+  color: #f1f8f6;
+}
+
+html.dark .back-button,
+body.dark .back-button,
+[data-theme="dark"] .back-button {
+  background: #102824;
+
+  color: #12bfa3;
+
+  box-shadow:
+    0 5px 14px
+    rgba(0, 0, 0, 0.20);
+}
+
+
+/* =====================================================
+   HERO
+   ===================================================== */
+
+html.dark .center-hero,
+body.dark .center-hero,
+[data-theme="dark"] .center-hero {
+  background:
+    linear-gradient(
+      135deg,
+      #087e6c 0%,
+      #086f61 52%,
+      #07594e 100%
+    );
+
+  box-shadow:
+    0 14px 32px
+    rgba(0, 0, 0, 0.25);
+}
+
+html.dark .center-icon,
+body.dark .center-icon,
+[data-theme="dark"] .center-icon {
+  background:
+    rgba(255, 255, 255, 0.10);
+
+  border-color:
+    rgba(255, 255, 255, 0.18);
+}
+
+html.dark .center-hero h2,
+body.dark .center-hero h2,
+[data-theme="dark"] .center-hero h2 {
+  color: #ffffff;
+}
+
+html.dark .center-type,
+body.dark .center-type,
+[data-theme="dark"] .center-type {
+  color: #e6f7f4;
+}
+
+html.dark .hero-location,
+body.dark .hero-location,
+[data-theme="dark"] .hero-location {
+  color: #e0f4f0;
+}
+
+html.dark .verified-badge,
+body.dark .verified-badge,
+[data-theme="dark"] .verified-badge {
+  background:
+    rgba(255, 255, 255, 0.11);
+
+  border-color:
+    rgba(255, 255, 255, 0.14);
+}
+
+
+/* =====================================================
+   DISTANCE
+   ===================================================== */
+
+html.dark .distance-badge,
+body.dark .distance-badge,
+[data-theme="dark"] .distance-badge {
+  background: #102e29;
+
+  border-color:
+    rgba(18, 191, 163, 0.12);
+
+  color: #12bfa3;
+}
+
+
+/* =====================================================
+   CENTER ACTIONS
+   ===================================================== */
+
+html.dark .center-actions-card,
+body.dark .center-actions-card,
+[data-theme="dark"] .center-actions-card {
+  background: #102824;
+
+  border-color:
+    rgba(18, 191, 163, 0.10);
+
+  box-shadow:
+    0 10px 28px
+    rgba(0, 0, 0, 0.22);
+}
+
+html.dark .actions-title-icon,
+body.dark .actions-title-icon,
+[data-theme="dark"] .actions-title-icon {
+  background: #123d38;
+
+  color: #12bfa3;
+}
+
+html.dark .center-actions-title h3,
+body.dark .center-actions-title h3,
+[data-theme="dark"] .center-actions-title h3 {
+  color: #d9eeea;
+}
+
+html.dark .center-actions-title p,
+body.dark .center-actions-title p,
+[data-theme="dark"] .center-actions-title p {
+  color: #91aaa5;
+}
+
+
+/* =====================================================
+   ACTION BUTTONS
+   ===================================================== */
+
+html.dark .donate-action,
+body.dark .donate-action,
+[data-theme="dark"] .donate-action {
+  background: #102f2a;
+
+  border-color:
+    rgba(18, 191, 163, 0.12);
+}
+
+html.dark .request-action,
+body.dark .request-action,
+[data-theme="dark"] .request-action {
+  background: #102b28;
+
+  border-color:
+    rgba(18, 191, 163, 0.12);
+}
+
+html.dark .center-action-icon,
+body.dark .center-action-icon,
+[data-theme="dark"] .center-action-icon {
+  background:
+    rgba(18, 191, 163, 0.12);
+
+  color: #12bfa3;
+}
+
+html.dark .center-action-text strong,
+body.dark .center-action-text strong,
+[data-theme="dark"] .center-action-text strong {
+  color: #d9eeea;
+}
+
+html.dark .center-action-text span,
+body.dark .center-action-text span,
+[data-theme="dark"] .center-action-text span {
+  color: #8fa9a4;
+}
+
+html.dark .center-action-button > svg,
+body.dark .center-action-button > svg,
+[data-theme="dark"] .center-action-button > svg {
+  color: #12bfa3;
+}
+
+
+/* =====================================================
+   DETAILS CARDS
+   ===================================================== */
+
+html.dark .details-card,
+body.dark .details-card,
+[data-theme="dark"] .details-card {
+  background: #102824;
+
+  border-color:
+    rgba(18, 191, 163, 0.10);
+
+  box-shadow:
+    0 10px 28px
+    rgba(0, 0, 0, 0.22);
+}
+
+html.dark .details-card h3,
+body.dark .details-card h3,
+[data-theme="dark"] .details-card h3 {
+  color: #d9eeea;
+}
+
+
+/* =====================================================
+   INFO
+   ===================================================== */
+
+html.dark .info-icon,
+body.dark .info-icon,
+[data-theme="dark"] .info-icon {
+  background: #123d38;
+
+  color: #12bfa3;
+}
+
+html.dark .info-text span,
+body.dark .info-text span,
+[data-theme="dark"] .info-text span {
+  color: #91aaa5;
+}
+
+html.dark .info-text strong,
+body.dark .info-text strong,
+[data-theme="dark"] .info-text strong {
+  color: #d9eeea;
+}
+
+html.dark .phone-value,
+body.dark .phone-value,
+[data-theme="dark"] .phone-value {
+  color: #12bfa3;
+}
+
+html.dark .info-divider,
+body.dark .info-divider,
+[data-theme="dark"] .info-divider {
+  background: #21423d;
+}
+
+
+/* =====================================================
+   SERVICES
+   ===================================================== */
+
+html.dark .service-item,
+body.dark .service-item,
+[data-theme="dark"] .service-item {
+  background: #102f2a;
+
+  border-color:
+    rgba(18, 191, 163, 0.09);
+
+  color: #c9e2dd;
+}
+
+html.dark .service-check,
+body.dark .service-check,
+[data-theme="dark"] .service-check {
+  color: #12bfa3;
+}
+
+
+/* =====================================================
+   MAP CARD
+   ===================================================== */
+
+html.dark .map-card,
+body.dark .map-card,
+[data-theme="dark"] .map-card {
+  background: #102824;
+
+  border-color:
+    rgba(18, 191, 163, 0.10);
+
+  box-shadow:
+    0 10px 28px
+    rgba(0, 0, 0, 0.24);
+}
+
+html.dark .real-map-wrapper,
+body.dark .real-map-wrapper,
+[data-theme="dark"] .real-map-wrapper {
+  background: #102824;
+}
+
+
+/* =====================================================
+   MAP LABEL
+   ===================================================== */
+
+html.dark .map-floating-label,
+body.dark .map-floating-label,
+[data-theme="dark"] .map-floating-label {
+  background: #102f2a;
+
+  border-color:
+    rgba(18, 191, 163, 0.12);
+
+  color: #12bfa3;
+}
+
+html.dark .map-floating-label strong,
+body.dark .map-floating-label strong,
+[data-theme="dark"] .map-floating-label strong {
+  color: #d9eeea;
+}
+
+html.dark .map-floating-label span,
+body.dark .map-floating-label span,
+[data-theme="dark"] .map-floating-label span {
+  color: #91aaa5;
+}
+
+
+/* =====================================================
+   LEAFLET POPUP
+   ===================================================== */
+
+html.dark .leaflet-popup-content-wrapper,
+body.dark .leaflet-popup-content-wrapper,
+[data-theme="dark"] .leaflet-popup-content-wrapper {
+  background: #102824;
+
+  color: #d9eeea;
+}
+
+html.dark .leaflet-popup-tip,
+body.dark .leaflet-popup-tip,
+[data-theme="dark"] .leaflet-popup-tip {
+  background: #102824;
+}
+
+html.dark .leaflet-popup-content-custom strong,
+body.dark .leaflet-popup-content-custom strong,
+[data-theme="dark"] .leaflet-popup-content-custom strong {
+  color: #d9eeea;
+}
+
+html.dark .leaflet-popup-content-custom span,
+body.dark .leaflet-popup-content-custom span,
+[data-theme="dark"] .leaflet-popup-content-custom span {
+  color: #91aaa5;
+}
+
+
+/* =====================================================
+   DIRECTIONS BUTTON
+   ===================================================== */
+
+html.dark .directions-button,
+body.dark .directions-button,
+[data-theme="dark"] .directions-button {
+  background: #102824;
+
+  color: #12bfa3;
+}
+
+html.dark .directions-button:active,
+body.dark .directions-button:active,
+[data-theme="dark"] .directions-button:active {
+  background: #123d38;
+}
+
+
+/* =====================================================
+   CALL BUTTON
+   ===================================================== */
+
+html.dark .call-button,
+body.dark .call-button,
+[data-theme="dark"] .call-button {
+  background:
+    linear-gradient(
+      135deg,
+      #087e6c,
+      #075f53
+    );
+
+  box-shadow:
+    0 10px 23px
+    rgba(0, 0, 0, 0.25);
+}
+
+
+/* =====================================================
+   MODAL OVERLAY
+   ===================================================== */
+
+html.dark .form-overlay,
+body.dark .form-overlay,
+[data-theme="dark"] .form-overlay {
+  background:
+    rgba(0, 0, 0, 0.62);
+}
+
+
+/* =====================================================
+   MODAL
+   ===================================================== */
+
+html.dark .service-modal,
+body.dark .service-modal,
+[data-theme="dark"] .service-modal {
+  background: #102824;
+
+  box-shadow:
+    0 22px 60px
+    rgba(0, 0, 0, 0.50);
+}
+
+html.dark .modal-header,
+body.dark .modal-header,
+[data-theme="dark"] .modal-header {
+  background:
+    rgba(16, 40, 36, 0.97);
+
+  border-bottom-color:
+    #21423d;
+}
+
+html.dark .modal-title-icon,
+body.dark .modal-title-icon,
+[data-theme="dark"] .modal-title-icon {
+  background: #123d38;
+
+  color: #12bfa3;
+}
+
+html.dark .blood-modal-icon,
+body.dark .blood-modal-icon,
+[data-theme="dark"] .blood-modal-icon {
+  background: #123d38;
+}
+
+html.dark .modal-title-wrap h2,
+body.dark .modal-title-wrap h2,
+[data-theme="dark"] .modal-title-wrap h2 {
+  color: #d9eeea;
+}
+
+html.dark .modal-title-wrap p,
+body.dark .modal-title-wrap p,
+[data-theme="dark"] .modal-title-wrap p {
+  color: #91aaa5;
+}
+
+html.dark .modal-close,
+body.dark .modal-close,
+[data-theme="dark"] .modal-close {
+  background: #17332f;
+
+  color: #9ab5b0;
+}
+
+
+/* =====================================================
+   FORM
+   ===================================================== */
+
+html.dark .form-field label,
+body.dark .form-field label,
+[data-theme="dark"] .form-field label {
+  color: #d9eeea;
+}
+
+html.dark .form-field label span,
+body.dark .form-field label span,
+[data-theme="dark"] .form-field label span {
+  color: #91aaa5;
+}
+
+html.dark .form-field input,
+html.dark .form-field select,
+html.dark .form-field textarea,
+body.dark .form-field input,
+body.dark .form-field select,
+body.dark .form-field textarea,
+[data-theme="dark"] .form-field input,
+[data-theme="dark"] .form-field select,
+[data-theme="dark"] .form-field textarea {
+  background: #0b211e;
+
+  border-color: #28504a;
+
+  color: #d9eeea;
+}
+
+html.dark .form-field input::placeholder,
+html.dark .form-field textarea::placeholder,
+body.dark .form-field input::placeholder,
+body.dark .form-field textarea::placeholder,
+[data-theme="dark"] .form-field input::placeholder,
+[data-theme="dark"] .form-field textarea::placeholder {
+  color: #708b85;
+}
+
+html.dark .form-field input:focus,
+html.dark .form-field select:focus,
+html.dark .form-field textarea:focus,
+body.dark .form-field input:focus,
+body.dark .form-field select:focus,
+body.dark .form-field textarea:focus,
+[data-theme="dark"] .form-field input:focus,
+[data-theme="dark"] .form-field select:focus,
+[data-theme="dark"] .form-field textarea:focus {
+  background: #102824;
+
+  border-color: #12bfa3;
+
+  box-shadow:
+    0 0 0 3px
+    rgba(18, 191, 163, 0.12);
+}
+
+
+/* =====================================================
+   REQUEST NOTE
+   ===================================================== */
+
+html.dark .request-note,
+body.dark .request-note,
+[data-theme="dark"] .request-note {
+  background: #102f2a;
+
+  border-color: #28504a;
+}
+
+html.dark .request-note > span,
+body.dark .request-note > span,
+[data-theme="dark"] .request-note > span {
+  background: #173f39;
+
+  color: #12bfa3;
+}
+
+html.dark .request-note p,
+body.dark .request-note p,
+[data-theme="dark"] .request-note p {
+  color: #91aaa5;
+}
+
+
+/* =====================================================
+   SUCCESS / ERROR
+   ===================================================== */
+
+html.dark .form-success,
+body.dark .form-success,
+[data-theme="dark"] .form-success {
+  background: #10332e;
+
+  border-color: #20564d;
+
+  color: #48d5bc;
+}
+
+html.dark .form-error,
+body.dark .form-error,
+[data-theme="dark"] .form-error {
+  background: #351f21;
+
+  border-color: #61383b;
+
+  color: #ff9696;
+}
+
+
+/* =====================================================
+   LOADING / ERROR PAGE
+   ===================================================== */
+
+html.dark .loading-card,
+html.dark .error-card,
+body.dark .loading-card,
+body.dark .error-card,
+[data-theme="dark"] .loading-card,
+[data-theme="dark"] .error-card {
+  background: #102824;
+
+  box-shadow:
+    0 10px 28px
+    rgba(0, 0, 0, 0.25);
+}
+
+html.dark .loading-card p,
+body.dark .loading-card p,
+[data-theme="dark"] .loading-card p {
+  color: #91aaa5;
+}
+
+html.dark .loading-spinner,
+body.dark .loading-spinner,
+[data-theme="dark"] .loading-spinner {
+  border-color: #21423d;
+
+  border-top-color: #12bfa3;
+}
+
+html.dark .error-card h2,
+body.dark .error-card h2,
+[data-theme="dark"] .error-card h2 {
+  color: #d9eeea;
+}
+
+html.dark .error-card p,
+body.dark .error-card p,
+[data-theme="dark"] .error-card p {
+  color: #91aaa5;
+}
+
+html.dark .error-icon,
+body.dark .error-icon,
+[data-theme="dark"] .error-icon {
+  background: #351f21;
+
+  color: #ff8585;
+}
+
+
+/* =====================================================
+   SELECT OPTION
+   ===================================================== */
+
+html.dark .form-field select option,
+body.dark .form-field select option,
+[data-theme="dark"] .form-field select option {
+  background: #102824;
+
+  color: #d9eeea;
+}
+
+
+/* =====================================================
+   LEAFLET CONTROL DARK FIX
+   ===================================================== */
+
+html.dark .leaflet-control-zoom a,
+body.dark .leaflet-control-zoom a,
+[data-theme="dark"] .leaflet-control-zoom a {
+  background: #102824;
+
+  color: #d9eeea;
+
+  border-color: #28504a;
+}
+
+html.dark .leaflet-control-attribution,
+body.dark .leaflet-control-attribution,
+[data-theme="dark"] .leaflet-control-attribution {
+  background: rgba(16, 40, 36, 0.85);
+
+  color: #91aaa5;
+}
+
+html.dark .leaflet-control-attribution a,
+body.dark .leaflet-control-attribution a,
+[data-theme="dark"] .leaflet-control-attribution a {
+  color: #12bfa3;
+}
