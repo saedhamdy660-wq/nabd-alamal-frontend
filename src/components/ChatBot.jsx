@@ -4,6 +4,8 @@ import React, {
   useState,
 } from "react";
 
+import api from "../api.js";
+
 function ChatHeartLogo({
   size = 32,
 }) {
@@ -106,117 +108,36 @@ export default function ChatBot() {
   ]);
 
   const addBotMessage = (text) => {
-    setIsTyping(true);
-
-    setTimeout(() => {
-      setMessages((prev) => [
-        ...prev,
-        {
-          id:
-            Date.now() +
-            Math.random(),
-          sender: "bot",
-          text,
-        },
-      ]);
-
-      setIsTyping(false);
-    }, 700);
+    setMessages((prev) => [
+      ...prev,
+      {
+        id:
+          Date.now() +
+          Math.random(),
+        sender: "bot",
+        text,
+      },
+    ]);
   };
 
-  const getBotReply = (text) => {
-    const value = text
-      .trim()
-      .toLowerCase();
+  // ============================================================
+  // Send Message To Backend
+  // ============================================================
 
-    if (
-      value.includes("دم") ||
-      value.includes("blood")
-    ) {
-      return (
-        "أكيد\n" +
-        "أقدر أساعدك في طلب الدم أو البحث عن متبرع أو الوصول لأقرب مركز دم.\n\n" +
-        "اختار من الأزرار الموجودة بالأسفل أو اكتب لي بالضبط أنت محتاج إيه."
-      );
-    }
-
-    if (
-      value.includes("متبرع") ||
-      value.includes("متبرعين")
-    ) {
-      return (
-        "تمام 🩸\n" +
-        "نقدر نبحث عن متبرعين مناسبين حسب فصيلة الدم والموقع.\n\n" +
-        "في النسخة القادمة هنربط الجزء ده مباشرة ببيانات المتبرعين الحقيقية."
-      );
-    }
-
-    if (
-      value.includes("مركز") ||
-      value.includes("بنك")
-    ) {
-      return (
-        "🏥 عندنا قسم مراكز وبنوك الدم.\n\n" +
-        "تقدر تشوف المراكز، موقعها على الخريطة، مواعيد العمل، وبيانات التواصل."
-      );
-    }
-
-    if (
-      value.includes("دواء") ||
-      value.includes("أدوية")
-    ) {
-      return (
-        "💊 أقدر أساعدك في الوصول لقسم الأدوية والبحث عن الدواء المطلوب.\n\n" +
-        "اكتب اسم الدواء اللي بتدور عليه."
-      );
-    }
-
-    if (
-      value.includes("موعد") ||
-      value.includes("تبرع")
-    ) {
-      return (
-        "📅 تقدر تحجز موعد للتبرع من صفحة مركز الدم.\n\n" +
-        "وتقدر تختار نوع التبرع والموعد المناسب."
-      );
-    }
-
-    if (
-      value.includes("السلام عليكم") ||
-      value.includes("السلام")
-    ) {
-      return "وعليكم السلام ورحمة الله وبركاته";
-    }
-
-    if (
-      value.includes("اهلا") ||
-      value.includes("أهلا") ||
-      value.includes("هاي") ||
-      value.includes("hello")
-    ) {
-      return "أهلاً بيك، إزاي أقدر أساعدك؟";
-    }
-
-    return (
-      "تمام\n" +
-      "أنا مساعد نبض الأمل.\n\n" +
-      "أقدر أساعدك في:\n" +
-      "🩸 طلب الدم\n" +
-      "🔎 البحث عن متبرع\n" +
-      "🏥 مراكز وبنوك الدم\n" +
-      "💊 الأدوية\n" +
-      "📅 حجز موعد للتبرع\n\n" +
-      "اكتبلي محتاج إيه وأنا هساعدك."
-    );
-  };
-
-  const sendMessage = (text = null) => {
+  const sendMessage = async (
+    text = null
+  ) => {
     const finalMessage =
       text !== null
-        ? text
+        ? String(text).trim()
         : message.trim();
 
-    if (!finalMessage) return;
+    if (
+      !finalMessage ||
+      isTyping
+    ) {
+      return;
+    }
 
     setMessages((prev) => [
       ...prev,
@@ -230,10 +151,47 @@ export default function ChatBot() {
     ]);
 
     setMessage("");
+    setIsTyping(true);
 
-    addBotMessage(
-      getBotReply(finalMessage)
-    );
+    try {
+      const savedUser =
+        JSON.parse(
+          localStorage.getItem(
+            "nabd_user"
+          ) || "null"
+        );
+
+      const userId =
+        savedUser?.id || "";
+
+      const response =
+        await api.sendChatMessage(
+          finalMessage,
+          userId
+        );
+
+      const reply =
+        response?.reply;
+
+      if (reply) {
+        addBotMessage(reply);
+      } else {
+        addBotMessage(
+          "حصلت مشكلة بسيطة وأنا بحاول أجهز الرد. جرب تاني."
+        );
+      }
+    } catch (error) {
+      console.error(
+        "Chat request error:",
+        error
+      );
+
+      addBotMessage(
+        "مش قادر أوصل لخدمة المساعد حاليًا. تأكد إن الاتصال بالـ Backend شغال وجرب تاني."
+      );
+    } finally {
+      setIsTyping(false);
+    }
   };
 
   const quickActions = [
@@ -396,6 +354,7 @@ export default function ChatBot() {
                       action.message
                     )
                   }
+                  disabled={isTyping}
                 >
                   <span>
                     {action.icon}
@@ -426,6 +385,7 @@ export default function ChatBot() {
               }}
               placeholder="اكتب رسالتك..."
               dir="rtl"
+              disabled={isTyping}
             />
 
             <button
@@ -435,7 +395,8 @@ export default function ChatBot() {
                 sendMessage()
               }
               disabled={
-                !message.trim()
+                !message.trim() ||
+                isTyping
               }
               aria-label="إرسال الرسالة"
             >
@@ -814,6 +775,11 @@ export default function ChatBot() {
           gap: 4px;
         }
 
+        .nabd-chatbot-quick-actions button:disabled {
+          opacity: 0.55;
+          cursor: default;
+        }
+
         .nabd-chatbot-dark
           .nabd-chatbot-quick-actions {
           border-color: rgba(
@@ -836,6 +802,11 @@ export default function ChatBot() {
             210,
             0.13
           );
+        }
+
+        .nabd-chatbot-quick-actions
+          button:hover:not(:disabled) {
+          transform: translateY(-1px);
         }
 
         .nabd-chatbot-input-area {
@@ -893,6 +864,11 @@ export default function ChatBot() {
               143,
               0.08
             );
+        }
+
+        .nabd-chatbot-input-area input:disabled {
+          opacity: 0.7;
+          cursor: default;
         }
 
         .nabd-chatbot-dark
