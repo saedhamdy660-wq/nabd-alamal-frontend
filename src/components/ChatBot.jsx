@@ -49,7 +49,7 @@ export default function ChatBot() {
       id: 1,
       sender: "bot",
       text:
-        "أهلاً بيك في نبض الأمل ❤️\nأنا مساعدك الذكي، أقدر أساعدك في طلب الدم، البحث عن متبرع، مراكز الدم، والأدوية.",
+        "أهلاً بيك في نبض الأمل\nأنا مساعدك الذكي، أقدر أساعدك في طلب الدم، البحث عن متبرع، مراكز الدم، والأدوية.",
     },
   ]);
 
@@ -134,7 +134,7 @@ export default function ChatBot() {
       value.includes("blood")
     ) {
       return (
-        "أكيد ❤️\n" +
+        "أكيد\n" +
         "أقدر أساعدك في طلب الدم أو البحث عن متبرع أو الوصول لأقرب مركز دم.\n\n" +
         "اختار من الأزرار الموجودة بالأسفل أو اكتب لي بالضبط أنت محتاج إيه."
       );
@@ -185,7 +185,7 @@ export default function ChatBot() {
       value.includes("السلام عليكم") ||
       value.includes("السلام")
     ) {
-      return "وعليكم السلام ورحمة الله وبركاته ❤️";
+      return "وعليكم السلام ورحمة الله وبركاته";
     }
 
     if (
@@ -194,11 +194,11 @@ export default function ChatBot() {
       value.includes("هاي") ||
       value.includes("hello")
     ) {
-      return "أهلاً بيك ❤️ إزاي أقدر أساعدك؟";
+      return "أهلاً بيك، إزاي أقدر أساعدك؟";
     }
 
     return (
-      "تمام ❤️\n" +
+      "تمام\n" +
       "أنا مساعد نبض الأمل.\n\n" +
       "أقدر أساعدك في:\n" +
       "🩸 طلب الدم\n" +
@@ -446,7 +446,7 @@ export default function ChatBot() {
         .nabd-chatbot-floating {
           position: fixed;
           left: 18px;
-          bottom: 86px;
+          bottom: 96px;
           width: 58px;
           height: 58px;
           padding: 0;
@@ -465,6 +465,11 @@ export default function ChatBot() {
           transition:
             transform 0.2s ease,
             box-shadow 0.2s ease;
+        }
+
+        .nabd-chatbot-dark
+          ~ * {
+          --chat-dark-mode: 1;
         }
 
         .nabd-chatbot-floating:hover {
@@ -488,7 +493,7 @@ export default function ChatBot() {
         .nabd-chatbot {
           position: fixed;
           left: 18px;
-          bottom: 86px;
+          bottom: 96px;
           width: min(
             380px,
             calc(100vw - 36px)
@@ -886,17 +891,40 @@ export default function ChatBot() {
           cursor: default;
         }
 
+        /* Dark mode for the floating chatbot button */
+        body:has(.nabd-chatbot-dark)
+          .nabd-chatbot-floating {
+          background: linear-gradient(
+            145deg,
+            #173b37 0%,
+            #102c29 48%,
+            #081b19 100%
+          );
+          border: 1px solid
+            rgba(
+              100,
+              230,
+              210,
+              0.22
+            );
+          box-shadow:
+            0 10px 28px
+            rgba(0, 0, 0, 0.45),
+            inset 0 1px 0
+            rgba(255, 255, 255, 0.06);
+        }
+
         @media (max-width: 600px) {
           .nabd-chatbot-floating {
             left: 14px;
-            bottom: 78px;
+            bottom: 88px;
             width: 54px;
             height: 54px;
           }
 
           .nabd-chatbot {
             left: 10px;
-            bottom: 74px;
+            bottom: 84px;
             width: calc(100vw - 20px);
             height: min(
               620px,
