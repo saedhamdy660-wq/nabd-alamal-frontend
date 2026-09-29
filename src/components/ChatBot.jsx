@@ -4,6 +4,34 @@ import React, {
   useState,
 } from "react";
 
+function ChatHeartLogo({
+  size = 32,
+}) {
+  return (
+    <svg
+      width={size}
+      height={size}
+      viewBox="0 0 100 100"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+    >
+      <path
+        d="M50 88C50 88 12 63 12 35C12 19 24 9 38 9C46 9 50 15 50 15C50 15 54 9 62 9C76 9 88 19 88 35C88 63 50 88 50 88Z"
+        fill="#0aa88f"
+      />
+
+      <path
+        d="M18 46H33L39 35L47 58L54 46H82"
+        stroke="white"
+        strokeWidth="4.5"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        fill="none"
+      />
+    </svg>
+  );
+}
+
 export default function ChatBot() {
   const [open, setOpen] = useState(false);
   const [message, setMessage] = useState("");
@@ -71,7 +99,11 @@ export default function ChatBot() {
     messagesEndRef.current?.scrollIntoView({
       behavior: "smooth",
     });
-  }, [messages, open, isTyping]);
+  }, [
+    messages,
+    open,
+    isTyping,
+  ]);
 
   const addBotMessage = (text) => {
     setIsTyping(true);
@@ -244,9 +276,9 @@ export default function ChatBot() {
           onClick={() => setOpen(true)}
           aria-label="فتح مساعد نبض الأمل"
         >
-          <span className="nabd-chatbot-floating-icon">
-            💬
-          </span>
+          <ChatHeartLogo
+            size={34}
+          />
 
           <span className="nabd-chatbot-floating-dot" />
         </button>
@@ -262,8 +294,11 @@ export default function ChatBot() {
         >
           <div className="nabd-chatbot-header">
             <div className="nabd-chatbot-header-info">
+
               <div className="nabd-chatbot-avatar">
-                ❤️
+                <ChatHeartLogo
+                  size={31}
+                />
               </div>
 
               <div>
@@ -280,7 +315,9 @@ export default function ChatBot() {
             <button
               type="button"
               className="nabd-chatbot-close"
-              onClick={() => setOpen(false)}
+              onClick={() =>
+                setOpen(false)
+              }
               aria-label="إغلاق الشات"
             >
               ×
@@ -412,14 +449,11 @@ export default function ChatBot() {
           bottom: 86px;
           width: 58px;
           height: 58px;
+          padding: 0;
           border: none;
           border-radius: 50%;
-          background: linear-gradient(
-            145deg,
-            #0aa88f,
-            #078876
-          );
-          color: white;
+          background: white;
+          color: #0aa88f;
           display: flex;
           align-items: center;
           justify-content: center;
@@ -438,11 +472,6 @@ export default function ChatBot() {
           box-shadow:
             0 14px 32px
             rgba(0, 0, 0, 0.28);
-        }
-
-        .nabd-chatbot-floating-icon {
-          font-size: 25px;
-          line-height: 1;
         }
 
         .nabd-chatbot-floating-dot {
@@ -548,7 +577,6 @@ export default function ChatBot() {
               255,
               0.2
             );
-          font-size: 21px;
         }
 
         .nabd-chatbot-header-info strong {
