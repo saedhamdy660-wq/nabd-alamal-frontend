@@ -61,7 +61,6 @@ export default function App() {
       return savedTheme;
     }
 
-    // Backward compatibility with the old Dark Mode key.
     return localStorage.getItem(
       "nabd_dark_mode"
     ) === "true"
@@ -98,7 +97,6 @@ export default function App() {
         normalizedTheme
       );
 
-      // The existing project dark-mode CSS uses nabd-dark.
       document.documentElement.classList.toggle(
         "nabd-dark",
         normalizedTheme === "dark"
@@ -109,7 +107,6 @@ export default function App() {
         normalizedTheme === "dark"
       );
 
-      // Keep both keys synchronized for compatibility.
       localStorage.setItem(
         "nabd_theme",
         normalizedTheme
@@ -329,7 +326,19 @@ export default function App() {
 
       {!hideNav && <Navbar />}
 
-      {!hideNav && <ChatBot />}
+      {/* الشات يظهر في كل صفحات التطبيق الداخلية،
+          بما فيها Home، حتى لو الـNavbar مخفي */}
+      {![
+        "/",
+        "/welcome",
+        "/login",
+        "/signup",
+        "/verify-phone",
+        "/verify-identity",
+        "/location-permission",
+      ].includes(location.pathname) && (
+        <ChatBot />
+      )}
 
       <style>{`
         html,
