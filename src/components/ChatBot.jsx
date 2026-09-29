@@ -272,7 +272,11 @@ export default function ChatBot() {
       {!open && (
         <button
           type="button"
-          className="nabd-chatbot-floating"
+          className={`nabd-chatbot-floating ${
+            theme === "dark"
+              ? "nabd-chatbot-floating-dark"
+              : "nabd-chatbot-floating-light"
+          }`}
           onClick={() => setOpen(true)}
           aria-label="فتح مساعد نبض الأمل"
         >
@@ -294,7 +298,6 @@ export default function ChatBot() {
         >
           <div className="nabd-chatbot-header">
             <div className="nabd-chatbot-header-info">
-
               <div className="nabd-chatbot-avatar">
                 <ChatHeartLogo
                   size={31}
@@ -450,33 +453,68 @@ export default function ChatBot() {
           width: 58px;
           height: 58px;
           padding: 0;
-          border: none;
           border-radius: 50%;
-          background: white;
-          color: #0aa88f;
           display: flex;
           align-items: center;
           justify-content: center;
           cursor: pointer;
           z-index: 9998;
+          transition:
+            transform 0.2s ease,
+            box-shadow 0.2s ease,
+            background 0.25s ease,
+            border-color 0.25s ease;
+        }
+
+        /* Light Mode */
+        .nabd-chatbot-floating-light {
+          border: none;
+          background: white;
+          color: #0aa88f;
           box-shadow:
             0 10px 28px
             rgba(0, 0, 0, 0.22);
-          transition:
-            transform 0.2s ease,
-            box-shadow 0.2s ease;
         }
 
-        .nabd-chatbot-dark
-          ~ * {
-          --chat-dark-mode: 1;
+        /* Dark Mode */
+        .nabd-chatbot-floating-dark {
+          border: 1px solid
+            rgba(
+              100,
+              230,
+              210,
+              0.22
+            );
+          background: linear-gradient(
+            145deg,
+            #173b37 0%,
+            #102c29 48%,
+            #081b19 100%
+          );
+          color: #0aa88f;
+          box-shadow:
+            0 10px 28px
+            rgba(0, 0, 0, 0.45),
+            inset 0 1px 0
+            rgba(255, 255, 255, 0.06);
         }
 
         .nabd-chatbot-floating:hover {
           transform: translateY(-3px);
+        }
+
+        .nabd-chatbot-floating-light:hover {
           box-shadow:
             0 14px 32px
             rgba(0, 0, 0, 0.28);
+        }
+
+        .nabd-chatbot-floating-dark:hover {
+          box-shadow:
+            0 14px 34px
+            rgba(0, 0, 0, 0.55),
+            inset 0 1px 0
+            rgba(255, 255, 255, 0.08);
         }
 
         .nabd-chatbot-floating-dot {
@@ -488,6 +526,11 @@ export default function ChatBot() {
           border-radius: 50%;
           background: #39d98a;
           border: 2px solid white;
+        }
+
+        .nabd-chatbot-floating-dark
+          .nabd-chatbot-floating-dot {
+          border-color: #173b37;
         }
 
         .nabd-chatbot {
@@ -889,29 +932,6 @@ export default function ChatBot() {
         .nabd-chatbot-send:disabled {
           opacity: 0.45;
           cursor: default;
-        }
-
-        /* Dark mode for the floating chatbot button */
-        body:has(.nabd-chatbot-dark)
-          .nabd-chatbot-floating {
-          background: linear-gradient(
-            145deg,
-            #173b37 0%,
-            #102c29 48%,
-            #081b19 100%
-          );
-          border: 1px solid
-            rgba(
-              100,
-              230,
-              210,
-              0.22
-            );
-          box-shadow:
-            0 10px 28px
-            rgba(0, 0, 0, 0.45),
-            inset 0 1px 0
-            rgba(255, 255, 255, 0.06);
         }
 
         @media (max-width: 600px) {
