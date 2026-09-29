@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { Routes, Route, useLocation } from "react-router-dom";
 
 import Navbar from "./components/Navbar.jsx";
+import ChatBot from "./components/ChatBot.jsx";
 
 import Splash from "./pages/Splash.jsx";
 import Welcome from "./pages/Welcome.jsx";
@@ -50,14 +51,20 @@ export default function App() {
   const location = useLocation();
 
   const [theme, setTheme] = useState(() => {
-    const savedTheme = localStorage.getItem("nabd_theme");
+    const savedTheme =
+      localStorage.getItem("nabd_theme");
 
-    if (savedTheme === "dark" || savedTheme === "light") {
+    if (
+      savedTheme === "dark" ||
+      savedTheme === "light"
+    ) {
       return savedTheme;
     }
 
     // Backward compatibility with the old Dark Mode key.
-    return localStorage.getItem("nabd_dark_mode") === "true"
+    return localStorage.getItem(
+      "nabd_dark_mode"
+    ) === "true"
       ? "dark"
       : "light";
   });
@@ -67,13 +74,17 @@ export default function App() {
       const savedTheme =
         localStorage.getItem("nabd_theme") ||
         (
-          localStorage.getItem("nabd_dark_mode") === "true"
+          localStorage.getItem(
+            "nabd_dark_mode"
+          ) === "true"
             ? "dark"
             : "light"
         );
 
       const normalizedTheme =
-        savedTheme === "dark" ? "dark" : "light";
+        savedTheme === "dark"
+          ? "dark"
+          : "light";
 
       setTheme(normalizedTheme);
 
@@ -106,7 +117,9 @@ export default function App() {
 
       localStorage.setItem(
         "nabd_dark_mode",
-        String(normalizedTheme === "dark")
+        String(
+          normalizedTheme === "dark"
+        )
       );
     };
 
@@ -136,13 +149,27 @@ export default function App() {
   }, []);
 
   const hideNav =
-    noNavRoutes.includes(location.pathname) ||
-    location.pathname.startsWith("/medicines/") ||
-    location.pathname.startsWith("/pharmacy/") ||
-    location.pathname.startsWith("/donor/") ||
-    location.pathname.startsWith("/track/") ||
-    location.pathname.startsWith("/donation-request/") ||
-    location.pathname.startsWith("/blood-centers/");
+    noNavRoutes.includes(
+      location.pathname
+    ) ||
+    location.pathname.startsWith(
+      "/medicines/"
+    ) ||
+    location.pathname.startsWith(
+      "/pharmacy/"
+    ) ||
+    location.pathname.startsWith(
+      "/donor/"
+    ) ||
+    location.pathname.startsWith(
+      "/track/"
+    ) ||
+    location.pathname.startsWith(
+      "/donation-request/"
+    ) ||
+    location.pathname.startsWith(
+      "/blood-centers/"
+    );
 
   return (
     <div
@@ -246,7 +273,9 @@ export default function App() {
 
         <Route
           path="/donation-request/:id"
-          element={<DonationRequestDetails />}
+          element={
+            <DonationRequestDetails />
+          }
         />
 
         <Route
@@ -261,7 +290,9 @@ export default function App() {
 
         <Route
           path="/notification-settings"
-          element={<NotificationSettings />}
+          element={
+            <NotificationSettings />
+          }
         />
 
         <Route
@@ -297,6 +328,8 @@ export default function App() {
       </Routes>
 
       {!hideNav && <Navbar />}
+
+      {!hideNav && <ChatBot />}
 
       <style>{`
         html,
