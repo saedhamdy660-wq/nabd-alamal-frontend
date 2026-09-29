@@ -562,6 +562,26 @@ const api = {
         }),
       }
     ),
+
+  // ============================================================
+  // Chat
+  // ============================================================
+
+  sendChatMessage: (
+    message,
+    userId = ""
+  ) =>
+    request(
+      "/chat",
+      {
+        method: "POST",
+
+        body: JSON.stringify({
+          message,
+          userId,
+        }),
+      }
+    ),
 };
 
 export default api;
