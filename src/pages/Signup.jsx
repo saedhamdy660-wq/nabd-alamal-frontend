@@ -77,6 +77,42 @@ const HeartIcon = () => (
 );
 
 /* =========================
+   Medical Icon
+========================= */
+
+const MedicalIcon = () => (
+  <svg viewBox="0 0 24 24" fill="none">
+    <path
+      d="M7 4H17C18.1 4 19 4.9 19 6V20H5V6C5 4.9 5.9 4 7 4Z"
+      stroke="currentColor"
+      strokeWidth="1.8"
+      strokeLinejoin="round"
+    />
+
+    <path
+      d="M9 4V3C9 2.45 9.45 2 10 2H14C14.55 2 15 2.45 15 3V4"
+      stroke="currentColor"
+      strokeWidth="1.8"
+      strokeLinecap="round"
+    />
+
+    <path
+      d="M12 8V15"
+      stroke="currentColor"
+      strokeWidth="1.8"
+      strokeLinecap="round"
+    />
+
+    <path
+      d="M8.5 11.5H15.5"
+      stroke="currentColor"
+      strokeWidth="1.8"
+      strokeLinecap="round"
+    />
+  </svg>
+);
+
+/* =========================
    Blood Drop Icon
 ========================= */
 
@@ -358,6 +394,8 @@ export default function Signup() {
 
   const [accountType, setAccountType] = useState("user");
 
+  const [medicalType, setMedicalType] = useState("");
+
   const [form, setForm] = useState({
     name: "",
     email: "",
@@ -400,6 +438,10 @@ export default function Signup() {
     setAccountType(type);
     setError("");
 
+    if (type !== "medical") {
+      setMedicalType("");
+    }
+
     if (type === "user") {
       setForm((prev) => ({
         ...prev,
@@ -408,6 +450,19 @@ export default function Signup() {
         chronicDisease: "",
       }));
     }
+  };
+
+  const handleMedicalTypeChange = (type) => {
+    setMedicalType(type);
+    setError("");
+  };
+
+  const getBackendAccountType = () => {
+    if (accountType !== "medical") {
+      return accountType;
+    }
+
+    return medicalType;
   };
 
   const openDatePicker = () => {
@@ -473,8 +528,16 @@ export default function Signup() {
       }
     }
 
+    if (accountType === "medical" && !medicalType) {
+      setError("من فضلك اختر نوع الجهة الطبية");
+      return;
+    }
+
     try {
       setLoading(true);
+
+      const backendAccountType =
+        getBackendAccountType();
 
       const user = await api.register({
         name: form.name.trim(),
@@ -482,7 +545,7 @@ export default function Signup() {
         phone: form.phone.trim(),
         nationalId: form.nationalId,
         password: form.password,
-        accountType,
+        accountType: backendAccountType,
 
         bloodType:
           accountType === "donor"
@@ -522,7 +585,7 @@ export default function Signup() {
             ? form.chronicDisease === "نعم"
             : false,
 
-        accountType,
+        accountType: backendAccountType,
 
         phoneVerified: false,
         identityVerified: false,
@@ -582,11 +645,6 @@ export default function Signup() {
           text-align: right !important;
         }
 
-        /*
-          الهاتف والرقم القومي:
-          الأرقام تظل طبيعية، لكن مكان النص يمين
-        */
-
         .signup-field input[dir="ltr"] {
           direction: ltr !important;
           text-align: right !important;
@@ -602,9 +660,8 @@ export default function Signup() {
           opacity: 1 !important;
         }
 
-
         /* =========================================
-           الأيقونات - نفس الشكل القديم
+           الأيقونات
         ========================================= */
 
         .signup-field-icon {
@@ -633,9 +690,8 @@ export default function Signup() {
           height: 28px !important;
         }
 
-
         /* =========================================
-           Select - الكلام ناحية اليمين
+           Select
         ========================================= */
 
         .signup-donor-select {
@@ -668,9 +724,8 @@ export default function Signup() {
           color: #555 !important;
         }
 
-
         /* =========================================
-           سهم الـ Select - نفس القديم
+           سهم الـ Select
         ========================================= */
 
         .signup-donor-chevron {
@@ -701,9 +756,8 @@ export default function Signup() {
           height: 24px !important;
         }
 
-
         /* =========================================
-           تاريخ آخر تبرع - يمين
+           تاريخ آخر تبرع
         ========================================= */
 
         .signup-date-field {
@@ -735,11 +789,6 @@ export default function Signup() {
           color: #555 !important;
         }
 
-
-        /* =========================================
-           التاريخ الحقيقي مخفي
-        ========================================= */
-
         .signup-date-field input[type="date"] {
           position: absolute !important;
 
@@ -750,9 +799,8 @@ export default function Signup() {
           pointer-events: none !important;
         }
 
-
         /* =========================================
-           العين - نفس الشكل القديم
+           العين
         ========================================= */
 
         .signup-eye {
@@ -784,17 +832,30 @@ export default function Signup() {
           height: 25px !important;
         }
 
-
         .signup-field *,
         .signup-field *::before,
         .signup-field *::after {
           box-sizing: border-box !important;
         }
 
+        /* =========================================
+           اختيار الجهة الطبية
+        ========================================= */
+
+        .signup-medical-select {
+          margin-top: 2px;
+        }
+
+        .signup-medical-title {
+          margin: 0 0 10px;
+          color: #6b7c79;
+          font-size: 14px;
+          text-align: right;
+          direction: rtl;
+        }
 
         /* =========================================
            📱 الموبايل
-           تصغير بسيط فقط
         ========================================= */
 
         @media (max-width: 480px) {
@@ -862,7 +923,6 @@ export default function Signup() {
 
       `}</style>
 
-
       {/* =========================
           Background
       ========================= */}
@@ -878,7 +938,6 @@ export default function Signup() {
         +
       </div>
 
-
       {/* =========================
           Back
       ========================= */}
@@ -890,7 +949,6 @@ export default function Signup() {
       >
         <BackIcon />
       </button>
-
 
       <main className="signup-content">
 
@@ -905,7 +963,6 @@ export default function Signup() {
         <p className="signup-subtitle">
           انضم إلى منصة نبض الأمل
         </p>
-
 
         {/* Heartbeat */}
 
@@ -931,7 +988,6 @@ export default function Signup() {
 
         </div>
 
-
         {/* Account Types */}
 
         <div className="signup-account-types">
@@ -956,7 +1012,6 @@ export default function Signup() {
             </span>
           </button>
 
-
           <button
             type="button"
             className={
@@ -977,8 +1032,27 @@ export default function Signup() {
             </span>
           </button>
 
-        </div>
+          <button
+            type="button"
+            className={
+              accountType === "medical"
+                ? "account-type active"
+                : "account-type"
+            }
+            onClick={() =>
+              handleAccountTypeChange("medical")
+            }
+          >
+            <span className="account-icon">
+              <MedicalIcon />
+            </span>
 
+            <span>
+              جهة طبية
+            </span>
+          </button>
+
+        </div>
 
         {/* Form */}
 
@@ -1000,12 +1074,15 @@ export default function Signup() {
               type="text"
               value={form.name}
               onChange={update("name")}
-              placeholder="الاسم الكامل"
+              placeholder={
+                accountType === "medical"
+                  ? "اسم الجهة الطبية"
+                  : "الاسم الكامل"
+              }
               autoComplete="name"
             />
 
           </div>
-
 
           {/* البريد */}
 
@@ -1025,7 +1102,6 @@ export default function Signup() {
             />
 
           </div>
-
 
           {/* الهاتف */}
 
@@ -1047,7 +1123,6 @@ export default function Signup() {
 
           </div>
 
-
           {/* الرقم القومي */}
 
           <div className="signup-field">
@@ -1062,7 +1137,11 @@ export default function Signup() {
               inputMode="numeric"
               value={form.nationalId}
               onChange={handleNationalIdChange}
-              placeholder="الرقم القومي - 14 رقم"
+              placeholder={
+                accountType === "medical"
+                  ? "رقم الترخيص / الرقم القومي - 14 رقم"
+                  : "الرقم القومي - 14 رقم"
+              }
               autoComplete="off"
               dir="ltr"
               maxLength={14}
@@ -1070,6 +1149,62 @@ export default function Signup() {
 
           </div>
 
+          {/* Medical */}
+
+          {accountType === "medical" && (
+            <>
+
+              <p className="signup-medical-title">
+                اختر نوع الجهة الطبية
+              </p>
+
+              <div className="signup-field signup-medical-select">
+
+                <div className="signup-field-icon">
+                  <MedicalIcon />
+                </div>
+
+                <select
+                  className="signup-donor-select"
+                  value={medicalType}
+                  onChange={(e) =>
+                    handleMedicalTypeChange(
+                      e.target.value
+                    )
+                  }
+                  aria-label="نوع الجهة الطبية"
+                  required
+                >
+
+                  <option
+                    value=""
+                    disabled
+                  >
+                    اختر نوع الجهة
+                  </option>
+
+                  <option value="hospital">
+                    مستشفى
+                  </option>
+
+                  <option value="pharmacy">
+                    صيدلية
+                  </option>
+
+                  <option value="blood_center">
+                    مركز / بنك دم
+                  </option>
+
+                </select>
+
+                <div className="signup-donor-chevron">
+                  <ChevronDownIcon />
+                </div>
+
+              </div>
+
+            </>
+          )}
 
           {/* Donor */}
 
@@ -1116,7 +1251,6 @@ export default function Signup() {
 
               </div>
 
-
               {/* تاريخ آخر تبرع */}
 
               <div
@@ -1154,7 +1288,6 @@ export default function Signup() {
                 />
 
               </div>
-
 
               {/* الأمراض المزمنة */}
 
@@ -1198,7 +1331,6 @@ export default function Signup() {
             </>
           )}
 
-
           {/* كلمة المرور */}
 
           <div className="signup-field">
@@ -1238,7 +1370,6 @@ export default function Signup() {
             </button>
 
           </div>
-
 
           {/* تأكيد كلمة المرور */}
 
@@ -1280,7 +1411,6 @@ export default function Signup() {
 
           </div>
 
-
           {/* Error */}
 
           {error && (
@@ -1288,7 +1418,6 @@ export default function Signup() {
               {error}
             </div>
           )}
-
 
           {/* Submit */}
 
@@ -1303,7 +1432,6 @@ export default function Signup() {
           </button>
 
         </form>
-
 
         {/* Login */}
 
@@ -1320,7 +1448,6 @@ export default function Signup() {
         </div>
 
       </main>
-
 
       {/* Bottom */}
 
