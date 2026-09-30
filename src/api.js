@@ -501,6 +501,47 @@ const api = {
     ),
 
   // ============================================================
+  // Medical Entity Requests
+  // ============================================================
+
+  // جلب كل الطلبات الخاصة بالجهة الطبية
+  getMedicalEntityRequests: (
+    entityType,
+    entityId
+  ) =>
+    request(
+      `/medical/${entityType}/${entityId}/requests`
+    ),
+
+  // جلب طلب طبي واحد
+  getMedicalEntityRequest: (
+    entityType,
+    entityId,
+    requestId
+  ) =>
+    request(
+      `/medical/${entityType}/${entityId}/requests/${requestId}`
+    ),
+
+  // تحديث حالة الطلب من الجهة الطبية
+  updateMedicalRequestStatus: (
+    entityType,
+    entityId,
+    requestId,
+    status
+  ) =>
+    request(
+      `/medical/${entityType}/${entityId}/requests/${requestId}/status`,
+      {
+        method: "POST",
+
+        body: JSON.stringify({
+          status,
+        }),
+      }
+    ),
+
+  // ============================================================
   // Notifications
   // ============================================================
 
