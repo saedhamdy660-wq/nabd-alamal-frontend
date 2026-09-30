@@ -1,5 +1,14 @@
-import React, { useRef, useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import React, {
+  useEffect,
+  useRef,
+  useState,
+} from "react";
+
+import {
+  Link,
+  useNavigate,
+} from "react-router-dom";
+
 import api from "../api";
 
 /* =========================
@@ -8,7 +17,12 @@ import api from "../api";
 
 const Logo = () => (
   <svg viewBox="0 0 100 100" fill="none">
-    <circle cx="50" cy="50" r="46" fill="url(#signupLogoGradient)" />
+    <circle
+      cx="50"
+      cy="50"
+      r="46"
+      fill="url(#signupLogoGradient)"
+    />
 
     <path
       d="M50 73C47 70 27 56 23 43C19 31 27 22 38 22C44 22 49 25 52 30C55 25 60 22 66 22C77 22 85 31 81 43C77 56 55 70 50 73Z"
@@ -32,7 +46,10 @@ const Logo = () => (
         y2="85"
       >
         <stop stopColor="#0AA88F" />
-        <stop offset="1" stopColor="#078876" />
+        <stop
+          offset="1"
+          stopColor="#078876"
+        />
       </linearGradient>
     </defs>
   </svg>
@@ -392,9 +409,26 @@ const BackIcon = () => (
 export default function Signup() {
   const navigate = useNavigate();
 
-  const [accountType, setAccountType] = useState("user");
+  const [accountType, setAccountType] =
+    useState("user");
 
-  const [medicalType, setMedicalType] = useState("");
+  const [medicalType, setMedicalType] =
+    useState("");
+
+  const [
+    medicalEntities,
+    setMedicalEntities,
+  ] = useState([]);
+
+  const [
+    medicalEntitiesLoading,
+    setMedicalEntitiesLoading,
+  ] = useState(false);
+
+  const [
+    medicalEntityId,
+    setMedicalEntityId,
+  ] = useState("");
 
   const [form, setForm] = useState({
     name: "",
@@ -408,13 +442,120 @@ export default function Signup() {
     chronicDisease: "",
   });
 
-  const [showPassword, setShowPassword] = useState(false);
-  const [showConfirm, setShowConfirm] = useState(false);
+  const [
+    showPassword,
+    setShowPassword,
+  ] = useState(false);
 
-  const [error, setError] = useState("");
-  const [loading, setLoading] = useState(false);
+  const [
+    showConfirm,
+    setShowConfirm,
+  ] = useState(false);
 
-  const dateInputRef = useRef(null);
+  const [error, setError] =
+    useState("");
+
+  const [loading, setLoading] =
+    useState(false);
+
+  const dateInputRef =
+    useRef(null);
+
+  /* ============================================================
+     تحميل الجهات الطبية المعتمدة عند اختيار النوع
+  ============================================================ */
+
+  useEffect(() => {
+    let cancelled = false;
+
+    const loadMedicalEntities =
+      async () => {
+        if (
+          accountType !== "medical" ||
+          !medicalType
+        ) {
+          setMedicalEntities([]);
+          setMedicalEntityId("");
+          setMedicalEntitiesLoading(
+            false
+          );
+
+          return;
+        }
+
+        setMedicalEntitiesLoading(
+          true
+        );
+
+        setMedicalEntities([]);
+        setMedicalEntityId("");
+
+        try {
+          let entities = [];
+
+          if (
+            medicalType ===
+            "hospital"
+          ) {
+            entities =
+              await api.getMedicalHospitals();
+          }
+
+          if (
+            medicalType ===
+            "pharmacy"
+          ) {
+            entities =
+              await api.getMedicalPharmacies();
+          }
+
+          if (
+            medicalType ===
+            "blood_center"
+          ) {
+            entities =
+              await api.getMedicalBloodCenters();
+          }
+
+          if (!cancelled) {
+            setMedicalEntities(
+              Array.isArray(entities)
+                ? entities
+                : []
+            );
+          }
+        } catch (err) {
+          if (!cancelled) {
+            setMedicalEntities([]);
+            setMedicalEntityId("");
+
+            setError(
+              err?.message ||
+                "حدث خطأ أثناء تحميل الجهات الطبية المعتمدة"
+            );
+          }
+        } finally {
+          if (!cancelled) {
+            setMedicalEntitiesLoading(
+              false
+            );
+          }
+        }
+      };
+
+    loadMedicalEntities();
+
+    return () => {
+      cancelled = true;
+    };
+  }, [
+    accountType,
+    medicalType,
+  ]);
+
+  /* ============================================================
+     Form Helpers
+  ============================================================ */
 
   const update = (field) => (e) => {
     setForm({
@@ -423,53 +564,69 @@ export default function Signup() {
     });
   };
 
-  const handleNationalIdChange = (e) => {
-    const value = e.target.value
-      .replace(/\D/g, "")
-      .slice(0, 14);
+  const handleNationalIdChange =
+    (e) => {
+      const value = e.target.value
+        .replace(/\D/g, "")
+        .slice(0, 14);
 
-    setForm({
-      ...form,
-      nationalId: value,
-    });
-  };
+      setForm({
+        ...form,
+        nationalId: value,
+      });
+    };
 
-  const handleAccountTypeChange = (type) => {
-    setAccountType(type);
-    setError("");
+  const handleAccountTypeChange =
+    (type) => {
+      setAccountType(type);
+      setError("");
 
-    if (type !== "medical") {
-      setMedicalType("");
-    }
+      if (type !== "medical") {
+        setMedicalType("");
+        setMedicalEntities([]);
+        setMedicalEntityId("");
+      }
 
-    if (type === "user") {
-      setForm((prev) => ({
-        ...prev,
-        bloodType: "",
-        lastDonation: "",
-        chronicDisease: "",
-      }));
-    }
-  };
+      if (type === "user") {
+        setForm((prev) => ({
+          ...prev,
+          bloodType: "",
+          lastDonation: "",
+          chronicDisease: "",
+        }));
+      }
+    };
 
-  const handleMedicalTypeChange = (type) => {
-    setMedicalType(type);
-    setError("");
-  };
+  const handleMedicalTypeChange =
+    (type) => {
+      setMedicalType(type);
+      setMedicalEntityId("");
+      setMedicalEntities([]);
+      setError("");
+    };
 
-  const getBackendAccountType = () => {
-    if (accountType !== "medical") {
-      return accountType;
-    }
+  const handleMedicalEntityChange =
+    (id) => {
+      setMedicalEntityId(id);
+      setError("");
+    };
 
-    return medicalType;
-  };
+  const getBackendAccountType =
+    () => {
+      if (
+        accountType !== "medical"
+      ) {
+        return accountType;
+      }
+
+      return medicalType;
+    };
 
   const openDatePicker = () => {
     if (dateInputRef.current) {
       if (
-        typeof dateInputRef.current.showPicker ===
-        "function"
+        typeof dateInputRef.current
+          .showPicker === "function"
       ) {
         dateInputRef.current.showPicker();
       } else {
@@ -478,6 +635,10 @@ export default function Signup() {
       }
     }
   };
+
+  /* ============================================================
+     Submit
+  ============================================================ */
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -492,45 +653,130 @@ export default function Signup() {
       !form.password ||
       !form.confirm
     ) {
-      setError("من فضلك أكمل جميع البيانات");
+      setError(
+        "من فضلك أكمل جميع البيانات"
+      );
+
       return;
     }
 
-    if (!/^\d{14}$/.test(form.nationalId)) {
-      setError("الرقم القومي يجب أن يتكون من 14 رقم");
+    if (
+      !/^\d{14}$/.test(
+        form.nationalId
+      )
+    ) {
+      setError(
+        "الرقم القومي يجب أن يتكون من 14 رقم"
+      );
+
       return;
     }
 
-    if (form.password.length < 6) {
-      setError("كلمة المرور يجب أن تكون 6 أحرف على الأقل");
+    if (
+      form.password.length < 6
+    ) {
+      setError(
+        "كلمة المرور يجب أن تكون 6 أحرف على الأقل"
+      );
+
       return;
     }
 
-    if (form.password !== form.confirm) {
-      setError("كلمة المرور وتأكيد كلمة المرور غير متطابقين");
+    if (
+      form.password !==
+      form.confirm
+    ) {
+      setError(
+        "كلمة المرور وتأكيد كلمة المرور غير متطابقين"
+      );
+
       return;
     }
 
-    if (accountType === "donor") {
+    if (
+      accountType === "donor"
+    ) {
       if (!form.bloodType) {
-        setError("من فضلك اختر فصيلة الدم");
+        setError(
+          "من فضلك اختر فصيلة الدم"
+        );
+
         return;
       }
 
       if (!form.lastDonation) {
-        setError("من فضلك أدخل تاريخ آخر تبرع بالدم");
+        setError(
+          "من فضلك أدخل تاريخ آخر تبرع بالدم"
+        );
+
         return;
       }
 
-      if (!form.chronicDisease) {
-        setError("من فضلك حدد هل لديك أمراض مزمنة أم لا");
+      if (
+        !form.chronicDisease
+      ) {
+        setError(
+          "من فضلك حدد هل لديك أمراض مزمنة أم لا"
+        );
+
         return;
       }
     }
 
-    if (accountType === "medical" && !medicalType) {
-      setError("من فضلك اختر نوع الجهة الطبية");
-      return;
+    if (
+      accountType === "medical"
+    ) {
+      if (!medicalType) {
+        setError(
+          "من فضلك اختر نوع الجهة الطبية"
+        );
+
+        return;
+      }
+
+      if (
+        medicalEntitiesLoading
+      ) {
+        setError(
+          "جاري تحميل الجهات الطبية المعتمدة، من فضلك انتظر"
+        );
+
+        return;
+      }
+
+      if (
+        !medicalEntityId
+      ) {
+        if (
+          medicalEntities.length ===
+          0
+        ) {
+          setError(
+            "لا توجد جهة طبية معتمدة من النوع الذي اخترته حاليًا"
+          );
+        } else {
+          setError(
+            "من فضلك اختر الجهة الطبية"
+          );
+        }
+
+        return;
+      }
+
+      const selectedEntity =
+        medicalEntities.find(
+          (entity) =>
+            entity.id ===
+            medicalEntityId
+        );
+
+      if (!selectedEntity) {
+        setError(
+          "الجهة الطبية المختارة غير صحيحة"
+        );
+
+        return;
+      }
     }
 
     try {
@@ -539,36 +785,66 @@ export default function Signup() {
       const backendAccountType =
         getBackendAccountType();
 
-      const user = await api.register({
-        name: form.name.trim(),
-        email: form.email.trim(),
-        phone: form.phone.trim(),
-        nationalId: form.nationalId,
-        password: form.password,
-        accountType: backendAccountType,
+      const user =
+        await api.register({
+          name: form.name.trim(),
 
-        bloodType:
-          accountType === "donor"
-            ? form.bloodType
-            : "",
+          email:
+            form.email.trim(),
 
-        lastDonation:
-          accountType === "donor"
-            ? form.lastDonation
-            : "",
+          phone:
+            form.phone.trim(),
 
-        chronicDisease:
-          accountType === "donor"
-            ? form.chronicDisease === "نعم"
-            : false,
-      });
+          nationalId:
+            form.nationalId,
+
+          password:
+            form.password,
+
+          accountType:
+            backendAccountType,
+
+          /* =========================================
+             الجهة الطبية المختارة
+             ========================================= */
+
+          medicalEntityId:
+            accountType ===
+            "medical"
+              ? medicalEntityId
+              : "",
+
+          bloodType:
+            accountType === "donor"
+              ? form.bloodType
+              : "",
+
+          lastDonation:
+            accountType === "donor"
+              ? form.lastDonation
+              : "",
+
+          chronicDisease:
+            accountType === "donor"
+              ? form.chronicDisease ===
+                "نعم"
+              : false,
+        });
 
       const savedUser = {
         ...user,
-        name: form.name.trim(),
-        email: form.email.trim(),
-        phone: form.phone.trim(),
-        nationalId: form.nationalId,
+
+        name:
+          form.name.trim(),
+
+        email:
+          form.email.trim(),
+
+        phone:
+          form.phone.trim(),
+
+        nationalId:
+          form.nationalId,
 
         bloodType:
           accountType === "donor"
@@ -582,26 +858,42 @@ export default function Signup() {
 
         chronicDisease:
           accountType === "donor"
-            ? form.chronicDisease === "نعم"
+            ? form.chronicDisease ===
+              "نعم"
             : false,
 
-        accountType: backendAccountType,
+        accountType:
+          backendAccountType,
+
+        medicalEntityId:
+          accountType ===
+          "medical"
+            ? medicalEntityId
+            : "",
 
         phoneVerified: false,
-        identityVerified: false,
-        verificationStatus: "pending",
+
+        identityVerified:
+          false,
+
+        verificationStatus:
+          "pending",
       };
 
       localStorage.setItem(
         "nabd_user",
-        JSON.stringify(savedUser)
+        JSON.stringify(
+          savedUser
+        )
       );
 
-      navigate("/verify-phone");
+      navigate(
+        "/verify-phone"
+      );
     } catch (err) {
       setError(
         err?.message ||
-        "حدث خطأ أثناء إنشاء الحساب"
+          "حدث خطأ أثناء إنشاء الحساب"
       );
     } finally {
       setLoading(false);
@@ -868,7 +1160,6 @@ export default function Signup() {
           justify-content: center !important;
           gap: 8px !important;
 
-          /* مهم: يجعل أول عنصر على الشمال */
           direction: ltr !important;
 
           margin-bottom: 18px !important;
@@ -916,6 +1207,32 @@ export default function Signup() {
         .signup-account-types .account-icon svg {
           width: 23px !important;
           height: 23px !important;
+        }
+
+        /* =========================================
+           الجهات الطبية المعتمدة
+        ========================================= */
+
+        .signup-medical-loading {
+          margin-top: 8px;
+          margin-bottom: 8px;
+          color: #6b7c79;
+          font-size: 13px;
+          text-align: right;
+          direction: rtl;
+        }
+
+        .signup-medical-empty {
+          margin-top: 8px;
+          margin-bottom: 8px;
+          padding: 10px 12px;
+          border-radius: 10px;
+          background: #fff7f5;
+          color: #b45d4f;
+          font-size: 13px;
+          line-height: 1.5;
+          text-align: right;
+          direction: rtl;
         }
 
         /* =========================================
@@ -1082,7 +1399,7 @@ export default function Signup() {
 
         <div className="signup-account-types">
 
-          {/* مستخدم - أول عنصر على الشمال */}
+          {/* مستخدم */}
 
           <button
             type="button"
@@ -1092,7 +1409,9 @@ export default function Signup() {
                 : "account-type"
             }
             onClick={() =>
-              handleAccountTypeChange("user")
+              handleAccountTypeChange(
+                "user"
+              )
             }
           >
             <span className="account-icon">
@@ -1104,7 +1423,7 @@ export default function Signup() {
             </span>
           </button>
 
-          {/* متبرع - في المنتصف */}
+          {/* متبرع */}
 
           <button
             type="button"
@@ -1114,7 +1433,9 @@ export default function Signup() {
                 : "account-type"
             }
             onClick={() =>
-              handleAccountTypeChange("donor")
+              handleAccountTypeChange(
+                "donor"
+              )
             }
           >
             <span className="account-icon">
@@ -1126,7 +1447,7 @@ export default function Signup() {
             </span>
           </button>
 
-          {/* جهة طبية - آخر عنصر على اليمين */}
+          {/* جهة طبية */}
 
           <button
             type="button"
@@ -1136,7 +1457,9 @@ export default function Signup() {
                 : "account-type"
             }
             onClick={() =>
-              handleAccountTypeChange("medical")
+              handleAccountTypeChange(
+                "medical"
+              )
             }
           >
             <span className="account-icon">
@@ -1171,7 +1494,8 @@ export default function Signup() {
               value={form.name}
               onChange={update("name")}
               placeholder={
-                accountType === "medical"
+                accountType ===
+                "medical"
                   ? "اسم الجهة الطبية"
                   : "الاسم الكامل"
               }
@@ -1219,7 +1543,7 @@ export default function Signup() {
 
           </div>
 
-          {/* الرقم القومي */}
+          {/* الرقم القومي / الترخيص */}
 
           <div className="signup-field">
 
@@ -1232,9 +1556,12 @@ export default function Signup() {
               type="text"
               inputMode="numeric"
               value={form.nationalId}
-              onChange={handleNationalIdChange}
+              onChange={
+                handleNationalIdChange
+              }
               placeholder={
-                accountType === "medical"
+                accountType ===
+                "medical"
                   ? "رقم الترخيص / الرقم القومي - 14 رقم"
                   : "الرقم القومي - 14 رقم"
               }
@@ -1247,8 +1574,11 @@ export default function Signup() {
 
           {/* Medical */}
 
-          {accountType === "medical" && (
+          {accountType ===
+            "medical" && (
             <>
+
+              {/* نوع الجهة */}
 
               <p className="signup-medical-title">
                 اختر نوع الجهة الطبية
@@ -1262,7 +1592,9 @@ export default function Signup() {
 
                 <select
                   className="signup-donor-select"
-                  value={medicalType}
+                  value={
+                    medicalType
+                  }
                   onChange={(e) =>
                     handleMedicalTypeChange(
                       e.target.value
@@ -1299,12 +1631,85 @@ export default function Signup() {
 
               </div>
 
+              {/* الجهة المعتمدة */}
+
+              {medicalType && (
+                <>
+                  <p className="signup-medical-title">
+                    اختر الجهة الطبية المعتمدة
+                  </p>
+
+                  {medicalEntitiesLoading ? (
+                    <div className="signup-medical-loading">
+                      جاري تحميل الجهات المعتمدة...
+                    </div>
+                  ) : medicalEntities.length ===
+                    0 ? (
+                    <div className="signup-medical-empty">
+                      لا توجد جهات معتمدة من هذا النوع حاليًا.
+                      يجب أن تعتمد الجهة أولًا من إدارة المنصة.
+                    </div>
+                  ) : (
+                    <div className="signup-field signup-medical-select">
+
+                      <div className="signup-field-icon">
+                        <MedicalIcon />
+                      </div>
+
+                      <select
+                        className="signup-donor-select"
+                        value={
+                          medicalEntityId
+                        }
+                        onChange={(e) =>
+                          handleMedicalEntityChange(
+                            e.target.value
+                          )
+                        }
+                        aria-label="الجهة الطبية"
+                        required
+                      >
+
+                        <option
+                          value=""
+                          disabled
+                        >
+                          اختر الجهة الطبية
+                        </option>
+
+                        {medicalEntities.map(
+                          (entity) => (
+                            <option
+                              key={
+                                entity.id
+                              }
+                              value={
+                                entity.id
+                              }
+                            >
+                              {entity.name}
+                            </option>
+                          )
+                        )}
+
+                      </select>
+
+                      <div className="signup-donor-chevron">
+                        <ChevronDownIcon />
+                      </div>
+
+                    </div>
+                  )}
+                </>
+              )}
+
             </>
           )}
 
           {/* Donor */}
 
-          {accountType === "donor" && (
+          {accountType ===
+            "donor" && (
             <>
 
               {/* فصيلة الدم */}
@@ -1317,8 +1722,12 @@ export default function Signup() {
 
                 <select
                   className="signup-donor-select"
-                  value={form.bloodType}
-                  onChange={update("bloodType")}
+                  value={
+                    form.bloodType
+                  }
+                  onChange={update(
+                    "bloodType"
+                  )}
                   aria-label="فصيلة الدم"
                   required
                 >
@@ -1330,14 +1739,37 @@ export default function Signup() {
                     اختر فصيلة الدم
                   </option>
 
-                  <option value="A+">A+</option>
-                  <option value="A-">A-</option>
-                  <option value="B+">B+</option>
-                  <option value="B-">B-</option>
-                  <option value="AB+">AB+</option>
-                  <option value="AB-">AB-</option>
-                  <option value="O+">O+</option>
-                  <option value="O-">O-</option>
+                  <option value="A+">
+                    A+
+                  </option>
+
+                  <option value="A-">
+                    A-
+                  </option>
+
+                  <option value="B+">
+                    B+
+                  </option>
+
+                  <option value="B-">
+                    B-
+                  </option>
+
+                  <option value="AB+">
+                    AB+
+                  </option>
+
+                  <option value="AB-">
+                    AB-
+                  </option>
+
+                  <option value="O+">
+                    O+
+                  </option>
+
+                  <option value="O-">
+                    O-
+                  </option>
 
                 </select>
 
@@ -1351,7 +1783,9 @@ export default function Signup() {
 
               <div
                 className="signup-field signup-donor-field signup-date-field"
-                onClick={openDatePicker}
+                onClick={
+                  openDatePicker
+                }
               >
 
                 <div className="signup-field-icon">
@@ -1371,14 +1805,22 @@ export default function Signup() {
                 </span>
 
                 <input
-                  ref={dateInputRef}
+                  ref={
+                    dateInputRef
+                  }
                   type="date"
-                  value={form.lastDonation}
-                  onChange={update("lastDonation")}
+                  value={
+                    form.lastDonation
+                  }
+                  onChange={update(
+                    "lastDonation"
+                  )}
                   max={
                     new Date()
                       .toISOString()
-                      .split("T")[0]
+                      .split(
+                        "T"
+                      )[0]
                   }
                   aria-label="تاريخ آخر تبرع بالدم"
                 />
@@ -1395,8 +1837,12 @@ export default function Signup() {
 
                 <select
                   className="signup-donor-select"
-                  value={form.chronicDisease}
-                  onChange={update("chronicDisease")}
+                  value={
+                    form.chronicDisease
+                  }
+                  onChange={update(
+                    "chronicDisease"
+                  )}
                   aria-label="الأمراض المزمنة"
                   required
                 >
@@ -1442,8 +1888,12 @@ export default function Signup() {
                   ? "text"
                   : "password"
               }
-              value={form.password}
-              onChange={update("password")}
+              value={
+                form.password
+              }
+              onChange={update(
+                "password"
+              )}
               placeholder="كلمة المرور"
               autoComplete="new-password"
             />
@@ -1452,7 +1902,9 @@ export default function Signup() {
               type="button"
               className="signup-eye"
               onClick={() =>
-                setShowPassword(!showPassword)
+                setShowPassword(
+                  !showPassword
+                )
               }
               aria-label={
                 showPassword
@@ -1461,7 +1913,9 @@ export default function Signup() {
               }
             >
               <EyeIcon
-                off={!showPassword}
+                off={
+                  !showPassword
+                }
               />
             </button>
 
@@ -1482,8 +1936,12 @@ export default function Signup() {
                   ? "text"
                   : "password"
               }
-              value={form.confirm}
-              onChange={update("confirm")}
+              value={
+                form.confirm
+              }
+              onChange={update(
+                "confirm"
+              )}
               placeholder="تأكيد كلمة المرور"
               autoComplete="new-password"
             />
@@ -1492,7 +1950,9 @@ export default function Signup() {
               type="button"
               className="signup-eye"
               onClick={() =>
-                setShowConfirm(!showConfirm)
+                setShowConfirm(
+                  !showConfirm
+                )
               }
               aria-label={
                 showConfirm
@@ -1501,7 +1961,9 @@ export default function Signup() {
               }
             >
               <EyeIcon
-                off={!showConfirm}
+                off={
+                  !showConfirm
+                }
               />
             </button>
 
