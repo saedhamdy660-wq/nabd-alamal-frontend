@@ -856,6 +856,8 @@ export default function Signup() {
 
         /* =========================================
            أنواع الحسابات - الثلاثة في صف واحد
+           الترتيب من الشمال لليمين:
+           مستخدم → متبرع → جهة طبية
         ========================================= */
 
         .signup-account-types {
@@ -865,7 +867,10 @@ export default function Signup() {
           align-items: stretch !important;
           justify-content: center !important;
           gap: 8px !important;
-          direction: rtl !important;
+
+          /* مهم: يجعل أول عنصر على الشمال */
+          direction: ltr !important;
+
           margin-bottom: 18px !important;
           box-sizing: border-box !important;
         }
@@ -1077,25 +1082,7 @@ export default function Signup() {
 
         <div className="signup-account-types">
 
-          <button
-            type="button"
-            className={
-              accountType === "donor"
-                ? "account-type active"
-                : "account-type"
-            }
-            onClick={() =>
-              handleAccountTypeChange("donor")
-            }
-          >
-            <span className="account-icon">
-              <HeartIcon />
-            </span>
-
-            <span>
-              متبرع
-            </span>
-          </button>
+          {/* مستخدم - أول عنصر على الشمال */}
 
           <button
             type="button"
@@ -1116,6 +1103,30 @@ export default function Signup() {
               مستخدم
             </span>
           </button>
+
+          {/* متبرع - في المنتصف */}
+
+          <button
+            type="button"
+            className={
+              accountType === "donor"
+                ? "account-type active"
+                : "account-type"
+            }
+            onClick={() =>
+              handleAccountTypeChange("donor")
+            }
+          >
+            <span className="account-icon">
+              <HeartIcon />
+            </span>
+
+            <span>
+              متبرع
+            </span>
+          </button>
+
+          {/* جهة طبية - آخر عنصر على اليمين */}
 
           <button
             type="button"
