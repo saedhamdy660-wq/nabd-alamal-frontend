@@ -473,6 +473,34 @@ const api = {
     ),
 
   // ============================================================
+  // Medical Entities
+  // ============================================================
+
+  // جميع الجهات الطبية المعتمدة
+  getMedicalEntities: () =>
+    request(
+      "/medical/entities"
+    ),
+
+  // المستشفيات المعتمدة فقط
+  getMedicalHospitals: () =>
+    request(
+      "/medical/entities/hospitals"
+    ),
+
+  // الصيدليات المعتمدة فقط
+  getMedicalPharmacies: () =>
+    request(
+      "/medical/entities/pharmacies"
+    ),
+
+  // مراكز / بنوك الدم المعتمدة فقط
+  getMedicalBloodCenters: () =>
+    request(
+      "/medical/entities/blood-centers"
+    ),
+
+  // ============================================================
   // Notifications
   // ============================================================
 
