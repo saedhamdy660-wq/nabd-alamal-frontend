@@ -855,10 +855,95 @@ export default function Signup() {
         }
 
         /* =========================================
+           أنواع الحسابات - الثلاثة في صف واحد
+        ========================================= */
+
+        .signup-account-types {
+          width: 100%;
+          display: flex !important;
+          flex-direction: row !important;
+          align-items: stretch !important;
+          justify-content: center !important;
+          gap: 8px !important;
+          direction: rtl !important;
+          margin-bottom: 18px !important;
+          box-sizing: border-box !important;
+        }
+
+        .signup-account-types .account-type {
+          flex: 1 1 0 !important;
+          min-width: 0 !important;
+          width: 33.333% !important;
+          height: 72px !important;
+
+          display: flex !important;
+          flex-direction: column !important;
+          align-items: center !important;
+          justify-content: center !important;
+
+          gap: 5px !important;
+
+          padding: 8px 4px !important;
+          margin: 0 !important;
+
+          box-sizing: border-box !important;
+          overflow: hidden !important;
+
+          font-family: inherit !important;
+          font-size: 13px !important;
+          line-height: 1.2 !important;
+
+          white-space: nowrap !important;
+        }
+
+        .signup-account-types .account-icon {
+          width: 25px !important;
+          height: 25px !important;
+
+          min-width: 25px !important;
+          min-height: 25px !important;
+
+          display: flex !important;
+          align-items: center !important;
+          justify-content: center !important;
+        }
+
+        .signup-account-types .account-icon svg {
+          width: 23px !important;
+          height: 23px !important;
+        }
+
+        /* =========================================
            📱 الموبايل
         ========================================= */
 
         @media (max-width: 480px) {
+
+          .signup-account-types {
+            gap: 7px !important;
+            margin-bottom: 16px !important;
+          }
+
+          .signup-account-types .account-type {
+            height: 68px !important;
+            padding: 7px 3px !important;
+            font-size: 12px !important;
+            gap: 4px !important;
+            border-radius: 12px !important;
+          }
+
+          .signup-account-types .account-icon {
+            width: 23px !important;
+            height: 23px !important;
+
+            min-width: 23px !important;
+            min-height: 23px !important;
+          }
+
+          .signup-account-types .account-icon svg {
+            width: 21px !important;
+            height: 21px !important;
+          }
 
           .signup-field input,
           .signup-donor-select {
