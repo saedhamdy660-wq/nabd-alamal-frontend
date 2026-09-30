@@ -13,6 +13,8 @@ import VerifyIdentity from "./pages/VerifyIdentity";
 import LocationPermission from "./pages/LocationPermission.jsx";
 
 import Home from "./pages/Home.jsx";
+import MedicalDashboard from "./pages/MedicalDashboard.jsx";
+
 import BloodDonation from "./pages/BloodDonation.jsx";
 import BloodCenters from "./pages/BloodCenters.jsx";
 import BloodCenterDetails from "./pages/BloodCenterDetails.jsx";
@@ -168,6 +170,37 @@ export default function App() {
       "/blood-centers/"
     );
 
+  // ============================================================
+  // تحديد الصفحة الرئيسية حسب نوع الحساب
+  // ============================================================
+
+  const getHomePage = () => {
+    try {
+      const savedUser =
+        JSON.parse(
+          localStorage.getItem(
+            "nabd_user"
+          ) || "null"
+        );
+
+      if (
+        savedUser?.accountType ===
+        "medical"
+      ) {
+        return (
+          <MedicalDashboard />
+        );
+      }
+    } catch (error) {
+      console.error(
+        "Failed to read saved user:",
+        error
+      );
+    }
+
+    return <Home />;
+  };
+
   return (
     <div
       className={`app-shell ${
@@ -221,7 +254,7 @@ export default function App() {
 
         <Route
           path="/home"
-          element={<Home />}
+          element={getHomePage()}
         />
 
         <Route
@@ -326,8 +359,7 @@ export default function App() {
 
       {!hideNav && <Navbar />}
 
-      {/* الشات يظهر في كل صفحات التطبيق الداخلية،
-          بما فيها Home، حتى لو الـNavbar مخفي */}
+      {/* الشات يظهر في كل صفحات التطبيق الداخلية */}
       {![
         "/",
         "/welcome",
