@@ -655,6 +655,11 @@ export default function Signup() {
       setMedicalEntityId("");
       setError("");
       setSuccess("");
+
+      /*
+       * لو رجعنا لتسجيل جهة معتمدة
+       * نبدأ بتحميل الجهات مرة أخرى من خلال useEffect.
+       */
     };
 
   const getBackendAccountType =
@@ -697,13 +702,30 @@ export default function Signup() {
     setError("");
     setSuccess("");
 
+    /*
+     * ========================================================
+     * البيانات الأساسية
+     * ========================================================
+     *
+     * في حالة طلب الانضمام:
+     * كلمة المرور وتأكيدها غير مطلوبين.
+     */
     if (
       !form.name ||
       !form.email ||
       !form.phone ||
       !form.nationalId ||
-      !form.password ||
-      !form.confirm
+      (
+        !(
+          accountType === "medical" &&
+          medicalJoinMode
+        )
+        &&
+        (
+          !form.password ||
+          !form.confirm
+        )
+      )
     ) {
       setError(
         "من فضلك أكمل جميع البيانات"
@@ -724,26 +746,41 @@ export default function Signup() {
       return;
     }
 
+    /*
+     * التحقق من كلمة المرور فقط
+     * عند إنشاء حساب فعلي.
+     */
     if (
-      form.password.length < 6
+      !(
+        accountType === "medical" &&
+        medicalJoinMode
+      )
     ) {
-      setError(
-        "كلمة المرور يجب أن تكون 6 أحرف على الأقل"
-      );
+      if (
+        form.password.length < 6
+      ) {
+        setError(
+          "كلمة المرور يجب أن تكون 6 أحرف على الأقل"
+        );
 
-      return;
+        return;
+      }
+
+      if (
+        form.password !==
+        form.confirm
+      ) {
+        setError(
+          "كلمة المرور وتأكيد كلمة المرور غير متطابقين"
+        );
+
+        return;
+      }
     }
 
-    if (
-      form.password !==
-      form.confirm
-    ) {
-      setError(
-        "كلمة المرور وتأكيد كلمة المرور غير متطابقين"
-      );
-
-      return;
-    }
+    /* ==========================================================
+       Donor
+    ========================================================== */
 
     if (
       accountType === "donor"
@@ -775,6 +812,10 @@ export default function Signup() {
       }
     }
 
+    /* ==========================================================
+       Medical
+    ========================================================== */
+
     if (
       accountType === "medical"
     ) {
@@ -794,6 +835,7 @@ export default function Signup() {
        * هنا لا نقوم بإنشاء حساب.
        * فقط نرسل طلب انضمام للإدارة.
        */
+
       if (medicalJoinMode) {
         try {
           setLoading(true);
@@ -827,6 +869,19 @@ export default function Signup() {
           );
 
           setError("");
+
+          /*
+           * نمسح كلمة المرور لو كان المستخدم
+           * كتبها قبل اختيار وضع طلب الانضمام.
+           */
+          setForm((prev) => ({
+            ...prev,
+            password: "",
+            confirm: "",
+          }));
+
+          setShowPassword(false);
+          setShowConfirm(false);
         } catch (err) {
           setError(
             err?.message ||
@@ -890,6 +945,10 @@ export default function Signup() {
       }
     }
 
+    /* ==========================================================
+       إنشاء الحساب
+    ========================================================== */
+
     try {
       setLoading(true);
 
@@ -914,10 +973,6 @@ export default function Signup() {
 
           accountType:
             backendAccountType,
-
-          /* =========================================
-             الجهة الطبية المختارة
-             ========================================= */
 
           medicalEntityId:
             accountType ===
@@ -1257,9 +1312,7 @@ export default function Signup() {
         }
 
         /* =========================================
-           أنواع الحسابات - الثلاثة في صف واحد
-           الترتيب من الشمال لليمين:
-           مستخدم → متبرع → جهة طبية
+           أنواع الحسابات
         ========================================= */
 
         .signup-account-types {
@@ -1582,6 +1635,7 @@ export default function Signup() {
         {/* Account Types */}
 
         <div className="signup-account-types">
+
           {/* مستخدم */}
 
           <button
@@ -1661,6 +1715,7 @@ export default function Signup() {
           className="signup-form"
           onSubmit={handleSubmit}
         >
+
           {/* الاسم */}
 
           <div className="signup-field">
@@ -2068,97 +2123,109 @@ export default function Signup() {
             </>
           )}
 
-          {/* كلمة المرور */}
+          {/* =====================================================
+              كلمة المرور
+              تظهر فقط عند إنشاء حساب فعلي
+              ===================================================== */}
 
-          <div className="signup-field">
-            <div className="signup-field-icon">
-              <LockIcon />
-            </div>
+          {!(
+            accountType === "medical" &&
+            medicalJoinMode
+          ) && (
+            <>
+              {/* كلمة المرور */}
 
-            <input
-              className="signup-input"
-              type={
-                showPassword
-                  ? "text"
-                  : "password"
-              }
-              value={
-                form.password
-              }
-              onChange={update(
-                "password"
-              )}
-              placeholder="كلمة المرور"
-              autoComplete="new-password"
-            />
+              <div className="signup-field">
+                <div className="signup-field-icon">
+                  <LockIcon />
+                </div>
 
-            <button
-              type="button"
-              className="signup-eye"
-              onClick={() =>
-                setShowPassword(
-                  !showPassword
-                )
-              }
-              aria-label={
-                showPassword
-                  ? "إخفاء كلمة المرور"
-                  : "إظهار كلمة المرور"
-              }
-            >
-              <EyeIcon
-                off={
-                  !showPassword
-                }
-              />
-            </button>
-          </div>
+                <input
+                  className="signup-input"
+                  type={
+                    showPassword
+                      ? "text"
+                      : "password"
+                  }
+                  value={
+                    form.password
+                  }
+                  onChange={update(
+                    "password"
+                  )}
+                  placeholder="كلمة المرور"
+                  autoComplete="new-password"
+                />
 
-          {/* تأكيد كلمة المرور */}
+                <button
+                  type="button"
+                  className="signup-eye"
+                  onClick={() =>
+                    setShowPassword(
+                      !showPassword
+                    )
+                  }
+                  aria-label={
+                    showPassword
+                      ? "إخفاء كلمة المرور"
+                      : "إظهار كلمة المرور"
+                  }
+                >
+                  <EyeIcon
+                    off={
+                      !showPassword
+                    }
+                  />
+                </button>
+              </div>
 
-          <div className="signup-field">
-            <div className="signup-field-icon">
-              <LockIcon />
-            </div>
+              {/* تأكيد كلمة المرور */}
 
-            <input
-              className="signup-input"
-              type={
-                showConfirm
-                  ? "text"
-                  : "password"
-              }
-              value={
-                form.confirm
-              }
-              onChange={update(
-                "confirm"
-              )}
-              placeholder="تأكيد كلمة المرور"
-              autoComplete="new-password"
-            />
+              <div className="signup-field">
+                <div className="signup-field-icon">
+                  <LockIcon />
+                </div>
 
-            <button
-              type="button"
-              className="signup-eye"
-              onClick={() =>
-                setShowConfirm(
-                  !showConfirm
-                )
-              }
-              aria-label={
-                showConfirm
-                  ? "إخفاء تأكيد كلمة المرور"
-                  : "إظهار تأكيد كلمة المرور"
-              }
-            >
-              <EyeIcon
-                off={
-                  !showConfirm
-                }
-              />
-            </button>
-          </div>
+                <input
+                  className="signup-input"
+                  type={
+                    showConfirm
+                      ? "text"
+                      : "password"
+                  }
+                  value={
+                    form.confirm
+                  }
+                  onChange={update(
+                    "confirm"
+                  )}
+                  placeholder="تأكيد كلمة المرور"
+                  autoComplete="new-password"
+                />
+
+                <button
+                  type="button"
+                  className="signup-eye"
+                  onClick={() =>
+                    setShowConfirm(
+                      !showConfirm
+                    )
+                  }
+                  aria-label={
+                    showConfirm
+                      ? "إخفاء تأكيد كلمة المرور"
+                      : "إظهار تأكيد كلمة المرور"
+                  }
+                >
+                  <EyeIcon
+                    off={
+                      !showConfirm
+                    }
+                  />
+                </button>
+              </div>
+            </>
+          )}
 
           {/* Error */}
 
