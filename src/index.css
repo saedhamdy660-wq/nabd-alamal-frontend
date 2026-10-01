@@ -11369,3 +11369,52 @@ body.dark .leaflet-control-attribution a,
   color: #e9ffff !important;
 }
 }
+/* =========================================================
+   🌙 SIGNUP PAGE - DONOR & MEDICAL ENTITY BUTTONS
+   ========================================================= */
+
+/* الزرار التاني (متبرع) - لون بنفسجي */
+body.nabd-dark .account-type:not(.active):nth-child(2) {
+  background: #4b2e44 !important;
+  border-color: rgba(196, 139, 179, 0.3) !important;
+  color: #c48bb3 !important;
+}
+
+body.nabd-dark .account-type:not(.active):nth-child(2) svg {
+  color: #c48bb3 !important;
+  stroke: #c48bb3 !important;
+}
+
+body.nabd-dark .account-type:not(.active):nth-child(2) .account-icon {
+  background: rgba(196, 139, 179, 0.15) !important;
+  color: #c48bb3 !important;
+}
+
+/* الزرار التالت (جهة طبية) - لون أزرق */
+body.nabd-dark .account-type:not(.active):nth-child(3) {
+  background: #2e3c4d !important;
+  border-color: rgba(142, 179, 214, 0.3) !important;
+  color: #8eb3d6 !important;
+}
+
+body.nabd-dark .account-type:not(.active):nth-child(3) svg {
+  color: #8eb3d6 !important;
+  stroke: #8eb3d6 !important;
+}
+
+body.nabd-dark .account-type:not(.active):nth-child(3) .account-icon {
+  background: rgba(142, 179, 214, 0.15) !important;
+  color: #8eb3d6 !important;
+}
+
+/* عشان "مستخدم" لما يبقى مش نشط يبقى لونه غامق زي باقي الأزرار غير النشطة */
+body.nabd-dark .account-type:not(.active):nth-child(1) {
+  background: #0d2a2e !important;
+  border-color: rgba(170, 230, 225, 0.15) !important;
+  color: #9bbdbc !important;
+}
+
+body.nabd-dark .account-type:not(.active):nth-child(1) svg {
+  color: #5ed9c5 !important;
+  stroke: #5ed9c5 !important;
+}
