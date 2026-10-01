@@ -52,6 +52,10 @@ const noNavRoutes = [
   "/location-permission",
   "/home",
   "/admin",
+
+  // صفحة الإشعارات مستقلة بدون Navbar
+  "/notifications",
+
   "/notification-settings",
   "/settings",
 ];
@@ -203,6 +207,10 @@ export default function App() {
     };
   }, []);
 
+  // ============================================================
+  // HIDE GLOBAL NAVBAR
+  // ============================================================
+
   const hideNav =
     noNavRoutes.includes(
       location.pathname
@@ -240,8 +248,6 @@ export default function App() {
         );
 
       // ================= ADMIN =================
-      // لو حساب Admin وصل إلى /home لأي سبب
-      // يتم توجيهه فعليًا إلى لوحة تحكم الأدمن
 
       if (
         savedUser?.accountType === "admin" ||
@@ -273,6 +279,10 @@ export default function App() {
 
     return <Home />;
   };
+
+  // ============================================================
+  // RENDER
+  // ============================================================
 
   return (
     <div
@@ -393,6 +403,8 @@ export default function App() {
           element={<Requests />}
         />
 
+        {/* ================= NOTIFICATIONS ================= */}
+
         <Route
           path="/notifications"
           element={<Notifications />}
@@ -437,9 +449,17 @@ export default function App() {
 
       </Routes>
 
+      {/* ========================================================
+          Navbar
+          الإشعارات مستثناة من الـ Navbar
+         ======================================================== */}
+
       {!hideNav && <Navbar />}
 
-      {/* الشات يظهر في صفحات التطبيق الداخلية */}
+      {/* ========================================================
+          ChatBot
+          الإشعارات مستثناة من الـ ChatBot أيضًا
+         ======================================================== */}
 
       {[
         "/",
@@ -450,6 +470,7 @@ export default function App() {
         "/verify-identity",
         "/location-permission",
         "/admin",
+        "/notifications",
       ].includes(location.pathname) === false && (
         <ChatBot />
       )}
