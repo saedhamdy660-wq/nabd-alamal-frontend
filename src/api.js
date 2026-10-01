@@ -501,6 +501,94 @@ const api = {
     ),
 
   // ============================================================
+  // Medical Join Requests
+  // ============================================================
+
+  // إرسال طلب انضمام لجهة طبية جديدة
+  createMedicalJoinRequest: (
+    data
+  ) =>
+    request(
+      "/medical/join-requests",
+      {
+        method: "POST",
+
+        body: JSON.stringify(
+          data
+        ),
+      }
+    ),
+
+  // جلب طلبات انضمام الجهات الطبية
+  getMedicalJoinRequests: ({
+    status = "",
+    type = "",
+  } = {}) => {
+    const params =
+      new URLSearchParams();
+
+    if (status) {
+      params.set(
+        "status",
+        status
+      );
+    }
+
+    if (type) {
+      params.set(
+        "type",
+        type
+      );
+    }
+
+    const query =
+      params.toString();
+
+    return request(
+      `/medical/join-requests${
+        query
+          ? `?${query}`
+          : ""
+      }`
+    );
+  },
+
+  // جلب طلب انضمام محدد
+  getMedicalJoinRequest: (
+    id
+  ) =>
+    request(
+      `/medical/join-requests/${id}`
+    ),
+
+  // الموافقة على طلب انضمام
+  approveMedicalJoinRequest: (
+    id
+  ) =>
+    request(
+      `/medical/join-requests/${id}/approve`,
+      {
+        method: "POST",
+      }
+    ),
+
+  // رفض طلب انضمام
+  rejectMedicalJoinRequest: (
+    id,
+    rejectionReason = ""
+  ) =>
+    request(
+      `/medical/join-requests/${id}/reject`,
+      {
+        method: "POST",
+
+        body: JSON.stringify({
+          rejectionReason,
+        }),
+      }
+    ),
+
+  // ============================================================
   // Medical Entity Requests
   // ============================================================
 
