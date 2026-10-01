@@ -29,7 +29,20 @@ export default function MedicalDashboard() {
 
   const [updatingRequestId, setUpdatingRequestId] =
     useState("");
+// ============================================================
+// Logout
+// ============================================================
 
+const handleLogout = () => {
+  try {
+    localStorage.removeItem("nabd_user");
+    localStorage.removeItem("nabd_remember");
+    sessionStorage.clear();
+    window.location.replace("/login");
+  } catch (err) {
+    window.location.replace("/login");
+  }
+};
   useEffect(() => {
     loadMedicalDashboard();
   }, []);
