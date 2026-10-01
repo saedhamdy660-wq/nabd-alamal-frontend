@@ -635,14 +635,121 @@ const handleLogout = () => {
   // Dashboard
   // ============================================================
 
-  return (
+ return (
+  <div
+    dir="rtl"
+    style={styles.page}
+  >
     <div
-      dir="rtl"
-      style={styles.page}
+      style={
+        styles.container
+      }
     >
+
+      {/* =========================
+          Top Bar with Icons
+      ========================= */}
+
+      <div style={styles.topBar}>
+
+        <div style={styles.topBarRight}>
+          <div style={styles.topBarBrandIcon}>
+            🏥
+          </div>
+          <span style={styles.topBarBrandText}>
+            نبض الأمل
+          </span>
+        </div>
+
+        <div style={styles.topBarIcons}>
+
+          {/* بروفايل */}
+          <button
+            type="button"
+            style={styles.topBarAvatar}
+            title="الملف الشخصي"
+          >
+            {(user?.name || "م")
+              .charAt(0)
+              .toUpperCase()}
+          </button>
+
+          {/* الإشعارات */}
+          <button
+            type="button"
+            style={styles.topBarIconBtn}
+            title="الإشعارات"
+          >
+            <svg
+              width="20"
+              height="20"
+              viewBox="0 0 24 24"
+              fill="none"
+            >
+              <path
+                d="M18 9.5C18 6.46 15.76 4 12 4C8.24 4 6 6.46 6 9.5C6 14.2 4.5 15.5 4.5 17H19.5C19.5 15.5 18 14.2 18 9.5Z"
+                stroke="currentColor"
+                strokeWidth="1.7"
+                strokeLinejoin="round"
+              />
+              <path
+                d="M10 20H14"
+                stroke="currentColor"
+                strokeWidth="1.7"
+                strokeLinecap="round"
+              />
+            </svg>
+            <span style={styles.topBarNotificationDot} />
+          </button>
+
+          {/* تسجيل الخروج */}
+          <button
+            type="button"
+            style={{
+              ...styles.topBarIconBtn,
+              ...styles.topBarLogout,
+            }}
+            title="تسجيل الخروج"
+            onClick={handleLogout}
+          >
+            <svg
+              width="20"
+              height="20"
+              viewBox="0 0 24 24"
+              fill="none"
+            >
+              <path
+                d="M10 5H6.5C5.67 5 5 5.67 5 6.5V17.5C5 18.33 5.67 19 6.5 19H10"
+                stroke="currentColor"
+                strokeWidth="1.8"
+                strokeLinecap="round"
+              />
+              <path
+                d="M13 8L17 12L13 16"
+                stroke="currentColor"
+                strokeWidth="1.8"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              />
+              <path
+                d="M17 12H9"
+                stroke="currentColor"
+                strokeWidth="1.8"
+                strokeLinecap="round"
+              />
+            </svg>
+          </button>
+
+        </div>
+      </div>
+
+      {/* =========================
+          Header
+      ========================= */}
+
       <div
         style={
-          styles.container
+          styles.header
         }
       >
 
