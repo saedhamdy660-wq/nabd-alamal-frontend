@@ -58,6 +58,9 @@ export default function MedicalDashboard() {
         : "light";
     });
 
+  const isDark =
+    theme === "dark";
+
   useEffect(() => {
     loadMedicalDashboard();
   }, []);
@@ -580,7 +583,9 @@ export default function MedicalDashboard() {
       value ===
         "تم القبول"
     ) {
-      return styles.statusSuccess;
+      return isDark
+        ? styles.statusSuccessDark
+        : styles.statusSuccess;
     }
 
     if (
@@ -589,7 +594,9 @@ export default function MedicalDashboard() {
       value ===
         "تم الإلغاء"
     ) {
-      return styles.statusDanger;
+      return isDark
+        ? styles.statusDangerDark
+        : styles.statusDanger;
     }
 
     if (
@@ -602,10 +609,14 @@ export default function MedicalDashboard() {
       value ===
         "قيد التجهيز"
     ) {
-      return styles.statusProgress;
+      return isDark
+        ? styles.statusProgressDark
+        : styles.statusProgress;
     }
 
-    return styles.statusPending;
+    return isDark
+      ? styles.statusPendingDark
+      : styles.statusPending;
   }
 
   // ============================================================
@@ -711,32 +722,51 @@ export default function MedicalDashboard() {
 
   if (loading) {
     return (
-      <div style={styles.page}>
+      <div
+        style={{
+          ...styles.page,
+          ...(isDark
+            ? styles.pageDark
+            : {}),
+        }}
+      >
         <div
-          style={
-            styles.loadingCard
-          }
+          style={{
+            ...styles.loadingCard,
+            ...(isDark
+              ? styles.loadingCardDark
+              : {}),
+          }}
         >
           <div
-            style={
-              styles.loadingIcon
-            }
+            style={{
+              ...styles.loadingIcon,
+              ...(isDark
+                ? styles.loadingIconDark
+                : {}),
+            }}
           >
             🏥
           </div>
 
           <h2
-            style={
-              styles.loadingTitle
-            }
+            style={{
+              ...styles.loadingTitle,
+              ...(isDark
+                ? styles.darkText
+                : {}),
+            }}
           >
             جاري تحميل لوحة التحكم
           </h2>
 
           <p
-            style={
-              styles.loadingText
-            }
+            style={{
+              ...styles.loadingText,
+              ...(isDark
+                ? styles.secondaryTextDark
+                : {}),
+            }}
           >
             برجاء الانتظار...
           </p>
@@ -751,32 +781,51 @@ export default function MedicalDashboard() {
 
   if (error) {
     return (
-      <div style={styles.page}>
+      <div
+        style={{
+          ...styles.page,
+          ...(isDark
+            ? styles.pageDark
+            : {}),
+        }}
+      >
         <div
-          style={
-            styles.errorCard
-          }
+          style={{
+            ...styles.errorCard,
+            ...(isDark
+              ? styles.errorCardDark
+              : {}),
+          }}
         >
           <div
-            style={
-              styles.errorIcon
-            }
+            style={{
+              ...styles.errorIcon,
+              ...(isDark
+                ? styles.errorIconDark
+                : {}),
+            }}
           >
             ⚠️
           </div>
 
           <h2
-            style={
-              styles.errorTitle
-            }
+            style={{
+              ...styles.errorTitle,
+              ...(isDark
+                ? styles.darkText
+                : {}),
+            }}
           >
             تعذر تحميل البيانات
           </h2>
 
           <p
-            style={
-              styles.errorText
-            }
+            style={{
+              ...styles.errorText,
+              ...(isDark
+                ? styles.secondaryTextDark
+                : {}),
+            }}
           >
             {error}
           </p>
@@ -786,9 +835,12 @@ export default function MedicalDashboard() {
             onClick={
               loadMedicalDashboard
             }
-            style={
-              styles.retryButton
-            }
+            style={{
+              ...styles.retryButton,
+              ...(isDark
+                ? styles.retryButtonDark
+                : {}),
+            }}
           >
             إعادة المحاولة
           </button>
@@ -806,7 +858,7 @@ export default function MedicalDashboard() {
       dir="rtl"
       style={{
         ...styles.page,
-        ...(theme === "dark"
+        ...(isDark
           ? styles.pageDark
           : {}),
       }}
@@ -824,7 +876,7 @@ export default function MedicalDashboard() {
         <div
           style={{
             ...styles.topBar,
-            ...(theme === "dark"
+            ...(isDark
               ? styles.topBarDark
               : {}),
           }}
@@ -837,7 +889,7 @@ export default function MedicalDashboard() {
             <div
               style={{
                 ...styles.topBarBrandIcon,
-                ...(theme === "dark"
+                ...(isDark
                   ? styles.topBarBrandIconDark
                   : {}),
               }}
@@ -851,12 +903,9 @@ export default function MedicalDashboard() {
               }
             >
               <span
-                style={{
-                  ...styles.topBarBrandText,
-                  ...(theme === "dark"
-                    ? styles.darkText
-                    : {}),
-                }}
+                style={
+                  styles.topBarBrandText
+                }
               >
                 نبض الأمل
               </span>
@@ -864,7 +913,7 @@ export default function MedicalDashboard() {
               <span
                 style={{
                   ...styles.topBarBrandSubText,
-                  ...(theme === "dark"
+                  ...(isDark
                     ? styles.topBarBrandSubTextDark
                     : {}),
                 }}
@@ -880,8 +929,6 @@ export default function MedicalDashboard() {
             }
           >
 
-            {/* Notifications */}
-
             <button
               type="button"
               title="الإشعارات"
@@ -891,7 +938,7 @@ export default function MedicalDashboard() {
               }
               style={{
                 ...styles.topBarIconBtn,
-                ...(theme === "dark"
+                ...(isDark
                   ? styles.topBarIconBtnDark
                   : {}),
               }}
@@ -899,17 +946,15 @@ export default function MedicalDashboard() {
               <BellIcon />
             </button>
 
-            {/* Dark Mode */}
-
             <button
               type="button"
               title={
-                theme === "dark"
+                isDark
                   ? "الوضع الفاتح"
                   : "الوضع الداكن"
               }
               aria-label={
-                theme === "dark"
+                isDark
                   ? "الوضع الفاتح"
                   : "الوضع الداكن"
               }
@@ -918,19 +963,17 @@ export default function MedicalDashboard() {
               }
               style={{
                 ...styles.topBarIconBtn,
-                ...(theme === "dark"
+                ...(isDark
                   ? styles.topBarIconBtnDark
                   : {}),
               }}
             >
-              {theme === "dark" ? (
+              {isDark ? (
                 <SunIcon />
               ) : (
                 <MoonIcon />
               )}
             </button>
-
-            {/* Logout */}
 
             <button
               type="button"
@@ -942,7 +985,7 @@ export default function MedicalDashboard() {
               style={{
                 ...styles.topBarIconBtn,
                 ...styles.topBarLogout,
-                ...(theme === "dark"
+                ...(isDark
                   ? styles.topBarLogoutDark
                   : {}),
               }}
@@ -1014,17 +1057,23 @@ export default function MedicalDashboard() {
           }
         >
           <h2
-            style={
-              styles.sectionTitle
-            }
+            style={{
+              ...styles.sectionTitle,
+              ...(isDark
+                ? styles.darkText
+                : {}),
+            }}
           >
             بيانات الجهة
           </h2>
 
           <div
-            style={
-              styles.infoCard
-            }
+            style={{
+              ...styles.infoCard,
+              ...(isDark
+                ? styles.infoCardDark
+                : {}),
+            }}
           >
             <InfoRow
               icon="🏢"
@@ -1033,6 +1082,7 @@ export default function MedicalDashboard() {
                 entity?.name ||
                 "غير متوفر"
               }
+              isDark={isDark}
             />
 
             <InfoRow
@@ -1042,6 +1092,7 @@ export default function MedicalDashboard() {
                 entity?.email ||
                 "غير متوفر"
               }
+              isDark={isDark}
             />
 
             <InfoRow
@@ -1051,6 +1102,7 @@ export default function MedicalDashboard() {
                 entity?.phone ||
                 "غير متوفر"
               }
+              isDark={isDark}
             />
 
             <InfoRow
@@ -1060,6 +1112,7 @@ export default function MedicalDashboard() {
                 entity?.licenseNumber ||
                 "غير متوفر"
               }
+              isDark={isDark}
             />
 
             <InfoRow
@@ -1069,6 +1122,7 @@ export default function MedicalDashboard() {
                 entity?.address ||
                 "غير متوفر"
               }
+              isDark={isDark}
             />
 
             <InfoRow
@@ -1083,6 +1137,7 @@ export default function MedicalDashboard() {
                   .join(" - ") ||
                 "غير متوفر"
               }
+              isDark={isDark}
             />
           </div>
         </section>
@@ -1097,17 +1152,23 @@ export default function MedicalDashboard() {
           }
         >
           <h2
-            style={
-              styles.sectionTitle
-            }
+            style={{
+              ...styles.sectionTitle,
+              ...(isDark
+                ? styles.darkText
+                : {}),
+            }}
           >
             بيانات الحساب
           </h2>
 
           <div
-            style={
-              styles.infoCard
-            }
+            style={{
+              ...styles.infoCard,
+              ...(isDark
+                ? styles.infoCardDark
+                : {}),
+            }}
           >
             <InfoRow
               icon="👤"
@@ -1116,6 +1177,7 @@ export default function MedicalDashboard() {
                 user?.name ||
                 "غير متوفر"
               }
+              isDark={isDark}
             />
 
             <InfoRow
@@ -1125,12 +1187,14 @@ export default function MedicalDashboard() {
                 user?.email ||
                 "غير متوفر"
               }
+              isDark={isDark}
             />
 
             <InfoRow
               icon="🔐"
               label="نوع الحساب"
               value="حساب جهة طبية"
+              isDark={isDark}
             />
           </div>
         </section>
@@ -1151,20 +1215,32 @@ export default function MedicalDashboard() {
           >
             <div>
               <h2
-                style={
-                  styles.sectionTitle
-                }
+                style={{
+                  ...styles.sectionTitle,
+                  ...(isDark
+                    ? styles.darkText
+                    : {}),
+                }}
               >
                 الطلبات
               </h2>
 
               <p
-                style={
-                  styles.requestsCount
-                }
+                style={{
+                  ...styles.requestsCount,
+                  ...(isDark
+                    ? styles.secondaryTextDark
+                    : {}),
+                }}
               >
                 إجمالي الطلبات:{" "}
-                <strong>
+                <strong
+                  style={
+                    isDark
+                      ? styles.darkText
+                      : {}
+                  }
+                >
                   {requests.length}
                 </strong>
               </p>
@@ -1181,9 +1257,12 @@ export default function MedicalDashboard() {
               disabled={
                 requestsLoading
               }
-              style={
-                styles.refreshButton
-              }
+              style={{
+                ...styles.refreshButton,
+                ...(isDark
+                  ? styles.refreshButtonDark
+                  : {}),
+              }}
             >
               {requestsLoading
                 ? "جاري التحديث..."
@@ -1193,9 +1272,12 @@ export default function MedicalDashboard() {
 
           {requestsError && (
             <div
-              style={
-                styles.requestsError
-              }
+              style={{
+                ...styles.requestsError,
+                ...(isDark
+                  ? styles.requestsErrorDark
+                  : {}),
+              }}
             >
               {requestsError}
             </div>
@@ -1204,30 +1286,42 @@ export default function MedicalDashboard() {
           {requestsLoading &&
           requests.length === 0 ? (
             <div
-              style={
-                styles.emptyCard
-              }
+              style={{
+                ...styles.emptyCard,
+                ...(isDark
+                  ? styles.emptyCardDark
+                  : {}),
+              }}
             >
               <div
-                style={
-                  styles.emptyIcon
-                }
+                style={{
+                  ...styles.emptyIcon,
+                  ...(isDark
+                    ? styles.emptyIconDark
+                    : {}),
+                }}
               >
                 ⏳
               </div>
 
               <h3
-                style={
-                  styles.emptyTitle
-                }
+                style={{
+                  ...styles.emptyTitle,
+                  ...(isDark
+                    ? styles.darkText
+                    : {}),
+                }}
               >
                 جاري تحميل الطلبات
               </h3>
 
               <p
-                style={
-                  styles.emptyText
-                }
+                style={{
+                  ...styles.emptyText,
+                  ...(isDark
+                    ? styles.secondaryTextDark
+                    : {}),
+                }}
               >
                 برجاء الانتظار...
               </p>
@@ -1235,30 +1329,42 @@ export default function MedicalDashboard() {
           ) : requests.length ===
             0 ? (
             <div
-              style={
-                styles.emptyCard
-              }
+              style={{
+                ...styles.emptyCard,
+                ...(isDark
+                  ? styles.emptyCardDark
+                  : {}),
+              }}
             >
               <div
-                style={
-                  styles.emptyIcon
-                }
+                style={{
+                  ...styles.emptyIcon,
+                  ...(isDark
+                    ? styles.emptyIconDark
+                    : {}),
+                }}
               >
                 📋
               </div>
 
               <h3
-                style={
-                  styles.emptyTitle
-                }
+                style={{
+                  ...styles.emptyTitle,
+                  ...(isDark
+                    ? styles.darkText
+                    : {}),
+                }}
               >
                 لا توجد طلبات حتى الآن
               </h3>
 
               <p
-                style={
-                  styles.emptyText
-                }
+                style={{
+                  ...styles.emptyText,
+                  ...(isDark
+                    ? styles.secondaryTextDark
+                    : {}),
+                }}
               >
                 سيتم عرض الطلبات الخاصة
                 بجهتك الطبية هنا عند وصولها.
@@ -1281,6 +1387,9 @@ export default function MedicalDashboard() {
                     }
                     user={
                       user
+                    }
+                    isDark={
+                      isDark
                     }
                     updatingRequestId={
                       updatingRequestId
@@ -1338,9 +1447,12 @@ export default function MedicalDashboard() {
           }
         >
           <div
-            style={
-              styles.verifiedCard
-            }
+            style={{
+              ...styles.verifiedCard,
+              ...(isDark
+                ? styles.verifiedCardDark
+                : {}),
+            }}
           >
             <div
               style={
@@ -1352,17 +1464,23 @@ export default function MedicalDashboard() {
 
             <div>
               <h3
-                style={
-                  styles.verifiedTitle
-                }
+                style={{
+                  ...styles.verifiedTitle,
+                  ...(isDark
+                    ? styles.darkText
+                    : {}),
+                }}
               >
                 جهة طبية معتمدة
               </h3>
 
               <p
-                style={
-                  styles.verifiedText
-                }
+                style={{
+                  ...styles.verifiedText,
+                  ...(isDark
+                    ? styles.secondaryTextDark
+                    : {}),
+                }}
               >
                 هذه الجهة تمت إضافتها واعتمادها
                 من إدارة منصة نبض الأمل.
@@ -1584,6 +1702,7 @@ function MedicalBrandIcon() {
 function RequestCard({
   request,
   user,
+  isDark,
   updatingRequestId,
   statusOptions,
   onStatusChange,
@@ -1634,9 +1753,12 @@ function RequestCard({
 
   return (
     <div
-      style={
-        styles.requestCard
-      }
+      style={{
+        ...styles.requestCard,
+        ...(isDark
+          ? styles.requestCardDark
+          : {}),
+      }}
     >
 
       <div
@@ -1650,18 +1772,24 @@ function RequestCard({
           }
         >
           <div
-            style={
-              styles.requestIcon
-            }
+            style={{
+              ...styles.requestIcon,
+              ...(isDark
+                ? styles.requestIconDark
+                : {}),
+            }}
           >
             {getRequestIcon()}
           </div>
 
           <div>
             <h3
-              style={
-                styles.requestTitle
-              }
+              style={{
+                ...styles.requestTitle,
+                ...(isDark
+                  ? styles.darkText
+                  : {}),
+              }}
             >
               {getRequestTypeLabel(
                 request
@@ -1669,9 +1797,12 @@ function RequestCard({
             </h3>
 
             <p
-              style={
-                styles.requestId
-              }
+              style={{
+                ...styles.requestId,
+                ...(isDark
+                  ? styles.secondaryTextDark
+                  : {}),
+              }}
             >
               رقم الطلب:{" "}
               {request.id ||
@@ -1706,6 +1837,7 @@ function RequestCard({
               request
             )
           }
+          isDark={isDark}
         />
 
         {user?.medicalEntityType !==
@@ -1717,6 +1849,7 @@ function RequestCard({
               value={
                 bloodType
               }
+              isDark={isDark}
             />
           )}
 
@@ -1729,6 +1862,7 @@ function RequestCard({
               value={
                 medicineName
               }
+              isDark={isDark}
             />
           )}
 
@@ -1743,6 +1877,7 @@ function RequestCard({
                   units
                 )
               }
+              isDark={isDark}
             />
           )}
 
@@ -1753,6 +1888,7 @@ function RequestCard({
             value={
               urgency
             }
+            isDark={isDark}
           />
         )}
 
@@ -1763,28 +1899,38 @@ function RequestCard({
             value={
               requestDate
             }
+            isDark={isDark}
           />
         )}
       </div>
 
       {notes && (
         <div
-          style={
-            styles.notesBox
-          }
+          style={{
+            ...styles.notesBox,
+            ...(isDark
+              ? styles.notesBoxDark
+              : {}),
+          }}
         >
           <span
-            style={
-              styles.notesLabel
-            }
+            style={{
+              ...styles.notesLabel,
+              ...(isDark
+                ? styles.secondaryTextDark
+                : {}),
+            }}
           >
             ملاحظات
           </span>
 
           <p
-            style={
-              styles.notesText
-            }
+            style={{
+              ...styles.notesText,
+              ...(isDark
+                ? styles.darkText
+                : {}),
+            }}
           >
             {notes}
           </p>
@@ -1792,14 +1938,20 @@ function RequestCard({
       )}
 
       <div
-        style={
-          styles.statusSection
-        }
+        style={{
+          ...styles.statusSection,
+          ...(isDark
+            ? styles.statusSectionDark
+            : {}),
+        }}
       >
         <label
-          style={
-            styles.statusLabel
-          }
+          style={{
+            ...styles.statusLabel,
+            ...(isDark
+              ? styles.darkText
+              : {}),
+          }}
         >
           تحديث حالة الطلب
         </label>
@@ -1818,9 +1970,12 @@ function RequestCard({
           disabled={
             isUpdating
           }
-          style={
-            styles.statusSelect
-          }
+          style={{
+            ...styles.statusSelect,
+            ...(isDark
+              ? styles.statusSelectDark
+              : {}),
+          }}
         >
           <option value="">
             اختر حالة الطلب
@@ -1861,17 +2016,24 @@ function RequestInfo({
   icon,
   label,
   value,
+  isDark,
 }) {
   return (
     <div
-      style={
-        styles.requestInfoItem
-      }
+      style={{
+        ...styles.requestInfoItem,
+        ...(isDark
+          ? styles.requestInfoItemDark
+          : {}),
+      }}
     >
       <div
-        style={
-          styles.requestInfoIcon
-        }
+        style={{
+          ...styles.requestInfoIcon,
+          ...(isDark
+            ? styles.requestInfoIconDark
+            : {}),
+        }}
       >
         {icon}
       </div>
@@ -1882,17 +2044,23 @@ function RequestInfo({
         }
       >
         <span
-          style={
-            styles.requestInfoLabel
-          }
+          style={{
+            ...styles.requestInfoLabel,
+            ...(isDark
+              ? styles.secondaryTextDark
+              : {}),
+          }}
         >
           {label}
         </span>
 
         <span
-          style={
-            styles.requestInfoValue
-          }
+          style={{
+            ...styles.requestInfoValue,
+            ...(isDark
+              ? styles.darkText
+              : {}),
+          }}
         >
           {value}
         </span>
@@ -1909,17 +2077,24 @@ function InfoRow({
   icon,
   label,
   value,
+  isDark,
 }) {
   return (
     <div
-      style={
-        styles.infoRow
-      }
+      style={{
+        ...styles.infoRow,
+        ...(isDark
+          ? styles.infoRowDark
+          : {}),
+      }}
     >
       <div
-        style={
-          styles.infoIcon
-        }
+        style={{
+          ...styles.infoIcon,
+          ...(isDark
+            ? styles.infoIconDark
+            : {}),
+        }}
       >
         {icon}
       </div>
@@ -1930,17 +2105,23 @@ function InfoRow({
         }
       >
         <span
-          style={
-            styles.infoLabel
-          }
+          style={{
+            ...styles.infoLabel,
+            ...(isDark
+              ? styles.secondaryTextDark
+              : {}),
+          }}
         >
           {label}
         </span>
 
         <span
-          style={
-            styles.infoValue
-          }
+          style={{
+            ...styles.infoValue,
+            ...(isDark
+              ? styles.darkText
+              : {}),
+          }}
         >
           {value}
         </span>
@@ -1969,8 +2150,16 @@ const styles = {
 
   pageDark: {
     background:
-      "linear-gradient(180deg, #10221f 0%, #142b27 55%, #10221f 100%)",
+      "linear-gradient(180deg, #081714 0%, #0d211d 52%, #091815 100%)",
     color: "#eefaf7",
+  },
+
+  darkText: {
+    color: "#eefaf7",
+  },
+
+  secondaryTextDark: {
+    color: "#9ab7b1",
   },
 
   container: {
@@ -2123,14 +2312,6 @@ const styles = {
       "rgba(220, 38, 38, 0.18)",
   },
 
-  topBarBrandTextDark: {
-    color: "#eefaf7",
-  },
-
-  darkText: {
-    color: "#eefaf7",
-  },
-
   // ==========================================================
   // Header
   // ==========================================================
@@ -2224,6 +2405,16 @@ const styles = {
       "0 8px 22px rgba(23, 70, 63, 0.05)",
     overflow: "hidden",
     boxSizing: "border-box",
+    transition:
+      "background .25s ease, border .25s ease, box-shadow .25s ease",
+  },
+
+  infoCardDark: {
+    background: "#122823",
+    border:
+      "1px solid rgba(102, 157, 147, 0.20)",
+    boxShadow:
+      "0 10px 24px rgba(0, 0, 0, 0.20)",
   },
 
   infoRow: {
@@ -2238,6 +2429,11 @@ const styles = {
     boxSizing: "border-box",
   },
 
+  infoRowDark: {
+    borderBottom:
+      "1px solid rgba(142, 183, 174, 0.12)",
+  },
+
   infoIcon: {
     width: "38px",
     height: "38px",
@@ -2250,6 +2446,13 @@ const styles = {
     fontSize: "17px",
     boxShadow:
       "0 2px 8px rgba(10, 168, 143, 0.04)",
+  },
+
+  infoIconDark: {
+    background:
+      "rgba(10, 168, 143, 0.16)",
+    boxShadow:
+      "0 3px 10px rgba(0, 0, 0, 0.12)",
   },
 
   infoContent: {
@@ -2311,6 +2514,16 @@ const styles = {
       "0 3px 10px rgba(10, 168, 143, 0.06)",
   },
 
+  refreshButtonDark: {
+    background:
+      "rgba(10, 168, 143, 0.16)",
+    color: "#73e2cf",
+    boxShadow:
+      "0 4px 12px rgba(0, 0, 0, 0.14)",
+    border:
+      "1px solid rgba(10, 168, 143, 0.16)",
+  },
+
   requestsError: {
     background: "#fff5f5",
     border:
@@ -2321,6 +2534,14 @@ const styles = {
     marginBottom: "12px",
     fontSize: "12px",
     lineHeight: 1.7,
+  },
+
+  requestsErrorDark: {
+    background:
+      "rgba(127, 29, 29, 0.22)",
+    border:
+      "1px solid rgba(248, 113, 113, 0.22)",
+    color: "#ffb4b4",
   },
 
   // ==========================================================
@@ -2342,6 +2563,16 @@ const styles = {
     boxShadow:
       "0 7px 20px rgba(23, 70, 63, 0.05)",
     boxSizing: "border-box",
+    transition:
+      "background .25s ease, border .25s ease, box-shadow .25s ease",
+  },
+
+  requestCardDark: {
+    background: "#122823",
+    border:
+      "1px solid rgba(102, 157, 147, 0.20)",
+    boxShadow:
+      "0 10px 24px rgba(0, 0, 0, 0.20)",
   },
 
   requestTop: {
@@ -2370,6 +2601,11 @@ const styles = {
     alignItems: "center",
     justifyContent: "center",
     fontSize: "18px",
+  },
+
+  requestIconDark: {
+    background:
+      "rgba(10, 168, 143, 0.16)",
   },
 
   requestTitle: {
@@ -2401,9 +2637,21 @@ const styles = {
     color: "#9b7200",
   },
 
+  statusPendingDark: {
+    background:
+      "rgba(154, 114, 0, 0.20)",
+    color: "#f4d875",
+  },
+
   statusProgress: {
     background: "#edf7ff",
     color: "#23648e",
+  },
+
+  statusProgressDark: {
+    background:
+      "rgba(35, 100, 142, 0.22)",
+    color: "#8cccf2",
   },
 
   statusSuccess: {
@@ -2411,9 +2659,21 @@ const styles = {
     color: "#078876",
   },
 
+  statusSuccessDark: {
+    background:
+      "rgba(10, 168, 143, 0.18)",
+    color: "#6fe0cd",
+  },
+
   statusDanger: {
     background: "#fff0f0",
     color: "#b13b3b",
+  },
+
+  statusDangerDark: {
+    background:
+      "rgba(177, 59, 59, 0.20)",
+    color: "#ffaaaa",
   },
 
   // ==========================================================
@@ -2441,6 +2701,13 @@ const styles = {
     boxSizing: "border-box",
   },
 
+  requestInfoItemDark: {
+    background:
+      "rgba(255,255,255,0.035)",
+    border:
+      "1px solid rgba(142, 183, 174, 0.12)",
+  },
+
   requestInfoIcon: {
     width: "30px",
     height: "30px",
@@ -2451,6 +2718,11 @@ const styles = {
     alignItems: "center",
     justifyContent: "center",
     fontSize: "13px",
+  },
+
+  requestInfoIconDark: {
+    background:
+      "rgba(10, 168, 143, 0.15)",
   },
 
   requestInfoContent: {
@@ -2488,6 +2760,13 @@ const styles = {
     marginBottom: "11px",
   },
 
+  notesBoxDark: {
+    background:
+      "linear-gradient(135deg, #162e29 0%, #132923 100%)",
+    border:
+      "1px solid rgba(142, 183, 174, 0.13)",
+  },
+
   notesLabel: {
     display: "block",
     color: "#71827f",
@@ -2511,6 +2790,11 @@ const styles = {
     borderTop:
       "1px solid #edf3f2",
     paddingTop: "12px",
+  },
+
+  statusSectionDark: {
+    borderTop:
+      "1px solid rgba(142, 183, 174, 0.12)",
   },
 
   statusLabel: {
@@ -2538,6 +2822,13 @@ const styles = {
     boxSizing: "border-box",
   },
 
+  statusSelectDark: {
+    border:
+      "1px solid rgba(142, 183, 174, 0.20)",
+    background: "#0d1f1b",
+    color: "#eefaf7",
+  },
+
   updatingText: {
     margin: "6px 0 0",
     color: "#078876",
@@ -2559,6 +2850,14 @@ const styles = {
       "0 5px 16px rgba(23, 70, 63, 0.025)",
   },
 
+  emptyCardDark: {
+    background: "#122823",
+    border:
+      "1px dashed rgba(126, 196, 184, 0.22)",
+    boxShadow:
+      "0 8px 20px rgba(0, 0, 0, 0.16)",
+  },
+
   emptyIcon: {
     width: "56px",
     height: "56px",
@@ -2569,6 +2868,11 @@ const styles = {
     alignItems: "center",
     justifyContent: "center",
     fontSize: "26px",
+  },
+
+  emptyIconDark: {
+    background:
+      "rgba(10, 168, 143, 0.15)",
   },
 
   emptyTitle: {
@@ -2601,6 +2905,15 @@ const styles = {
     gap: "11px",
     boxShadow:
       "0 6px 18px rgba(10, 168, 143, 0.06)",
+  },
+
+  verifiedCardDark: {
+    background:
+      "linear-gradient(135deg, #15342e 0%, #122b26 100%)",
+    border:
+      "1px solid rgba(10, 168, 143, 0.20)",
+    boxShadow:
+      "0 8px 20px rgba(0, 0, 0, 0.18)",
   },
 
   verifiedIcon: {
@@ -2652,6 +2965,14 @@ const styles = {
     boxSizing: "border-box",
   },
 
+  loadingCardDark: {
+    background: "#122823",
+    border:
+      "1px solid rgba(126, 196, 184, 0.16)",
+    boxShadow:
+      "0 10px 28px rgba(0, 0, 0, 0.24)",
+  },
+
   loadingIcon: {
     width: "60px",
     height: "60px",
@@ -2662,6 +2983,11 @@ const styles = {
     alignItems: "center",
     justifyContent: "center",
     fontSize: "32px",
+  },
+
+  loadingIconDark: {
+    background:
+      "rgba(10, 168, 143, 0.15)",
   },
 
   loadingTitle: {
@@ -2695,6 +3021,14 @@ const styles = {
     boxSizing: "border-box",
   },
 
+  errorCardDark: {
+    background: "#122823",
+    border:
+      "1px solid rgba(248, 113, 113, 0.18)",
+    boxShadow:
+      "0 10px 28px rgba(0, 0, 0, 0.24)",
+  },
+
   errorIcon: {
     width: "60px",
     height: "60px",
@@ -2705,6 +3039,11 @@ const styles = {
     alignItems: "center",
     justifyContent: "center",
     fontSize: "32px",
+  },
+
+  errorIconDark: {
+    background:
+      "rgba(177, 59, 59, 0.18)",
   },
 
   errorTitle: {
@@ -2732,5 +3071,12 @@ const styles = {
     fontSize: "12px",
     fontWeight: 800,
     cursor: "pointer",
+  },
+
+  retryButtonDark: {
+    background:
+      "linear-gradient(135deg, #0aa88f, #078876)",
+    boxShadow:
+      "0 6px 16px rgba(10, 168, 143, 0.18)",
   },
 };
