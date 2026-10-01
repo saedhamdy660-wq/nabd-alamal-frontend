@@ -14,6 +14,7 @@ import LocationPermission from "./pages/LocationPermission.jsx";
 
 import Home from "./pages/Home.jsx";
 import MedicalDashboard from "./pages/MedicalDashboard.jsx";
+import AdminDashboard from "./pages/AdminDashboard.jsx";
 
 import BloodDonation from "./pages/BloodDonation.jsx";
 import BloodCenters from "./pages/BloodCenters.jsx";
@@ -45,6 +46,7 @@ const noNavRoutes = [
   "/verify-identity",
   "/location-permission",
   "/home",
+  "/admin",
   "/notification-settings",
   "/settings",
 ];
@@ -257,6 +259,13 @@ export default function App() {
           element={getHomePage()}
         />
 
+        {/* ================= ADMIN ================= */}
+
+        <Route
+          path="/admin"
+          element={<AdminDashboard />}
+        />
+
         <Route
           path="/medicines"
           element={<MedicineExchange />}
@@ -359,8 +368,8 @@ export default function App() {
 
       {!hideNav && <Navbar />}
 
-      {/* الشات يظهر في كل صفحات التطبيق الداخلية */}
-      {![
+      {/* الشات يظهر في صفحات التطبيق الداخلية */}
+      {[
         "/",
         "/welcome",
         "/login",
@@ -368,7 +377,8 @@ export default function App() {
         "/verify-phone",
         "/verify-identity",
         "/location-permission",
-      ].includes(location.pathname) && (
+        "/admin",
+      ].includes(location.pathname) === false && (
         <ChatBot />
       )}
 
