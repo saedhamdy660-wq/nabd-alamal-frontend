@@ -1435,7 +1435,6 @@ function InfoRow({
     </div>
   );
 }
-
 // ============================================================
 // Styles
 // ============================================================
@@ -1444,245 +1443,283 @@ const styles = {
   page: {
     minHeight: "100vh",
     background:
-      "linear-gradient(180deg, #f7fffd 0%, #ffffff 100%)",
-    padding:
-      "24px 16px 100px",
-    fontFamily:
-      "Tajawal, Arial, sans-serif",
+      "linear-gradient(180deg, #f4fffd 0%, #ffffff 55%, #f8fffe 100%)",
+    padding: "18px 14px 90px",
+    fontFamily: "Tajawal, Arial, sans-serif",
     color: "#17332e",
+    boxSizing: "border-box",
   },
 
   container: {
     width: "100%",
-    maxWidth: "900px",
+    maxWidth: "420px",
     margin: "0 auto",
+    boxSizing: "border-box",
   },
+
+  // ==========================================================
+  // Header
+  // ==========================================================
 
   header: {
     background:
-      "linear-gradient(135deg, #0aa88f 0%, #078876 100%)",
-    borderRadius: "24px",
-    padding: "24px",
+      "linear-gradient(135deg, #12aa95 0%, #07917f 100%)",
+    borderRadius: "28px",
+    padding: "24px 22px",
     color: "#ffffff",
     display: "flex",
+    flexDirection: "row",
     alignItems: "center",
-    justifyContent:
-      "space-between",
+    justifyContent: "space-between",
     gap: "16px",
     boxShadow:
-      "0 12px 30px rgba(10, 168, 143, 0.18)",
-    marginBottom: "24px",
+      "0 14px 34px rgba(8, 150, 130, 0.20)",
+    marginBottom: "30px",
+    minHeight: "150px",
+    boxSizing: "border-box",
   },
 
   welcome: {
-    margin: "0 0 6px",
+    margin: "0 0 5px",
     fontSize: "14px",
-    opacity: 0.9,
+    fontWeight: 500,
+    opacity: 0.92,
+    lineHeight: 1.5,
   },
 
   title: {
     margin: 0,
-    fontSize: "26px",
-    fontWeight: 800,
+    fontSize: "28px",
+    fontWeight: 900,
+    lineHeight: 1.25,
+    letterSpacing: "-0.5px",
   },
 
   subtitle: {
-    margin:
-      "7px 0 0",
-    fontSize: "14px",
-    opacity: 0.92,
+    margin: "6px 0 0",
+    fontSize: "15px",
+    fontWeight: 500,
+    opacity: 0.94,
   },
 
   entityIcon: {
-    width: "64px",
-    height: "64px",
-    minWidth: "64px",
-    borderRadius: "20px",
+    width: "76px",
+    height: "76px",
+    minWidth: "76px",
+    borderRadius: "25px",
     background:
       "rgba(255,255,255,0.18)",
+    border:
+      "1px solid rgba(255,255,255,0.10)",
     display: "flex",
     alignItems: "center",
     justifyContent: "center",
-    fontSize: "30px",
+    fontSize: "36px",
+    boxShadow:
+      "inset 0 1px 0 rgba(255,255,255,0.10)",
   },
 
+  // ==========================================================
+  // Sections
+  // ==========================================================
+
   section: {
-    marginBottom: "24px",
+    marginBottom: "28px",
   },
 
   sectionTitle: {
-    margin:
-      "0 0 12px",
-    fontSize: "19px",
-    fontWeight: 800,
+    margin: "0 0 14px",
+    padding: "0 4px",
+    fontSize: "23px",
+    fontWeight: 900,
+    color: "#17332e",
+    lineHeight: 1.4,
   },
+
+  // ==========================================================
+  // Information Cards
+  // ==========================================================
 
   infoCard: {
     background: "#ffffff",
     border:
-      "1px solid #e5efed",
-    borderRadius: "20px",
-    padding:
-      "6px 18px",
+      "1px solid rgba(173, 215, 208, 0.42)",
+    borderRadius: "25px",
+    padding: "5px 16px",
     boxShadow:
-      "0 6px 20px rgba(23, 51, 46, 0.05)",
+      "0 10px 28px rgba(23, 70, 63, 0.055)",
+    overflow: "hidden",
+    boxSizing: "border-box",
   },
 
   infoRow: {
     display: "flex",
+    flexDirection: "row",
     alignItems: "center",
     gap: "13px",
     padding: "15px 0",
+    minHeight: "67px",
     borderBottom:
       "1px solid #edf3f2",
+    boxSizing: "border-box",
   },
 
   infoIcon: {
-    width: "42px",
-    height: "42px",
-    minWidth: "42px",
-    borderRadius: "13px",
-    background: "#e6f7f4",
+    width: "48px",
+    height: "48px",
+    minWidth: "48px",
+    borderRadius: "16px",
+    background:
+      "#e6f7f4",
     display: "flex",
     alignItems: "center",
-    justifyContent:
-      "center",
-    fontSize: "19px",
+    justifyContent: "center",
+    fontSize: "21px",
+    boxShadow:
+      "0 3px 10px rgba(10, 168, 143, 0.04)",
   },
 
   infoContent: {
     minWidth: 0,
+    flex: 1,
     display: "flex",
-    flexDirection:
-      "column",
+    flexDirection: "column",
     gap: "4px",
+    alignItems: "flex-start",
   },
 
   infoLabel: {
-    fontSize: "12px",
-    color: "#6b7c79",
+    fontSize: "13px",
+    color: "#71827f",
+    fontWeight: 500,
+    lineHeight: 1.4,
   },
 
   infoValue: {
-    fontSize: "15px",
-    fontWeight: 700,
+    fontSize: "16px",
+    fontWeight: 800,
     color: "#17332e",
-    overflowWrap:
-      "anywhere",
+    overflowWrap: "anywhere",
+    lineHeight: 1.45,
   },
 
   // ==========================================================
-  // Requests
+  // Requests Header
   // ==========================================================
 
   requestsHeader: {
     display: "flex",
     alignItems: "flex-end",
-    justifyContent:
-      "space-between",
-    gap: "12px",
-    marginBottom: "12px",
+    justifyContent: "space-between",
+    gap: "10px",
+    marginBottom: "14px",
   },
 
   requestsCount: {
-    margin:
-      "-5px 0 0",
-    color: "#6b7c79",
+    margin: "-7px 4px 0 0",
+    color: "#7a8986",
     fontSize: "13px",
+    lineHeight: 1.6,
   },
 
   refreshButton: {
     border: "none",
     background: "#e6f7f4",
     color: "#078876",
-    padding:
-      "10px 15px",
-    borderRadius: "12px",
+    padding: "11px 18px",
+    minHeight: "44px",
+    borderRadius: "15px",
+    fontFamily: "Tajawal, Arial, sans-serif",
     fontSize: "13px",
-    fontWeight: 800,
+    fontWeight: 900,
     cursor: "pointer",
+    boxShadow:
+      "0 4px 12px rgba(10, 168, 143, 0.06)",
   },
 
   requestsError: {
-    background: "#fff4f4",
+    background: "#fff5f5",
     border:
-      "1px solid #f2cccc",
+      "1px solid #f3cccc",
     color: "#a33b3b",
-    borderRadius: "14px",
-    padding:
-      "12px 14px",
-    marginBottom: "12px",
+    borderRadius: "16px",
+    padding: "12px 14px",
+    marginBottom: "14px",
     fontSize: "13px",
-    lineHeight: 1.6,
+    lineHeight: 1.7,
   },
+
+  // ==========================================================
+  // Requests
+  // ==========================================================
 
   requestsList: {
     display: "flex",
-    flexDirection:
-      "column",
-    gap: "16px",
+    flexDirection: "column",
+    gap: "15px",
   },
 
   requestCard: {
     background: "#ffffff",
     border:
-      "1px solid #e5efed",
-    borderRadius: "20px",
-    padding: "18px",
+      "1px solid rgba(173, 215, 208, 0.42)",
+    borderRadius: "23px",
+    padding: "17px",
     boxShadow:
-      "0 6px 20px rgba(23, 51, 46, 0.05)",
+      "0 9px 25px rgba(23, 70, 63, 0.055)",
+    boxSizing: "border-box",
   },
 
   requestTop: {
     display: "flex",
     alignItems: "flex-start",
-    justifyContent:
-      "space-between",
-    gap: "12px",
-    marginBottom: "16px",
+    justifyContent: "space-between",
+    gap: "10px",
+    marginBottom: "15px",
   },
 
   requestTitleArea: {
     display: "flex",
     alignItems: "center",
-    gap: "12px",
+    gap: "11px",
     minWidth: 0,
+    flex: 1,
   },
 
   requestIcon: {
-    width: "46px",
-    height: "46px",
-    minWidth: "46px",
-    borderRadius: "14px",
+    width: "47px",
+    height: "47px",
+    minWidth: "47px",
+    borderRadius: "15px",
     background: "#e6f7f4",
     display: "flex",
     alignItems: "center",
-    justifyContent:
-      "center",
+    justifyContent: "center",
     fontSize: "22px",
   },
 
   requestTitle: {
     margin: 0,
-    fontSize: "16px",
-    fontWeight: 800,
+    fontSize: "15px",
+    fontWeight: 900,
+    color: "#17332e",
+    lineHeight: 1.4,
   },
 
   requestId: {
-    margin:
-      "4px 0 0",
-    color: "#6b7c79",
-    fontSize: "12px",
+    margin: "3px 0 0",
+    color: "#788884",
+    fontSize: "11px",
+    lineHeight: 1.5,
   },
 
   statusBadge: {
     borderRadius: "999px",
-    padding:
-      "7px 11px",
-    fontSize: "11px",
-    fontWeight: 800,
-    whiteSpace:
-      "nowrap",
+    padding: "7px 10px",
+    fontSize: "10px",
+    fontWeight: 900,
+    whiteSpace: "nowrap",
+    flexShrink: 0,
   },
 
   statusPending: {
@@ -1691,7 +1728,7 @@ const styles = {
   },
 
   statusProgress: {
-    background: "#eaf5ff",
+    background: "#edf7ff",
     color: "#23648e",
   },
 
@@ -1705,82 +1742,101 @@ const styles = {
     color: "#b13b3b",
   },
 
+  // ==========================================================
+  // Request Information
+  // ==========================================================
+
   requestInfo: {
     display: "grid",
     gridTemplateColumns:
-      "repeat(auto-fit, minmax(180px, 1fr))",
-    gap: "10px",
-    marginBottom: "14px",
+      "repeat(2, minmax(0, 1fr))",
+    gap: "9px",
+    marginBottom: "13px",
   },
 
   requestInfoItem: {
     display: "flex",
     alignItems: "center",
-    gap: "9px",
+    gap: "8px",
     background: "#f8fcfb",
-    borderRadius: "13px",
-    padding: "10px",
+    border:
+      "1px solid #eef5f3",
+    borderRadius: "14px",
+    padding: "9px",
+    minWidth: 0,
+    boxSizing: "border-box",
   },
 
   requestInfoIcon: {
     width: "34px",
     height: "34px",
     minWidth: "34px",
-    borderRadius: "10px",
+    borderRadius: "11px",
     background: "#e6f7f4",
     display: "flex",
     alignItems: "center",
-    justifyContent:
-      "center",
-    fontSize: "16px",
+    justifyContent: "center",
+    fontSize: "15px",
   },
 
   requestInfoContent: {
     minWidth: 0,
     display: "flex",
-    flexDirection:
-      "column",
-    gap: "3px",
+    flexDirection: "column",
+    gap: "2px",
   },
 
   requestInfoLabel: {
-    color: "#6b7c79",
-    fontSize: "10px",
+    color: "#788884",
+    fontSize: "9px",
+    lineHeight: 1.4,
   },
 
   requestInfoValue: {
     color: "#17332e",
-    fontSize: "13px",
-    fontWeight: 800,
-    overflowWrap:
-      "anywhere",
+    fontSize: "12px",
+    fontWeight: 900,
+    overflowWrap: "anywhere",
+    lineHeight: 1.45,
   },
 
+  // ==========================================================
+  // Notes
+  // ==========================================================
+
   notesBox: {
-    background: "#f8fcfb",
-    borderRadius: "14px",
-    padding: "12px 14px",
-    marginBottom: "15px",
+    background:
+      "linear-gradient(135deg, #f7fcfb 0%, #f1faf8 100%)",
+    border:
+      "1px solid #e7f1ef",
+    borderRadius: "15px",
+    padding: "12px 13px",
+    marginBottom: "14px",
   },
 
   notesLabel: {
     display: "block",
-    color: "#6b7c79",
+    color: "#71827f",
     fontSize: "11px",
     marginBottom: "5px",
+    fontWeight: 700,
   },
 
   notesText: {
     margin: 0,
     color: "#17332e",
-    fontSize: "13px",
-    lineHeight: 1.7,
+    fontSize: "12px",
+    lineHeight: 1.8,
   },
+
+  // ==========================================================
+  // Status Update
+  // ==========================================================
 
   statusSection: {
     borderTop:
       "1px solid #edf3f2",
-    paddingTop: "15px",
+    paddingTop: "14px",
   },
 
   statusLabel: {
@@ -1788,99 +1844,118 @@ const styles = {
     marginBottom: "7px",
     color: "#17332e",
     fontSize: "12px",
-    fontWeight: 800,
+    fontWeight: 900,
   },
 
   statusSelect: {
     width: "100%",
+    minHeight: "45px",
     border:
-      "1px solid #d9e9e6",
+      "1px solid #dceae7",
     background: "#ffffff",
     color: "#17332e",
-    borderRadius: "12px",
-    padding:
-      "11px 12px",
-    fontFamily:
-      "Tajawal, Arial, sans-serif",
-    fontSize: "13px",
+    borderRadius: "13px",
+    padding: "10px 12px",
+    fontFamily: "Tajawal, Arial, sans-serif",
+    fontSize: "12px",
     outline: "none",
     cursor: "pointer",
+    boxSizing: "border-box",
   },
 
   updatingText: {
-    margin:
-      "7px 0 0",
+    margin: "7px 0 0",
     color: "#078876",
     fontSize: "11px",
   },
+
+  // ==========================================================
+  // Empty State
+  // ==========================================================
 
   emptyCard: {
     background: "#ffffff",
     border:
       "1px dashed #cbdeda",
-    borderRadius: "20px",
-    padding:
-      "35px 20px",
+    borderRadius: "24px",
+    padding: "38px 20px",
     textAlign: "center",
+    boxShadow:
+      "0 5px 18px rgba(23, 70, 63, 0.025)",
   },
 
   emptyIcon: {
-    fontSize: "42px",
-    marginBottom: "10px",
+    width: "66px",
+    height: "66px",
+    margin: "0 auto 13px",
+    borderRadius: "20px",
+    background: "#e6f7f4",
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+    fontSize: "32px",
   },
 
   emptyTitle: {
-    margin:
-      "0 0 8px",
+    margin: "0 0 8px",
     fontSize: "17px",
-    fontWeight: 800,
+    fontWeight: 900,
+    color: "#17332e",
   },
 
   emptyText: {
     margin: 0,
-    color: "#6b7c79",
-    fontSize: "14px",
-    lineHeight: 1.7,
+    color: "#788884",
+    fontSize: "13px",
+    lineHeight: 1.8,
   },
 
+  // ==========================================================
+  // Verified Card
+  // ==========================================================
+
   verifiedCard: {
-    background: "#e6f7f4",
+    background:
+      "linear-gradient(135deg, #eaf9f6 0%, #e0f6f2 100%)",
     border:
-      "1px solid #c7ebe4",
-    borderRadius: "18px",
+      "1px solid #c8ebe4",
+    borderRadius: "21px",
     padding: "17px",
     display: "flex",
     alignItems: "center",
     gap: "13px",
+    boxShadow:
+      "0 7px 20px rgba(10, 168, 143, 0.06)",
   },
 
   verifiedIcon: {
-    width: "44px",
-    height: "44px",
-    minWidth: "44px",
+    width: "48px",
+    height: "48px",
+    minWidth: "48px",
     borderRadius: "50%",
     background: "#0aa88f",
     color: "#ffffff",
     display: "flex",
     alignItems: "center",
-    justifyContent:
-      "center",
-    fontSize: "22px",
+    justifyContent: "center",
+    fontSize: "23px",
     fontWeight: 900,
+    boxShadow:
+      "0 5px 12px rgba(10, 168, 143, 0.18)",
   },
 
   verifiedTitle: {
-    margin:
-      "0 0 4px",
+    margin: "0 0 4px",
     fontSize: "15px",
-    fontWeight: 800,
+    fontWeight: 900,
+    color: "#17332e",
   },
 
   verifiedText: {
     margin: 0,
     color: "#55706a",
-    fontSize: "13px",
-    lineHeight: 1.6,
+    fontSize: "12px",
+    lineHeight: 1.7,
   },
 
   // ==========================================================
@@ -1888,32 +1963,42 @@ const styles = {
   // ==========================================================
 
   loadingCard: {
-    maxWidth: "500px",
-    margin:
-      "100px auto",
+    width: "calc(100% - 28px)",
+    maxWidth: "420px",
+    margin: "100px auto",
     background: "#ffffff",
-    borderRadius: "24px",
-    padding:
-      "40px 24px",
+    border:
+      "1px solid #e5efed",
+    borderRadius: "26px",
+    padding: "40px 24px",
     textAlign: "center",
     boxShadow:
-      "0 10px 30px rgba(23, 51, 46, 0.08)",
+      "0 12px 30px rgba(23, 51, 46, 0.08)",
+    boxSizing: "border-box",
   },
 
   loadingIcon: {
-    fontSize: "46px",
-    marginBottom: "12px",
+    width: "70px",
+    height: "70px",
+    margin: "0 auto 14px",
+    borderRadius: "22px",
+    background: "#e6f7f4",
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+    fontSize: "38px",
   },
 
   loadingTitle: {
     margin: 0,
     fontSize: "20px",
+    fontWeight: 900,
   },
 
   loadingText: {
-    margin:
-      "8px 0 0",
+    margin: "8px 0 0",
     color: "#6b7c79",
+    fontSize: "13px",
   },
 
   // ==========================================================
@@ -1921,44 +2006,55 @@ const styles = {
   // ==========================================================
 
   errorCard: {
-    maxWidth: "500px",
-    margin:
-      "100px auto",
+    width: "calc(100% - 28px)",
+    maxWidth: "420px",
+    margin: "100px auto",
     background: "#ffffff",
-    borderRadius: "24px",
-    padding:
-      "40px 24px",
+    border:
+      "1px solid #f0dada",
+    borderRadius: "26px",
+    padding: "40px 24px",
     textAlign: "center",
     boxShadow:
-      "0 10px 30px rgba(23, 51, 46, 0.08)",
+      "0 12px 30px rgba(23, 51, 46, 0.08)",
+    boxSizing: "border-box",
   },
 
   errorIcon: {
-    fontSize: "46px",
-    marginBottom: "12px",
+    width: "70px",
+    height: "70px",
+    margin: "0 auto 14px",
+    borderRadius: "22px",
+    background: "#fff0f0",
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+    fontSize: "38px",
   },
 
   errorTitle: {
     margin: 0,
     fontSize: "20px",
+    fontWeight: 900,
   },
 
   errorText: {
-    margin:
-      "10px 0 20px",
+    margin: "10px 0 20px",
     color: "#6b7c79",
-    lineHeight: 1.7,
+    lineHeight: 1.8,
+    fontSize: "13px",
   },
 
   retryButton: {
     border: "none",
     background: "#0aa88f",
     color: "#ffffff",
-    padding:
-      "12px 24px",
-    borderRadius: "12px",
-    fontSize: "14px",
-    fontWeight: 700,
+    padding: "12px 26px",
+    minHeight: "45px",
+    borderRadius: "14px",
+    fontFamily: "Tajawal, Arial, sans-serif",
+    fontSize: "13px",
+    fontWeight: 800,
     cursor: "pointer",
   },
 };
