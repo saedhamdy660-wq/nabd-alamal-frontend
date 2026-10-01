@@ -12,7 +12,7 @@ import {
 import api from "../api";
 
 /* =========================
-   Logo
+Logo
 ========================= */
 
 const Logo = () => (
@@ -56,7 +56,7 @@ const Logo = () => (
 );
 
 /* =========================
-   User Icon
+User Icon
 ========================= */
 
 const UserIcon = () => (
@@ -79,7 +79,7 @@ const UserIcon = () => (
 );
 
 /* =========================
-   Heart Icon
+Heart Icon
 ========================= */
 
 const HeartIcon = () => (
@@ -94,7 +94,7 @@ const HeartIcon = () => (
 );
 
 /* =========================
-   Medical Icon
+Medical Icon
 ========================= */
 
 const MedicalIcon = () => (
@@ -130,7 +130,7 @@ const MedicalIcon = () => (
 );
 
 /* =========================
-   Blood Drop Icon
+Blood Drop Icon
 ========================= */
 
 const BloodDropIcon = () => (
@@ -146,7 +146,7 @@ const BloodDropIcon = () => (
 );
 
 /* =========================
-   Calendar Icon
+Calendar Icon
 ========================= */
 
 const CalendarIcon = () => (
@@ -184,7 +184,7 @@ const CalendarIcon = () => (
 );
 
 /* =========================
-   Plus Circle Icon
+Plus Circle Icon
 ========================= */
 
 const PlusCircleIcon = () => (
@@ -214,7 +214,7 @@ const PlusCircleIcon = () => (
 );
 
 /* =========================
-   Chevron Icon
+Chevron Icon
 ========================= */
 
 const ChevronDownIcon = () => (
@@ -230,7 +230,7 @@ const ChevronDownIcon = () => (
 );
 
 /* =========================
-   Mail Icon
+Mail Icon
 ========================= */
 
 const MailIcon = () => (
@@ -256,7 +256,7 @@ const MailIcon = () => (
 );
 
 /* =========================
-   Phone Icon
+Phone Icon
 ========================= */
 
 const PhoneIcon = () => (
@@ -277,7 +277,7 @@ const PhoneIcon = () => (
 );
 
 /* =========================
-   ID Card Icon
+ID Card Icon
 ========================= */
 
 const IdCardIcon = () => (
@@ -331,7 +331,7 @@ const IdCardIcon = () => (
 );
 
 /* =========================
-   Lock Icon
+Lock Icon
 ========================= */
 
 const LockIcon = () => (
@@ -356,7 +356,7 @@ const LockIcon = () => (
 );
 
 /* =========================
-   Eye Icon
+Eye Icon
 ========================= */
 
 const EyeIcon = ({ off = false }) => (
@@ -387,7 +387,7 @@ const EyeIcon = ({ off = false }) => (
 );
 
 /* =========================
-   Back Icon
+Back Icon
 ========================= */
 
 const BackIcon = () => (
@@ -403,7 +403,7 @@ const BackIcon = () => (
 );
 
 /* =========================
-   Signup
+Signup
 ========================= */
 
 export default function Signup() {
@@ -430,6 +430,15 @@ export default function Signup() {
     setMedicalEntityId,
   ] = useState("");
 
+  /*
+   * true = الجهة جديدة وتريد إرسال طلب انضمام
+   * false = جهة موجودة ومعتمدة بالفعل
+   */
+  const [
+    medicalJoinMode,
+    setMedicalJoinMode,
+  ] = useState(false);
+
   const [form, setForm] = useState({
     name: "",
     email: "",
@@ -455,6 +464,9 @@ export default function Signup() {
   const [error, setError] =
     useState("");
 
+  const [success, setSuccess] =
+    useState("");
+
   const [loading, setLoading] =
     useState(false);
 
@@ -474,6 +486,20 @@ export default function Signup() {
           accountType !== "medical" ||
           !medicalType
         ) {
+          setMedicalEntities([]);
+          setMedicalEntityId("");
+          setMedicalEntitiesLoading(
+            false
+          );
+
+          return;
+        }
+
+        /*
+         * لو المستخدم داخل على طلب جهة جديدة
+         * مش محتاجين تحميل الجهات للاختيار.
+         */
+        if (medicalJoinMode) {
           setMedicalEntities([]);
           setMedicalEntityId("");
           setMedicalEntitiesLoading(
@@ -551,6 +577,7 @@ export default function Signup() {
   }, [
     accountType,
     medicalType,
+    medicalJoinMode,
   ]);
 
   /* ============================================================
@@ -562,6 +589,9 @@ export default function Signup() {
       ...form,
       [field]: e.target.value,
     });
+
+    setError("");
+    setSuccess("");
   };
 
   const handleNationalIdChange =
@@ -574,17 +604,22 @@ export default function Signup() {
         ...form,
         nationalId: value,
       });
+
+      setError("");
+      setSuccess("");
     };
 
   const handleAccountTypeChange =
     (type) => {
       setAccountType(type);
       setError("");
+      setSuccess("");
 
       if (type !== "medical") {
         setMedicalType("");
         setMedicalEntities([]);
         setMedicalEntityId("");
+        setMedicalJoinMode(false);
       }
 
       if (type === "user") {
@@ -602,13 +637,24 @@ export default function Signup() {
       setMedicalType(type);
       setMedicalEntityId("");
       setMedicalEntities([]);
+      setMedicalJoinMode(false);
       setError("");
+      setSuccess("");
     };
 
   const handleMedicalEntityChange =
     (id) => {
       setMedicalEntityId(id);
       setError("");
+      setSuccess("");
+    };
+
+  const handleMedicalJoinMode =
+    (value) => {
+      setMedicalJoinMode(value);
+      setMedicalEntityId("");
+      setError("");
+      setSuccess("");
     };
 
   const getBackendAccountType =
@@ -619,7 +665,12 @@ export default function Signup() {
         return accountType;
       }
 
-      return medicalType;
+      /*
+       * الحساب الطبي الحقيقي لازم يرسل
+       * accountType = medical
+       * وليس hospital / pharmacy / blood_center
+       */
+      return "medical";
     };
 
   const openDatePicker = () => {
@@ -644,6 +695,7 @@ export default function Signup() {
     e.preventDefault();
 
     setError("");
+    setSuccess("");
 
     if (
       !form.name ||
@@ -733,6 +785,65 @@ export default function Signup() {
 
         return;
       }
+
+      /*
+       * ========================================================
+       * جهة طبية جديدة
+       * ========================================================
+       *
+       * هنا لا نقوم بإنشاء حساب.
+       * فقط نرسل طلب انضمام للإدارة.
+       */
+      if (medicalJoinMode) {
+        try {
+          setLoading(true);
+
+          await api.createMedicalJoinRequest(
+            {
+              type: medicalType,
+
+              name:
+                form.name.trim(),
+
+              email:
+                form.email.trim(),
+
+              phone:
+                form.phone.trim(),
+
+              licenseNumber:
+                form.nationalId,
+
+              address: "",
+
+              governorate: "",
+
+              city: "",
+            }
+          );
+
+          setSuccess(
+            "تم إرسال طلب الانضمام بنجاح. سيتم مراجعته من إدارة المنصة، وبعد الموافقة ستظهر الجهة ضمن الجهات الطبية المعتمدة ويمكن إنشاء الحساب."
+          );
+
+          setError("");
+        } catch (err) {
+          setError(
+            err?.message ||
+              "حدث خطأ أثناء إرسال طلب الانضمام"
+          );
+        } finally {
+          setLoading(false);
+        }
+
+        return;
+      }
+
+      /*
+       * ========================================================
+       * جهة طبية معتمدة بالفعل
+       * ========================================================
+       */
 
       if (
         medicalEntitiesLoading
@@ -902,7 +1013,6 @@ export default function Signup() {
 
   return (
     <div className="signup-page">
-
       <style>{`
 
         /* =========================================
@@ -1236,6 +1346,81 @@ export default function Signup() {
         }
 
         /* =========================================
+           طلب جهة طبية جديدة
+        ========================================= */
+
+        .signup-medical-join-option {
+          margin-top: 10px;
+          margin-bottom: 10px;
+          padding: 12px 14px;
+          border-radius: 12px;
+          border: 1px solid #d9eee9;
+          background: #f5fbfa;
+          color: #0a9685;
+          font-family: inherit;
+          font-size: 13px;
+          line-height: 1.5;
+          text-align: right;
+          direction: rtl;
+          cursor: pointer;
+          transition: all 0.2s ease;
+        }
+
+        .signup-medical-join-option:hover {
+          background: #eaf8f5;
+          border-color: #0aa88f;
+        }
+
+        .signup-medical-join-option.active {
+          background: #e6f7f4;
+          border-color: #0aa88f;
+          color: #078876;
+        }
+
+        .signup-medical-join-option-title {
+          display: block;
+          font-weight: 700;
+          margin-bottom: 3px;
+        }
+
+        .signup-medical-join-option-text {
+          display: block;
+          color: #6b7c79;
+          font-size: 12px;
+        }
+
+        .signup-medical-join-info {
+          margin-top: 8px;
+          margin-bottom: 8px;
+          padding: 11px 12px;
+          border-radius: 10px;
+          background: #f5fbfa;
+          color: #31786e;
+          font-size: 13px;
+          line-height: 1.6;
+          text-align: right;
+          direction: rtl;
+        }
+
+        /* =========================================
+           رسالة النجاح
+        ========================================= */
+
+        .signup-success {
+          margin-top: 10px;
+          margin-bottom: 10px;
+          padding: 11px 12px;
+          border-radius: 10px;
+          background: #e9f8f4;
+          border: 1px solid #b9e7dc;
+          color: #087d6c;
+          font-size: 13px;
+          line-height: 1.6;
+          text-align: right;
+          direction: rtl;
+        }
+
+        /* =========================================
            📱 الموبايل
         ========================================= */
 
@@ -1352,13 +1537,14 @@ export default function Signup() {
       <button
         type="button"
         className="signup-back"
-        onClick={() => navigate(-1)}
+        onClick={() =>
+          navigate(-1)
+        }
       >
         <BackIcon />
       </button>
 
       <main className="signup-content">
-
         <div className="signup-logo">
           <Logo />
         </div>
@@ -1374,7 +1560,6 @@ export default function Signup() {
         {/* Heartbeat */}
 
         <div className="signup-heartbeat">
-
           <span />
 
           <svg
@@ -1392,13 +1577,11 @@ export default function Signup() {
           </svg>
 
           <span />
-
         </div>
 
         {/* Account Types */}
 
         <div className="signup-account-types">
-
           {/* مستخدم */}
 
           <button
@@ -1470,7 +1653,6 @@ export default function Signup() {
               جهة طبية
             </span>
           </button>
-
         </div>
 
         {/* Form */}
@@ -1479,11 +1661,9 @@ export default function Signup() {
           className="signup-form"
           onSubmit={handleSubmit}
         >
-
           {/* الاسم */}
 
           <div className="signup-field">
-
             <div className="signup-field-icon">
               <UserIcon />
             </div>
@@ -1501,13 +1681,11 @@ export default function Signup() {
               }
               autoComplete="name"
             />
-
           </div>
 
           {/* البريد */}
 
           <div className="signup-field">
-
             <div className="signup-field-icon">
               <MailIcon />
             </div>
@@ -1520,13 +1698,11 @@ export default function Signup() {
               placeholder="البريد الإلكتروني"
               autoComplete="email"
             />
-
           </div>
 
           {/* الهاتف */}
 
           <div className="signup-field">
-
             <div className="signup-field-icon">
               <PhoneIcon />
             </div>
@@ -1540,13 +1716,11 @@ export default function Signup() {
               autoComplete="tel"
               dir="ltr"
             />
-
           </div>
 
           {/* الرقم القومي / الترخيص */}
 
           <div className="signup-field">
-
             <div className="signup-field-icon">
               <IdCardIcon />
             </div>
@@ -1569,7 +1743,6 @@ export default function Signup() {
               dir="ltr"
               maxLength={14}
             />
-
           </div>
 
           {/* Medical */}
@@ -1577,7 +1750,6 @@ export default function Signup() {
           {accountType ===
             "medical" && (
             <>
-
               {/* نوع الجهة */}
 
               <p className="signup-medical-title">
@@ -1585,7 +1757,6 @@ export default function Signup() {
               </p>
 
               <div className="signup-field signup-medical-select">
-
                 <div className="signup-field-icon">
                   <MedicalIcon />
                 </div>
@@ -1603,7 +1774,6 @@ export default function Signup() {
                   aria-label="نوع الجهة الطبية"
                   required
                 >
-
                   <option
                     value=""
                     disabled
@@ -1622,87 +1792,124 @@ export default function Signup() {
                   <option value="blood_center">
                     مركز / بنك دم
                   </option>
-
                 </select>
 
                 <div className="signup-donor-chevron">
                   <ChevronDownIcon />
                 </div>
-
               </div>
 
-              {/* الجهة المعتمدة */}
+              {/* اختيار نوع التسجيل */}
 
               {medicalType && (
                 <>
                   <p className="signup-medical-title">
-                    اختر الجهة الطبية المعتمدة
+                    طريقة التسجيل
                   </p>
 
-                  {medicalEntitiesLoading ? (
-                    <div className="signup-medical-loading">
-                      جاري تحميل الجهات المعتمدة...
-                    </div>
-                  ) : medicalEntities.length ===
-                    0 ? (
-                    <div className="signup-medical-empty">
-                      لا توجد جهات معتمدة من هذا النوع حاليًا.
-                      يجب أن تعتمد الجهة أولًا من إدارة المنصة.
+                  <button
+                    type="button"
+                    className={
+                      medicalJoinMode
+                        ? "signup-medical-join-option active"
+                        : "signup-medical-join-option"
+                    }
+                    onClick={() =>
+                      handleMedicalJoinMode(
+                        !medicalJoinMode
+                      )
+                    }
+                  >
+                    <span className="signup-medical-join-option-title">
+                      {medicalJoinMode
+                        ? "✓ طلب انضمام جهة جديدة"
+                        : "جهة طبية جديدة؟ أرسل طلب انضمام"}
+                    </span>
+
+                    <span className="signup-medical-join-option-text">
+                      {medicalJoinMode
+                        ? "سيتم إرسال بيانات الجهة للإدارة للمراجعة والاعتماد."
+                        : "لو الجهة غير موجودة ضمن الجهات المعتمدة، يمكنك إرسال طلب للإدارة أولًا."}
+                    </span>
+                  </button>
+
+                  {medicalJoinMode ? (
+                    <div className="signup-medical-join-info">
+                      سيتم إرسال طلب انضمام فقط، ولن يتم إنشاء حساب للجهة قبل موافقة إدارة المنصة. بعد الموافقة ستظهر الجهة ضمن الجهات المعتمدة ويمكن إنشاء الحساب.
                     </div>
                   ) : (
-                    <div className="signup-field signup-medical-select">
+                    <>
+                      {/* الجهة المعتمدة */}
 
-                      <div className="signup-field-icon">
-                        <MedicalIcon />
-                      </div>
+                      <p className="signup-medical-title">
+                        اختر الجهة الطبية المعتمدة
+                      </p>
 
-                      <select
-                        className="signup-donor-select"
-                        value={
-                          medicalEntityId
-                        }
-                        onChange={(e) =>
-                          handleMedicalEntityChange(
-                            e.target.value
-                          )
-                        }
-                        aria-label="الجهة الطبية"
-                        required
-                      >
+                      {medicalEntitiesLoading ? (
+                        <div className="signup-medical-loading">
+                          جاري تحميل الجهات المعتمدة...
+                        </div>
+                      ) : medicalEntities.length ===
+                        0 ? (
+                        <div className="signup-medical-empty">
+                          لا توجد جهات معتمدة من هذا النوع حاليًا.
+                          يمكنك إرسال طلب انضمام جديد بدلًا من ذلك.
+                        </div>
+                      ) : (
+                        <div className="signup-field signup-medical-select">
+                          <div className="signup-field-icon">
+                            <MedicalIcon />
+                          </div>
 
-                        <option
-                          value=""
-                          disabled
-                        >
-                          اختر الجهة الطبية
-                        </option>
-
-                        {medicalEntities.map(
-                          (entity) => (
+                          <select
+                            className="signup-donor-select"
+                            value={
+                              medicalEntityId
+                            }
+                            onChange={(e) =>
+                              handleMedicalEntityChange(
+                                e.target.value
+                              )
+                            }
+                            aria-label="الجهة الطبية"
+                            required
+                          >
                             <option
-                              key={
-                                entity.id
-                              }
-                              value={
-                                entity.id
-                              }
+                              value=""
+                              disabled
                             >
-                              {entity.name}
+                              اختر الجهة الطبية
                             </option>
-                          )
-                        )}
 
-                      </select>
+                            {medicalEntities.map(
+                              (
+                                entity
+                              ) => (
+                                <option
+                                  key={
+                                    entity.id
+                                  }
+                                  value={
+                                    entity.id
+                                  }
+                                >
+                                  {
+                                    entity.name
+                                  }
+                                </option>
+                              )
+                            )}
+                          </select>
 
-                      <div className="signup-donor-chevron">
-                        <ChevronDownIcon />
-                      </div>
-
-                    </div>
+                          <div className="signup-donor-chevron">
+                            <ChevronDownIcon />
+                          </div>
+                        </div>
+                      )}
+                    </>
                   )}
                 </>
               )}
-
             </>
           )}
 
@@ -1711,11 +1918,9 @@ export default function Signup() {
           {accountType ===
             "donor" && (
             <>
-
               {/* فصيلة الدم */}
 
               <div className="signup-field signup-donor-field">
-
                 <div className="signup-field-icon">
                   <BloodDropIcon />
                 </div>
@@ -1731,7 +1936,6 @@ export default function Signup() {
                   aria-label="فصيلة الدم"
                   required
                 >
-
                   <option
                     value=""
                     disabled
@@ -1770,13 +1974,11 @@ export default function Signup() {
                   <option value="O-">
                     O-
                   </option>
-
                 </select>
 
                 <div className="signup-donor-chevron">
                   <ChevronDownIcon />
                 </div>
-
               </div>
 
               {/* تاريخ آخر تبرع */}
@@ -1787,7 +1989,6 @@ export default function Signup() {
                   openDatePicker
                 }
               >
-
                 <div className="signup-field-icon">
                   <CalendarIcon />
                 </div>
@@ -1824,13 +2025,11 @@ export default function Signup() {
                   }
                   aria-label="تاريخ آخر تبرع بالدم"
                 />
-
               </div>
 
               {/* الأمراض المزمنة */}
 
               <div className="signup-field signup-donor-field">
-
                 <div className="signup-field-icon">
                   <PlusCircleIcon />
                 </div>
@@ -1846,7 +2045,6 @@ export default function Signup() {
                   aria-label="الأمراض المزمنة"
                   required
                 >
-
                   <option
                     value=""
                     disabled
@@ -1861,22 +2059,18 @@ export default function Signup() {
                   <option value="لا">
                     لا
                   </option>
-
                 </select>
 
                 <div className="signup-donor-chevron">
                   <ChevronDownIcon />
                 </div>
-
               </div>
-
             </>
           )}
 
           {/* كلمة المرور */}
 
           <div className="signup-field">
-
             <div className="signup-field-icon">
               <LockIcon />
             </div>
@@ -1918,13 +2112,11 @@ export default function Signup() {
                 }
               />
             </button>
-
           </div>
 
           {/* تأكيد كلمة المرور */}
 
           <div className="signup-field">
-
             <div className="signup-field-icon">
               <LockIcon />
             </div>
@@ -1966,7 +2158,6 @@ export default function Signup() {
                 }
               />
             </button>
-
           </div>
 
           {/* Error */}
@@ -1974,6 +2165,14 @@ export default function Signup() {
           {error && (
             <div className="signup-error">
               {error}
+            </div>
+          )}
+
+          {/* Success */}
+
+          {success && (
+            <div className="signup-success">
+              {success}
             </div>
           )}
 
@@ -1985,16 +2184,22 @@ export default function Signup() {
             disabled={loading}
           >
             {loading
-              ? "جاري إنشاء الحساب..."
+              ? medicalJoinMode &&
+                accountType ===
+                  "medical"
+                ? "جاري إرسال الطلب..."
+                : "جاري إنشاء الحساب..."
+              : medicalJoinMode &&
+                accountType ===
+                  "medical"
+              ? "إرسال طلب الانضمام"
               : "إنشاء الحساب"}
           </button>
-
         </form>
 
         {/* Login */}
 
         <div className="signup-login">
-
           <span>
             لديك حساب بالفعل؟
           </span>
@@ -2002,20 +2207,16 @@ export default function Signup() {
           <Link to="/login">
             تسجيل الدخول
           </Link>
-
         </div>
-
       </main>
 
       {/* Bottom */}
 
       <div className="signup-bottom">
-
         <svg
           viewBox="0 0 500 120"
           preserveAspectRatio="none"
         >
-
           <path
             d="M0 65C80 30 120 85 190 57C250 33 280 76 340 55C405 32 450 70 500 42V120H0Z"
             fill="rgba(10,168,143,.25)"
@@ -2033,11 +2234,8 @@ export default function Signup() {
             strokeWidth="2.5"
             opacity=".9"
           />
-
         </svg>
-
       </div>
-
     </div>
   );
 }
