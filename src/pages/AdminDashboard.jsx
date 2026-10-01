@@ -286,6 +286,38 @@ export default function AdminDashboard() {
     useState("");
 
   /* =========================
+     Logout
+  ========================= */
+
+  const handleLogout = () => {
+    try {
+      // مسح بيانات حساب الأدمن من الجهاز
+      localStorage.removeItem("nabd_user");
+      localStorage.removeItem("nabd_remember");
+
+      // تنظيف أي بيانات جلسة محفوظة مرتبطة بالتطبيق
+      sessionStorage.clear();
+
+      // استبدال الصفحة الحالية بصفحة تسجيل الدخول
+      window.history.replaceState(
+        null,
+        "",
+        "/login"
+      );
+
+      // الانتقال إلى Login بدون الاحتفاظ بالأدمن في سجل الرجوع
+      window.location.replace("/login");
+    } catch (error) {
+      console.error(
+        "Failed to logout admin:",
+        error
+      );
+
+      window.location.replace("/login");
+    }
+  };
+
+  /* =========================
      Load Requests
   ========================= */
 
@@ -599,27 +631,91 @@ export default function AdminDashboard() {
             </div>
           </div>
 
-          <button
-            type="button"
-            onClick={loadRequests}
-            disabled={loading}
+          <div
             style={{
-              border: `1px solid ${BORDER}`,
-              background: "#ffffff",
-              color: PRIMARY_DARK,
-              borderRadius: 12,
-              padding: "10px 14px",
-              fontFamily:
-                "inherit",
-              fontWeight: 700,
-              cursor: loading
-                ? "default"
-                : "pointer",
-              opacity: loading ? 0.6 : 1,
+              display: "flex",
+              alignItems: "center",
+              gap: 8,
+              flexWrap: "wrap",
+              justifyContent: "flex-end",
             }}
           >
-            تحديث
-          </button>
+            <button
+              type="button"
+              onClick={loadRequests}
+              disabled={loading}
+              style={{
+                border: `1px solid ${BORDER}`,
+                background: "#ffffff",
+                color: PRIMARY_DARK,
+                borderRadius: 12,
+                padding: "10px 14px",
+                fontFamily:
+                  "inherit",
+                fontWeight: 700,
+                cursor: loading
+                  ? "default"
+                  : "pointer",
+                opacity: loading ? 0.6 : 1,
+              }}
+            >
+              تحديث
+            </button>
+
+            <button
+              type="button"
+              onClick={handleLogout}
+              style={{
+                border:
+                  "1px solid #f0caca",
+                background:
+                  "#fff5f5",
+                color: "#c53b3b",
+                borderRadius: 12,
+                padding: "10px 14px",
+                fontFamily:
+                  "inherit",
+                fontWeight: 800,
+                cursor: "pointer",
+                display: "inline-flex",
+                alignItems: "center",
+                justifyContent:
+                  "center",
+                gap: 7,
+              }}
+            >
+              <svg
+                width="18"
+                height="18"
+                viewBox="0 0 24 24"
+                fill="none"
+              >
+                <path
+                  d="M10 5H6.5C5.67 5 5 5.67 5 6.5V17.5C5 18.33 5.67 19 6.5 19H10"
+                  stroke="currentColor"
+                  strokeWidth="1.8"
+                  strokeLinecap="round"
+                />
+
+                <path
+                  d="M13 8L17 12L13 16"
+                  stroke="currentColor"
+                  strokeWidth="1.8"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                />
+
+                <path
+                  d="M17 12H9"
+                  stroke="currentColor"
+                  strokeWidth="1.8"
+                  strokeLinecap="round"
+                />
+              </svg>
+
+              تسجيل الخروج
+            </button>
+          </div>
         </div>
       </header>
 
