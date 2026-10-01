@@ -3,9 +3,16 @@ import React, {
   useState,
 } from "react";
 
+import {
+  useNavigate,
+} from "react-router-dom";
+
 import { api } from "../api.js";
 
 export default function MedicalDashboard() {
+  const navigate =
+    useNavigate();
+
   const [user, setUser] =
     useState(null);
 
@@ -30,9 +37,181 @@ export default function MedicalDashboard() {
   const [updatingRequestId, setUpdatingRequestId] =
     useState("");
 
+  const [theme, setTheme] =
+    useState(() => {
+      const savedTheme =
+        localStorage.getItem(
+          "nabd_theme"
+        );
+
+      if (
+        savedTheme === "dark" ||
+        savedTheme === "light"
+      ) {
+        return savedTheme;
+      }
+
+      return localStorage.getItem(
+        "nabd_dark_mode"
+      ) === "true"
+        ? "dark"
+        : "light";
+    });
+
   useEffect(() => {
     loadMedicalDashboard();
   }, []);
+
+  // ============================================================
+  // Theme
+  // ============================================================
+
+  useEffect(() => {
+    const applyTheme = () => {
+      const savedTheme =
+        localStorage.getItem(
+          "nabd_theme"
+        ) ||
+        (
+          localStorage.getItem(
+            "nabd_dark_mode"
+          ) === "true"
+            ? "dark"
+            : "light"
+        );
+
+      const normalizedTheme =
+        savedTheme === "dark"
+          ? "dark"
+          : "light";
+
+      setTheme(
+        normalizedTheme
+      );
+
+      document.documentElement.setAttribute(
+        "data-theme",
+        normalizedTheme
+      );
+
+      document.body.setAttribute(
+        "data-theme",
+        normalizedTheme
+      );
+
+      document.documentElement.classList.toggle(
+        "nabd-dark",
+        normalizedTheme === "dark"
+      );
+
+      document.body.classList.toggle(
+        "nabd-dark",
+        normalizedTheme === "dark"
+      );
+
+      localStorage.setItem(
+        "nabd_theme",
+        normalizedTheme
+      );
+
+      localStorage.setItem(
+        "nabd_dark_mode",
+        String(
+          normalizedTheme === "dark"
+        )
+      );
+    };
+
+    applyTheme();
+
+    window.addEventListener(
+      "theme-changed",
+      applyTheme
+    );
+
+    window.addEventListener(
+      "storage",
+      applyTheme
+    );
+
+    return () => {
+      window.removeEventListener(
+        "theme-changed",
+        applyTheme
+      );
+
+      window.removeEventListener(
+        "storage",
+        applyTheme
+      );
+    };
+  }, []);
+
+  function toggleTheme() {
+    const nextTheme =
+      theme === "dark"
+        ? "light"
+        : "dark";
+
+    localStorage.setItem(
+      "nabd_theme",
+      nextTheme
+    );
+
+    localStorage.setItem(
+      "nabd_dark_mode",
+      String(
+        nextTheme === "dark"
+      )
+    );
+
+    window.dispatchEvent(
+      new Event(
+        "theme-changed"
+      )
+    );
+  }
+
+  // ============================================================
+  // Logout
+  // ============================================================
+
+  function handleLogout() {
+    try {
+      localStorage.removeItem(
+        "nabd_user"
+      );
+
+      localStorage.removeItem(
+        "nabd_remember"
+      );
+
+      sessionStorage.clear();
+
+      navigate("/login", {
+        replace: true,
+      });
+    } catch (error) {
+      console.error(
+        "Medical logout error:",
+        error
+      );
+
+      window.location.replace(
+        "/login"
+      );
+    }
+  }
+
+  // ============================================================
+  // Notifications
+  // ============================================================
+
+  function handleNotifications() {
+    navigate(
+      "/notifications"
+    );
+  }
 
   // ============================================================
   // Load Medical Dashboard
@@ -625,13 +804,135 @@ export default function MedicalDashboard() {
   return (
     <div
       dir="rtl"
-      style={styles.page}
+      style={{
+        ...styles.page,
+        ...(theme === "dark"
+          ? styles.pageDark
+          : {}),
+      }}
     >
       <div
         style={
           styles.container
         }
       >
+
+        {/* =========================
+            Top Icons Bar
+        ========================= */}
+
+        <div
+          style={
+            styles.topBar
+          }
+        >
+          <div
+            style={
+              styles.topBarRight
+            }
+          >
+            <div
+              style={
+                styles.topBarBrandIcon
+              }
+            >
+              {user?.medicalEntityType ===
+              "pharmacy"
+                ? "💊"
+                : user?.medicalEntityType ===
+                  "blood_center"
+                ? "🩸"
+                : "🏥"}
+            </div>
+
+            <span
+              style={{
+                ...styles.topBarBrandText,
+                ...(theme ===
+                "dark"
+                  ? styles.darkText
+                  : {}),
+              }}
+            >
+              نبض الأمل
+            </span>
+          </div>
+
+          <div
+            style={
+              styles.topBarIcons
+            }
+          >
+
+            {/* Notifications */}
+
+            <button
+              type="button"
+              title="الإشعارات"
+              aria-label="الإشعارات"
+              onClick={
+                handleNotifications
+              }
+              style={{
+                ...styles.topBarIconBtn,
+                ...(theme ===
+                "dark"
+                  ? styles.topBarIconBtnDark
+                  : {}),
+              }}
+            >
+              🔔
+            </button>
+
+            {/* Dark Mode */}
+
+            <button
+              type="button"
+              title={
+                theme === "dark"
+                  ? "الوضع الفاتح"
+                  : "الوضع الداكن"
+              }
+              aria-label={
+                theme === "dark"
+                  ? "الوضع الفاتح"
+                  : "الوضع الداكن"
+              }
+              onClick={
+                toggleTheme
+              }
+              style={{
+                ...styles.topBarIconBtn,
+                ...(theme ===
+                "dark"
+                  ? styles.topBarIconBtnDark
+                  : {}),
+              }}
+            >
+              {theme === "dark"
+                ? "☀️"
+                : "🌙"}
+            </button>
+
+            {/* Logout */}
+
+            <button
+              type="button"
+              title="تسجيل الخروج"
+              aria-label="تسجيل الخروج"
+              onClick={
+                handleLogout
+              }
+              style={{
+                ...styles.topBarIconBtn,
+                ...styles.topBarLogout,
+              }}
+            >
+              🚪
+            </button>
+
+          </div>
+        </div>
 
         {/* =========================
             Header
@@ -1435,6 +1736,7 @@ function InfoRow({
     </div>
   );
 }
+
 // ============================================================
 // Styles
 // ============================================================
@@ -1448,6 +1750,14 @@ const styles = {
     fontFamily: "Tajawal, Arial, sans-serif",
     color: "#17332e",
     boxSizing: "border-box",
+    transition:
+      "background .25s ease, color .25s ease",
+  },
+
+  pageDark: {
+    background:
+      "linear-gradient(180deg, #10221f 0%, #142b27 55%, #10221f 100%)",
+    color: "#eefaf7",
   },
 
   container: {
@@ -1458,7 +1768,7 @@ const styles = {
   },
 
   // ==========================================================
-  // Top Bar (شريط الأيقونات العلوي)
+  // Top Bar
   // ==========================================================
 
   topBar: {
@@ -1504,52 +1814,47 @@ const styles = {
     width: "42px",
     height: "42px",
     borderRadius: "14px",
-    border: "1px solid rgba(173, 215, 208, 0.42)",
+    border:
+      "1px solid rgba(173, 215, 208, 0.42)",
     background: "#ffffff",
     color: "#078876",
     display: "flex",
     alignItems: "center",
     justifyContent: "center",
     cursor: "pointer",
-    boxShadow: "0 4px 12px rgba(23, 70, 63, 0.05)",
+    boxShadow:
+      "0 4px 12px rgba(23, 70, 63, 0.05)",
     position: "relative",
     padding: 0,
     flexShrink: 0,
+    fontSize: "17px",
+    transition:
+      "background .2s ease, border .2s ease, transform .15s ease",
+  },
+
+  topBarIconBtnDark: {
+    background: "#1b3732",
+    border:
+      "1px solid rgba(126, 196, 184, 0.18)",
+    color: "#9be5d7",
+    boxShadow:
+      "0 4px 12px rgba(0, 0, 0, 0.16)",
   },
 
   topBarLogout: {
     color: "#dc2626",
-    borderColor: "rgba(220, 38, 38, 0.2)",
-    background: "rgba(220, 38, 38, 0.06)",
+    borderColor:
+      "rgba(220, 38, 38, 0.2)",
+    background:
+      "rgba(220, 38, 38, 0.06)",
   },
 
-  topBarNotificationDot: {
-    position: "absolute",
-    top: "8px",
-    right: "8px",
-    width: "8px",
-    height: "8px",
-    borderRadius: "50%",
-    background: "#dc2626",
-    border: "2px solid #ffffff",
-    boxSizing: "content-box",
+  topBarBrandTextDark: {
+    color: "#eefaf7",
   },
 
-  topBarAvatar: {
-    width: "42px",
-    height: "42px",
-    borderRadius: "14px",
-    background: "linear-gradient(135deg, #0aa88f, #078876)",
-    color: "#ffffff",
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "center",
-    fontSize: "15px",
-    fontWeight: 900,
-    cursor: "pointer",
-    border: "none",
-    boxShadow: "0 4px 12px rgba(10, 168, 143, 0.18)",
-    flexShrink: 0,
+  darkText: {
+    color: "#eefaf7",
   },
 
   // ==========================================================
@@ -1664,8 +1969,7 @@ const styles = {
     height: "38px",
     minWidth: "38px",
     borderRadius: "12px",
-    background:
-      "#e6f7f4",
+    background: "#e6f7f4",
     display: "flex",
     alignItems: "center",
     justifyContent: "center",
