@@ -456,10 +456,10 @@ const StatCard = ({
     className="admin-stat-card"
     style={{
       background: darkMode
-        ? "#172321"
+        ? "#0d2a2e"
         : "#ffffff",
       border: `1px solid ${
-        darkMode ? "#2d403d" : BORDER
+        darkMode ? "rgba(170, 230, 225, 0.15)" : BORDER
       }`,
       borderRadius: 18,
       padding: 17,
@@ -479,8 +479,8 @@ const StatCard = ({
         width: 49,
         height: 49,
         borderRadius: 15,
-        background: iconBackground,
-        color: iconColor,
+        background: darkMode ? "#0a2428" : iconBackground,
+        color: darkMode ? "#5ed9c5" : iconColor,
         display: "flex",
         alignItems: "center",
         justifyContent: "center",
@@ -498,7 +498,7 @@ const StatCard = ({
       <div
         style={{
           color: darkMode
-            ? "#9db0ac"
+            ? "#9bbdbc"
             : TEXT_MUTED,
           fontSize: 11,
           fontWeight: 800,
@@ -512,7 +512,7 @@ const StatCard = ({
       <div
         style={{
           color: darkMode
-            ? "#ffffff"
+            ? "#e9ffff"
             : TEXT_DARK,
           fontSize: 26,
           fontWeight: 900,
@@ -879,12 +879,12 @@ export default function AdminDashboard() {
       style={{
         minHeight: "100vh",
         background: darkMode
-          ? "#101918"
+          ? "#071a1d"
           : BG,
         fontFamily:
           "Tajawal, Cairo, Arial, sans-serif",
         color: darkMode
-          ? "#f1f8f6"
+          ? "#e9ffff"
           : TEXT_DARK,
         transition:
           "background 0.25s ease, color 0.25s ease",
@@ -898,11 +898,11 @@ export default function AdminDashboard() {
         className="admin-header"
         style={{
           background: darkMode
-            ? "#15211f"
+            ? "#0d2a2e"
             : "#ffffff",
           borderBottom: `1px solid ${
             darkMode
-              ? "#2a3b38"
+              ? "rgba(170, 230, 225, 0.15)"
               : BORDER
           }`,
           padding:
@@ -986,7 +986,7 @@ export default function AdminDashboard() {
                     "clamp(18px, 3vw, 21px)",
                   fontWeight: 900,
                   color: darkMode
-                    ? "#ffffff"
+                    ? "#e9ffff"
                     : TEXT_DARK,
                 }}
               >
@@ -997,7 +997,7 @@ export default function AdminDashboard() {
                 style={{
                   marginTop: 3,
                   color: darkMode
-                    ? "#9db0ac"
+                    ? "#9bbdbc"
                     : TEXT_MUTED,
                   fontSize: 11,
                   whiteSpace: "nowrap",
@@ -1037,14 +1037,14 @@ export default function AdminDashboard() {
                   height: 43,
                   border: `1px solid ${
                     darkMode
-                      ? "#304641"
+                      ? "rgba(170, 230, 225, 0.15)"
                       : BORDER
                   }`,
                   background: darkMode
-                    ? "#1a2826"
+                    ? "#0a2428"
                     : "#ffffff",
                   color: darkMode
-                    ? "#d8e8e4"
+                    ? "#e9ffff"
                     : TEXT_DARK,
                   borderRadius: 13,
                   display: "flex",
@@ -1089,11 +1089,11 @@ export default function AdminDashboard() {
                     width: 310,
                     background:
                       darkMode
-                        ? "#1a2826"
+                        ? "#0a2428"
                         : "#ffffff",
                     border: `1px solid ${
                       darkMode
-                        ? "#304641"
+                        ? "rgba(170, 230, 225, 0.15)"
                         : BORDER
                     }`,
                     borderRadius: 16,
@@ -1128,9 +1128,9 @@ export default function AdminDashboard() {
                     <span
                       style={{
                         background:
-                          PRIMARY_LIGHT,
+                          darkMode ? "#0a2428" : PRIMARY_LIGHT,
                         color:
-                          PRIMARY_DARK,
+                          darkMode ? "#5ed9c5" : PRIMARY_DARK,
                         padding:
                           "4px 8px",
                         borderRadius:
@@ -1159,12 +1159,12 @@ export default function AdminDashboard() {
                         width: "100%",
                         border: `1px solid ${
                           darkMode
-                            ? "#304641"
+                            ? "rgba(170, 230, 225, 0.15)"
                             : BORDER
                         }`,
                         background:
                           darkMode
-                            ? "#21312e"
+                            ? "#0a2428"
                             : "#f7fffd",
                         borderRadius: 12,
                         padding: 11,
@@ -1241,7 +1241,7 @@ export default function AdminDashboard() {
                             fontSize: 11,
                             color:
                               darkMode
-                                ? "#9db0ac"
+                                ? "#9bbdbc"
                                 : TEXT_MUTED,
                           }}
                         >
@@ -1263,7 +1263,7 @@ export default function AdminDashboard() {
                           "20px 10px",
                         color:
                           darkMode
-                            ? "#9db0ac"
+                            ? "#9bbdbc"
                             : TEXT_MUTED,
                         fontSize: 12,
                       }}
@@ -1295,14 +1295,14 @@ export default function AdminDashboard() {
                 height: 43,
                 border: `1px solid ${
                   darkMode
-                    ? "#304641"
+                    ? "rgba(170, 230, 225, 0.15)"
                     : BORDER
                 }`,
                 background: darkMode
-                  ? "#1a2826"
+                  ? "#0a2428"
                   : "#ffffff",
                 color: darkMode
-                  ? "#f6d66d"
+                  ? "#5ed9c5"
                   : TEXT_DARK,
                 borderRadius: 13,
                 display: "flex",
@@ -1328,8 +1328,8 @@ export default function AdminDashboard() {
                 width: 43,
                 height: 43,
                 borderRadius: 13,
-                background: PRIMARY_LIGHT,
-                color: PRIMARY_DARK,
+                background: darkMode ? "#0a2428" : PRIMARY_LIGHT,
+                color: darkMode ? "#5ed9c5" : PRIMARY_DARK,
                 display: "flex",
                 alignItems: "center",
                 justifyContent:
@@ -1339,7 +1339,7 @@ export default function AdminDashboard() {
                 flexShrink: 0,
                 border: `1px solid ${
                   darkMode
-                    ? "#2d403d"
+                    ? "rgba(170, 230, 225, 0.15)"
                     : BORDER
                 }`,
               }}
@@ -1389,7 +1389,7 @@ export default function AdminDashboard() {
                 transform:
                   "translateY(-50%)",
                 color: darkMode
-                  ? "#91a7a2"
+                  ? "#9bbdbc"
                   : TEXT_MUTED,
                 pointerEvents:
                   "none",
@@ -1412,12 +1412,12 @@ export default function AdminDashboard() {
                 boxSizing: "border-box",
                 border: `1px solid ${
                   darkMode
-                    ? "#304641"
+                    ? "rgba(170, 230, 225, 0.15)"
                     : BORDER
                 }`,
                 borderRadius: 13,
                 background: darkMode
-                  ? "#1a2826"
+                  ? "#0a2428"
                   : "#ffffff",
                 padding:
                   "0 46px 0 14px",
@@ -1425,7 +1425,7 @@ export default function AdminDashboard() {
                 fontFamily:
                   "inherit",
                 color: darkMode
-                  ? "#ffffff"
+                  ? "#e9ffff"
                   : TEXT_DARK,
                 fontSize: 13,
                 textAlign: "right",
@@ -1450,14 +1450,14 @@ export default function AdminDashboard() {
                 height: 46,
                 border: `1px solid ${
                   darkMode
-                    ? "#304641"
+                    ? "rgba(170, 230, 225, 0.15)"
                     : BORDER
                 }`,
                 background: darkMode
-                  ? "#1a2826"
+                  ? "#0a2428"
                   : "#ffffff",
                 color: darkMode
-                  ? "#d8e8e4"
+                  ? "#e9ffff"
                   : TEXT_DARK,
                 borderRadius: 13,
                 display: "flex",
@@ -1508,7 +1508,7 @@ export default function AdminDashboard() {
               fontSize: 20,
               fontWeight: 900,
               color: darkMode
-                ? "#ffffff"
+                ? "#e9ffff"
                 : TEXT_DARK,
             }}
           >
@@ -1519,7 +1519,7 @@ export default function AdminDashboard() {
             style={{
               margin: 0,
               color: darkMode
-                ? "#9db0ac"
+                ? "#9bbdbc"
                 : TEXT_MUTED,
               fontSize: 12,
               lineHeight: 1.8,
@@ -1542,13 +1542,13 @@ export default function AdminDashboard() {
               marginBottom: 17,
               background:
                 darkMode
-                  ? "#351f20"
+                  ? "#0a2428"
                   : "#fff1f1",
               border:
-                "1px solid #ffd5d5",
+                `1px solid ${darkMode ? "rgba(170, 230, 225, 0.15)" : "#ffd5d5"}`,
               color:
                 darkMode
-                  ? "#ffb4b4"
+                  ? "#e9ffff"
                   : "#b52f2f",
               borderRadius: 13,
               padding:
@@ -1567,13 +1567,13 @@ export default function AdminDashboard() {
               marginBottom: 17,
               background:
                 darkMode
-                  ? "#17372d"
+                  ? "#0d2a2e"
                   : "#eaf9f1",
               border:
-                "1px solid #cceedd",
+                `1px solid ${darkMode ? "rgba(170, 230, 225, 0.15)" : "#cceedd"}`,
               color:
                 darkMode
-                  ? "#9de0bd"
+                  ? "#5ed9c5"
                   : "#197747",
               borderRadius: 13,
               padding:
@@ -1713,11 +1713,11 @@ export default function AdminDashboard() {
         <section
           style={{
             background: darkMode
-              ? "#172321"
+              ? "#0d2a2e"
               : "#ffffff",
             border: `1px solid ${
               darkMode
-                ? "#2d403d"
+                ? "rgba(170, 230, 225, 0.15)"
                 : BORDER
             }`,
             borderRadius: 17,
@@ -1800,15 +1800,15 @@ export default function AdminDashboard() {
                   height: 43,
                   border: `1px solid ${
                     darkMode
-                      ? "#304641"
+                      ? "rgba(170, 230, 225, 0.15)"
                       : "#dfe7e5"
                   }`,
                   background:
                     darkMode
-                      ? "#20302d"
+                      ? "#123d40"
                       : "#f2f5f4",
                   color: darkMode
-                    ? "#e1eeeb"
+                    ? "#e9ffff"
                     : TEXT_DARK,
                   borderRadius: 11,
                   fontFamily:
@@ -1835,16 +1835,16 @@ export default function AdminDashboard() {
                   height: 43,
                   border: `1px solid ${
                     darkMode
-                      ? "#31524a"
+                      ? "rgba(170, 230, 225, 0.15)"
                       : BORDER
                   }`,
                   background:
                     darkMode
-                      ? "#17372f"
+                      ? "#0a2428"
                       : PRIMARY_LIGHT,
                   color:
                     darkMode
-                      ? "#9de0c7"
+                      ? "#5ed9c5"
                       : PRIMARY_DARK,
                   borderRadius: 11,
                   display: "flex",
@@ -1871,18 +1871,18 @@ export default function AdminDashboard() {
           <div
             style={{
               background: darkMode
-                ? "#172321"
+                ? "#0d2a2e"
                 : "#ffffff",
               border: `1px solid ${
                 darkMode
-                  ? "#2d403d"
+                  ? "rgba(170, 230, 225, 0.15)"
                   : BORDER
               }`,
               borderRadius: 17,
               padding: 35,
               textAlign: "center",
               color: darkMode
-                ? "#9db0ac"
+                ? "#9bbdbc"
                 : TEXT_MUTED,
             }}
           >
@@ -1894,11 +1894,11 @@ export default function AdminDashboard() {
           <div
             style={{
               background: darkMode
-                ? "#172321"
+                ? "#0d2a2e"
                 : "#ffffff",
               border: `1px solid ${
                 darkMode
-                  ? "#2d403d"
+                  ? "rgba(170, 230, 225, 0.15)"
                   : BORDER
               }`,
               borderRadius: 17,
@@ -1932,7 +1932,7 @@ export default function AdminDashboard() {
             <div
               style={{
                 color: darkMode
-                  ? "#ffffff"
+                  ? "#e9ffff"
                   : TEXT_DARK,
                 fontWeight: 900,
                 fontSize: 16,
@@ -1945,7 +1945,7 @@ export default function AdminDashboard() {
             <div
               style={{
                 color: darkMode
-                  ? "#9db0ac"
+                  ? "#9bbdbc"
                   : TEXT_MUTED,
                 fontSize: 13,
               }}
@@ -2003,11 +2003,11 @@ export default function AdminDashboard() {
                     style={{
                       background:
                         darkMode
-                          ? "#172321"
+                          ? "#0d2a2e"
                           : "#ffffff",
                       border: `1px solid ${
                         darkMode
-                          ? "#2d403d"
+                          ? "rgba(170, 230, 225, 0.15)"
                           : BORDER
                       }`,
                       borderRadius: 19,
@@ -2037,7 +2037,7 @@ export default function AdminDashboard() {
                         borderBottom:
                           `1px solid ${
                             darkMode
-                              ? "#2d403d"
+                              ? "rgba(170, 230, 225, 0.15)"
                               : BORDER
                           }`,
                         marginBottom:
@@ -2134,7 +2134,7 @@ export default function AdminDashboard() {
                             style={{
                               color:
                                 darkMode
-                                  ? "#9db0ac"
+                                  ? "#9bbdbc"
                                   : TEXT_MUTED,
                               fontSize: 11,
                               marginTop: 4,
@@ -2283,7 +2283,7 @@ export default function AdminDashboard() {
                           borderTop:
                             `1px solid ${
                               darkMode
-                                ? "#2d403d"
+                                ? "rgba(170, 230, 225, 0.15)"
                                 : BORDER
                             }`,
                           paddingTop:
@@ -2314,7 +2314,7 @@ export default function AdminDashboard() {
                                 border:
                                   "none",
                                 background:
-                                  PRIMARY_DARK,
+                                  darkMode ? "#123d40" : PRIMARY_DARK,
                                 color:
                                   "#ffffff",
                                 borderRadius:
@@ -2391,10 +2391,10 @@ export default function AdminDashboard() {
                             style={{
                               background:
                                 darkMode
-                                  ? "#251c1d"
+                                  ? "#0a2428"
                                   : "#fffafa",
                               border:
-                                "1px solid #f2d4d4",
+                                `1px solid ${darkMode ? "rgba(170, 230, 225, 0.15)" : "#f2d4d4"}`,
                               borderRadius:
                                 14,
                               padding:
@@ -2441,7 +2441,7 @@ export default function AdminDashboard() {
                                 boxSizing:
                                   "border-box",
                                 border:
-                                  "1px solid #ead8d8",
+                                  `1px solid ${darkMode ? "rgba(170, 230, 225, 0.15)" : "#ead8d8"}`,
                                 borderRadius:
                                   11,
                                 padding:
@@ -2456,7 +2456,7 @@ export default function AdminDashboard() {
                                     : TEXT_DARK,
                                 background:
                                   darkMode
-                                    ? "#1a2826"
+                                    ? "#0a2428"
                                     : "#ffffff",
                                 outline:
                                   "none",
@@ -2532,16 +2532,16 @@ export default function AdminDashboard() {
                                   border:
                                     `1px solid ${
                                       darkMode
-                                        ? "#304641"
+                                        ? "rgba(170, 230, 225, 0.15)"
                                         : BORDER
                                     }`,
                                   background:
                                     darkMode
-                                      ? "#1a2826"
+                                      ? "#0a2428"
                                       : "#ffffff",
                                   color:
                                     darkMode
-                                      ? "#b7c8c4"
+                                      ? "#e9ffff"
                                       : TEXT_MUTED,
                                   borderRadius:
                                     11,
@@ -2721,7 +2721,7 @@ function FilterSelect({
           fontSize: 11,
           fontWeight: 800,
           color: darkMode
-            ? "#9db0ac"
+            ? "#9bbdbc"
             : TEXT_MUTED,
         }}
       >
@@ -2741,16 +2741,16 @@ function FilterSelect({
           boxSizing: "border-box",
           border: `1px solid ${
             darkMode
-              ? "#304641"
+              ? "rgba(170, 230, 225, 0.15)"
               : BORDER
           }`,
           borderRadius: 11,
           padding: "0 11px",
           background: darkMode
-            ? "#1a2826"
+            ? "#0a2428"
             : "#ffffff",
           color: darkMode
-            ? "#ffffff"
+            ? "#e9ffff"
             : TEXT_DARK,
           fontFamily:
             "inherit",
@@ -2771,10 +2771,10 @@ function FilterSelect({
               style={{
                 background:
                   darkMode
-                    ? "#1a2826"
+                    ? "#0a2428"
                     : "#ffffff",
                 color: darkMode
-                  ? "#ffffff"
+                  ? "#e9ffff"
                   : TEXT_DARK,
               }}
             >
@@ -2801,11 +2801,11 @@ function InfoItem({
     <div
       style={{
         background: darkMode
-          ? "#1c2b29"
+          ? "#0a2428"
           : "#fbfefd",
         border: `1px solid ${
           darkMode
-            ? "#2d403d"
+            ? "rgba(170, 230, 225, 0.15)"
             : BORDER
         }`,
         borderRadius: 12,
@@ -2824,10 +2824,10 @@ function InfoItem({
           borderRadius: 10,
           background:
             darkMode
-              ? "#20453c"
+              ? "#123d40"
               : PRIMARY_LIGHT,
           color: darkMode
-            ? "#8cdbc7"
+            ? "#5ed9c5"
             : PRIMARY_DARK,
           display: "flex",
           alignItems:
@@ -2849,7 +2849,7 @@ function InfoItem({
         <div
           style={{
             color: darkMode
-              ? "#91a7a2"
+              ? "#9bbdbc"
               : TEXT_MUTED,
             fontSize: 10,
             marginBottom: 3,
@@ -2862,7 +2862,7 @@ function InfoItem({
         <div
           style={{
             color: darkMode
-              ? "#f1f8f6"
+              ? "#e9ffff"
               : TEXT_DARK,
             fontSize: 12,
             fontWeight: 800,
