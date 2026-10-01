@@ -1017,39 +1017,6 @@ export default function AdminDashboard() {
               gap: 8,
             }}
           >
-             {/* Logout */}
-             <button
-               type="button"
-               title="تسجيل الخروج"
-               onClick={handleLogout}
-               style={{
-                 minHeight: 43,
-                 padding: "0 14px",
-                 border: `1px solid ${
-                   darkMode ? "rgba(170, 230, 225, 0.15)" : "#dfe3e5"
-                 }`,
-                 background: darkMode ? "#123d40" : "#eef1f2",
-                 color: darkMode ? "#5ed9c5" : "#596467",
-                 borderRadius: 13,
-                 display: "flex",
-                 alignItems: "center",
-                 justifyContent: "center",
-                 gap: 7,
-                 cursor: "pointer",
-                 fontFamily: "inherit",
-                 fontSize: 12,
-                 fontWeight: 900,
-                 flexShrink: 0,
-               }}
-             >
-               <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-                 <path d="M10 17l5-5-5-5" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" />
-                 <path d="M15 12H4" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" />
-                 <path d="M20 4v16" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" />
-               </svg>
-               <span>تسجيل الخروج</span>
-             </button>
-
             {/* Notification */}
 
             <div
@@ -1353,32 +1320,60 @@ export default function AdminDashboard() {
               )}
             </button>
 
-            {/* Admin Avatar */}
+            {/* Logout */}
 
-            <div
-              title="مدير النظام"
+            <button
+              type="button"
+              title="تسجيل الخروج"
+              aria-label="تسجيل الخروج"
+              onClick={handleLogout}
               style={{
                 width: 43,
                 height: 43,
                 borderRadius: 13,
-                background: darkMode ? "#0a2428" : PRIMARY_LIGHT,
-                color: darkMode ? "#5ed9c5" : PRIMARY_DARK,
+                background: darkMode ? "#123d40" : "#eef1f2",
+                color: darkMode ? "#5ed9c5" : "#596467",
                 display: "flex",
                 alignItems: "center",
-                justifyContent:
-                  "center",
-                fontWeight: 900,
-                fontSize: 15,
+                justifyContent: "center",
                 flexShrink: 0,
                 border: `1px solid ${
                   darkMode
                     ? "rgba(170, 230, 225, 0.15)"
-                    : BORDER
+                    : "#dfe3e5"
                 }`,
+                cursor: "pointer",
+                padding: 0,
               }}
             >
-              م
-            </div>
+              <svg
+                width="19"
+                height="19"
+                viewBox="0 0 24 24"
+                fill="none"
+                aria-hidden="true"
+              >
+                <path
+                  d="M10 17l5-5-5-5"
+                  stroke="currentColor"
+                  strokeWidth="1.8"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                />
+                <path
+                  d="M15 12H4"
+                  stroke="currentColor"
+                  strokeWidth="1.8"
+                  strokeLinecap="round"
+                />
+                <path
+                  d="M20 4v16"
+                  stroke="currentColor"
+                  strokeWidth="1.8"
+                  strokeLinecap="round"
+                />
+              </svg>
+            </button>
           </div>
         </div>
       </header>
