@@ -11418,3 +11418,40 @@ body.nabd-dark .account-type:not(.active):nth-child(1) svg {
   color: #5ed9c5 !important;
   stroke: #5ed9c5 !important;
 }
+/* =========================================================
+   🌙 SIGNUP - ACCOUNT TYPE BUTTONS (DARK MODE FIX)
+   ========================================================= */
+
+/* الزرار التاني (متبرع) - لون بنفسجي */
+body.nabd-dark .signup-page .signup-account-types .account-type:nth-child(2):not(.active) {
+  background: #4a2d44 !important;
+  border-color: rgba(196, 139, 179, 0.35) !important;
+  color: #d4a4c8 !important;
+  box-shadow: 0 6px 18px rgba(74, 45, 68, 0.4) !important;
+}
+
+body.nabd-dark .signup-page .signup-account-types .account-type:nth-child(2):not(.active) .account-icon {
+  background: rgba(196, 139, 179, 0.2) !important;
+}
+
+body.nabd-dark .signup-page .signup-account-types .account-type:nth-child(2):not(.active) svg {
+  color: #d4a4c8 !important;
+  stroke: #d4a4c8 !important;
+}
+
+/* الزرار التالت (جهة طبية) - لون أزرق */
+body.nabd-dark .signup-page .signup-account-types .account-type:nth-child(3):not(.active) {
+  background: #2c3a52 !important;
+  border-color: rgba(142, 179, 214, 0.35) !important;
+  color: #a8c8e8 !important;
+  box-shadow: 0 6px 18px rgba(44, 58, 82, 0.4) !important;
+}
+
+body.nabd-dark .signup-page .signup-account-types .account-type:nth-child(3):not(.active) .account-icon {
+  background: rgba(142, 179, 214, 0.2) !important;
+}
+
+body.nabd-dark .signup-page .signup-account-types .account-type:nth-child(3):not(.active) svg {
+  color: #a8c8e8 !important;
+  stroke: #a8c8e8 !important;
+}
