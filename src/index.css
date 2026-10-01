@@ -11368,45 +11368,4 @@ body.dark .leaflet-control-attribution a,
 }
   color: #e9ffff !important;
 }
-/* =========================================================
-   🌙 SIGNUP PAGE - ACCOUNT TYPE BUTTONS DARK MODE
-   ========================================================= */
-
-/* الأزرار غير المحددة (متبرع + جهة طبية) في الوضع الداكن */
-body.nabd-dark .account-type:not(.active) {
-  background: #0d2a2e !important;
-  border-color: rgba(170, 230, 225, 0.15) !important;
-  color: #9bbdbc !important;
-  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15) !important;
-}
-
-body.nabd-dark .account-type:not(.active):hover {
-  background: #123d40 !important;
-  border-color: rgba(170, 230, 225, 0.25) !important;
-  color: #5ed9c5 !important;
-}
-
-/* الأيقونات جوه الأزرار غير المحددة */
-body.nabd-dark .account-type:not(.active) svg {
-  color: #5ed9c5 !important;
-  stroke: #5ed9c5 !important;
-}
-
-/* الدائرة اللي حوالين الأيقونة */
-body.nabd-dark .account-type:not(.active) .account-icon {
-  background: rgba(94, 217, 197, 0.15) !important;
-  color: #5ed9c5 !important;
-}
-
-/* الزرار المحدد (مستخدم) - نخليه تركواز واضح */
-body.nabd-dark .account-type.active {
-  background: linear-gradient(135deg, #159b8a, #087d70) !important;
-  color: #ffffff !important;
-  border-color: transparent !important;
-  box-shadow: 0 10px 25px rgba(21, 155, 138, 0.3) !important;
-}
-
-body.nabd-dark .account-type.active svg {
-  color: #ffffff !important;
-  stroke: #ffffff !important;
 }
