@@ -11366,3 +11366,62 @@ body.dark .leaflet-control-attribution a,
 [data-theme="dark"] .leaflet-control-attribution a {
   color: #12bfa3;
 }
+/* =========================================================
+   🌙 ADMIN DASHBOARD - DARK MODE (MATCHING APP)
+   ========================================================= */
+
+body.nabd-dark .admin-dashboard {
+  background: #071a1d !important;
+  color: #e9ffff !important;
+}
+
+body.nabd-dark .admin-dashboard header {
+  background: #0d2a2e !important;
+  border-bottom-color: rgba(170, 230, 225, 0.15) !important;
+}
+
+body.nabd-dark .admin-dashboard h1,
+body.nabd-dark .admin-dashboard h2,
+body.nabd-dark .admin-dashboard h3,
+body.nabd-dark .admin-dashboard strong {
+  color: #e9ffff !important;
+}
+
+body.nabd-dark .admin-dashboard p,
+body.nabd-dark .admin-dashboard span,
+body.nabd-dark .admin-dashboard label {
+  color: #9bbdbc !important;
+}
+
+/* الكروت */
+body.nabd-dark .admin-dashboard article,
+body.nabd-dark .admin-dashboard section > div[style*="background: rgb(255, 255, 255)"],
+body.nabd-dark .admin-dashboard div[style*="background: #ffffff"] {
+  background: #0d2a2e !important;
+  border-color: rgba(170, 230, 225, 0.15) !important;
+}
+
+/* مربعات البيانات */
+body.nabd-dark .admin-dashboard div[style*="background: #fbfefd"] {
+  background: #0a2428 !important;
+  border-color: rgba(170, 230, 225, 0.12) !important;
+}
+
+/* مربع البحث */
+body.nabd-dark .admin-dashboard input,
+body.nabd-dark .admin-dashboard select,
+body.nabd-dark .admin-dashboard textarea {
+  background: #0a2428 !important;
+  border-color: rgba(170, 230, 225, 0.15) !important;
+  color: #e9ffff !important;
+}
+
+body.nabd-dark .admin-dashboard input::placeholder {
+  color: #789b99 !important;
+}
+
+/* الفلاتر */
+body.nabd-dark .admin-dashboard select option {
+  background: #0d2a2e !important;
+  color: #e9ffff !important;
+}
