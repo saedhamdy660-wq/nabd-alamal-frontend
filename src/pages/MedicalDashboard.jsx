@@ -822,9 +822,12 @@ export default function MedicalDashboard() {
         ========================= */}
 
         <div
-          style={
-            styles.topBar
-          }
+          style={{
+            ...styles.topBar,
+            ...(theme === "dark"
+              ? styles.topBarDark
+              : {}),
+          }}
         >
           <div
             style={
@@ -832,30 +835,43 @@ export default function MedicalDashboard() {
             }
           >
             <div
-              style={
-                styles.topBarBrandIcon
-              }
-            >
-              {user?.medicalEntityType ===
-              "pharmacy"
-                ? "💊"
-                : user?.medicalEntityType ===
-                  "blood_center"
-                ? "🩸"
-                : "🏥"}
-            </div>
-
-            <span
               style={{
-                ...styles.topBarBrandText,
-                ...(theme ===
-                "dark"
-                  ? styles.darkText
+                ...styles.topBarBrandIcon,
+                ...(theme === "dark"
+                  ? styles.topBarBrandIconDark
                   : {}),
               }}
             >
-              نبض الأمل
-            </span>
+              <MedicalBrandIcon />
+            </div>
+
+            <div
+              style={
+                styles.topBarBrandContent
+              }
+            >
+              <span
+                style={{
+                  ...styles.topBarBrandText,
+                  ...(theme === "dark"
+                    ? styles.darkText
+                    : {}),
+                }}
+              >
+                نبض الأمل
+              </span>
+
+              <span
+                style={{
+                  ...styles.topBarBrandSubText,
+                  ...(theme === "dark"
+                    ? styles.topBarBrandSubTextDark
+                    : {}),
+                }}
+              >
+                لوحة الجهة الطبية
+              </span>
+            </div>
           </div>
 
           <div
@@ -875,13 +891,12 @@ export default function MedicalDashboard() {
               }
               style={{
                 ...styles.topBarIconBtn,
-                ...(theme ===
-                "dark"
+                ...(theme === "dark"
                   ? styles.topBarIconBtnDark
                   : {}),
               }}
             >
-              🔔
+              <BellIcon />
             </button>
 
             {/* Dark Mode */}
@@ -903,15 +918,16 @@ export default function MedicalDashboard() {
               }
               style={{
                 ...styles.topBarIconBtn,
-                ...(theme ===
-                "dark"
+                ...(theme === "dark"
                   ? styles.topBarIconBtnDark
                   : {}),
               }}
             >
-              {theme === "dark"
-                ? "☀️"
-                : "🌙"}
+              {theme === "dark" ? (
+                <SunIcon />
+              ) : (
+                <MoonIcon />
+              )}
             </button>
 
             {/* Logout */}
@@ -926,9 +942,12 @@ export default function MedicalDashboard() {
               style={{
                 ...styles.topBarIconBtn,
                 ...styles.topBarLogout,
+                ...(theme === "dark"
+                  ? styles.topBarLogoutDark
+                  : {}),
               }}
             >
-              🚪
+              <LogoutIcon />
             </button>
 
           </div>
@@ -1358,6 +1377,207 @@ export default function MedicalDashboard() {
 }
 
 // ============================================================
+// SVG Icons
+// ============================================================
+
+function BellIcon() {
+  return (
+    <svg
+      width="21"
+      height="21"
+      viewBox="0 0 24 24"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+      aria-hidden="true"
+    >
+      <path
+        d="M18 8C18 4.686 15.761 2 12 2C8.239 2 6 4.686 6 8C6 13 4 15 4 16.5C4 17.328 4.672 18 5.5 18H18.5C19.328 18 20 17.328 20 16.5C20 15 18 13 18 8Z"
+        stroke="currentColor"
+        strokeWidth="1.8"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+
+      <path
+        d="M9.5 21C10.133 21.622 11.017 22 12 22C12.983 22 13.867 21.622 14.5 21"
+        stroke="currentColor"
+        strokeWidth="1.8"
+        strokeLinecap="round"
+      />
+    </svg>
+  );
+}
+
+function MoonIcon() {
+  return (
+    <svg
+      width="20"
+      height="20"
+      viewBox="0 0 24 24"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+      aria-hidden="true"
+    >
+      <path
+        d="M20.5 15.5C19.58 15.82 18.59 16 17.56 16C12.28 16 8 11.72 8 6.44C8 5.41 8.18 4.42 8.5 3.5C4.7 4.8 2 8.4 2 12.63C2 18.05 6.39 22.44 11.81 22.44C16.04 22.44 19.64 19.74 20.94 15.94C20.8 15.78 20.65 15.64 20.5 15.5Z"
+        stroke="currentColor"
+        strokeWidth="1.8"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+    </svg>
+  );
+}
+
+function SunIcon() {
+  return (
+    <svg
+      width="20"
+      height="20"
+      viewBox="0 0 24 24"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+      aria-hidden="true"
+    >
+      <circle
+        cx="12"
+        cy="12"
+        r="4"
+        stroke="currentColor"
+        strokeWidth="1.8"
+      />
+
+      <path
+        d="M12 2V4"
+        stroke="currentColor"
+        strokeWidth="1.8"
+        strokeLinecap="round"
+      />
+
+      <path
+        d="M12 20V22"
+        stroke="currentColor"
+        strokeWidth="1.8"
+        strokeLinecap="round"
+      />
+
+      <path
+        d="M4.93 4.93L6.34 6.34"
+        stroke="currentColor"
+        strokeWidth="1.8"
+        strokeLinecap="round"
+      />
+
+      <path
+        d="M17.66 17.66L19.07 19.07"
+        stroke="currentColor"
+        strokeWidth="1.8"
+        strokeLinecap="round"
+      />
+
+      <path
+        d="M2 12H4"
+        stroke="currentColor"
+        strokeWidth="1.8"
+        strokeLinecap="round"
+      />
+
+      <path
+        d="M20 12H22"
+        stroke="currentColor"
+        strokeWidth="1.8"
+        strokeLinecap="round"
+      />
+
+      <path
+        d="M4.93 19.07L6.34 17.66"
+        stroke="currentColor"
+        strokeWidth="1.8"
+        strokeLinecap="round"
+      />
+
+      <path
+        d="M17.66 6.34L19.07 4.93"
+        stroke="currentColor"
+        strokeWidth="1.8"
+        strokeLinecap="round"
+      />
+    </svg>
+  );
+}
+
+function LogoutIcon() {
+  return (
+    <svg
+      width="20"
+      height="20"
+      viewBox="0 0 24 24"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+      aria-hidden="true"
+    >
+      <path
+        d="M10 5V4.5C10 3.672 10.672 3 11.5 3H18.5C19.328 3 20 3.672 20 4.5V19.5C20 20.328 19.328 21 18.5 21H11.5C10.672 21 10 20.328 10 19.5V19"
+        stroke="currentColor"
+        strokeWidth="1.8"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+
+      <path
+        d="M3 12H14"
+        stroke="currentColor"
+        strokeWidth="1.8"
+        strokeLinecap="round"
+      />
+
+      <path
+        d="M10 8L14 12L10 16"
+        stroke="currentColor"
+        strokeWidth="1.8"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+    </svg>
+  );
+}
+
+function MedicalBrandIcon() {
+  return (
+    <svg
+      width="21"
+      height="21"
+      viewBox="0 0 24 24"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+      aria-hidden="true"
+    >
+      <path
+        d="M12 21C12 21 4 16.5 4 10.2C4 6.8 6.3 4.5 9.1 4.5C10.5 4.5 11.6 5.1 12 6.1C12.4 5.1 13.5 4.5 14.9 4.5C17.7 4.5 20 6.8 20 10.2C20 16.5 12 21 12 21Z"
+        stroke="currentColor"
+        strokeWidth="1.8"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+
+      <path
+        d="M12 9V14"
+        stroke="currentColor"
+        strokeWidth="1.8"
+        strokeLinecap="round"
+      />
+
+      <path
+        d="M9.5 11.5H14.5"
+        stroke="currentColor"
+        strokeWidth="1.8"
+        strokeLinecap="round"
+      />
+    </svg>
+  );
+}
+
+// ============================================================
 // Request Card
 // ============================================================
 
@@ -1419,8 +1639,6 @@ function RequestCard({
       }
     >
 
-      {/* Request Header */}
-
       <div
         style={
           styles.requestTop
@@ -1474,8 +1692,6 @@ function RequestCard({
             "قيد الانتظار"}
         </span>
       </div>
-
-      {/* Request Information */}
 
       <div
         style={
@@ -1551,8 +1767,6 @@ function RequestCard({
         )}
       </div>
 
-      {/* Notes */}
-
       {notes && (
         <div
           style={
@@ -1576,8 +1790,6 @@ function RequestCard({
           </p>
         </div>
       )}
-
-      {/* Status Update */}
 
       <div
         style={
@@ -1747,7 +1959,8 @@ const styles = {
     background:
       "linear-gradient(180deg, #f4fffd 0%, #ffffff 55%, #f8fffe 100%)",
     padding: "14px 14px 80px",
-    fontFamily: "Tajawal, Arial, sans-serif",
+    fontFamily:
+      "Tajawal, Arial, sans-serif",
     color: "#17332e",
     boxSizing: "border-box",
     transition:
@@ -1777,76 +1990,137 @@ const styles = {
     justifyContent: "space-between",
     gap: "10px",
     marginBottom: "14px",
-    padding: "0 4px",
+    padding: "9px 10px",
+    borderRadius: "20px",
+    background:
+      "linear-gradient(135deg, #0aa88f 0%, #078b7b 52%, #066f66 100%)",
+    border:
+      "1px solid rgba(255,255,255,0.18)",
+    boxShadow:
+      "0 10px 24px rgba(8, 139, 123, 0.18)",
+    boxSizing: "border-box",
+    transition:
+      "background .25s ease, box-shadow .25s ease",
+  },
+
+  topBarDark: {
+    background:
+      "linear-gradient(135deg, #123f38 0%, #0d342f 52%, #092a27 100%)",
+    border:
+      "1px solid rgba(126, 196, 184, 0.16)",
+    boxShadow:
+      "0 10px 24px rgba(0, 0, 0, 0.22)",
   },
 
   topBarRight: {
     display: "flex",
     alignItems: "center",
-    gap: "8px",
+    gap: "9px",
+    minWidth: 0,
   },
 
   topBarBrandIcon: {
-    width: "36px",
-    height: "36px",
-    borderRadius: "12px",
-    background: "#e6f7f4",
+    width: "38px",
+    height: "38px",
+    minWidth: "38px",
+    borderRadius: "13px",
+    background:
+      "rgba(255,255,255,0.16)",
+    border:
+      "1px solid rgba(255,255,255,0.18)",
+    color: "#ffffff",
     display: "flex",
     alignItems: "center",
     justifyContent: "center",
-    fontSize: "18px",
-    flexShrink: 0,
+    boxShadow:
+      "inset 0 1px 0 rgba(255,255,255,0.12)",
+  },
+
+  topBarBrandIconDark: {
+    background:
+      "rgba(126, 229, 211, 0.12)",
+    border:
+      "1px solid rgba(126, 229, 211, 0.16)",
+  },
+
+  topBarBrandContent: {
+    display: "flex",
+    flexDirection: "column",
+    gap: "1px",
+    minWidth: 0,
   },
 
   topBarBrandText: {
     fontWeight: 900,
     fontSize: "14px",
-    color: "#17332e",
+    color: "#ffffff",
+    lineHeight: 1.25,
+  },
+
+  topBarBrandSubText: {
+    fontWeight: 500,
+    fontSize: "9px",
+    color:
+      "rgba(255,255,255,0.78)",
+    lineHeight: 1.3,
+  },
+
+  topBarBrandSubTextDark: {
+    color:
+      "rgba(220,250,245,0.68)",
   },
 
   topBarIcons: {
     display: "flex",
     alignItems: "center",
-    gap: "8px",
+    gap: "7px",
+    flexShrink: 0,
   },
 
   topBarIconBtn: {
-    width: "42px",
-    height: "42px",
-    borderRadius: "14px",
+    width: "39px",
+    height: "39px",
+    borderRadius: "13px",
     border:
-      "1px solid rgba(173, 215, 208, 0.42)",
-    background: "#ffffff",
-    color: "#078876",
+      "1px solid rgba(255,255,255,0.22)",
+    background:
+      "rgba(255,255,255,0.13)",
+    color: "#ffffff",
     display: "flex",
     alignItems: "center",
     justifyContent: "center",
     cursor: "pointer",
     boxShadow:
-      "0 4px 12px rgba(23, 70, 63, 0.05)",
+      "inset 0 1px 0 rgba(255,255,255,0.10)",
     position: "relative",
     padding: 0,
     flexShrink: 0,
-    fontSize: "17px",
     transition:
       "background .2s ease, border .2s ease, transform .15s ease",
   },
 
   topBarIconBtnDark: {
-    background: "#1b3732",
+    background:
+      "rgba(255,255,255,0.08)",
     border:
-      "1px solid rgba(126, 196, 184, 0.18)",
-    color: "#9be5d7",
-    boxShadow:
-      "0 4px 12px rgba(0, 0, 0, 0.16)",
+      "1px solid rgba(126,196,184,0.18)",
+    color: "#b5f0e5",
   },
 
   topBarLogout: {
-    color: "#dc2626",
-    borderColor:
-      "rgba(220, 38, 38, 0.2)",
+    color: "#ffffff",
+    border:
+      "1px solid rgba(255,255,255,0.20)",
     background:
-      "rgba(220, 38, 38, 0.06)",
+      "rgba(220, 38, 38, 0.20)",
+  },
+
+  topBarLogoutDark: {
+    color: "#ffb5b5",
+    border:
+      "1px solid rgba(255,120,120,0.20)",
+    background:
+      "rgba(220, 38, 38, 0.18)",
   },
 
   topBarBrandTextDark: {
@@ -2028,7 +2302,8 @@ const styles = {
     padding: "9px 15px",
     minHeight: "40px",
     borderRadius: "13px",
-    fontFamily: "Tajawal, Arial, sans-serif",
+    fontFamily:
+      "Tajawal, Arial, sans-serif",
     fontSize: "12px",
     fontWeight: 900,
     cursor: "pointer",
@@ -2255,7 +2530,8 @@ const styles = {
     color: "#17332e",
     borderRadius: "12px",
     padding: "9px 11px",
-    fontFamily: "Tajawal, Arial, sans-serif",
+    fontFamily:
+      "Tajawal, Arial, sans-serif",
     fontSize: "12px",
     outline: "none",
     cursor: "pointer",
@@ -2451,7 +2727,8 @@ const styles = {
     padding: "11px 22px",
     minHeight: "42px",
     borderRadius: "13px",
-    fontFamily: "Tajawal, Arial, sans-serif",
+    fontFamily:
+      "Tajawal, Arial, sans-serif",
     fontSize: "12px",
     fontWeight: 800,
     cursor: "pointer",
