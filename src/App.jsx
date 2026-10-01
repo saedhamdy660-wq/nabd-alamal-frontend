@@ -1,5 +1,10 @@
 import React, { useEffect, useState } from "react";
-import { Routes, Route, useLocation } from "react-router-dom";
+import {
+  Routes,
+  Route,
+  useLocation,
+  useNavigate,
+} from "react-router-dom";
 
 import Navbar from "./components/Navbar.jsx";
 import ChatBot from "./components/ChatBot.jsx";
@@ -53,6 +58,55 @@ const noNavRoutes = [
 
 export default function App() {
   const location = useLocation();
+  const navigate = useNavigate();
+
+  // ============================================================
+  // ADMIN ACCESS CONTROL
+  // ============================================================
+
+  const getSavedUser = () => {
+    try {
+      return JSON.parse(
+        localStorage.getItem("nabd_user") || "null"
+      );
+    } catch (error) {
+      console.error(
+        "Failed to read saved user:",
+        error
+      );
+
+      return null;
+    }
+  };
+
+  const savedUser = getSavedUser();
+
+  const isAdmin =
+    savedUser?.accountType === "admin" ||
+    savedUser?.role === "admin";
+
+  // ============================================================
+  // منع الأدمن من دخول أي صفحة غير /admin
+  // ============================================================
+
+  useEffect(() => {
+    if (
+      isAdmin &&
+      location.pathname !== "/admin"
+    ) {
+      navigate("/admin", {
+        replace: true,
+      });
+    }
+  }, [
+    isAdmin,
+    location.pathname,
+    navigate,
+  ]);
+
+  // ============================================================
+  // THEME
+  // ============================================================
 
   const [theme, setTheme] = useState(() => {
     const savedTheme =
@@ -188,6 +242,7 @@ export default function App() {
       // ================= ADMIN =================
       // لو حساب Admin وصل إلى /home لأي سبب
       // يتم توجيهه فعليًا إلى لوحة تحكم الأدمن
+
       if (
         savedUser?.accountType === "admin" ||
         savedUser?.role === "admin"
@@ -198,6 +253,7 @@ export default function App() {
       }
 
       // ================= MEDICAL =================
+
       if (
         savedUser?.accountType ===
         "medical"
@@ -214,6 +270,7 @@ export default function App() {
     }
 
     // ================= NORMAL USER =================
+
     return <Home />;
   };
 
@@ -383,6 +440,7 @@ export default function App() {
       {!hideNav && <Navbar />}
 
       {/* الشات يظهر في صفحات التطبيق الداخلية */}
+
       {[
         "/",
         "/welcome",
