@@ -197,7 +197,19 @@ export default function Login() {
         );
       }
 
-      // المستخدم الموجود يدخل للصفحة الرئيسية مباشرة
+      // ================================
+      // Admin → Admin Dashboard
+      // User → Home
+      // ================================
+      if (
+        loggedInUser?.role === "admin" ||
+        loggedInUser?.accountType === "admin"
+      ) {
+        navigate("/admin", { replace: true });
+        return;
+      }
+
+      // المستخدم العادي يدخل للصفحة الرئيسية
       navigate("/home");
     } catch (err) {
       setError(
