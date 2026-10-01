@@ -1444,7 +1444,7 @@ const styles = {
     minHeight: "100vh",
     background:
       "linear-gradient(180deg, #f4fffd 0%, #ffffff 55%, #f8fffe 100%)",
-    padding: "18px 14px 90px",
+    padding: "14px 14px 80px",
     fontFamily: "Tajawal, Arial, sans-serif",
     color: "#17332e",
     boxSizing: "border-box",
@@ -1458,55 +1458,150 @@ const styles = {
   },
 
   // ==========================================================
+  // Top Bar (شريط الأيقونات العلوي)
+  // ==========================================================
+
+  topBar: {
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "space-between",
+    gap: "10px",
+    marginBottom: "14px",
+    padding: "0 4px",
+  },
+
+  topBarRight: {
+    display: "flex",
+    alignItems: "center",
+    gap: "8px",
+  },
+
+  topBarBrandIcon: {
+    width: "36px",
+    height: "36px",
+    borderRadius: "12px",
+    background: "#e6f7f4",
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+    fontSize: "18px",
+    flexShrink: 0,
+  },
+
+  topBarBrandText: {
+    fontWeight: 900,
+    fontSize: "14px",
+    color: "#17332e",
+  },
+
+  topBarIcons: {
+    display: "flex",
+    alignItems: "center",
+    gap: "8px",
+  },
+
+  topBarIconBtn: {
+    width: "42px",
+    height: "42px",
+    borderRadius: "14px",
+    border: "1px solid rgba(173, 215, 208, 0.42)",
+    background: "#ffffff",
+    color: "#078876",
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+    cursor: "pointer",
+    boxShadow: "0 4px 12px rgba(23, 70, 63, 0.05)",
+    position: "relative",
+    padding: 0,
+    flexShrink: 0,
+  },
+
+  topBarLogout: {
+    color: "#dc2626",
+    borderColor: "rgba(220, 38, 38, 0.2)",
+    background: "rgba(220, 38, 38, 0.06)",
+  },
+
+  topBarNotificationDot: {
+    position: "absolute",
+    top: "8px",
+    right: "8px",
+    width: "8px",
+    height: "8px",
+    borderRadius: "50%",
+    background: "#dc2626",
+    border: "2px solid #ffffff",
+    boxSizing: "content-box",
+  },
+
+  topBarAvatar: {
+    width: "42px",
+    height: "42px",
+    borderRadius: "14px",
+    background: "linear-gradient(135deg, #0aa88f, #078876)",
+    color: "#ffffff",
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+    fontSize: "15px",
+    fontWeight: 900,
+    cursor: "pointer",
+    border: "none",
+    boxShadow: "0 4px 12px rgba(10, 168, 143, 0.18)",
+    flexShrink: 0,
+  },
+
+  // ==========================================================
   // Header
   // ==========================================================
 
   header: {
     background:
       "linear-gradient(135deg, #12aa95 0%, #07917f 100%)",
-    borderRadius: "28px",
-    padding: "24px 22px",
+    borderRadius: "22px",
+    padding: "16px 18px",
     color: "#ffffff",
     display: "flex",
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "space-between",
-    gap: "16px",
+    gap: "12px",
     boxShadow:
-      "0 14px 34px rgba(8, 150, 130, 0.20)",
-    marginBottom: "30px",
-    minHeight: "150px",
+      "0 10px 24px rgba(8, 150, 130, 0.18)",
+    marginBottom: "20px",
+    minHeight: "100px",
     boxSizing: "border-box",
   },
 
   welcome: {
-    margin: "0 0 5px",
-    fontSize: "14px",
-    fontWeight: 500,
+    margin: "0 0 2px",
+    fontSize: "11px",
+    fontWeight: 600,
     opacity: 0.92,
-    lineHeight: 1.5,
+    lineHeight: 1.4,
   },
 
   title: {
     margin: 0,
-    fontSize: "28px",
+    fontSize: "22px",
     fontWeight: 900,
-    lineHeight: 1.25,
-    letterSpacing: "-0.5px",
+    lineHeight: 1.2,
+    letterSpacing: "-0.3px",
   },
 
   subtitle: {
-    margin: "6px 0 0",
-    fontSize: "15px",
-    fontWeight: 500,
+    margin: "4px 0 0",
+    fontSize: "13px",
+    fontWeight: 600,
     opacity: 0.94,
   },
 
   entityIcon: {
-    width: "76px",
-    height: "76px",
-    minWidth: "76px",
-    borderRadius: "25px",
+    width: "56px",
+    height: "56px",
+    minWidth: "56px",
+    borderRadius: "18px",
     background:
       "rgba(255,255,255,0.18)",
     border:
@@ -1514,7 +1609,7 @@ const styles = {
     display: "flex",
     alignItems: "center",
     justifyContent: "center",
-    fontSize: "36px",
+    fontSize: "28px",
     boxShadow:
       "inset 0 1px 0 rgba(255,255,255,0.10)",
   },
@@ -1524,13 +1619,13 @@ const styles = {
   // ==========================================================
 
   section: {
-    marginBottom: "28px",
+    marginBottom: "18px",
   },
 
   sectionTitle: {
-    margin: "0 0 14px",
-    padding: "0 4px",
-    fontSize: "23px",
+    margin: "0 0 10px",
+    padding: "0 2px",
+    fontSize: "17px",
     fontWeight: 900,
     color: "#17332e",
     lineHeight: 1.4,
@@ -1544,10 +1639,10 @@ const styles = {
     background: "#ffffff",
     border:
       "1px solid rgba(173, 215, 208, 0.42)",
-    borderRadius: "25px",
-    padding: "5px 16px",
+    borderRadius: "20px",
+    padding: "2px 14px",
     boxShadow:
-      "0 10px 28px rgba(23, 70, 63, 0.055)",
+      "0 8px 22px rgba(23, 70, 63, 0.05)",
     overflow: "hidden",
     boxSizing: "border-box",
   },
@@ -1556,27 +1651,27 @@ const styles = {
     display: "flex",
     flexDirection: "row",
     alignItems: "center",
-    gap: "13px",
-    padding: "15px 0",
-    minHeight: "67px",
+    gap: "11px",
+    padding: "11px 0",
+    minHeight: "55px",
     borderBottom:
       "1px solid #edf3f2",
     boxSizing: "border-box",
   },
 
   infoIcon: {
-    width: "48px",
-    height: "48px",
-    minWidth: "48px",
-    borderRadius: "16px",
+    width: "38px",
+    height: "38px",
+    minWidth: "38px",
+    borderRadius: "12px",
     background:
       "#e6f7f4",
     display: "flex",
     alignItems: "center",
     justifyContent: "center",
-    fontSize: "21px",
+    fontSize: "17px",
     boxShadow:
-      "0 3px 10px rgba(10, 168, 143, 0.04)",
+      "0 2px 8px rgba(10, 168, 143, 0.04)",
   },
 
   infoContent: {
@@ -1584,19 +1679,19 @@ const styles = {
     flex: 1,
     display: "flex",
     flexDirection: "column",
-    gap: "4px",
+    gap: "2px",
     alignItems: "flex-start",
   },
 
   infoLabel: {
-    fontSize: "13px",
+    fontSize: "11px",
     color: "#71827f",
     fontWeight: 500,
     lineHeight: 1.4,
   },
 
   infoValue: {
-    fontSize: "16px",
+    fontSize: "14px",
     fontWeight: 800,
     color: "#17332e",
     overflowWrap: "anywhere",
@@ -1612,13 +1707,13 @@ const styles = {
     alignItems: "flex-end",
     justifyContent: "space-between",
     gap: "10px",
-    marginBottom: "14px",
+    marginBottom: "10px",
   },
 
   requestsCount: {
-    margin: "-7px 4px 0 0",
+    margin: "-4px 4px 0 0",
     color: "#7a8986",
-    fontSize: "13px",
+    fontSize: "12px",
     lineHeight: 1.6,
   },
 
@@ -1626,15 +1721,15 @@ const styles = {
     border: "none",
     background: "#e6f7f4",
     color: "#078876",
-    padding: "11px 18px",
-    minHeight: "44px",
-    borderRadius: "15px",
+    padding: "9px 15px",
+    minHeight: "40px",
+    borderRadius: "13px",
     fontFamily: "Tajawal, Arial, sans-serif",
-    fontSize: "13px",
+    fontSize: "12px",
     fontWeight: 900,
     cursor: "pointer",
     boxShadow:
-      "0 4px 12px rgba(10, 168, 143, 0.06)",
+      "0 3px 10px rgba(10, 168, 143, 0.06)",
   },
 
   requestsError: {
@@ -1642,10 +1737,10 @@ const styles = {
     border:
       "1px solid #f3cccc",
     color: "#a33b3b",
-    borderRadius: "16px",
-    padding: "12px 14px",
-    marginBottom: "14px",
-    fontSize: "13px",
+    borderRadius: "14px",
+    padding: "10px 12px",
+    marginBottom: "12px",
+    fontSize: "12px",
     lineHeight: 1.7,
   },
 
@@ -1656,17 +1751,17 @@ const styles = {
   requestsList: {
     display: "flex",
     flexDirection: "column",
-    gap: "15px",
+    gap: "11px",
   },
 
   requestCard: {
     background: "#ffffff",
     border:
       "1px solid rgba(173, 215, 208, 0.42)",
-    borderRadius: "23px",
-    padding: "17px",
+    borderRadius: "20px",
+    padding: "14px",
     boxShadow:
-      "0 9px 25px rgba(23, 70, 63, 0.055)",
+      "0 7px 20px rgba(23, 70, 63, 0.05)",
     boxSizing: "border-box",
   },
 
@@ -1674,49 +1769,49 @@ const styles = {
     display: "flex",
     alignItems: "flex-start",
     justifyContent: "space-between",
-    gap: "10px",
-    marginBottom: "15px",
+    gap: "8px",
+    marginBottom: "12px",
   },
 
   requestTitleArea: {
     display: "flex",
     alignItems: "center",
-    gap: "11px",
+    gap: "9px",
     minWidth: 0,
     flex: 1,
   },
 
   requestIcon: {
-    width: "47px",
-    height: "47px",
-    minWidth: "47px",
-    borderRadius: "15px",
+    width: "40px",
+    height: "40px",
+    minWidth: "40px",
+    borderRadius: "13px",
     background: "#e6f7f4",
     display: "flex",
     alignItems: "center",
     justifyContent: "center",
-    fontSize: "22px",
+    fontSize: "18px",
   },
 
   requestTitle: {
     margin: 0,
-    fontSize: "15px",
+    fontSize: "14px",
     fontWeight: 900,
     color: "#17332e",
     lineHeight: 1.4,
   },
 
   requestId: {
-    margin: "3px 0 0",
+    margin: "2px 0 0",
     color: "#788884",
-    fontSize: "11px",
+    fontSize: "10px",
     lineHeight: 1.5,
   },
 
   statusBadge: {
     borderRadius: "999px",
-    padding: "7px 10px",
-    fontSize: "10px",
+    padding: "5px 9px",
+    fontSize: "9px",
     fontWeight: 900,
     whiteSpace: "nowrap",
     flexShrink: 0,
@@ -1750,51 +1845,51 @@ const styles = {
     display: "grid",
     gridTemplateColumns:
       "repeat(2, minmax(0, 1fr))",
-    gap: "9px",
-    marginBottom: "13px",
+    gap: "7px",
+    marginBottom: "10px",
   },
 
   requestInfoItem: {
     display: "flex",
     alignItems: "center",
-    gap: "8px",
+    gap: "7px",
     background: "#f8fcfb",
     border:
       "1px solid #eef5f3",
-    borderRadius: "14px",
-    padding: "9px",
+    borderRadius: "12px",
+    padding: "8px",
     minWidth: 0,
     boxSizing: "border-box",
   },
 
   requestInfoIcon: {
-    width: "34px",
-    height: "34px",
-    minWidth: "34px",
-    borderRadius: "11px",
+    width: "30px",
+    height: "30px",
+    minWidth: "30px",
+    borderRadius: "9px",
     background: "#e6f7f4",
     display: "flex",
     alignItems: "center",
     justifyContent: "center",
-    fontSize: "15px",
+    fontSize: "13px",
   },
 
   requestInfoContent: {
     minWidth: 0,
     display: "flex",
     flexDirection: "column",
-    gap: "2px",
+    gap: "1px",
   },
 
   requestInfoLabel: {
     color: "#788884",
-    fontSize: "9px",
+    fontSize: "8px",
     lineHeight: 1.4,
   },
 
   requestInfoValue: {
     color: "#17332e",
-    fontSize: "12px",
+    fontSize: "11px",
     fontWeight: 900,
     overflowWrap: "anywhere",
     lineHeight: 1.45,
@@ -1809,24 +1904,24 @@ const styles = {
       "linear-gradient(135deg, #f7fcfb 0%, #f1faf8 100%)",
     border:
       "1px solid #e7f1ef",
-    borderRadius: "15px",
-    padding: "12px 13px",
-    marginBottom: "14px",
+    borderRadius: "13px",
+    padding: "10px 11px",
+    marginBottom: "11px",
   },
 
   notesLabel: {
     display: "block",
     color: "#71827f",
-    fontSize: "11px",
-    marginBottom: "5px",
+    fontSize: "10px",
+    marginBottom: "4px",
     fontWeight: 700,
   },
 
   notesText: {
     margin: 0,
     color: "#17332e",
-    fontSize: "12px",
-    lineHeight: 1.8,
+    fontSize: "11px",
+    lineHeight: 1.7,
   },
 
   // ==========================================================
@@ -1836,26 +1931,26 @@ const styles = {
   statusSection: {
     borderTop:
       "1px solid #edf3f2",
-    paddingTop: "14px",
+    paddingTop: "12px",
   },
 
   statusLabel: {
     display: "block",
-    marginBottom: "7px",
+    marginBottom: "6px",
     color: "#17332e",
-    fontSize: "12px",
+    fontSize: "11px",
     fontWeight: 900,
   },
 
   statusSelect: {
     width: "100%",
-    minHeight: "45px",
+    minHeight: "42px",
     border:
       "1px solid #dceae7",
     background: "#ffffff",
     color: "#17332e",
-    borderRadius: "13px",
-    padding: "10px 12px",
+    borderRadius: "12px",
+    padding: "9px 11px",
     fontFamily: "Tajawal, Arial, sans-serif",
     fontSize: "12px",
     outline: "none",
@@ -1864,9 +1959,9 @@ const styles = {
   },
 
   updatingText: {
-    margin: "7px 0 0",
+    margin: "6px 0 0",
     color: "#078876",
-    fontSize: "11px",
+    fontSize: "10px",
   },
 
   // ==========================================================
@@ -1877,28 +1972,28 @@ const styles = {
     background: "#ffffff",
     border:
       "1px dashed #cbdeda",
-    borderRadius: "24px",
-    padding: "38px 20px",
+    borderRadius: "20px",
+    padding: "30px 18px",
     textAlign: "center",
     boxShadow:
-      "0 5px 18px rgba(23, 70, 63, 0.025)",
+      "0 5px 16px rgba(23, 70, 63, 0.025)",
   },
 
   emptyIcon: {
-    width: "66px",
-    height: "66px",
-    margin: "0 auto 13px",
-    borderRadius: "20px",
+    width: "56px",
+    height: "56px",
+    margin: "0 auto 10px",
+    borderRadius: "18px",
     background: "#e6f7f4",
     display: "flex",
     alignItems: "center",
     justifyContent: "center",
-    fontSize: "32px",
+    fontSize: "26px",
   },
 
   emptyTitle: {
-    margin: "0 0 8px",
-    fontSize: "17px",
+    margin: "0 0 6px",
+    fontSize: "15px",
     fontWeight: 900,
     color: "#17332e",
   },
@@ -1906,8 +2001,8 @@ const styles = {
   emptyText: {
     margin: 0,
     color: "#788884",
-    fontSize: "13px",
-    lineHeight: 1.8,
+    fontSize: "12px",
+    lineHeight: 1.7,
   },
 
   // ==========================================================
@@ -1919,34 +2014,34 @@ const styles = {
       "linear-gradient(135deg, #eaf9f6 0%, #e0f6f2 100%)",
     border:
       "1px solid #c8ebe4",
-    borderRadius: "21px",
-    padding: "17px",
+    borderRadius: "18px",
+    padding: "14px",
     display: "flex",
     alignItems: "center",
-    gap: "13px",
+    gap: "11px",
     boxShadow:
-      "0 7px 20px rgba(10, 168, 143, 0.06)",
+      "0 6px 18px rgba(10, 168, 143, 0.06)",
   },
 
   verifiedIcon: {
-    width: "48px",
-    height: "48px",
-    minWidth: "48px",
+    width: "42px",
+    height: "42px",
+    minWidth: "42px",
     borderRadius: "50%",
     background: "#0aa88f",
     color: "#ffffff",
     display: "flex",
     alignItems: "center",
     justifyContent: "center",
-    fontSize: "23px",
+    fontSize: "20px",
     fontWeight: 900,
     boxShadow:
-      "0 5px 12px rgba(10, 168, 143, 0.18)",
+      "0 4px 10px rgba(10, 168, 143, 0.18)",
   },
 
   verifiedTitle: {
-    margin: "0 0 4px",
-    fontSize: "15px",
+    margin: "0 0 3px",
+    fontSize: "14px",
     fontWeight: 900,
     color: "#17332e",
   },
@@ -1954,8 +2049,8 @@ const styles = {
   verifiedText: {
     margin: 0,
     color: "#55706a",
-    fontSize: "12px",
-    lineHeight: 1.7,
+    fontSize: "11px",
+    lineHeight: 1.6,
   },
 
   // ==========================================================
@@ -1965,40 +2060,40 @@ const styles = {
   loadingCard: {
     width: "calc(100% - 28px)",
     maxWidth: "420px",
-    margin: "100px auto",
+    margin: "80px auto",
     background: "#ffffff",
     border:
       "1px solid #e5efed",
-    borderRadius: "26px",
-    padding: "40px 24px",
+    borderRadius: "22px",
+    padding: "32px 20px",
     textAlign: "center",
     boxShadow:
-      "0 12px 30px rgba(23, 51, 46, 0.08)",
+      "0 10px 26px rgba(23, 51, 46, 0.08)",
     boxSizing: "border-box",
   },
 
   loadingIcon: {
-    width: "70px",
-    height: "70px",
-    margin: "0 auto 14px",
-    borderRadius: "22px",
+    width: "60px",
+    height: "60px",
+    margin: "0 auto 12px",
+    borderRadius: "18px",
     background: "#e6f7f4",
     display: "flex",
     alignItems: "center",
     justifyContent: "center",
-    fontSize: "38px",
+    fontSize: "32px",
   },
 
   loadingTitle: {
     margin: 0,
-    fontSize: "20px",
+    fontSize: "18px",
     fontWeight: 900,
   },
 
   loadingText: {
-    margin: "8px 0 0",
+    margin: "6px 0 0",
     color: "#6b7c79",
-    fontSize: "13px",
+    fontSize: "12px",
   },
 
   // ==========================================================
@@ -2008,52 +2103,52 @@ const styles = {
   errorCard: {
     width: "calc(100% - 28px)",
     maxWidth: "420px",
-    margin: "100px auto",
+    margin: "80px auto",
     background: "#ffffff",
     border:
       "1px solid #f0dada",
-    borderRadius: "26px",
-    padding: "40px 24px",
+    borderRadius: "22px",
+    padding: "32px 20px",
     textAlign: "center",
     boxShadow:
-      "0 12px 30px rgba(23, 51, 46, 0.08)",
+      "0 10px 26px rgba(23, 51, 46, 0.08)",
     boxSizing: "border-box",
   },
 
   errorIcon: {
-    width: "70px",
-    height: "70px",
-    margin: "0 auto 14px",
-    borderRadius: "22px",
+    width: "60px",
+    height: "60px",
+    margin: "0 auto 12px",
+    borderRadius: "18px",
     background: "#fff0f0",
     display: "flex",
     alignItems: "center",
     justifyContent: "center",
-    fontSize: "38px",
+    fontSize: "32px",
   },
 
   errorTitle: {
     margin: 0,
-    fontSize: "20px",
+    fontSize: "18px",
     fontWeight: 900,
   },
 
   errorText: {
-    margin: "10px 0 20px",
+    margin: "8px 0 16px",
     color: "#6b7c79",
-    lineHeight: 1.8,
-    fontSize: "13px",
+    lineHeight: 1.7,
+    fontSize: "12px",
   },
 
   retryButton: {
     border: "none",
     background: "#0aa88f",
     color: "#ffffff",
-    padding: "12px 26px",
-    minHeight: "45px",
-    borderRadius: "14px",
+    padding: "11px 22px",
+    minHeight: "42px",
+    borderRadius: "13px",
     fontFamily: "Tajawal, Arial, sans-serif",
-    fontSize: "13px",
+    fontSize: "12px",
     fontWeight: 800,
     cursor: "pointer",
   },
