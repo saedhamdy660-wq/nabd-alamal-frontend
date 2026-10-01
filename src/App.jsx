@@ -185,6 +185,19 @@ export default function App() {
           ) || "null"
         );
 
+      // ================= ADMIN =================
+      // لو حساب Admin وصل إلى /home لأي سبب
+      // يتم توجيهه فعليًا إلى لوحة تحكم الأدمن
+      if (
+        savedUser?.accountType === "admin" ||
+        savedUser?.role === "admin"
+      ) {
+        return (
+          <AdminDashboard />
+        );
+      }
+
+      // ================= MEDICAL =================
       if (
         savedUser?.accountType ===
         "medical"
@@ -200,6 +213,7 @@ export default function App() {
       );
     }
 
+    // ================= NORMAL USER =================
     return <Home />;
   };
 
