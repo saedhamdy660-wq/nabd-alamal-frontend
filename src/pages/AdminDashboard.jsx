@@ -2572,6 +2572,78 @@ export default function AdminDashboard() {
             )}
           </div>
         )}
+        {/* Logout - Bottom of page */}
+        <div
+          style={{
+            marginTop: 28,
+            paddingTop: 20,
+            borderTop: `1px solid ${
+              darkMode
+                ? "rgba(170, 230, 225, 0.15)"
+                : BORDER
+            }`,
+            display: "flex",
+            justifyContent: "flex-end",
+          }}
+        >
+          <button
+            type="button"
+            title="تسجيل الخروج"
+            onClick={handleLogout}
+            style={{
+              minHeight: 44,
+              padding: "0 18px",
+              border: "1px solid transparent",
+              background: darkMode
+                ? "#123d40"
+                : "#c53b3b",
+              color: darkMode
+                ? "#5ed9c5"
+                : "#ffffff",
+              borderRadius: 13,
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              gap: 8,
+              cursor: "pointer",
+              fontFamily: "inherit",
+              fontSize: 13,
+              fontWeight: 900,
+              boxShadow: darkMode
+                ? "none"
+                : "0 5px 14px rgba(197, 59, 59, 0.16)",
+            }}
+          >
+            <svg
+              width="18"
+              height="18"
+              viewBox="0 0 24 24"
+              fill="none"
+              aria-hidden="true"
+            >
+              <path
+                d="M10 17l5-5-5-5"
+                stroke="currentColor"
+                strokeWidth="1.8"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              />
+              <path
+                d="M15 12H4"
+                stroke="currentColor"
+                strokeWidth="1.8"
+                strokeLinecap="round"
+              />
+              <path
+                d="M20 4v16"
+                stroke="currentColor"
+                strokeWidth="1.8"
+                strokeLinecap="round"
+              />
+            </svg>
+            <span>تسجيل الخروج</span>
+          </button>
+        </div>
       </main>
 
       {/* =====================================================
