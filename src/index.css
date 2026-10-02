@@ -11455,3 +11455,40 @@ body.nabd-dark .signup-page .signup-account-types .account-type:nth-child(3):not
   color: #a8c8e8 !important;
   stroke: #a8c8e8 !important;
 }
+/* =========================================================
+   🌙 APP SETTINGS - MUTED TEXT VISIBILITY FIX
+   ========================================================= */
+
+/* النصوص الثانوية في صفحة الإعدادات - تغميقها */
+.settings-page .setting-card p,
+.settings-page .setting-card small,
+.settings-page .settings-card p,
+.settings-page .settings-card small,
+.settings-page .muted,
+.settings-page .subtitle,
+.settings-page .description,
+.settings-page [class*="muted"],
+.settings-page [class*="subtitle"],
+.settings-page [class*="description"] {
+  color: #5a7a76 !important;
+  font-weight: 600 !important;
+}
+
+/* لو الكلاسات مختلفة، نستخدم targeting عام */
+.settings-page p,
+.settings-page span:not([class*="active"]),
+.settings-page small {
+  color: #5a7a76 !important;
+}
+
+/* استثناء النصوص الرئيسية */
+.settings-page h1,
+.settings-page h2,
+.settings-page h3,
+.settings-page h4,
+.settings-page strong,
+.settings-page .setting-title,
+.settings-page [class*="title"] {
+  color: #17332e !important;
+  font-weight: 800 !important;
+}
