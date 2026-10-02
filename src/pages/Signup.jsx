@@ -449,6 +449,7 @@ export default function Signup() {
     bloodType: "",
     lastDonation: "",
     chronicDisease: "",
+    chronicDiseaseName: "",
   });
 
   const [
@@ -628,6 +629,7 @@ export default function Signup() {
           bloodType: "",
           lastDonation: "",
           chronicDisease: "",
+          chronicDiseaseName: "",
         }));
       }
     };
@@ -660,6 +662,24 @@ export default function Signup() {
        * لو رجعنا لتسجيل جهة معتمدة
        * نبدأ بتحميل الجهات مرة أخرى من خلال useEffect.
        */
+    };
+
+  const handleChronicDiseaseChange =
+    (e) => {
+      const value =
+        e.target.value;
+
+      setForm((prev) => ({
+        ...prev,
+        chronicDisease: value,
+        chronicDiseaseName:
+          value === "نعم"
+            ? prev.chronicDiseaseName
+            : "",
+      }));
+
+      setError("");
+      setSuccess("");
     };
 
   const getBackendAccountType =
@@ -806,6 +826,18 @@ export default function Signup() {
       ) {
         setError(
           "من فضلك حدد هل لديك أمراض مزمنة أم لا"
+        );
+
+        return;
+      }
+
+      if (
+        form.chronicDisease ===
+          "نعم" &&
+        !form.chronicDiseaseName.trim()
+      ) {
+        setError(
+          "من فضلك اذكر المرض المزمن الذي تعاني منه"
         );
 
         return;
@@ -995,6 +1027,13 @@ export default function Signup() {
               ? form.chronicDisease ===
                 "نعم"
               : false,
+
+          chronicDiseaseName:
+            accountType === "donor" &&
+            form.chronicDisease ===
+              "نعم"
+              ? form.chronicDiseaseName.trim()
+              : "",
         });
 
       const savedUser = {
@@ -1027,6 +1066,13 @@ export default function Signup() {
             ? form.chronicDisease ===
               "نعم"
             : false,
+
+        chronicDiseaseName:
+          accountType === "donor" &&
+          form.chronicDisease ===
+            "نعم"
+            ? form.chronicDiseaseName.trim()
+            : "",
 
         accountType:
           backendAccountType,
@@ -2094,9 +2140,9 @@ export default function Signup() {
                   value={
                     form.chronicDisease
                   }
-                  onChange={update(
-                    "chronicDisease"
-                  )}
+                  onChange={
+                    handleChronicDiseaseChange
+                  }
                   aria-label="الأمراض المزمنة"
                   required
                 >
@@ -2120,6 +2166,31 @@ export default function Signup() {
                   <ChevronDownIcon />
                 </div>
               </div>
+
+              {/* اسم المرض المزمن */}
+
+              {form.chronicDisease ===
+                "نعم" && (
+                <div className="signup-field signup-donor-field">
+                  <div className="signup-field-icon">
+                    <PlusCircleIcon />
+                  </div>
+
+                  <input
+                    className="signup-input"
+                    type="text"
+                    value={
+                      form.chronicDiseaseName
+                    }
+                    onChange={update(
+                      "chronicDiseaseName"
+                    )}
+                    placeholder="من فضلك اذكر المرض المزمن الذي تعاني منه"
+                    aria-label="المرض المزمن"
+                    autoComplete="off"
+                  />
+                </div>
+              )}
             </>
           )}
 
