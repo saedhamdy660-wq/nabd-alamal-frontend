@@ -11456,39 +11456,70 @@ body.nabd-dark .signup-page .signup-account-types .account-type:nth-child(3):not
   stroke: #a8c8e8 !important;
 }
 /* =========================================================
-   🌙 APP SETTINGS - MUTED TEXT VISIBILITY FIX
+   🌙 APP SETTINGS - TEXT VISIBILITY FIX
    ========================================================= */
 
-/* النصوص الثانوية في صفحة الإعدادات - تغميقها */
-.settings-page .setting-card p,
-.settings-page .setting-card small,
-.settings-page .settings-card p,
-.settings-page .settings-card small,
-.settings-page .muted,
-.settings-page .subtitle,
-.settings-page .description,
-.settings-page [class*="muted"],
+/* النص الوصفي تحت "خصص تجربتك" */
+.settings-page .hero-subtitle,
+.settings-page .hero-text,
+.settings-page .page-subtitle,
+.settings-page .header-subtitle,
+.settings-page p {
+  color: #4a6f6a !important;
+  font-weight: 600 !important;
+  font-size: 13.5px !important;
+  line-height: 1.7 !important;
+}
+
+/* النصوص الثانوية تحت العناوين */
+.settings-page .setting-subtitle,
+.settings-page .setting-description,
+.settings-page .setting-hint,
+.settings-page .card-subtitle,
+.settings-page .card-description,
+.settings-page small,
 .settings-page [class*="subtitle"],
-.settings-page [class*="description"] {
+.settings-page [class*="description"],
+.settings-page [class*="hint"] {
   color: #5a7a76 !important;
   font-weight: 600 !important;
+  font-size: 12.5px !important;
+  opacity: 1 !important;
 }
 
-/* لو الكلاسات مختلفة، نستخدم targeting عام */
-.settings-page p,
-.settings-page span:not([class*="active"]),
-.settings-page small {
-  color: #5a7a76 !important;
-}
-
-/* استثناء النصوص الرئيسية */
+/* تأكيد لون العناوين الرئيسية */
+.settings-page .setting-title,
+.settings-page .card-title,
 .settings-page h1,
 .settings-page h2,
 .settings-page h3,
 .settings-page h4,
 .settings-page strong,
-.settings-page .setting-title,
 .settings-page [class*="title"] {
   color: #17332e !important;
-  font-weight: 800 !important;
+  font-weight: 900 !important;
+  opacity: 1 !important;
+}
+
+/* الوضع الداكن - النصوص الثانوية */
+body.nabd-dark .settings-page .setting-subtitle,
+body.nabd-dark .settings-page .setting-description,
+body.nabd-dark .settings-page .setting-hint,
+body.nabd-dark .settings-page .card-subtitle,
+body.nabd-dark .settings-page .card-description,
+body.nabd-dark .settings-page small,
+body.nabd-dark .settings-page [class*="subtitle"],
+body.nabd-dark .settings-page [class*="description"],
+body.nabd-dark .settings-page [class*="hint"] {
+  color: #9bbdbc !important;
+}
+
+body.nabd-dark .settings-page .setting-title,
+body.nabd-dark .settings-page .card-title,
+body.nabd-dark .settings-page h1,
+body.nabd-dark .settings-page h2,
+body.nabd-dark .settings-page h3,
+body.nabd-dark .settings-page h4,
+body.nabd-dark .settings-page strong {
+  color: #e9ffff !important;
 }
