@@ -121,28 +121,6 @@ function SettingsIcon() {
   );
 }
 
-function BellSettingsIcon() {
-  return (
-    <svg viewBox="0 0 24 24">
-      <path
-        d="M6 17h12l-1.2-1.7V10a4.8 4.8 0 0 0-9.6 0v5.3L6 17Z"
-        fill="none"
-        stroke="currentColor"
-        strokeWidth="1.8"
-        strokeLinejoin="round"
-      />
-
-      <path
-        d="M10 20h4"
-        fill="none"
-        stroke="currentColor"
-        strokeWidth="1.8"
-        strokeLinecap="round"
-      />
-    </svg>
-  );
-}
-
 function SupportIcon() {
   return (
     <svg viewBox="0 0 24 24">
@@ -645,14 +623,6 @@ export default function Profile() {
         />
 
         <ProfileMenuItem
-          icon={<BellSettingsIcon />}
-          title="إعدادات الإشعارات"
-          onClick={() =>
-            navigate("/notification-settings")
-          }
-        />
-
-        <ProfileMenuItem
           icon={<SettingsIcon />}
           title="إعدادات التطبيق"
           onClick={() =>
@@ -935,6 +905,8 @@ export default function Profile() {
 
           background-repeat: no-repeat;
 
+          background-blend-mode: normal;
+
           border:
             6px solid
             rgba(255,255,255,.92);
@@ -947,6 +919,9 @@ export default function Profile() {
             rgba(255,255,255,.8);
 
           overflow: visible;
+
+          filter: none;
+          opacity: 1;
         }
 
 
@@ -1428,13 +1403,6 @@ export default function Profile() {
 
           color: #65d6c5 !important;
 
-          background:
-            linear-gradient(
-              145deg,
-              #163f41,
-              #0d3032
-            ) !important;
-
           border-color:
             rgba(255,255,255,.85) !important;
 
@@ -1444,6 +1412,23 @@ export default function Profile() {
 
             inset 0 1px 8px
             rgba(255,255,255,.06);
+
+          background-blend-mode: normal !important;
+
+          filter: none !important;
+
+          opacity: 1 !important;
+        }
+
+        /* الحفاظ على خلفية الصورة نفسها في الوضع الغامق */
+        .profile-page.dark-mode
+        .profile-avatar[style*="background-image"] {
+
+          background-blend-mode: normal !important;
+
+          filter: none !important;
+
+          opacity: 1 !important;
         }
 
 
