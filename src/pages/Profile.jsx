@@ -513,7 +513,11 @@ export default function Profile() {
         <button
           type="button"
           className="header-back"
-          onClick={() => navigate(-1)}
+          onClick={() =>
+            navigate("/home", {
+              replace: true,
+            })
+          }
         >
           ←
         </button>
