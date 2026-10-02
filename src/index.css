@@ -11486,50 +11486,5 @@ body.nabd-dark .settings-page .settings-section-title,
 body.nabd-dark .settings-page .settings-footer {
   color: #9bbdbc !important;
 }
-/* =========================================================
-   🌙 SPLASH / WELCOME - TEXT FIX IN DARK MODE
-   ========================================================= */
-
-/* في الوضع الداكن - نخلي النص غامق عشان يبان على الخلفية الفاتحة */
-body.nabd-dark .splash-screen h1,
-body.nabd-dark .welcome-page h1,
-body.nabd-dark .splash-title,
-body.nabd-dark .welcome-title {
-  color: #078876 !important;
-  text-shadow: none !important;
-}
-
-body.nabd-dark .splash-screen p,
-body.nabd-dark .welcome-page p,
-body.nabd-dark .splash-subtitle,
-body.nabd-dark .welcome-subtitle,
-body.nabd-dark .splash-tagline {
-  color: #0aa88f !important;
-  text-shadow: none !important;
-}
-
-body.nabd-dark .splash-tagline strong {
-  color: #078876 !important;
-}
-
-/* لو الصفحة كلها بتتأثر بالدارك مود، نخلي الخلفية فاتحة زي الأصل */
-body.nabd-dark .splash-screen {
-  background:
-    linear-gradient(
-      160deg,
-      #b8f0e8 0%,
-      #a0e8de 50%,
-      #7dd4c8 100%
-    ) !important;
-}
-
-/* نصوص الأزرار */
-body.nabd-dark .splash-screen .btn {
-  background: #ffffff !important;
-  color: #078876 !important;
-}
-
-body.nabd-dark .welcome-page .btn-primary,
-body.nabd-dark .welcome-page .start-button {
   color: #ffffff !important;
 }
