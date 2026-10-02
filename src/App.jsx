@@ -33,7 +33,6 @@ import DonationRequestDetails from "./pages/DonationRequestDetails.jsx";
 
 import Requests from "./pages/Requests.jsx";
 import Notifications from "./pages/Notifications.jsx";
-import NotificationSettings from "./pages/NotificationSettings.jsx";
 import AppSettings from "./pages/AppSettings.jsx";
 
 import Profile from "./pages/Profile.jsx";
@@ -56,7 +55,6 @@ const noNavRoutes = [
   // صفحة الإشعارات مستقلة بدون Navbar
   "/notifications",
 
-  "/notification-settings",
   "/settings",
 ];
 
@@ -410,12 +408,7 @@ export default function App() {
           element={<Notifications />}
         />
 
-        <Route
-          path="/notification-settings"
-          element={
-            <NotificationSettings />
-          }
-        />
+        {/* ================= SETTINGS ================= */}
 
         <Route
           path="/settings"
