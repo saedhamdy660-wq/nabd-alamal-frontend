@@ -2185,7 +2185,7 @@ export default function Signup() {
                     onChange={update(
                       "chronicDiseaseName"
                     )}
-                    placeholder="من فضلك اذكر المرض المزمن الذي تعاني منه"
+                   placeholder="من فضلك اذكر المرض الذي تعاني منه"
                     aria-label="المرض المزمن"
                     autoComplete="off"
                   />
