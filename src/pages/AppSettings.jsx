@@ -328,6 +328,26 @@ function LocationIcon() {
   );
 }
 
+function ChevronIcon({ open = false }) {
+  return (
+    <svg
+      viewBox="0 0 24 24"
+      className={`notification-chevron ${
+        open ? "open" : ""
+      }`}
+    >
+      <path
+        d="M9 6l6 6-6 6"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="2"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+    </svg>
+  );
+}
+
 /* =========================================================
    ILLUSTRATION
 ========================================================= */
@@ -424,10 +444,14 @@ function SettingItem({
   return (
     <button
       type="button"
-      className={`setting-item ${danger ? "setting-danger" : ""}`}
+      className={`setting-item ${
+        danger ? "setting-danger" : ""
+      }`}
       onClick={onClick}
     >
-      <div className="setting-icon">{icon}</div>
+      <div className="setting-icon">
+        {icon}
+      </div>
 
       <div className="setting-content">
         <strong>{title}</strong>
@@ -474,7 +498,9 @@ export default function AppSettings() {
   ------------------------------------------------------- */
 
   const [notifications, setNotifications] = useState(() => {
-    const saved = localStorage.getItem("nabd_notifications");
+    const saved = localStorage.getItem(
+      "nabd_notifications"
+    );
 
     return saved === null
       ? true
@@ -502,8 +528,9 @@ export default function AppSettings() {
 
   const [language, setLanguage] = useState(() => {
     return (
-      localStorage.getItem("nabd_language") ||
-      "العربية"
+      localStorage.getItem(
+        "nabd_language"
+      ) || "العربية"
     );
   });
 
@@ -557,12 +584,22 @@ export default function AppSettings() {
   });
 
   /* -------------------------------------------------------
+     COLLAPSE / EXPAND NOTIFICATION SETTINGS
+  ------------------------------------------------------- */
+
+  const [
+    notificationDetailsOpen,
+    setNotificationDetailsOpen,
+  ] = useState(false);
+
+  /* -------------------------------------------------------
      NOTIFICATION LABELS
   ------------------------------------------------------- */
 
   const notificationItems = [
     {
       key: "urgent",
+
       label:
         language === "English"
           ? "Emergency alerts"
@@ -576,6 +613,7 @@ export default function AppSettings() {
 
     {
       key: "orders",
+
       label:
         language === "English"
           ? "Order status updates"
@@ -589,6 +627,7 @@ export default function AppSettings() {
 
     {
       key: "platform",
+
       label:
         language === "English"
           ? "Platform messages"
@@ -602,6 +641,7 @@ export default function AppSettings() {
 
     {
       key: "promo",
+
       label:
         language === "English"
           ? "Offers and reminders"
@@ -850,6 +890,7 @@ export default function AppSettings() {
   const text = isEnglish
     ? {
         title: "App Settings",
+
         brand: "Nabd Al Amal",
 
         heroTitle:
@@ -858,7 +899,8 @@ export default function AppSettings() {
         heroText:
           "Control the app settings in the way that suits you.",
 
-        preferences: "Preferences",
+        preferences:
+          "Preferences",
 
         notifications:
           "Notifications",
@@ -873,7 +915,7 @@ export default function AppSettings() {
           "Notifications disabled",
 
         notificationDetails:
-          "Notification preferences",
+          "Notification settings",
 
         notificationDetailsSub:
           "Choose the notifications you want to receive",
@@ -899,13 +941,17 @@ export default function AppSettings() {
         notificationNote:
           "You can change your notification settings at any time to suit your needs.",
 
-        appearance: "Appearance",
+        appearance:
+          "Appearance",
 
-        light: "Light",
+        light:
+          "Light",
 
-        dark: "Dark",
+        dark:
+          "Dark",
 
-        language: "Language",
+        language:
+          "Language",
 
         languageSub:
           "Application interface language",
@@ -935,9 +981,11 @@ export default function AppSettings() {
           "Nabd Al Amal\n\nA platform designed to make it easier to access blood donation, medicine exchange, and medical assistance services.",
       }
     : {
-        title: "إعدادات التطبيق",
+        title:
+          "إعدادات التطبيق",
 
-        brand: "نبض الأمل",
+        brand:
+          "نبض الأمل",
 
         heroTitle:
           "خصّص تجربتك",
@@ -961,7 +1009,7 @@ export default function AppSettings() {
           "الإشعارات غير مفعلة",
 
         notificationDetails:
-          "إعدادات التنبيهات",
+          "إعدادات الإشعارات",
 
         notificationDetailsSub:
           "اختر التنبيهات التي تريد استقبالها",
@@ -978,11 +1026,14 @@ export default function AppSettings() {
         surroundingDescription:
           "ستصلك التنبيهات من الحالات الموجودة داخل هذه المسافة.",
 
-        km: "كم",
+        km:
+          "كم",
 
-        oneKm: "1 كم",
+        oneKm:
+          "1 كم",
 
-        twentyKm: "20 كم",
+        twentyKm:
+          "20 كم",
 
         notificationNote:
           "يمكنك تغيير إعدادات الإشعارات في أي وقت لتناسب احتياجاتك.",
@@ -1126,161 +1177,202 @@ export default function AppSettings() {
         </SettingItem>
 
         {/* =================================================
-            DETAILED NOTIFICATION SETTINGS
+            COLLAPSIBLE NOTIFICATION SETTINGS
         ================================================= */}
 
-        <div className="notification-settings-wrapper">
-          <div className="notification-heading">
-            <h3>
+        <button
+          type="button"
+          className="notification-settings-toggle"
+          onClick={() =>
+            setNotificationDetailsOpen(
+              (value) => !value
+            )
+          }
+          aria-expanded={
+            notificationDetailsOpen
+          }
+        >
+          <div className="notification-toggle-icon">
+            <BellIcon />
+          </div>
+
+          <div className="notification-toggle-content">
+            <strong>
               {text.notificationDetails}
-            </h3>
+            </strong>
 
             <span>
               {text.notificationDetailsSub}
             </span>
           </div>
 
-          <div className="notification-list">
-            {notificationItems.map(
-              (setting) => (
-                <div
-                  key={setting.key}
-                  className="notification-setting-row"
-                >
-                  <div className="notification-setting-icon">
-                    {getNotificationIcon(
-                      setting.key
-                    )}
-                  </div>
-
-                  <div className="notification-setting-text">
-                    <strong>
-                      {setting.label}
-                    </strong>
-
-                    <span>
-                      {setting.description}
-                    </span>
-                  </div>
-
-                  <label className="notification-switch">
-                    <input
-                      type="checkbox"
-                      checked={
-                        notifications &&
-                        notificationSettings[
-                          setting.key
-                        ]
-                      }
-                      disabled={
-                        !notifications
-                      }
-                      onChange={() =>
-                        toggleNotificationSetting(
-                          setting.key
-                        )
-                      }
-                    />
-
-                    <span className="notification-slider" />
-                  </label>
-                </div>
-              )
-            )}
+          <div
+            className={`notification-chevron-wrap ${
+              notificationDetailsOpen
+                ? "active"
+                : ""
+            }`}
+          >
+            <ChevronIcon
+              open={
+                notificationDetailsOpen
+              }
+            />
           </div>
-        </div>
+        </button>
 
         {/* =================================================
-            GEOGRAPHIC RANGE
+            NOTIFICATION DETAILS
         ================================================= */}
 
-        <div className="notification-geographic-wrapper">
-          <div className="notification-heading">
-            <h3>
-              {text.geographic}
-            </h3>
+        {notificationDetailsOpen && (
+          <div className="notification-details-panel">
+            <div className="notification-list">
+              {notificationItems.map(
+                (setting) => (
+                  <div
+                    key={setting.key}
+                    className="notification-setting-row"
+                  >
+                    <div className="notification-setting-icon">
+                      {getNotificationIcon(
+                        setting.key
+                      )}
+                    </div>
 
-            <span>
-              {text.geographicSub}
-            </span>
-          </div>
+                    <div className="notification-setting-text">
+                      <strong>
+                        {setting.label}
+                      </strong>
 
-          <div className="radius-card">
-            <div className="radius-top">
-              <div className="radius-icon">
-                <LocationIcon />
+                      <span>
+                        {
+                          setting.description
+                        }
+                      </span>
+                    </div>
+
+                    <label className="notification-switch">
+                      <input
+                        type="checkbox"
+                        checked={
+                          notifications &&
+                          notificationSettings[
+                            setting.key
+                          ]
+                        }
+                        disabled={
+                          !notifications
+                        }
+                        onChange={() =>
+                          toggleNotificationSetting(
+                            setting.key
+                          )
+                        }
+                      />
+
+                      <span className="notification-slider" />
+                    </label>
+                  </div>
+                )
+              )}
+            </div>
+
+            {/* =============================================
+                GEOGRAPHIC RANGE
+            ============================================= */}
+
+            <div className="notification-geographic-wrapper">
+              <div className="notification-heading">
+                <h3>
+                  {text.geographic}
+                </h3>
+
+                <span>
+                  {text.geographicSub}
+                </span>
               </div>
 
-              <div className="radius-info">
-                <strong>
-                  {
-                    text.surroundingDistance
-                  }
-                </strong>
+              <div className="radius-card">
+                <div className="radius-top">
+                  <div className="radius-icon">
+                    <LocationIcon />
+                  </div>
+
+                  <div className="radius-info">
+                    <strong>
+                      {
+                        text.surroundingDistance
+                      }
+                    </strong>
+
+                    <p>
+                      {
+                        text.surroundingDescription
+                      }
+                    </p>
+                  </div>
+
+                  <div className="radius-value">
+                    <span>
+                      {radius}
+                    </span>
+
+                    <small>
+                      {text.km}
+                    </small>
+                  </div>
+                </div>
+
+                <div className="range-container">
+                  <input
+                    type="range"
+                    min="1"
+                    max="20"
+                    value={radius}
+                    disabled={
+                      !notifications
+                    }
+                    onChange={(e) =>
+                      setRadius(
+                        Number(
+                          e.target.value
+                        )
+                      )
+                    }
+                    style={{
+                      background: `linear-gradient(
+                        to left,
+                        #159b8a 0%,
+                        #159b8a ${rangePercent}%,
+                        var(--range-empty) ${rangePercent}%,
+                        var(--range-empty) 100%
+                      )`,
+                    }}
+                  />
+
+                  <div className="range-labels">
+                    <span>
+                      {text.oneKm}
+                    </span>
+
+                    <span>
+                      {text.twentyKm}
+                    </span>
+                  </div>
+                </div>
+              </div>
+
+              <div className="settings-note">
+                <BellIcon />
 
                 <p>
-                  {
-                    text.surroundingDescription
-                  }
+                  {text.notificationNote}
                 </p>
               </div>
-
-              <div className="radius-value">
-                <span>
-                  {radius}
-                </span>
-
-                <small>
-                  {text.km}
-                </small>
-              </div>
-            </div>
-
-            <div className="range-container">
-              <input
-                type="range"
-                min="1"
-                max="20"
-                value={radius}
-                disabled={!notifications}
-                onChange={(e) =>
-                  setRadius(
-                    Number(
-                      e.target.value
-                    )
-                  )
-                }
-                style={{
-                  background: `linear-gradient(
-                    to left,
-                    #159b8a 0%,
-                    #159b8a ${rangePercent}%,
-                    var(--range-empty) ${rangePercent}%,
-                    var(--range-empty) 100%
-                  )`,
-                }}
-              />
-
-              <div className="range-labels">
-                <span>
-                  {text.oneKm}
-                </span>
-
-                <span>
-                  {text.twentyKm}
-                </span>
-              </div>
             </div>
           </div>
-
-          <div className="settings-note">
-            <BellIcon />
-
-            <p>
-              {text.notificationNote}
-            </p>
-          </div>
-        </div>
+        )}
 
         {/* =================================================
             APPEARANCE
@@ -1971,64 +2063,172 @@ export default function AppSettings() {
         }
 
         /* ===================================================
-           NOTIFICATION SETTINGS
+           COLLAPSIBLE NOTIFICATION SETTINGS
         =================================================== */
 
-        .notification-settings-wrapper {
-          margin:
-            4px
-            0
-            10px;
+        .notification-settings-toggle {
+          width: 100%;
+
+          min-height: 68px;
 
           padding:
-            13px
-            0
-            0;
+            8px
+            2px;
+
+          display: flex;
+
+          align-items: center;
+
+          gap: 12px;
+
+          border: 0;
 
           border-top:
             1px solid
             rgba(124,184,177,.14);
-        }
 
-        .notification-heading {
-          padding:
-            3px
-            2px
-            10px;
-        }
-
-        .notification-heading h3 {
-          margin:
-            0
-            0
-            4px;
+          background: transparent;
 
           color: #286d6d;
 
-          font-size: 15px;
+          text-align: right;
+
+          cursor: pointer;
+        }
+
+        .settings-page.settings-english
+        .notification-settings-toggle {
+          text-align: left;
+        }
+
+        .notification-toggle-icon {
+          width: 42px;
+          height: 42px;
+
+          flex-shrink: 0;
+
+          display: flex;
+
+          align-items: center;
+          justify-content: center;
+
+          border-radius: 15px;
+
+          color: #159b8a;
+
+          background:
+            linear-gradient(
+              145deg,
+              #e4faf6,
+              #d3f3ed
+            );
+        }
+
+        .notification-toggle-icon svg {
+          width: 22px;
+          height: 22px;
+        }
+
+        .notification-toggle-content {
+          flex: 1;
+
+          min-width: 0;
+
+          display: flex;
+
+          flex-direction: column;
+
+          gap: 3px;
+        }
+
+        .notification-toggle-content strong {
+          color: #286d6d;
+
+          font-size: 14px;
 
           font-weight: 800;
         }
 
-        .notification-heading span {
+        .notification-toggle-content span {
           color: #82a09f;
 
           font-size: 10px;
+        }
 
-          line-height: 1.6;
+        .notification-chevron-wrap {
+          width: 34px;
+          height: 34px;
+
+          flex-shrink: 0;
+
+          display: flex;
+
+          align-items: center;
+          justify-content: center;
+
+          border-radius: 11px;
+
+          color: #78a09d;
+
+          background:
+            rgba(224,241,238,.58);
+
+          transition:
+            background .2s,
+            color .2s;
+        }
+
+        .notification-chevron-wrap.active {
+          color: #159b8a;
+
+          background:
+            rgba(216,247,241,.8);
+        }
+
+        .notification-chevron {
+          width: 19px;
+          height: 19px;
+
+          transition:
+            transform .22s ease;
+        }
+
+        .notification-chevron.open {
+          transform:
+            rotate(90deg);
+        }
+
+        /* ===================================================
+           NOTIFICATION DETAILS PANEL
+        =================================================== */
+
+        .notification-details-panel {
+          margin:
+            0
+            2px
+            7px;
+
+          padding:
+            2px
+            0
+            4px;
+
+          border-top:
+            1px solid
+            rgba(124,184,177,.12);
         }
 
         .notification-list {
           overflow: hidden;
 
-          border-radius: 20px;
+          border-radius: 18px;
 
           background:
-            rgba(255,255,255,.44);
+            rgba(255,255,255,.24);
 
           border:
             1px solid
-            rgba(255,255,255,.72);
+            rgba(124,184,177,.08);
         }
 
         .notification-setting-row {
@@ -2198,16 +2398,44 @@ export default function AppSettings() {
 
         .notification-geographic-wrapper {
           margin:
-            7px
+            10px
             0
-            10px;
+            4px;
 
           padding-top:
             12px;
 
           border-top:
             1px solid
-            rgba(124,184,177,.14);
+            rgba(124,184,177,.12);
+        }
+
+        .notification-heading {
+          padding:
+            3px
+            2px
+            10px;
+        }
+
+        .notification-heading h3 {
+          margin:
+            0
+            0
+            4px;
+
+          color: #286d6d;
+
+          font-size: 14px;
+
+          font-weight: 800;
+        }
+
+        .notification-heading span {
+          color: #82a09f;
+
+          font-size: 9px;
+
+          line-height: 1.6;
         }
 
         .radius-card {
@@ -2215,28 +2443,17 @@ export default function AppSettings() {
 
           padding: 15px;
 
-          border-radius: 22px;
+          border-radius: 20px;
 
           background:
-            linear-gradient(
-              145deg,
-              rgba(255,255,255,.78),
-              rgba(232,249,246,.72)
-            );
+            rgba(229,248,244,.48);
 
           border:
             1px solid
-            rgba(255,255,255,.86);
+            rgba(124,184,177,.10);
 
           box-shadow:
-            0 8px 20px
-            rgba(42,128,128,.06);
-
-          backdrop-filter:
-            blur(12px);
-
-          -webkit-backdrop-filter:
-            blur(12px);
+            none;
         }
 
         .radius-top {
@@ -2462,11 +2679,11 @@ export default function AppSettings() {
           color: #82a09f;
 
           background:
-            rgba(255,255,255,.5);
+            rgba(255,255,255,.25);
 
           border:
             1px solid
-            rgba(255,255,255,.7);
+            rgba(124,184,177,.08);
         }
 
         .settings-note svg {
@@ -2870,31 +3087,65 @@ export default function AppSettings() {
         }
 
         /* ===================================================
-           DARK NOTIFICATIONS
+           DARK COLLAPSIBLE NOTIFICATIONS
         =================================================== */
 
         body.nabd-dark
-        .notification-settings-wrapper,
-        body.nabd-dark
-        .notification-geographic-wrapper {
-          border-color:
+        .notification-settings-toggle {
+          color: #dcefeb;
+
+          border-top-color:
             rgba(130,190,183,.10);
         }
 
         body.nabd-dark
-        .notification-heading h3 {
+        .notification-toggle-icon {
+          color: #65d5c3;
+
+          background:
+            linear-gradient(
+              145deg,
+              #173c3b,
+              #1b4946
+            );
+        }
+
+        body.nabd-dark
+        .notification-toggle-content strong {
           color: #dff6f1;
         }
 
         body.nabd-dark
-        .notification-heading span {
+        .notification-toggle-content span {
           color: #91aaa8;
+        }
+
+        body.nabd-dark
+        .notification-chevron-wrap {
+          color: #8eaaa7;
+
+          background:
+            rgba(25,58,59,.72);
+        }
+
+        body.nabd-dark
+        .notification-chevron-wrap.active {
+          color: #65d5c3;
+
+          background:
+            rgba(31,93,86,.58);
+        }
+
+        body.nabd-dark
+        .notification-details-panel {
+          border-top-color:
+            rgba(130,190,183,.10);
         }
 
         body.nabd-dark
         .notification-list {
           background:
-            rgba(13,34,35,.52);
+            rgba(13,34,35,.24);
 
           border-color:
             rgba(110,220,204,.08);
@@ -2944,21 +3195,31 @@ export default function AppSettings() {
         }
 
         body.nabd-dark
+        .notification-geographic-wrapper {
+          border-color:
+            rgba(130,190,183,.10);
+        }
+
+        body.nabd-dark
+        .notification-heading h3 {
+          color: #dff6f1;
+        }
+
+        body.nabd-dark
+        .notification-heading span {
+          color: #91aaa8;
+        }
+
+        body.nabd-dark
         .radius-card {
           background:
-            linear-gradient(
-              145deg,
-              #103c3e,
-              #0b2d2f
-            );
+            rgba(16,60,62,.34);
 
           border:
             1px solid
-            rgba(93,201,190,.20);
+            rgba(93,201,190,.12);
 
-          box-shadow:
-            0 10px 25px
-            rgba(0,0,0,.20);
+          box-shadow: none;
         }
 
         body.nabd-dark
@@ -3003,11 +3264,11 @@ export default function AppSettings() {
           color: #9bbdbc;
 
           background:
-            rgba(255,255,255,.055);
+            rgba(255,255,255,.035);
 
           border:
             1px solid
-            rgba(255,255,255,.08);
+            rgba(255,255,255,.06);
         }
 
         body.nabd-dark
@@ -3150,6 +3411,28 @@ export default function AppSettings() {
           .appearance-toggle span {
             padding-left: 5px;
             padding-right: 5px;
+          }
+
+          .notification-settings-toggle {
+            min-height: 64px;
+          }
+
+          .notification-toggle-icon {
+            width: 39px;
+            height: 39px;
+          }
+
+          .notification-toggle-icon svg {
+            width: 20px;
+            height: 20px;
+          }
+
+          .notification-toggle-content strong {
+            font-size: 12px;
+          }
+
+          .notification-toggle-content span {
+            font-size: 9px;
           }
 
           .notification-setting-row {
