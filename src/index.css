@@ -11455,4 +11455,213 @@ body.nabd-dark .signup-page .signup-account-types .account-type:nth-child(3):not
   color: #a8c8e8 !important;
   stroke: #a8c8e8 !important;
 }
+/* =========================================================
+   🌙 APP SETTINGS - FULL STYLE (LIGHT + DARK)
+   ========================================================= */
 
+/* ========== الصفحة العامة ========== */
+.settings-page {
+  background: linear-gradient(180deg, #f4fffd 0%, #ffffff 55%, #f8fffe 100%) !important;
+  padding: 16px 14px 90px !important;
+  font-family: "Tajawal", Arial, sans-serif !important;
+  color: #17332e !important;
+}
+
+/* ========== الكارت العلوي (خصص تجربتك) ========== */
+.settings-page .hero-card,
+.settings-page .settings-hero {
+  background: #ffffff !important;
+  border: 1px solid rgba(173, 215, 208, 0.35) !important;
+  border-radius: 22px !important;
+  padding: 18px !important;
+  margin-bottom: 16px !important;
+  box-shadow: 0 8px 22px rgba(23, 70, 63, 0.04) !important;
+}
+
+/* العناوين الرئيسية */
+.settings-page h1,
+.settings-page h2,
+.settings-page h3,
+.settings-page .title,
+.settings-page .setting-title {
+  color: #17332e !important;
+  font-weight: 900 !important;
+  opacity: 1 !important;
+}
+
+/* النصوص الثانوية */
+.settings-page p,
+.settings-page small,
+.settings-page .subtitle,
+.settings-page .setting-subtitle,
+.settings-page .setting-description,
+.settings-page .card-subtitle,
+.settings-page [class*="subtitle"],
+.settings-page [class*="description"] {
+  color: #5a7a76 !important;
+  font-weight: 600 !important;
+  opacity: 1 !important;
+}
+
+/* ========== الكروت الرئيسية (التفضيلات + الأمان) ========== */
+.settings-page .settings-card,
+.settings-page .setting-card,
+.settings-page .section-card {
+  background: #ffffff !important;
+  border: 1px solid rgba(173, 215, 208, 0.35) !important;
+  border-radius: 22px !important;
+  padding: 8px 16px !important;
+  margin-bottom: 16px !important;
+  box-shadow: 0 8px 22px rgba(23, 70, 63, 0.04) !important;
+}
+
+/* عنوان القسم (التفضيلات / الأمان والمعلومات) */
+.settings-page .section-title,
+.settings-page .section-header {
+  color: #6b7c79 !important;
+  font-weight: 800 !important;
+  font-size: 12px !important;
+  padding: 12px 4px 8px !important;
+  margin: 0 !important;
+}
+
+/* ========== الصفوف جوه الكارت ========== */
+.settings-page .setting-row,
+.settings-page .setting-item,
+.settings-page .card-row {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+  gap: 12px !important;
+  padding: 14px 0 !important;
+  border-bottom: 1px solid #edf3f2 !important;
+}
+
+.settings-page .setting-row:last-child,
+.settings-page .setting-item:last-child {
+  border-bottom: none !important;
+}
+
+/* ========== أيقونات الصفوف ========== */
+.settings-page .setting-icon,
+.settings-page .card-icon {
+  width: 44px !important;
+  height: 44px !important;
+  border-radius: 14px !important;
+  background: #e6f7f4 !important;
+  color: #0aa88f !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  flex-shrink: 0 !important;
+}
+
+/* ========== الـ Toggle (Switch) ========== */
+.settings-page .toggle-track,
+.settings-page .switch-track {
+  width: 50px !important;
+  height: 28px !important;
+  border-radius: 999px !important;
+  background: #0aa88f !important;
+  position: relative !important;
+  cursor: pointer !important;
+  transition: all 0.2s ease !important;
+}
+
+.settings-page .toggle-thumb,
+.settings-page .switch-thumb {
+  width: 22px !important;
+  height: 22px !important;
+  border-radius: 50% !important;
+  background: #ffffff !important;
+  position: absolute !important;
+  top: 3px !important;
+  left: 3px !important;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15) !important;
+  transition: all 0.2s ease !important;
+}
+
+/* ========== الـ Chip الصغير (فاتح / داكن / العربية) ========== */
+.settings-page .theme-toggle,
+.settings-page .language-chip {
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 4px !important;
+  padding: 6px 12px !important;
+  border-radius: 12px !important;
+  background: #e6f7f4 !important;
+  color: #078876 !important;
+  font-weight: 800 !important;
+  font-size: 13px !important;
+  border: none !important;
+}
+
+/* ========== سهم الانتقال ========== */
+.settings-page .arrow-icon,
+.settings-page .chevron {
+  color: #78938f !important;
+  opacity: 0.7 !important;
+}
+
+/* =========================================================
+   🌙 الوضع الداكن
+   ========================================================= */
+
+body.nabd-dark .settings-page {
+  background: linear-gradient(180deg, #071a1d 0%, #092326 100%) !important;
+  color: #e9ffff !important;
+}
+
+body.nabd-dark .settings-page .hero-card,
+body.nabd-dark .settings-page .settings-hero,
+body.nabd-dark .settings-page .settings-card,
+body.nabd-dark .settings-page .setting-card,
+body.nabd-dark .settings-page .section-card {
+  background: #0d2a2e !important;
+  border-color: rgba(170, 230, 225, 0.15) !important;
+  box-shadow: 0 8px 22px rgba(0, 0, 0, 0.25) !important;
+}
+
+body.nabd-dark .settings-page h1,
+body.nabd-dark .settings-page h2,
+body.nabd-dark .settings-page h3,
+body.nabd-dark .settings-page .title,
+body.nabd-dark .settings-page .setting-title {
+  color: #e9ffff !important;
+}
+
+body.nabd-dark .settings-page p,
+body.nabd-dark .settings-page small,
+body.nabd-dark .settings-page .subtitle,
+body.nabd-dark .settings-page .setting-subtitle,
+body.nabd-dark .settings-page .setting-description,
+body.nabd-dark .settings-page [class*="subtitle"],
+body.nabd-dark .settings-page [class*="description"] {
+  color: #9bbdbc !important;
+}
+
+body.nabd-dark .settings-page .setting-row,
+body.nabd-dark .settings-page .setting-item {
+  border-bottom-color: rgba(170, 230, 225, 0.1) !important;
+}
+
+body.nabd-dark .settings-page .setting-icon,
+body.nabd-dark .settings-page .card-icon {
+  background: #123d40 !important;
+  color: #5ed9c5 !important;
+}
+
+body.nabd-dark .settings-page .section-title {
+  color: #9bbdbc !important;
+}
+
+body.nabd-dark .settings-page .theme-toggle,
+body.nabd-dark .settings-page .language-chip {
+  background: #123d40 !important;
+  color: #5ed9c5 !important;
+}
+
+body.nabd-dark .settings-page .arrow-icon,
+body.nabd-dark .settings-page .chevron {
+  color: #5ed9c5 !important;
+}
