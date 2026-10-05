@@ -1,3 +1,5 @@
+import { Geolocation } from "@capacitor/geolocation";
+
 const BASE_URL =
   import.meta.env.VITE_API_URL ||
   "/api";
@@ -163,7 +165,6 @@ const api = {
 
   // ============================================================
   // إرسال طلب تبرع مباشر لمتبرع
-  // مع تحديد المستشفى من صاحب الطلب
   // ============================================================
 
   createDonationRequest: (
@@ -184,7 +185,6 @@ const api = {
       }
     ),
 
-  // قبول أو رفض طلب التبرع
   respondToDonationRequest: (
     id,
     donorId,
@@ -202,7 +202,6 @@ const api = {
       }
     ),
 
-  // تحديث مرحلة التبرع
   updateDonationProgress: (
     id,
     donorId,
@@ -435,7 +434,6 @@ const api = {
       `/medicines/${id}`
     ),
 
-  // طلب دواء مرتبط بالمستخدم الحالي
   requestMedicine: (
     id,
     userId
@@ -451,7 +449,6 @@ const api = {
       }
     ),
 
-  // إلغاء طلب دواء مرتبط بالمستخدم الحالي
   cancelMedicineRequest: (
     id,
     userId
@@ -476,25 +473,21 @@ const api = {
   // Medical Entities
   // ============================================================
 
-  // جميع الجهات الطبية المعتمدة
   getMedicalEntities: () =>
     request(
       "/medical/entities"
     ),
 
-  // المستشفيات المعتمدة فقط
   getMedicalHospitals: () =>
     request(
       "/medical/entities/hospitals"
     ),
 
-  // الصيدليات المعتمدة فقط
   getMedicalPharmacies: () =>
     request(
       "/medical/entities/pharmacies"
     ),
 
-  // مراكز / بنوك الدم المعتمدة فقط
   getMedicalBloodCenters: () =>
     request(
       "/medical/entities/blood-centers"
@@ -504,7 +497,6 @@ const api = {
   // Medical Join Requests
   // ============================================================
 
-  // إرسال طلب انضمام لجهة طبية جديدة
   createMedicalJoinRequest: (
     data
   ) =>
@@ -519,7 +511,6 @@ const api = {
       }
     ),
 
-  // جلب طلبات انضمام الجهات الطبية
   getMedicalJoinRequests: ({
     status = "",
     type = "",
@@ -553,7 +544,6 @@ const api = {
     );
   },
 
-  // جلب طلب انضمام محدد
   getMedicalJoinRequest: (
     id
   ) =>
@@ -561,7 +551,6 @@ const api = {
       `/medical/join-requests/${id}`
     ),
 
-  // الموافقة على طلب انضمام
   approveMedicalJoinRequest: (
     id
   ) =>
@@ -572,7 +561,6 @@ const api = {
       }
     ),
 
-  // رفض طلب انضمام
   rejectMedicalJoinRequest: (
     id,
     rejectionReason = ""
@@ -592,7 +580,6 @@ const api = {
   // Medical Entity Requests
   // ============================================================
 
-  // جلب كل الطلبات الخاصة بالجهة الطبية
   getMedicalEntityRequests: (
     entityType,
     entityId
@@ -601,7 +588,6 @@ const api = {
       `/medical/${entityType}/${entityId}/requests`
     ),
 
-  // جلب طلب طبي واحد
   getMedicalEntityRequest: (
     entityType,
     entityId,
@@ -611,7 +597,6 @@ const api = {
       `/medical/${entityType}/${entityId}/requests/${requestId}`
     ),
 
-  // تحديث حالة الطلب من الجهة الطبية
   updateMedicalRequestStatus: (
     entityType,
     entityId,
@@ -746,46 +731,58 @@ export default api;
 export { api };
 
 // ============================================================
-// Current Location
+// Current Location - Capacitor
 // ============================================================
 
-export function getCurrentLocation() {
-  return new Promise(
-    (resolve, reject) => {
-      if (
-        !navigator.geolocation
-      ) {
-        reject(
-          new Error(
-            "Geolocation not supported"
-          )
-        );
+export async function getCurrentLocation() {
+  try {
+    // فحص صلاحية الموقع الحالية
+    let permissions =
+      await Geolocation.checkPermissions();
 
-        return;
-      }
+    // لو الصلاحية غير مسموح بها، نطلبها
+    if (
+      permissions.location !== "granted"
+    ) {
+      permissions =
+        await Geolocation.requestPermissions();
+    }
 
-      navigator.geolocation.getCurrentPosition(
-        (pos) =>
-          resolve({
-            lat:
-              pos.coords.latitude,
+    // التأكد من أن المستخدم سمح بالموقع
+    if (
+      permissions.location !== "granted"
+    ) {
+      throw new Error(
+        "Location permission denied"
+      );
+    }
 
-            lng:
-              pos.coords.longitude,
-          }),
-
-        (err) =>
-          reject(err),
-
+    // الحصول على الموقع الحالي
+    const position =
+      await Geolocation.getCurrentPosition(
         {
-          enableHighAccuracy:
-            true,
-
+          enableHighAccuracy: true,
           timeout: 15000,
-
           maximumAge: 0,
         }
       );
-    }
-  );
+
+    return {
+      lat:
+        position.coords.latitude,
+
+      lng:
+        position.coords.longitude,
+
+      accuracy:
+        position.coords.accuracy,
+    };
+  } catch (error) {
+    console.error(
+      "Capacitor Geolocation Error:",
+      error
+    );
+
+    throw error;
+  }
 }
