@@ -9,36 +9,114 @@ export default function Home() {
   const avatar = localStorage.getItem("nabd_avatar");
 
   useEffect(() => {
-    const isGuest = localStorage.getItem("nabd_guest") === "true";
+    const guestFlag =
+      localStorage.getItem("nabd_guest") === "true";
 
-    // لو دخل كزائر، ممنوع نقرأ أي مستخدم محفوظ قديم
-    if (isGuest) {
-      setUser(null);
-    } else {
-      const stored = localStorage.getItem("nabd_user");
+    const stored = localStorage.getItem("nabd_user");
 
-      if (stored) {
-        try {
-          setUser(JSON.parse(stored));
-        } catch {
+    // لو فيه حساب محفوظ، فهو مستخدم حقيقي
+    // حتى لو كان nabd_guest ما زال موجودًا من دخول سابق كزائر
+    if (stored) {
+      try {
+        const parsedUser = JSON.parse(stored);
+
+        if (parsedUser && typeof parsedUser === "object") {
+          setUser(parsedUser);
+
+          // إزالة حالة الزائر القديمة حتى لا تؤثر على الحساب
+          localStorage.removeItem("nabd_guest");
+
+          const userEmail =
+            parsedUser.email ||
+            parsedUser.userEmail ||
+            "";
+
+          if (userEmail) {
+            api
+              .getUser(userEmail)
+              .then((freshUser) => {
+                if (freshUser) {
+                  const mergedUser = {
+                    ...parsedUser,
+                    ...freshUser,
+
+                    name:
+                      freshUser.name ||
+                      freshUser.fullName ||
+                      freshUser.username ||
+                      parsedUser.name ||
+                      parsedUser.fullName ||
+                      parsedUser.username ||
+                      "",
+
+                    email:
+                      freshUser.email ||
+                      parsedUser.email ||
+                      "",
+                  };
+
+                  setUser(mergedUser);
+
+                  localStorage.setItem(
+                    "nabd_user",
+                    JSON.stringify(mergedUser)
+                  );
+                }
+              })
+              .catch(() => {
+                // نستخدم البيانات المحفوظة محليًا لو الـ API فشل
+              });
+          }
+        } else {
           setUser(null);
         }
-      } else {
-        api.getUser()
-          .then(setUser)
-          .catch(() => {
-            setUser(null);
-          });
+      } catch {
+        setUser(null);
       }
+    } else if (guestFlag) {
+      // الزائر لا نقرأ له أي مستخدم محفوظ
+      setUser(null);
+    } else {
+      // لا يوجد مستخدم محلي، نحاول جلب المستخدم من الـ API
+      api
+        .getUser()
+        .then((freshUser) => {
+          if (freshUser) {
+            const normalizedUser = {
+              ...freshUser,
+
+              name:
+                freshUser.name ||
+                freshUser.fullName ||
+                freshUser.username ||
+                "",
+            };
+
+            setUser(normalizedUser);
+
+            localStorage.setItem(
+              "nabd_user",
+              JSON.stringify(normalizedUser)
+            );
+          } else {
+            setUser(null);
+          }
+        })
+        .catch(() => {
+          setUser(null);
+        });
     }
 
-    api.getBloodRequests()
+    api
+      .getBloodRequests()
       .then(setUrgentRequests)
       .catch(() => {});
   }, []);
 
+  // المستخدم يعتبر زائر فقط لو مفيش حساب محفوظ
   const isGuest =
-    localStorage.getItem("nabd_guest") === "true";
+    localStorage.getItem("nabd_guest") === "true" &&
+    !user;
 
   const userName = isGuest
     ? ""
@@ -1570,6 +1648,7 @@ export default function Home() {
             width: 22px;
             height: 22px;
           }
+
         }
 
       `}</style>
