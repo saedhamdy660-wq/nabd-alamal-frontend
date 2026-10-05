@@ -21,7 +21,6 @@ function BellIcon() {
         strokeLinejoin="round"
       />
 
-      
       <path
         d="M10 20h4"
         fill="none"
@@ -46,10 +45,25 @@ function SettingsIcon() {
       />
 
       <path
-        d="M19 13.2v-2.4l-1.8-.5a5.9 5.9 0 0 0-.6-1.5l1-1.5-1.7-1.7-1.5 1a5.9 5.9 0 0 0-1.5-.6L12.4 4H10l-.5 1.8a5.9 5.9 0 0 0-1.5.6l-1.5-1L4.8 7.1l1.7 1.7 1.5-1a5.9 5.9 0 0 0-.6 1.5l-1.8.5v2.4l1.8.5a5.9 5.9 0 0 0 .6 1.5l-1 1.5 1.7 1.7 1.5-1a5.9 5.9 0 0 0 1.5.6L10 20h2.4l.5-1.8a5.9 5.9 0 0 0 1.5-.6l1.5 1 1.7-1.7-1-1.5a5.9 5.9 0 0 0 .6-1.5l1.8-.7Z"
+        d="M19 13.2v-2.4l-1.8-.5a5.9 5.9 0 0 0-.6-1.5l1-1.5-1.7-1.7-1.5 1a5.9 5.9 0 0 0-1.5-.6L12.4 4H10l-.5 1.8a5.9 5.9 0 0 0-1.5.6l-1.5-1L4.8 7.1 6.5 8.8a5.9 5.9 0 0 0-.6 1.5l-1.8.5v2.4l1.8.5a5.9 5.9 0 0 0 .6 1.5l-1 1.5 1.7 1.7 1.5-1a5.9 5.9 0 0 0 1.5.6L10 20h2.4l.5-1.8a5.9 5.9 0 0 0 1.5-.6l1.5 1 1.7-1.7-1-1.5a5.9 5.9 0 0 0 .6-1.5l1.8-.7Z"
         fill="none"
         stroke="currentColor"
         strokeWidth="1.4"
+        strokeLinejoin="round"
+      />
+    </svg>
+  );
+}
+
+function BackIcon() {
+  return (
+    <svg viewBox="0 0 24 24">
+      <path
+        d="M15 5l-7 7 7 7"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="2"
+        strokeLinecap="round"
         strokeLinejoin="round"
       />
     </svg>
@@ -281,12 +295,22 @@ export default function Notifications() {
   };
 
   /*
-    فتح صفحة تفاصيل طلب التبرع.
-
-    مهم:
-    السهم لا يقوم بالقبول أو الرفض.
-    هو فقط ينقل المتبرع إلى صفحة التفاصيل.
+    زر الرجوع داخل صفحة الإشعارات.
+    لو فيه صفحة سابقة يرجع إليها،
+    وإلا يذهب للصفحة الرئيسية.
   */
+  const handleBack = () => {
+    if (
+      window.history.length > 1
+    ) {
+      navigate(-1);
+    } else {
+      navigate("/home", {
+        replace: true,
+      });
+    }
+  };
+
   const handleViewRequestDetails = (
     notification
   ) => {
@@ -320,10 +344,6 @@ export default function Notifications() {
 
     setActionError("");
 
-    /*
-      لو التفاصيل متحملة قبل كده
-      نستخدمها مباشرة.
-    */
     if (
       requestDetails[
         notification.requestId
@@ -409,10 +429,6 @@ export default function Notifications() {
           )
       );
 
-      /*
-        نحدث التفاصيل أيضًا حتى تفضل
-        الشاشة مفتوحة والحالة الجديدة ظاهرة.
-      */
       if (updatedRequest) {
         setRequestDetails(
           (prev) => ({
@@ -587,6 +603,16 @@ export default function Notifications() {
 
         <div className="header-title">
 
+          {/* Back Button */}
+          <button
+            type="button"
+            className="back-button"
+            onClick={handleBack}
+            aria-label="رجوع"
+          >
+            <BackIcon />
+          </button>
+
           <div className="header-bell">
             <BellIcon />
           </div>
@@ -601,9 +627,11 @@ export default function Notifications() {
 
         </div>
 
+        {/* App Settings */}
         <Link
-          to="/notification-settings"
+          to="/settings"
           className="settings-button"
+          aria-label="إعدادات التطبيق"
         >
           <SettingsIcon />
         </Link>
@@ -983,6 +1011,53 @@ export default function Notifications() {
           align-items: center;
 
           gap: 12px;
+        }
+
+        /* Back Button */
+
+        .back-button {
+          width: 42px;
+          height: 42px;
+
+          flex-shrink: 0;
+
+          display: flex;
+
+          align-items: center;
+          justify-content: center;
+
+          padding: 0;
+
+          border: 1px solid
+            rgba(255,255,255,.9);
+
+          border-radius: 14px;
+
+          color: #218d83;
+
+          background:
+            rgba(255,255,255,.72);
+
+          box-shadow:
+            0 7px 18px
+              rgba(35,139,128,.08),
+            inset 0 1px 0
+              rgba(255,255,255,.9);
+
+          cursor: pointer;
+
+          transition:
+            transform .2s ease,
+            background .2s ease;
+        }
+
+        .back-button svg {
+          width: 22px;
+          height: 22px;
+        }
+
+        .back-button:active {
+          transform: scale(.94);
         }
 
         .header-bell {
