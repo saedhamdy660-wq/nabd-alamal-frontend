@@ -175,14 +175,24 @@ export default function Login() {
         password,
       });
 
-      // نحافظ على بيانات المستخدم القديمة وبيانات التحقق
-      const oldUser = JSON.parse(
-        localStorage.getItem("nabd_user") || "null"
-      );
+      // ==========================================
+      // تسجيل الدخول الحقيقي يلغي حالة الزائر
+      // ==========================================
+      localStorage.removeItem("nabd_guest");
 
+      // ==========================================
+      // حفظ بيانات الحساب الحالي فقط
+      // ==========================================
       const loggedInUser = {
-        ...oldUser,
         ...user,
+        name:
+          user?.name ||
+          user?.fullName ||
+          user?.username ||
+          "",
+        email:
+          user?.email ||
+          email.trim(),
       };
 
       localStorage.setItem(
@@ -195,6 +205,8 @@ export default function Login() {
           "nabd_remember",
           "true"
         );
+      } else {
+        localStorage.removeItem("nabd_remember");
       }
 
       // ================================
