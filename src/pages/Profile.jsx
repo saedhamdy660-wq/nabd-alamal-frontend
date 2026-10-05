@@ -1,5 +1,6 @@
 import React, { useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { api } from "../api.js";
 
 function getSavedUser() {
   try {
@@ -394,7 +395,7 @@ export default function Profile() {
     document.body.classList.contains("nabd-dark");
 
   /* =========================
-     LOAD USER
+     LOAD USER + AVATAR
   ========================= */
 
   useEffect(() => {
@@ -424,6 +425,53 @@ export default function Profile() {
     if (savedAvatar) {
       setAvatar(savedAvatar);
     }
+
+    /*
+      تحميل بيانات المستخدم من الـ Backend
+      مرة أخرى حتى نسترجع الصورة المحفوظة
+      على الحساب بعد تسجيل الدخول.
+    */
+    const userEmail =
+      savedUser?.email ||
+      savedUser?.Email ||
+      "";
+
+    if (!userEmail) return;
+
+    api
+      .getUser(userEmail)
+      .then((freshUser) => {
+        if (!freshUser) return;
+
+        setUser(freshUser);
+
+        localStorage.setItem(
+          "nabd_user",
+          JSON.stringify(freshUser)
+        );
+
+        const backendAvatar =
+          freshUser.avatar ||
+          freshUser.profileImage ||
+          freshUser.profilePicture ||
+          freshUser.image ||
+          "";
+
+        if (backendAvatar) {
+          setAvatar(backendAvatar);
+
+          localStorage.setItem(
+            "nabd_avatar",
+            backendAvatar
+          );
+        }
+      })
+      .catch((error) => {
+        console.error(
+          "Failed to load user profile:",
+          error
+        );
+      });
   }, []);
 
   /* =========================
@@ -446,15 +494,98 @@ export default function Profile() {
 
     const reader = new FileReader();
 
-    reader.onload = () => {
+    reader.onload = async () => {
       const image = reader.result;
 
+      /*
+        نعرض الصورة فورًا للمستخدم.
+      */
+      setAvatar(image);
+
+      /*
+        نحفظها محليًا كـ cache.
+      */
       localStorage.setItem(
         "nabd_avatar",
         image
       );
 
-      setAvatar(image);
+      /*
+        لو المستخدم Guest، لا يوجد حساب
+        نحفظ الصورة محليًا فقط.
+      */
+      const guest =
+        localStorage.getItem("nabd_guest") === "true";
+
+      if (guest) {
+        return;
+      }
+
+      /*
+        معرفة ID المستخدم.
+        ندعم أكثر من اسم محتمل للـ ID
+        بدون تغيير أي شيء في الـ Backend.
+      */
+      const userId =
+        user?.id ||
+        user?.userId ||
+        user?._id ||
+        user?.ID;
+
+      if (!userId) {
+        console.warn(
+          "Cannot save avatar: user ID is missing."
+        );
+
+        return;
+      }
+
+      try {
+        /*
+          حفظ الصورة على حساب المستخدم
+          باستخدام API الموجود بالفعل.
+        */
+        await api.saveAvatar(
+          userId,
+          image
+        );
+
+        /*
+          تحديث نسخة المستخدم المحلية
+          أيضًا حتى تظل الصورة مرتبطة
+          بالـ user object.
+        */
+        const currentUser =
+          getSavedUser();
+
+        if (currentUser) {
+          const updatedUser = {
+            ...currentUser,
+            avatar: image,
+          };
+
+          localStorage.setItem(
+            "nabd_user",
+            JSON.stringify(updatedUser)
+          );
+
+          setUser(updatedUser);
+        }
+      } catch (error) {
+        console.error(
+          "Failed to save avatar:",
+          error
+        );
+
+        /*
+          الصورة تظل ظاهرة محليًا،
+          لكن نخبر المستخدم لو فشل الحفظ
+          على الحساب.
+        */
+        alert(
+          "تم عرض الصورة، لكن لم يتم حفظها على الحساب. حاول مرة أخرى."
+        );
+      }
     };
 
     reader.readAsDataURL(file);
@@ -1424,7 +1555,6 @@ export default function Profile() {
           opacity: 1 !important;
         }
 
-        /* الحفاظ على خلفية الصورة نفسها في الوضع الغامق */
         .profile-page.dark-mode
         .profile-avatar[style*="background-image"] {
 
